@@ -1,0 +1,92 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cf-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # content-dates 依赖完整 git 历史取真实内容日期，浅克隆会让全站日期丢失
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 不写 version：pnpm 版本由 package.json 的 packageManager 字段决定。
+      # 两处同时指定且不一致时，这个 action 会直接报错终止。
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # NODE_ENV=production 时自动静态导出到 out/
+      - name: Build
+        run: pnpm build
+
+      # --branch=main 对应 Pages 项目的生产分支，发布结果即 docs.fishxcode.com 的内容
+      - name: Deploy
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=fishxcode-docs --branch=main
+
+      # 对刚发布的这一版做冒烟检查：首页可访问，且边缘 Worker（public/_worker.js）的
+      # Markdown 内容协商生效。请求的是本次部署的专属地址（*.pages.dev）而不是正式域名，
+      # 结果不受域名绑定状态与缓存影响。检查失败时这一版已经在线上，需要尽快修复或回滚。
+      - name: Smoke test
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          if [ -z "${DEPLOYMENT_URL}" ]; then
+            echo "::error::部署 action 未返回地址"
+            exit 1
+          fi
+
+          content_type() {
+            curl --silent --show-error --fail --location \
+              --max-time 30 --connect-timeout 10 \
+              --retry 5 --retry-delay 5 --retry-all-errors \
+              --output /dev/null --write-out '%{content_type}' \
+              --header "Accept: $1" "$DEPLOYMENT_URL/"
+          }
+
+          html="$(content_type 'text/html')"
+          markdown="$(content_type 'text/markdown')"
+
+          # 变量一律写成 ${name}：变量名后面紧跟中文标点时，不加花括号在部分 bash 下会被并进变量名
+          {
+            echo "### 已发布到 Cloudflare Pages"
+            echo "- 线上地址：https://docs.fishxcode.com"
+            echo "- 本次部署：${DEPLOYMENT_URL}"
+            echo "- 首页（Accept: text/html）返回 \`${html}\`"
+            echo "- 首页（Accept: text/markdown）返回 \`${markdown}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "${html}" != text/html* ]]; then
+            echo "::error::首页没有返回 HTML（实际为 ${html}）"
+            exit 1
+          fi
+          if [[ "${markdown}" != text/markdown* ]]; then
+            echo "::error::带 Accept: text/markdown 的请求没有返回 Markdown（实际为 ${markdown}），请检查 public/_worker.js 与 public/_routes.json"
+            exit 1
+          fi

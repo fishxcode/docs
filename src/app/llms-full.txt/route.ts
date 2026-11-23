@@ -1,7 +1,8 @@
-import { docsLlms } from '@/lib/source';
+import { createLlmsFull } from '@/lib/discovery';
+import { DEFAULT_LOCALE } from '@/lib/i18n';
 
-export const revalidate = false;
+export const dynamic = 'force-static';
 
 export async function GET() {
-  return (await docsLlms.serve('/llms-full.txt'))!;
+  return createLlmsFull(DEFAULT_LOCALE);
 }

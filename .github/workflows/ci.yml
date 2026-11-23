@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 不写 version：pnpm 版本由 package.json 的 packageManager 字段决定。
+      # 两处同时指定且不一致时，这个 action 会直接报错终止。
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      # next typegen 生成路由类型（LayoutProps / RouteContext），tsc 做全量类型检查
+      - name: Type check
+        run: pnpm types:check
+
+      # 静态导出特有的问题（路由缺静态参数、用到动态 API）只有完整构建才会暴露。
+      # main 上的构建由部署工作流负责，这里只在 PR 上跑，避免同一次提交构建两遍。
+      - name: Build
+        if: github.event_name == 'pull_request'
+        run: pnpm build
