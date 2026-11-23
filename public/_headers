@@ -1,0 +1,169 @@
+# Cloudflare Pages 响应头配置
+#
+# 关键：/static.json/{locale} 是站内搜索的索引（单语言约 4.8MB 的 Orama 快照），
+# 客户端用 fetch().json() 解析，必须返回 application/json。Cloudflare 通常按
+# 扩展名推断，但这些路径没有扩展名，必须显式声明。
+#
+# 其余为缓存策略：带内容哈希的 _next/static 资源可长期缓存，
+# 而 HTML 与索引文件要在每次部署后立即更新。
+
+/static.json/*
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+# 社交分享图（首页 / 状态页固定一张，文档页每篇一张）。
+#
+# 这些图是构建期渲染好的静态文件，路径由 slug 决定、每次部署才重新生成，
+# 内容不会在部署之间变化，因此可以长缓存。此前误设为 max-age=0 且不带
+# /og/* 规则，导致每个爬虫每次抓取都要回源（该站源站单次 4–40s），
+# 微信/Slack 这类短超时抓取器直接拿不到图，卡片只剩标题和域名。
+/og/*
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# 内容发现入口在部署后重新验证，避免保留旧目录或抓取规则。
+
+/llms.txt
+  Content-Language: zh-CN
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/llms-full.txt
+  Content-Language: zh-CN
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+# 各语言的文档资源。
+
+/en/llms.txt
+  Content-Language: en
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en/llms-full.txt
+  Content-Language: en
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/fr/llms.txt
+  Content-Language: fr
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/fr/llms-full.txt
+  Content-Language: fr
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/fr/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ru/llms.txt
+  Content-Language: ru
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ru/llms-full.txt
+  Content-Language: ru
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ru/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ja/llms.txt
+  Content-Language: ja
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ja/llms-full.txt
+  Content-Language: ja
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ja/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/vi/llms.txt
+  Content-Language: vi
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/vi/llms-full.txt
+  Content-Language: vi
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/vi/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/zh-TW/llms.txt
+  Content-Language: zh-TW
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/zh-TW/llms-full.txt
+  Content-Language: zh-TW
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/zh-TW/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Markdown 为静态导出文件，部署后显式声明类型与重验证策略。
+/llms.mdx/*
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+# 默认语言文档。
+/llms.mdx/:page/content.md
+  Content-Language: zh-CN
+
+/llms.mdx/en/*
+  Content-Language: en
+
+/llms.mdx/fr/*
+  Content-Language: fr
+
+/llms.mdx/ru/*
+  Content-Language: ru
+
+/llms.mdx/ja/*
+  Content-Language: ja
+
+/llms.mdx/vi/*
+  Content-Language: vi
+
+/llms.mdx/zh-TW/*
+  Content-Language: zh-TW
