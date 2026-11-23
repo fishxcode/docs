@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.github
+.vscode
+.idea
+*.log
+.env*
+.wrangler
+scripts
+tests

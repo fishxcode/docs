@@ -1,0 +1,9 @@
+packages:
+  - '.'
+
+# wrangler 的依赖 esbuild、workerd 带安装脚本。pnpm 默认拦截未审批的构建脚本，
+# 并让 pnpm install 直接失败（ERR_PNPM_IGNORED_BUILDS），这里显式放行这两个官方包。
+# 注意：旧写法 onlyBuiltDependencies 自 pnpm 11 起已被本设置取代并被静默忽略。
+allowBuilds:
+  esbuild: true
+  workerd: true
