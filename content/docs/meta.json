@@ -23,6 +23,7 @@
     "platform",
     "compare",
     "models",
+    "[Activity][模型状态监控](/status)",
     "billing-groups",
     "group-health",
     "error-logs",

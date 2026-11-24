@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/app-link';
 import { HOME_CLIENTS } from '@/lib/home-copy';
 import { localePath, type Locale } from '@/lib/i18n';
 

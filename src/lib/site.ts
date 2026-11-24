@@ -14,15 +14,16 @@ export const siteConfig = {
   productUrl: 'https://fishxcode.com',
   productName: 'FishXCode',
   /** 品牌 logo（public 下的静态文件），导航栏与首页共用；站点图标由 src/app 下的 icon 文件生成 */
-  logo: '/img/logo.svg',
+  logo: '/img/logo.png',
   description:
     '一站式 AI 模型接入与账号服务平台，覆盖 Claude、Codex、Kiro、Grok、国产模型与多模态模型，稳定、高性价比、即开即用。',
   /**
-   * 导航栏的站外入口。注册链接带推广码，改动前先确认推广归属。
+   * 导航栏入口。「服务状态」是站内默认语言页面（其余语言暂不生成本地化副本）；
+   * 注册链接带推广码，改动前先确认推广归属。
    */
   links: {
     console: 'https://fishxcode.com/console',
-    status: 'https://status.fishxcode.com',
+    status: '/status',
     quota: 'https://api-key-tool.fishxcode.com',
     /** 企业专属站点：团队接入、批量采购与定制化方案 */
     enterprise: 'https://enterprise.fishxcode.com/',

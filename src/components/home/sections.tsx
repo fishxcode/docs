@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/app-link';
 import { Check, MessageCircle } from 'lucide-react';
 import {
   fmt,
@@ -46,11 +46,12 @@ const PLANS_PATH = '/subscription-plans';
 const BILLING_PATH = '/billing-groups';
 
 /** 首屏三条要点的链接，与 copy.hero.points 按下标对应 */
-const HERO_POINT_LINKS = [
+const HERO_POINT_LINKS: ReadonlyArray<{ href: string; external: boolean; absolute?: boolean }> = [
   { href: BILLING_PATH, external: false },
-  { href: siteConfig.links.status, external: true },
+  // 状态页暂只有默认语言版本，其余语言首页也统一指向 /status
+  { href: siteConfig.links.status, external: false, absolute: true },
   { href: siteConfig.links.enterprise, external: true },
-] as const;
+];
 
 /** 「为什么选择」四张卡片的英文等宽标签（版式元素，各语言共用），与 shared.features 按下标对应 */
 const WHY_LABELS = ['Official', 'Groups', 'Pay as you go', 'Enterprise'];
@@ -124,7 +125,7 @@ export function HeroSection({ lang, shared, copy, codeTabs }: SectionProps & { c
                       {content}
                     </a>
                   ) : (
-                    <Link href={localePath(lang, link.href)} className={className}>
+                    <Link href={link.absolute ? link.href : localePath(lang, link.href)} className={className}>
                       {content}
                     </Link>
                   )}

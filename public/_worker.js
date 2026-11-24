@@ -30,8 +30,26 @@
 
 const PRICING_PATH = '/api/pricing';
 const PRICING_UPSTREAM = 'https://fishxcode.com/api/pricing';
+const STATUS_DATA_PREFIX = '/api/status-data/';
+/** 状态页代理的上游白名单：路径后缀 → 完整上游地址。查询串只允许白名单参数 */
+const STATUS_UPSTREAMS = new Map([
+  ['status', 'https://status.fishxcode.com/api/v1/status'],
+  ['perf-summary', 'https://fishxcode.com/api/perf-metrics/summary'],
+  ['perf-model', 'https://fishxcode.com/api/perf-metrics'],
+  ['pricing', 'https://fishxcode.com/api/pricing'],
+]);
 /** 回传给浏览器的上游响应头：只放行与内容相关的几项，Set-Cookie、cf-* 等一律不带 */
 const PRICING_RESPONSE_HEADERS = ['content-type', 'cache-control', 'etag', 'last-modified'];
+/**
+ * 主站用 sandbox iframe 嵌入文档站，且没有 allow-same-origin：iframe 内
+ * window.origin 为 "null"，连请求文档站自己的公开接口也按跨域处理。
+ * 这里补上公开只读接口所需的 CORS 头；不带凭据，* 即可覆盖任意嵌入来源。
+ */
+const PUBLIC_API_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+  'Access-Control-Allow-Headers': 'Accept',
+};
 
 /** 非默认语言的 URL 前缀 */
 const LOCALES = new Set(['en', 'fr', 'es', 'pt', 'ru', 'ja', 'vi', 'zh-TW']);
@@ -163,6 +181,27 @@ function describeMarkdown(markdownPathname) {
   };
 }
 
+function withPublicApiHeaders(response, cacheControl) {
+  return withHeaders(response, (headers) => {
+    for (const [name, value] of Object.entries(PUBLIC_API_HEADERS)) headers.set(name, value);
+    headers.set('Vary', 'Origin');
+    headers.set('Cache-Control', cacheControl);
+  });
+}
+
+/** 只保留公开接口需要的查询串，避免把任意参数转发到上游 */
+function statusUpstreamUrl(upstream, url) {
+  const target = new URL(upstream);
+  for (const key of ['hours', 'model']) {
+    const value = url.searchParams.get(key);
+    if (value !== null) target.searchParams.set(key, value);
+  }
+  if (target.pathname.startsWith('/api/perf-metrics') && !target.searchParams.has('hours')) {
+    target.searchParams.set('hours', '24');
+  }
+  return target;
+}
+
 function withHeaders(response, mutate) {
   const headers = new Headers(response.headers);
   mutate(headers);
@@ -225,8 +264,11 @@ async function fetchMarkdown(env, request, url, target) {
  * 让页面上的模型目录显示「加载失败 / 重试」，而不是拿到一个 HTML 错误页。
  */
 async function proxyPricing(request, url) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: PUBLIC_API_HEADERS });
+  }
   if (request.method !== 'GET' && request.method !== 'HEAD') {
-    return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD' } });
+    return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD, OPTIONS' } });
   }
 
   const upstreamUrl = new URL(PRICING_UPSTREAM);
@@ -239,7 +281,7 @@ async function proxyPricing(request, url) {
   } catch {
     return Response.json(
       { success: false, message: 'pricing upstream unavailable' },
-      { status: 502, headers: { 'Cache-Control': 'no-store' } },
+      { status: 502, headers: { 'Cache-Control': 'no-store', ...PUBLIC_API_HEADERS } },
     );
   }
 
@@ -250,12 +292,56 @@ async function proxyPricing(request, url) {
   }
   // 价格随时可能变化：上游没给缓存策略时，也不让浏览器与 CDN 缓存
   if (!headers.has('Cache-Control')) headers.set('Cache-Control', 'no-store');
+  for (const [name, value] of Object.entries(PUBLIC_API_HEADERS)) headers.set(name, value);
+  headers.set('Vary', 'Origin');
 
   if (request.method === 'HEAD') {
     await upstream.body?.cancel();
     return new Response(null, { status: upstream.status, headers });
   }
   return new Response(upstream.body, { status: upstream.status, headers });
+}
+
+/**
+ * 状态页公开接口：固定上游白名单，只转发 GET/HEAD，不暴露上游报错与运维字段。
+ * 状态站巡检数据可能陈旧，浏览器每 2 分钟最多取一次；性能数据同样限 24 小时窗口。
+ */
+async function proxyStatusData(request, url) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: PUBLIC_API_HEADERS });
+  }
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD, OPTIONS' } });
+  }
+
+  const route = url.pathname.slice(STATUS_DATA_PREFIX.length).replace(/\/$/, '');
+  const upstream = STATUS_UPSTREAMS.get(route);
+  if (!upstream) return Response.json({ error: 'unknown status route' }, { status: 404, headers: PUBLIC_API_HEADERS });
+
+  const target = statusUpstreamUrl(upstream, url);
+  let upstreamResponse;
+  try {
+    upstreamResponse = await fetch(target, { headers: { Accept: 'application/json' } });
+  } catch {
+    return Response.json(
+      { error: 'upstream unavailable' },
+      { status: 502, headers: { ...PUBLIC_API_HEADERS, 'Cache-Control': 'no-store' } },
+    );
+  }
+  if (!upstreamResponse.ok) {
+    return Response.json(
+      { error: 'upstream unavailable' },
+      { status: 502, headers: { ...PUBLIC_API_HEADERS, 'Cache-Control': 'no-store' } },
+    );
+  }
+
+  const cacheControl = 'public, max-age=60, stale-while-revalidate=60';
+  const headers = { ...PUBLIC_API_HEADERS, 'Cache-Control': cacheControl, Vary: 'Origin' };
+  if (request.method === 'HEAD') {
+    await upstreamResponse.body?.cancel();
+    return new Response(null, { status: 200, headers });
+  }
+  return withPublicApiHeaders(upstreamResponse, cacheControl);
 }
 
 /** 旧地址 → 新路径；已下架的套餐页转到同语言的套餐总览页。不属于旧地址时返回 null */
@@ -285,6 +371,7 @@ async function handle(request, env) {
   const url = new URL(request.url);
 
   if (url.pathname === PRICING_PATH) return proxyPricing(request, url);
+  if (url.pathname.startsWith(STATUS_DATA_PREFIX)) return proxyStatusData(request, url);
 
   const redirect = legacyRedirect(url);
   if (redirect) return redirect;
