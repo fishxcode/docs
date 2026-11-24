@@ -1,8 +1,6 @@
 # FishXCode 文档
 
-FishXCode 的文档站，线上地址 <https://docs.fishxcode.com>。正文迁移自旧文档站
-（VitePress，仓库 [fishxcode/fishxcode](https://github.com/fishxcode/fishxcode)），
-现有简体中文、English、Français 三种语言的正文，其余语言回退显示中文。
+FishXCode 的文档站，线上地址 <https://docs.fishxcode.com>。
 
 基于 Next.js 16、React 19 与 Fumadocs 16，支持七种语言，构建时静态导出到 `out/`，
 部署在 Cloudflare Pages。站内搜索使用按语言生成的本地索引，不依赖外部搜索服务；
@@ -33,6 +31,7 @@ pnpm dev
 | `pnpm build` | 静态导出到 `out/` |
 | `pnpm preview` | 用 Wrangler 在本地运行 `out/`，包含与线上相同的 Worker（需先 `pnpm build`） |
 | `pnpm deploy:cf` | 构建并发布到 Cloudflare Pages 的生产环境 |
+| `pnpm indexnow` | 列出站点地图里将提交给 IndexNow 的地址；加 `-- --submit` 才真正提交（需先 `pnpm build`） |
 
 依赖管理有两点要注意：
 
@@ -49,7 +48,7 @@ pnpm dev
 | `src/app/` | 路由。`(home)`、`(docs)` 是简体中文，`en/`、`fr/` 等目录是各语言的薄壳 |
 | `src/components/` | 页面与布局的共用实现（`localized-*.tsx`），各语言的薄壳只负责传入语言 |
 | `src/lib/` | 站点配置、国际化、内容加载、搜索索引，以及 RSS、llms、分享图的生成 |
-| `public/_worker.js` | Cloudflare Pages 的边缘 Worker：定价接口转发、旧站地址跳转、Markdown 内容协商 |
+| `public/_worker.js` | Cloudflare Pages 的边缘 Worker：定价接口转发、地址跳转、Markdown 内容协商 |
 | `public/_routes.json` | 声明哪些路径经过 Worker，哪些直接按静态资源返回 |
 
 ## 写文档
@@ -80,6 +79,7 @@ pnpm dev
 | Tiếng Việt | `vi` | `/vi` |
 | 繁體中文 | `zh-TW` | `/zh-TW` |
 
+- 目前简体中文、English、Français 有完整正文，其余语言的页面回退显示中文。
 - 翻译放在 `content/docs/{lang}/` 下，与中文版保持相同的相对路径。
 - 没有翻译的页面在该语言下回退显示中文正文，canonical 指回中文版，并且不进入该语言的
   站点地图、RSS、llms.txt 和 hreflang。
@@ -115,10 +115,11 @@ Cloudflare 边缘），本地开发是 `src/proxy.ts`。两者有一处已知差
 
 ### 首次配置
 
-1. 创建 Pages 项目：
+1. 创建 Pages 项目。wrangler 4 默认会把新项目转交给 Workers 创建，对本项目会失败，
+   必须加 `--force` 直接建成 Pages 项目（只在创建时需要）：
 
    ```bash
-   pnpm exec wrangler pages project create fishxcode-docs --production-branch main
+   pnpm exec wrangler pages project create fishxcode-docs --production-branch main --force
    ```
 
 2. 在 Cloudflare 控制台进入 Workers & Pages → `fishxcode-docs` → Custom domains →
