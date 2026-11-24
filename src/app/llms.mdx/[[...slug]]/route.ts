@@ -10,8 +10,9 @@ export const dynamic = 'force-static';
 /**
  * Markdown 副本的统一响应。
  *
- * 静态导出不保留 route handler 设置的响应头，public/_worker.js 会按同样的口径
- * 补回（dev 环境的 proxy 不改写副本本体的响应，这里设置的头在 dev 下直接可见）。
+ * 静态导出不保留 route handler 设置的响应头：Cloudflare Pages 上由 public/_worker.js
+ * 按同样的口径补回；Vercel 上由 vercel.json 补回 Content-Language，Link 头暂未补回。
+ * dev 环境的 proxy 不改写副本本体的响应，这里设置的头在 dev 下直接可见。
  */
 function markdownResponse(body: string, lang: Locale, canonicalPath: string): Response {
   const canonical = new URL(canonicalPath, siteConfig.url);

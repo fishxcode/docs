@@ -7,7 +7,10 @@ export const docsRoute = '/';
 /** 文档页的社交分享图路由 */
 export const docsImageRoute = '/og';
 
-/** 文档的 Markdown 源码路由（llms.txt 生态用） */
+/**
+ * 文档的 Markdown 源码路由（llms.txt 生态用）。
+ * public/_worker.js、public/_headers 与 vercel.json 无法 import 本文件，都写死了这个路径，改路由时一起改。
+ */
 export const docsContentRoute = '/llms.mdx';
 
 /**
@@ -39,8 +42,8 @@ export const homeSlug = 'index';
 
 /**
  * 模型目录（ModelCatalog）在浏览器里请求的同源定价接口。主站的同名接口不带 CORS 头，
- * 跨域取不到，由 public/_worker.js（生产）与 src/proxy.ts（dev）原样转发到主站同一路径。
- * public/_worker.js 无法 import 本文件，那里有一份同名常量。
+ * 跨域取不到，转发到主站同一路径：Cloudflare Pages 上是 public/_worker.js，Vercel 上是
+ * vercel.json 的 rewrites，dev 下是 src/proxy.ts。前两者无法 import 本文件，各有一份字面量。
  */
 export const pricingRoute = '/api/pricing';
 

@@ -10,7 +10,7 @@ const config = {
   // dev server 无条件抛错（Next 硬编码行为），dev 体验极差且无法关闭；
   // 非 export 的 dev 下，未枚举路径正常渲染 not-found 页。
   output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
-  // 部署目标（Cloudflare Pages）直接托管静态文件，不走 Next 的图片优化管线
+  // 部署目标（Cloudflare Pages 与 Vercel）直接托管静态文件，不走 Next 的图片优化管线
   images: {
     unoptimized: true,
   },

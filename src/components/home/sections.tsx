@@ -389,7 +389,7 @@ export function StepsSection({ lang, copy }: SectionProps) {
   );
 }
 
-/** 底部深色色带：注册与企业服务，下方是客服联系方式（悬浮客服由全站组件负责） */
+/** 底部深色色带：注册与企业服务，下方是客服联系方式（悬浮客服是 SupportWidget，只在首页加载） */
 export function BottomCta({ shared, copy }: SectionProps) {
   const cta = copy.cta;
   const { email, wechat } = siteConfig.support;

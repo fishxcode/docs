@@ -14,10 +14,13 @@
  *    `Record<Locale, …>`，漏了 tsc 会直接报错；
  * 3. 把 `src/app/en/` 复制为 `src/app/{lang}/`，并把其中的 'en' 换成新语言——
  *    包括 `(docs)/layout.tsx` 里 JSX 写法的 `lang="en"`，漏了这一处页面会用英文界面；
- * 4. `public/_worker.js` 的 LOCALES 加上新语言——它是不经打包的纯 JS，无法 import
- *    本文件。漏了线上该语言的首页与未翻译页面拿不到 Markdown 副本，已翻译页面的
- *    Content-Language 也会标成中文。BCP 47 标签与前缀不同时（如 pt → pt-BR）还要加进
- *    同文件的 CONTENT_LANGUAGE_TAGS；`public/_headers` 里按语言的 Content-Language 规则也照抄一份；
+ * 4. 部署配置里的语言清单——它们都不经打包，无法 import 本文件：
+ *    - `public/_worker.js` 的 LOCALES。漏了 Cloudflare Pages 上该语言的首页与未翻译页面拿不到
+ *      Markdown 副本，已翻译页面的 Content-Language 也会标成中文。BCP 47 标签与前缀不同时
+ *      （如 pt → pt-BR）还要加进同文件的 CONTENT_LANGUAGE_TAGS；
+ *    - `public/_headers` 里按语言的 Content-Language 规则照抄一份；
+ *    - `vercel.json` 里每一处 `en|fr|…` 形式的语言列表都要补上。标签与前缀不同的语言
+ *      像 pt 一样单列 Content-Language 规则，并且不进通用规则的列表；
  * 5. 正文放进 `content/docs/{lang}/`，尚未翻译的页面自动回退显示中文。
  *
  * 其余（sitemap、RSS、llms.txt、hreflang、搜索索引、浏览器语言探测）自动跟随。

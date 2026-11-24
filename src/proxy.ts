@@ -6,7 +6,8 @@ import { DEFAULT_LOCALE, LOCALES } from '@/lib/i18n';
 
 /**
  * 仅 dev 模式生效的定价接口转发与 Markdown 内容协商。静态导出（next build）不运行 proxy，
- * 生产环境由 public/_worker.js 承担同样的职责（旧文档站地址的跳转只在生产环境做）。
+ * 生产环境由 public/_worker.js（Cloudflare Pages）承担同样的职责；Vercel 上由 vercel.json
+ * 完成其中能用路由规则表达的部分，不含 Accept 协商。旧文档站地址的跳转只在生产环境做。
  *
  * 定价接口：/api/pricing 转发到主站同一路径，供模型目录组件在本地调试时取数。
  *

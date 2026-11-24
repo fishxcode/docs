@@ -6,6 +6,10 @@
 #
 # 其余为缓存策略：带内容哈希的 _next/static 资源可长期缓存，
 # 而 HTML 与索引文件要在每次部署后立即更新。
+#
+# Vercel 不读本文件。Vercel 的默认值已经满足的规则（_next/static 长期缓存、其余文件每次
+# 重新验证、常见扩展名的 Content-Type）不用重复，其余规则写在仓库根目录的 vercel.json，
+# 改这里时同步那边。
 
 /static.json/*
   Content-Type: application/json; charset=utf-8

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/feed.xml", "destination": "/rss.xml", "statusCode": 301 },
+    { "source": "/feed.atom", "destination": "/rss.xml", "statusCode": 301 },
+    {
+      "source": "/subscription-plans/:plan(claude|codex|by-number-of-times){.html}?",
+      "destination": "/subscription-plans",
+      "statusCode": 301
+    },
+    {
+      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/subscription-plans/:plan(claude|codex|by-number-of-times){.html}?",
+      "destination": "/:locale/subscription-plans",
+      "statusCode": 301
+    }
+  ],
+  "rewrites": [
+    { "source": "/api/pricing", "destination": "https://fishxcode.com/api/pricing" },
+    { "source": "/:path+.md", "destination": "/llms.mdx/:path+/content.md" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/static.json/:locale",
+      "headers": [{ "key": "Content-Type", "value": "application/json; charset=utf-8" }]
+    },
+    {
+      "source": "/:dir(og|img)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    },
+    {
+      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)?/rss.xml",
+      "headers": [{ "key": "Content-Type", "value": "application/rss+xml; charset=utf-8" }]
+    },
+    {
+      "source": "/:file(llms|llms-full).txt",
+      "headers": [{ "key": "Content-Language", "value": "zh-CN" }]
+    },
+    {
+      "source": "/:locale(en|fr|es|ru|ja|vi|zh-TW)/:file(llms|llms-full).txt",
+      "headers": [{ "key": "Content-Language", "value": ":locale" }]
+    },
+    {
+      "source": "/pt/:file(llms|llms-full).txt",
+      "headers": [{ "key": "Content-Language", "value": "pt-BR" }]
+    },
+    {
+      "source": "/llms.mdx/:path((?!(?:en|fr|es|pt|ru|ja|vi|zh-TW)/).+)",
+      "headers": [{ "key": "Content-Language", "value": "zh-CN" }]
+    },
+    {
+      "source": "/llms.mdx/:locale(en|fr|es|ru|ja|vi|zh-TW)/:path+",
+      "headers": [{ "key": "Content-Language", "value": ":locale" }]
+    },
+    {
+      "source": "/llms.mdx/pt/:path+",
+      "headers": [{ "key": "Content-Language", "value": "pt-BR" }]
+    },
+    {
+      "source": "/:path((?!(?:en|fr|es|pt|ru|ja|vi|zh-TW|llms\\.mdx)/).+).md",
+      "headers": [{ "key": "Content-Language", "value": "zh-CN" }]
+    },
+    {
+      "source": "/:locale(en|fr|es|ru|ja|vi|zh-TW)/:path+.md",
+      "headers": [{ "key": "Content-Language", "value": ":locale" }]
+    },
+    {
+      "source": "/pt/:path+.md",
+      "headers": [{ "key": "Content-Language", "value": "pt-BR" }]
+    }
+  ]
+}
