@@ -120,7 +120,7 @@ Vercel 上没有内容协商，只能用 `.md` 后缀，原因见[部署](#部�
 
 ## 部署
 
-同一份代码发布到两个平台，正式域名 `docs.fishxcode.com`（以及 `doc.fishxcode.com`）指向 Vercel：
+同一份代码发布到两个平台，正式域名 `docs.fishxcode.com` 指向 Vercel：
 
 | 平台 | 发布方式 | 边缘配置 |
 | --- | --- | --- |
@@ -129,13 +129,17 @@ Vercel 上没有内容协商，只能用 `.md` 后缀，原因见[部署](#部�
 
 两边的配置互不通用，改接口转发、地址跳转或响应头时要两边一起改。Vercel 不运行 `_worker.js`，
 也不读 `_headers`、`_routes.json`（这几个文件在 Vercel 上只是普通静态文件）。`vercel.json`
-覆盖了定价接口转发、旧地址跳转、`.md` 后缀与响应头；`Accept: text/markdown` 协商、未翻译页面的
-副本回退在 Vercel 上做不到——Vercel 先查静态文件再应用 rewrites，已存在的页面地址无法按请求头改写。
-Markdown 副本的 `Link` 头在 Vercel 上暂未补回。
+覆盖了定价接口转发、旧地址跳转、`.md` 后缀与响应头（含 Markdown 副本的 `Content-Language` 与
+`Link`）；`Accept: text/markdown` 协商、未翻译页面的副本回退在 Vercel 上做不到——Vercel 先查静态
+文件再应用 rewrites，已存在的页面地址无法按请求头改写。
+
+旧域名 `doc.fishxcode.com` 同样解析到 Vercel，`vercel.json` 把它的全部请求按原路径 308 永久跳转
+到正式域名（`/.well-known/` 除外，留给证书签发的 HTTP 校验）。Cloudflare Pages 不承接这个域名，
+`_worker.js` 里没有对应规则。
 
 站点地址写在 `src/lib/site.ts` 的 `siteConfig.url`，canonical、站点地图、RSS、llms.txt 和
 分享图里的地址都由它生成。整站换域名时改这一处，或在构建时设置环境变量
-`NEXT_PUBLIC_SITE_URL`（完整地址，不带结尾斜杠）。
+`NEXT_PUBLIC_SITE_URL`（完整地址，不带结尾斜杠），并同步修改 `vercel.json` 里旧域名跳转的目标地址。
 
 ### Vercel
 

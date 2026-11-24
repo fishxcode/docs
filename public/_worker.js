@@ -20,10 +20,12 @@
  * src/lib/shared.ts 保持一致（本文件不经打包，无法 import）。
  *
  * Vercel 不运行本文件，也不读 _headers、_routes.json，对应的规则在仓库根目录的 vercel.json：
- * 定价接口转发、旧地址跳转、`.md` 后缀与 Content-Language 都有等价规则，改这里时同步那边。
- * 旧地址跳转在 Vercel 上不带一天的缓存：Vercel 的跳转响应是 max-age=0，同样不会被浏览器无限期缓存。
+ * 定价接口转发、旧地址跳转、`.md` 后缀、副本的 Content-Language 与 Link 都有等价规则（Link 同样
+ * 用相对引用，首页副本同样还原成首页地址），改这里时同步那边。已知差异：旧地址跳转在 Vercel 上
+ * 不带一天的缓存（Vercel 的跳转响应是 max-age=0，同样不会被浏览器无限期缓存）；定价接口在 Vercel
+ * 上原样转发，HEAD 请求会拿到主站的 404（浏览器只发 GET）。
  * Accept 协商与未翻译页面的副本回退在 Vercel 上做不到：Vercel 先查静态文件再应用 rewrites，
- * 已存在的页面地址无法按请求头改写。副本的 Link 头在 Vercel 上暂未补回。
+ * 已存在的页面地址无法按请求头改写。
  */
 
 const PRICING_PATH = '/api/pricing';
