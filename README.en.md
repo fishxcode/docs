@@ -5,7 +5,7 @@
 The FishXCode documentation site, live at <https://docs.fishxcode.com>.
 
 Built with Next.js 16, React 19 and Fumadocs 16, available in nine languages, statically exported to `out/`
-at build time and deployed on Cloudflare Pages. Search runs on per-language local indexes with no external
+at build time and deployed on Vercel and Cloudflare Pages. Search runs on per-language local indexes with no external
 search service, and the site also serves AI clients with Markdown page bodies, llms.txt, RSS and a sitemap.
 
 UI components come from the Base UI flavor of Fumadocs UI (`@fumadocs/base-ui`); `radix-ui` is installed
@@ -32,7 +32,7 @@ The dev server runs at <http://localhost:3000> by default.
 | `pnpm lint` | Run oxlint |
 | `pnpm types:check` | Generate Next route types, then type-check with TypeScript (no build) |
 | `pnpm build` | Statically export to `out/` |
-| `pnpm preview` | Serve `out/` locally with Wrangler, including the same Worker as production (run `pnpm build` first) |
+| `pnpm preview` | Serve `out/` locally with Wrangler, including the same Worker as Cloudflare Pages (run `pnpm build` first) |
 | `pnpm deploy:cf` | Build and publish to the Cloudflare Pages production environment |
 | `pnpm indexnow` | List the sitemap URLs that would be submitted to IndexNow; add `-- --submit` to submit (run `pnpm build` first) |
 
@@ -55,6 +55,7 @@ Two things to know about dependencies:
 | `src/lib/` | Site config, i18n, content loading, search indexes, and generation of RSS, llms files and share images |
 | `public/_worker.js` | The Cloudflare Pages edge Worker: pricing API proxy, redirects and Markdown content negotiation |
 | `public/_routes.json` | Declares which paths go through the Worker and which are served as static assets |
+| `vercel.json` | Vercel routing rules: pricing API proxy, redirects, the `.md` suffix and response headers |
 
 ## Writing docs
 
@@ -99,8 +100,8 @@ for syntax and the [page conventions](https://fumadocs.dev/docs/next/page-conven
   Chinese version, and it is left out of that language's sitemap, RSS, llms.txt and hreflang.
 - Visiting the site root redirects to the browser's language; once a user picks a language manually, that
   choice wins.
-- The full steps for adding a language are in the comment at the top of `src/lib/i18n.ts`. The language list
-  in `public/_worker.js` is not covered by type checking and is the easiest one to miss.
+- The full steps for adding a language are in the comment at the top of `src/lib/i18n.ts`. The language lists
+  in `public/_worker.js` and `vercel.json` are not covered by type checking and are the easiest ones to miss.
 
 ## Search
 
@@ -116,21 +117,48 @@ tokenizer in `src/lib/cjk-tokenizer.ts`, so both sides stay consistent when the 
 | `/llms.txt`, `/{lang}/llms.txt` | The documentation index for that language; `/.well-known/llms.txt` matches `/llms.txt` |
 | `/llms-full.txt`, `/{lang}/llms-full.txt` | The full Markdown body of every page in that language |
 | A page URL plus `.md`, e.g. `/start.md` | That page's Markdown body |
-| A page URL requested with `Accept: text/markdown` | The same, via content negotiation; the home page supports it too |
+| A page URL requested with `Accept: text/markdown` | The same, via content negotiation, including the home page; Cloudflare Pages only |
 | `/rss.xml`, `/{lang}/rss.xml` | Update feeds |
 | `/sitemap.xml`, `/robots.txt`, `/ai.txt` | Sitemap and crawling policy |
 
-Markdown content negotiation has two implementations, and **both must change together**: production uses
+Markdown content negotiation has two implementations, and **both must change together**: Cloudflare Pages uses
 `public/_worker.js` (running at the Cloudflare edge) and local development uses `src/proxy.ts`. They differ in
-one known way: when the requested page has no Markdown copy (for example, an untranslated page), production
-falls back to the Chinese copy or the original page, while local development returns 404.
+one known way: when the requested page has no Markdown copy (for example, an untranslated page), Cloudflare
+Pages falls back to the Chinese copy or the original page, while local development returns 404. Vercel has no
+content negotiation and only supports the `.md` suffix; see [Deployment](#deployment) for why.
 
 ## Deployment
 
-Production is the Cloudflare Pages project `fishxcode-docs`, production branch `main`, with the custom domain
-`docs.fishxcode.com`.
+The same code is published to two platforms, and the custom domain `docs.fishxcode.com` (along with
+`doc.fishxcode.com`) points to Vercel:
 
-### First-time setup
+| Platform | Publishing | Edge configuration |
+| --- | --- | --- |
+| Vercel, project `docs` | The project is connected to this repository and deploys on every push to `main` | `vercel.json` |
+| Cloudflare Pages, project `fishxcode-docs` | `.github/workflows/deploy.yml`, served at `fishxcode-docs.pages.dev` | `public/_worker.js`, `public/_headers`, `public/_routes.json` |
+
+The two configurations are not interchangeable, so change both when you touch the API proxy, redirects or
+response headers. Vercel does not run `_worker.js` and does not read `_headers` or `_routes.json` (on Vercel
+they are plain static files). `vercel.json` covers the pricing API proxy, legacy redirects, the `.md` suffix
+and response headers. `Accept: text/markdown` negotiation and the fallback to the Chinese copy for
+untranslated pages are not possible on Vercel: Vercel checks static files before applying rewrites, so the
+URL of an existing page cannot be rewritten based on request headers. The `Link` header on Markdown copies
+is not set on Vercel yet.
+
+The site URL is `siteConfig.url` in `src/lib/site.ts`; canonical URLs, the sitemap, RSS, llms.txt and share
+images are all built from it. To move the whole site to another domain, change it there or set
+`NEXT_PUBLIC_SITE_URL` (the full URL, without a trailing slash) at build time.
+
+### Vercel
+
+Build settings live in the Vercel project; `vercel.json` only holds routing rules. Mistakes in the rules
+surface only at deploy time, so after editing, parse the file locally with `getTransformedRoutes` from
+[`@vercel/routing-utils`](https://www.npmjs.com/package/@vercel/routing-utils). Vercel uses the same library,
+and it returns an error for any rule it cannot parse.
+
+### Cloudflare Pages
+
+#### First-time setup
 
 1. Create the Pages project. By default wrangler 4 hands new projects over to Workers, which fails for this
    project, so add `--force` to create it as a Pages project directly (needed only when creating it):
@@ -139,7 +167,8 @@ Production is the Cloudflare Pages project `fishxcode-docs`, production branch `
    pnpm exec wrangler pages project create fishxcode-docs --production-branch main --force
    ```
 
-2. In the Cloudflare dashboard, open Workers & Pages → `fishxcode-docs` → Custom domains → Set up a domain and
+2. (The custom domain now points to Vercel; do this only to move the domain back to Cloudflare Pages.) In the
+   Cloudflare dashboard, open Workers & Pages → `fishxcode-docs` → Custom domains → Set up a domain and
    add `docs.fishxcode.com`. When the domain is on Cloudflare, the DNS record is created automatically;
    otherwise add a CNAME at your DNS provider pointing `docs` to `fishxcode-docs.pages.dev`. Add the domain in
    the dashboard first: a CNAME alone, without associating the domain in the dashboard, results in a 522 error.
@@ -147,7 +176,7 @@ Production is the Cloudflare Pages project `fishxcode-docs`, production branch `
    - `CLOUDFLARE_API_TOKEN`: with the Account → Cloudflare Pages → Edit permission
    - `CLOUDFLARE_ACCOUNT_ID`: your Cloudflare account ID
 
-### Publishing
+#### Publishing
 
 - **Automatic**: pushing to `main` runs `.github/workflows/deploy.yml`, which builds and publishes, then
   smoke-tests the deployment: the home page returns HTML, and returns Markdown when requested with
@@ -155,10 +184,6 @@ Production is the Cloudflare Pages project `fishxcode-docs`, production branch `
   Access protects preview deployments.
 - **Manual**: run `pnpm deploy:cf` locally. Run `pnpm exec wrangler login` first, or set the two environment
   variables named above.
-
-The site URL is `siteConfig.url` in `src/lib/site.ts`; canonical URLs, the sitemap, RSS, llms.txt and share
-images are all built from it. To move the whole site to another domain, change it there or set
-`NEXT_PUBLIC_SITE_URL` (the full URL, without a trailing slash) at build time.
 
 `public/_worker.js` and `public/_routes.json` are copied into `out/` with the static files and must be
 included when publishing. Paths listed under `exclude` in `_routes.json` skip the Worker and are served as
