@@ -15,6 +15,7 @@ export function GET() {
     'Content-Signal: ai-train=yes, search=yes, ai-input=yes',
     '',
     `Host: ${new URL(siteConfig.url).host}`,
+    `Agentmap: ${new URL('/.well-known/ai-catalog.json', siteConfig.url).toString()}`,
     `Sitemap: ${new URL('/sitemap.xml', siteConfig.url).toString()}`,
     '',
   ].join('\n');
