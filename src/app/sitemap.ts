@@ -11,6 +11,8 @@ import {
 } from '@/lib/i18n';
 import { siteConfig } from '@/lib/site';
 import { HOME_COPY_SOURCE } from '@/lib/home-copy';
+import statusModels from '@/lib/status-models.json';
+import { FAMILY_ORDER } from '@/lib/status';
 
 /** XML 站点地图不会应用 metadataBase，语言版本地址必须显式转为绝对 URL。 */
 function absoluteAlternates(slugs: readonly string[], locales: readonly Locale[] = LOCALES) {
@@ -68,7 +70,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
   });
 
-  const entries: MetadataRoute.Sitemap = [...homeEntries, ...docPages];
+  /**
+   * 状态页只提供默认语言版本，不参与 hreflang 语言簇：
+   * 总览、11 个厂商系列页与离线清单里的全部模型页都直接生成静态路由。
+   */
+  const statusEntries: MetadataRoute.Sitemap = [
+    { url: new URL('/status', siteConfig.url).toString(), changeFrequency: 'hourly' as const, priority: 0.7 },
+    ...FAMILY_ORDER.map((fam) => ({
+      url: new URL(`/status/${fam}`, siteConfig.url).toString(),
+      changeFrequency: 'hourly' as const,
+      priority: 0.6,
+    })),
+    ...statusModels.map((name) => ({
+      url: new URL(`/status/model/${encodeURIComponent(name)}`, siteConfig.url).toString(),
+      changeFrequency: 'hourly' as const,
+      priority: 0.6,
+    })),
+  ];
+
+  const entries: MetadataRoute.Sitemap = [...homeEntries, ...docPages, ...statusEntries];
 
   // 不同来源可能给出同一地址（仅差结尾斜杠），统一去重
   const seen = new Set<string>();
