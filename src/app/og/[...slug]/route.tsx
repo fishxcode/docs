@@ -1,4 +1,4 @@
-import { getPageImageUrl, getResourcePage, source } from '@/lib/source';
+import { getPageImageUrl, getPageSummary, getResourcePage, source } from '@/lib/source';
 import { DEFAULT_LOCALE, LOCALES, isLocale, isTranslatedPage, type Locale } from '@/lib/i18n';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'takumi-js/response';
@@ -55,7 +55,7 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/[...slug]
   const title = content.data.title;
 
   return new ImageResponse(
-    <OgCard locale={contentLocale} title={title} description={content.data.description} />,
+    <OgCard locale={contentLocale} title={title} description={getPageSummary(content)} />,
     {
       width: 1200,
       height: 630,

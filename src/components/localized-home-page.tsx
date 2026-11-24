@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
@@ -29,7 +30,7 @@ export function createLocalizedHomePage(lang: Locale) {
       const image = getHomeImage(lang);
 
       return {
-        // absolute：根布局的标题模板会拼成「FishXcode 文档 | FishXcode」，首页自带站名无需再套
+        // absolute：首页标题本身已含站名，不再套用根布局的「xxx | 站名」模板
         title: { absolute: copy.title },
         description: copy.description,
         alternates: {
@@ -76,29 +77,50 @@ export function createLocalizedHomePage(lang: Locale) {
           <SiteStructuredData lang={lang} />
           {/* 告诉机器客户端：本站的 llms.txt 在哪（文档页有同样的声明） */}
           <link rel="describedby" type="text/plain" href={localePath(lang, '/llms.txt')} />
-          <HomeLayout {...baseOptions()}>
-            <div className="flex flex-col justify-center flex-1 px-6 py-24">
-              <div className="mx-auto w-full max-w-3xl text-center">
-                <h1 className="text-4xl md:text-5xl font-bold mb-5">{copy.title}</h1>
-                <p className="text-lg text-fd-muted-foreground mb-10">{copy.description}</p>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Link
-                    href={localePath(lang, HOME_START_PATH)}
-                    className="rounded-lg bg-fd-primary px-6 py-3 font-medium text-fd-primary-foreground transition-colors hover:opacity-90"
-                  >
-                    {copy.start}
-                  </Link>
-                  <a
-                    href={siteConfig.productUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="rounded-lg border border-fd-border px-6 py-3 font-medium transition-colors hover:bg-fd-accent"
-                  >
-                    {copy.console}
-                  </a>
+          <HomeLayout {...baseOptions(lang)}>
+            <div className="flex flex-1 flex-col justify-center px-6 py-20">
+              <div className="mx-auto w-full max-w-5xl">
+                <div className="mx-auto max-w-3xl text-center">
+                  <Image
+                    src={siteConfig.logo}
+                    alt=""
+                    width={96}
+                    height={96}
+                    priority
+                    className="mx-auto mb-6 size-24"
+                  />
+                  <h1 className="text-4xl font-bold md:text-5xl">{siteConfig.productName}</h1>
+                  <p className="mt-3 text-2xl font-semibold md:text-3xl">{copy.headline}</p>
+                  <p className="mt-4 text-lg text-fd-muted-foreground">{copy.tagline}</p>
+                  <div className="mt-10 flex flex-wrap justify-center gap-4">
+                    <a
+                      href={siteConfig.links.register}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="rounded-lg bg-fd-primary px-6 py-3 font-medium text-fd-primary-foreground transition-colors hover:opacity-90"
+                    >
+                      {copy.register}
+                    </a>
+                    <Link
+                      href={localePath(lang, HOME_START_PATH)}
+                      className="rounded-lg border border-fd-border px-6 py-3 font-medium transition-colors hover:bg-fd-accent"
+                    >
+                      {copy.docs}
+                    </Link>
+                  </div>
                 </div>
+
+                <ul className="mt-16 grid gap-4 md:grid-cols-3">
+                  {copy.features.map((feature) => (
+                    <li key={feature.title} className="rounded-xl border border-fd-border bg-fd-card p-5">
+                      <h2 className="font-semibold text-fd-card-foreground">{feature.title}</h2>
+                      <p className="mt-2 text-sm text-fd-muted-foreground">{feature.details}</p>
+                    </li>
+                  ))}
+                </ul>
+
                 {lastModified ? (
-                  <p className="mt-16 text-xs text-fd-muted-foreground">
+                  <p className="mt-16 text-center text-xs text-fd-muted-foreground">
                     {copy.updated}
                     {lastModified.slice(0, 10)}
                   </p>

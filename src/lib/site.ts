@@ -9,25 +9,36 @@ export const siteConfig = {
    * NEXT_PUBLIC_SITE_URL。它不是产品主站——主站见下方的 productUrl。
    */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://docs.fishxcode.com',
-  name: 'FishXcode 文档',
+  name: 'FishXCode 文档',
   /** 产品主站，用于跳转控制台、注册等 */
   productUrl: 'https://fishxcode.com',
-  productName: 'FishXcode',
-  description:
-    'FishXcode 是面向开发者的 AI API 中转聚合平台。一个 API Key 统一调用 Claude、GPT、Gemini 等全球主流大模型，兼容 OpenAI 协议，无需海外账号。',
+  productName: 'FishXCode',
+  /** 品牌 logo（public 下的静态文件），导航栏与首页共用；站点图标由 src/app 下的 icon 文件生成 */
+  logo: '/img/logo.svg',
+  description: 'AI Coding 中转站 - 支持 Claude、Codex 模型在多种平台使用',
+  /**
+   * 导航栏的站外入口，地址与旧文档站一致。注册链接带推广码，
+   * 改动前先确认推广归属。
+   */
+  links: {
+    console: 'https://fishxcode.com/console',
+    status: 'https://status.fishxcode.com',
+    quota: 'https://api-key-tool.fishxcode.com',
+    register: 'https://fishxcode.com/register?aff=9CTW',
+  },
+  /** 官方社交账号（来自旧文档站的 socialLinks），结构化数据的 sameAs 用 */
+  socials: ['https://x.com/fishxcode', 'https://github.com/fishxcode'],
   keywords: [
-    'FishXcode',
-    'AI API',
+    'FishXCode',
+    'AI Coding 中转站',
     'API 中转',
-    'API 聚合',
     'Claude API',
     'OpenAI API',
     'Anthropic API',
-    'Gemini API',
-    '大模型 API',
-    'LLM API',
     'Claude Code 接入',
+    'Codex 接入',
     'Cursor 配置',
+    'LLM API',
   ],
   locale: 'zh_CN',
   lang: 'zh-CN',

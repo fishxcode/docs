@@ -12,8 +12,10 @@
     "/llms.txt",
     "/llms-full.txt",
     "/.well-known/*",
+    "/img/*",
+    "/sw.js",
     "/favicon.ico",
-    "/icon.png",
+    "/icon.svg",
     "/apple-icon.png"
   ]
 }

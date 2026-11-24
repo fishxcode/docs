@@ -5,6 +5,7 @@ import { icons, type LucideIcon } from 'lucide-react';
 import { loader, type LoaderPlugin } from 'fumadocs-core/source';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
+import { z } from 'zod';
 import { siteConfig } from './site';
 import { machineResourceTypes } from './machine-resources';
 import {
@@ -35,7 +36,13 @@ const docs = defineDocs({
   // 值必须与 shared.ts 的 contentDir 一致——git 日期与「在 GitHub 上编辑」用的是那一处。
   dir: 'content/docs',
   docs: {
-    schema: pageSchema,
+    schema: pageSchema.extend({
+      /**
+       * 导航里显示的短标题（侧边栏、上一页/下一页、面包屑、页脚），缺省时用 title。
+       * 用于标题较长的页面：标题「在 Claude Desktop 中使用 FishXCode」，导航只写「Claude Desktop」。
+       */
+      navTitle: z.string().trim().min(1).optional(),
+    }),
     postprocess: {
       // Markdown 副本由语法树序列化而来（见 llm-markdown.ts），需要把语法树带进产物；
       // 源文件的行列坐标副本用不到，去掉可以减小产物体积。
@@ -98,6 +105,25 @@ function mixedIconsPlugin(): LoaderPlugin {
   };
 }
 
+/**
+ * 页面节点名改用 frontmatter 的 navTitle。页树只服务导航，页面标题（H1、<title>、
+ * 搜索结果、llms.txt）仍取 title，不受影响。
+ */
+function navTitlePlugin(): LoaderPlugin {
+  return {
+    name: 'fishxcode:nav-title',
+    transformPageTree: {
+      file(node, filePath) {
+        const file = filePath ? this.storage.read(filePath) : undefined;
+        if (file?.format === 'page' && 'navTitle' in file.data && typeof file.data.navTitle === 'string') {
+          node.name = file.data.navTitle;
+        }
+        return node;
+      },
+    },
+  };
+}
+
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
   baseUrl: docsRoute,
@@ -112,8 +138,50 @@ export const source = loader({
     parser: 'dir',
     fallbackLanguage: DEFAULT_LOCALE,
   },
-  plugins: [mixedIconsPlugin()],
+  plugins: [navTitlePlugin(), mixedIconsPlugin()],
 });
+
+/**
+ * 自动摘要的长度：至少凑够 MIN 个字符（只有一句「生效日期：…」说明不了一页），
+ * 最多 MAX 个字符（与旧文档站的自动描述一致）。
+ */
+const SUMMARY_MIN_LENGTH = 60;
+const SUMMARY_MAX_LENGTH = 160;
+
+/**
+ * 结构化数据里的正文保留了少量 Markdown 记号：去掉引用块的 >、加粗与行内代码的标记。
+ * 单个 * 与 _ 不动——正文里常见 ANTHROPIC_BASE_URL 这类标识符。
+ */
+function plainText(markdown: string): string {
+  return markdown
+    .replace(/^\s*>\s?/gm, '')
+    .replace(/\*\*|__|`/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * 页面摘要：meta description、分享卡片、RSS、llms.txt 与结构化数据共用。
+ *
+ * 优先用 frontmatter 的 description；没写的页面从正文开头按段累积文字——旧文档站对
+ * 这类页面也是这样自动生成描述的，迁移后搜索结果里的摘要不至于退化成标题。
+ * 只供机器与分享使用，页面上不额外显示（正文开头本来就是这些话）。
+ */
+export function getPageSummary(page: DocPage): string {
+  const description = page.data.description?.trim();
+  if (description) return description;
+
+  let text = '';
+  for (const { content } of page.data.structuredData.contents) {
+    const block = plainText(content);
+    // 表格以 Markdown 表格文本的形式出现，读起来不是一句话，跳过
+    if (!block || block.startsWith('|')) continue;
+    text = text ? `${text} ${block}` : block;
+    if (text.length >= SUMMARY_MIN_LENGTH) break;
+  }
+  if (!text) return page.data.title;
+  return text.length > SUMMARY_MAX_LENGTH ? `${text.slice(0, SUMMARY_MAX_LENGTH - 1).trimEnd()}…` : text;
+}
 
 /** 资源路径段：非默认语言带语言前缀，其后与页面 slug 一致，以文件名收尾。 */
 function resourceSegments(page: DocPage, filename: string): string[] {
@@ -194,7 +262,7 @@ export function docPageMetadata(
 ): Metadata {
   const contentLocale = isTranslatedPage(page, lang) ? lang : DEFAULT_LOCALE;
   const canonical = getDocCanonicalUrl(page, lang);
-  const description = page.data.description?.trim() || page.data.title;
+  const description = getPageSummary(page);
   const title = `${page.data.title} | ${siteConfig.productName}`;
   const image = {
     url: getPageImageUrl(getResourcePage(page, lang)).url,

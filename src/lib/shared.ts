@@ -1,5 +1,3 @@
-export const appName = 'FishXcode';
-
 /**
  * 文档挂在站点根路径下（如 `/quickstart`），不再是 `/docs/quickstart`。
  * 改这里要同步确认 `src/app/(docs)/` 的目录位置，两处必须一致。
@@ -38,6 +36,13 @@ export function joinRoute(route: string, segments: readonly string[]): string {
  * public/_worker.js 没有打包步骤、无法 import 本文件，那里有一份同名常量。
  */
 export const homeSlug = 'index';
+
+/**
+ * 模型目录（ModelCatalog）在浏览器里请求的同源定价接口。主站的同名接口不带 CORS 头，
+ * 跨域取不到，由 public/_worker.js（生产）与 src/proxy.ts（dev）原样转发到主站同一路径。
+ * public/_worker.js 无法 import 本文件，那里有一份同名常量。
+ */
+export const pricingRoute = '/api/pricing';
 
 export const gitConfig = {
   user: 'fishxcode',

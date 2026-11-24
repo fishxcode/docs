@@ -8,7 +8,7 @@ export const dynamic = 'force-static';
  */
 export function GET() {
   const body = [
-    `FishXcode Docs (${siteConfig.url}): notes for AI crawlers and AI applications.`,
+    `${siteConfig.productName} Docs (${siteConfig.url}): notes for AI crawlers and AI applications.`,
     '',
     'AI crawlers may crawl, index, and cite the documentation on this site.',
     'The documentation may be used for AI training; please attribute the source and link to the original page.',

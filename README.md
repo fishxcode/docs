@@ -1,6 +1,8 @@
-# FishXcode 文档
+# FishXCode 文档
 
-FishXcode 的文档站，线上地址 <https://docs.fishxcode.com>。
+FishXCode 的文档站，线上地址 <https://docs.fishxcode.com>。正文迁移自旧文档站
+（VitePress，仓库 [fishxcode/fishxcode](https://github.com/fishxcode/fishxcode)），
+现有简体中文、English、Français 三种语言的正文，其余语言回退显示中文。
 
 基于 Next.js 16、React 19 与 Fumadocs 16，支持七种语言，构建时静态导出到 `out/`，
 部署在 Cloudflare Pages。站内搜索使用按语言生成的本地索引，不依赖外部搜索服务；
@@ -47,7 +49,7 @@ pnpm dev
 | `src/app/` | 路由。`(home)`、`(docs)` 是简体中文，`en/`、`fr/` 等目录是各语言的薄壳 |
 | `src/components/` | 页面与布局的共用实现（`localized-*.tsx`），各语言的薄壳只负责传入语言 |
 | `src/lib/` | 站点配置、国际化、内容加载、搜索索引，以及 RSS、llms、分享图的生成 |
-| `public/_worker.js` | Cloudflare Pages 的边缘 Worker，负责 Markdown 内容协商 |
+| `public/_worker.js` | Cloudflare Pages 的边缘 Worker：定价接口转发、旧站地址跳转、Markdown 内容协商 |
 | `public/_routes.json` | 声明哪些路径经过 Worker，哪些直接按静态资源返回 |
 
 ## 写文档
@@ -59,6 +61,12 @@ pnpm dev
 
 - 站内链接写站内绝对路径，其余语言带上语言前缀，例如英文页面里写 `/en/quickstart`。
 - `content/docs/` 根目录不要放 `index.mdx`：它的地址是 `/`，会和首页冲突。
+- 标题较长时用 `navTitle` 指定侧边栏里的短标题，例如标题「在 Cursor 中接入 FishXCode」、
+  `navTitle: Cursor`。各语言目录下的 `meta.json` 决定侧边栏的分组与顺序。
+- 提示块用 `<Callout type="idea|info|warn|error" title="…">`，折叠块用
+  `<Accordions type="single"><Accordion title="…">`，多平台命令写成相邻的代码块并加
+  `tab="标签"`（如 ```` ```bash tab="macOS" ````），会自动合成一组分页。
+- `<ModelCatalog />` 是实时模型目录，数据来自主站的定价接口。
 
 ## 多语言
 
@@ -91,7 +99,7 @@ pnpm dev
 | --- | --- |
 | `/llms.txt`、`/{lang}/llms.txt` | 该语言的文档索引；`/.well-known/llms.txt` 与 `/llms.txt` 相同 |
 | `/llms-full.txt`、`/{lang}/llms-full.txt` | 该语言全部文档的 Markdown 正文 |
-| 页面地址加 `.md`，如 `/introduction.md` | 该页的 Markdown 正文 |
+| 页面地址加 `.md`，如 `/start.md` | 该页的 Markdown 正文 |
 | 页面地址，请求头带 `Accept: text/markdown` | 同上，由内容协商返回；首页同样支持 |
 | `/rss.xml`、`/{lang}/rss.xml` | 更新订阅 |
 | `/sitemap.xml`、`/robots.txt`、`/ai.txt` | 站点地图与抓取声明 |

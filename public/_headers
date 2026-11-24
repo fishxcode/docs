@@ -11,15 +11,22 @@
   Content-Type: application/json; charset=utf-8
   Cache-Control: public, max-age=0, must-revalidate
 
-# 社交分享图（首页 / 状态页固定一张，文档页每篇一张）。
+# 社交分享图（各语言首页一张，文档页每篇一张）。
 #
-# 这些图是构建期渲染好的静态文件，路径由 slug 决定、每次部署才重新生成，
-# 内容不会在部署之间变化，因此可以长缓存。此前误设为 max-age=0 且不带
-# /og/* 规则，导致每个爬虫每次抓取都要回源（该站源站单次 4–40s），
-# 微信/Slack 这类短超时抓取器直接拿不到图，卡片只剩标题和域名。
+# 构建期渲染好的静态文件，只随部署更新，可以缓存一天。分享卡片的抓取器
+# （微信、Slack 等）超时很短，能从边缘缓存直接拿到图，卡片才不会只剩标题。
 /og/*
   Content-Type: image/png
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# 文档截图（自旧文档站迁来，正文里的引用在构建期另行打包为带哈希的资源，
+# 这里的原地址供站外引用）。文件名固定，缓存一天。
+/img/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# 自毁版 Service Worker（见 public/sw.js）：浏览器检查更新时必须拿到最新内容
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
 
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable

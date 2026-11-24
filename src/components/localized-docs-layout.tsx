@@ -25,7 +25,7 @@ export function LocalizedDocsLayout({ lang, children }: { lang: Locale; children
           它的 children 会被渲染进「侧边栏 / 正文 / 目录」的多列网格 */}
       <div className="flex flex-1 flex-col">
         <div className="flex-1">
-          <DocsLayout tree={source.getPageTree(lang)} {...baseOptions()}>
+          <DocsLayout tree={source.getPageTree(lang)} {...baseOptions(lang)}>
             {children}
           </DocsLayout>
         </div>
