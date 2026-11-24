@@ -1,4 +1,4 @@
-import { getLLMText, getPageMarkdownUrl, source } from './source';
+import { getLLMText, getPageMarkdownUrl, getPageSummary, source } from './source';
 import { HOME_COPY, HOME_START_PATH } from './home-copy';
 import { SITE_COPY } from './site-copy';
 import { docsContentRoute, homeSlug, joinRoute } from './shared';
@@ -29,49 +29,49 @@ const COPY: Record<
   zh: {
     title: `${siteConfig.productName} 文档`,
     intro:
-      'FishXcode 是面向开发者的 AI API 中转聚合平台：一个 API Key 统一调用 Claude、GPT、Gemini 等主流大模型，兼容 OpenAI 协议。本索引列出全部文档页的 Markdown 副本。',
+      `${siteConfig.productName} 是 AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用。本索引列出全部文档页的 Markdown 副本。`,
     fullIntro: '下方是全部文档页的完整 Markdown 正文。',
     indexLabel: '索引',
   },
   en: {
     title: `${siteConfig.productName} Documentation`,
     intro:
-      'FishXcode is an AI API gateway for developers: one API key for Claude, GPT, Gemini and more, OpenAI-compatible. This index lists a Markdown copy of every docs page.',
+      `${siteConfig.productName} is an AI Coding relay for using Claude and Codex models across multiple platforms. This index lists a Markdown copy of every docs page.`,
     fullIntro: 'The full Markdown body of every docs page follows.',
     indexLabel: 'Index',
   },
   fr: {
     title: `${siteConfig.productName} Documentation`,
     intro:
-      "FishXcode est une passerelle d'API IA pour développeurs : une seule clé API pour Claude, GPT, Gemini et plus, compatible OpenAI. Cet index répertorie une copie Markdown de chaque page.",
+      `${siteConfig.productName} est un relais AI Coding pour utiliser les modèles Claude et Codex sur plusieurs plateformes. Cet index répertorie une copie Markdown de chaque page.`,
     fullIntro: 'Le corps Markdown complet de chaque page de documentation suit.',
     indexLabel: 'Index',
   },
   ru: {
     title: `Документация ${siteConfig.productName}`,
     intro:
-      'FishXcode — шлюз AI API для разработчиков: один API-ключ для Claude, GPT, Gemini и других, совместимость с OpenAI. В этом индексе перечислены Markdown-копии всех страниц.',
+      `${siteConfig.productName} — шлюз для AI Coding: модели Claude и Codex на разных платформах. В этом индексе перечислены Markdown-копии всех страниц.`,
     fullIntro: 'Ниже — полный Markdown-текст каждой страницы документации.',
     indexLabel: 'Индекс',
   },
   ja: {
     title: `${siteConfig.productName} ドキュメント`,
     intro:
-      'FishXcode は開発者向け AI API ゲートウェイ：API キー 1 つで Claude、GPT、Gemini などの主要モデルを利用可能、OpenAI 互換。このインデックスは全ドキュメントページの Markdown コピーを列挙します。',
+      `${siteConfig.productName} は AI Coding 中継サービスです。Claude・Codex のモデルをさまざまなプラットフォームで利用できます。このインデックスは全ドキュメントページの Markdown コピーを列挙します。`,
     fullIntro: '以下に各ドキュメントページの完全な Markdown 本文を示します。',
     indexLabel: 'インデックス',
   },
   vi: {
     title: `Tài liệu ${siteConfig.productName}`,
     intro:
-      'FishXcode là cổng API AI dành cho lập trình viên: một API key cho Claude, GPT, Gemini và nhiều hơn nữa, tương thích OpenAI. Chỉ mục này liệt kê bản sao Markdown của mọi trang tài liệu.',
+      `${siteConfig.productName} là trạm trung chuyển AI Coding, giúp dùng các mô hình Claude và Codex trên nhiều nền tảng. Chỉ mục này liệt kê bản sao Markdown của mọi trang tài liệu.`,
     fullIntro: 'Nội dung Markdown đầy đủ của mỗi trang tài liệu nằm bên dưới.',
     indexLabel: 'Chỉ mục',
   },
   'zh-TW': {
     title: `${siteConfig.productName} 文件`,
     intro:
-      'FishXcode 是面向開發者的 AI API 中轉聚合平台：一個 API Key 統一呼叫 Claude、GPT、Gemini 等主流大模型，相容 OpenAI 協議。本索引列出全部文件頁的 Markdown 副本。',
+      `${siteConfig.productName} 是 AI Coding 中轉站，支援 Claude、Codex 模型在多種平台使用。本索引列出全部文件頁的 Markdown 副本。`,
     fullIntro: '下方是全部文件頁的完整 Markdown 正文。',
     indexLabel: '索引',
   },
@@ -96,7 +96,9 @@ function absoluteUrl(path: string): string {
 
 /** llms 索引与首页副本共用的页面条目：标题链到该页的 Markdown 副本，后接一句描述。 */
 function pageEntry(page: (typeof source)['$inferPage']): string {
-  const description = page.data.description ? `: ${markdownText(page.data.description)}` : '';
+  const summary = getPageSummary(page);
+  // 摘要在页面既无描述、正文又没有文字段落时会退回标题，这时不必再重复一遍
+  const description = summary === page.data.title ? '' : `: ${markdownText(summary)}`;
   return `- [${markdownText(page.data.title)}](${absoluteUrl(getPageMarkdownUrl(page).url)})${description}`;
 }
 
@@ -190,8 +192,8 @@ export function getHomeMarkdownUrl(lang: Locale) {
  * 映射规则见 public/_worker.js 与 src/proxy.ts）。
  *
  * 首页是 React 组件而不是 .mdx 文档，进不了 docs loader，所以副本在这里按
- * 首页的可见文案拼装：标题、描述、两个按钮，再附该语言的文档页清单与机器
- * 可读资源。文案同源于 home-copy.ts，页面改了副本自动跟随。
+ * 首页的可见文案拼装：标题、描述、两个按钮、特性卡片，再附该语言的文档页清单
+ * 与机器可读资源。文案同源于 home-copy.ts，页面改了副本自动跟随。
  */
 export function createHomeMarkdown(lang: Locale): string {
   const copy = HOME_COPY[lang];
@@ -204,8 +206,10 @@ export function createHomeMarkdown(lang: Locale): string {
     `> ${copy.description}`,
     '',
     // 与首页的两个按钮一一对应
-    link(copy.start, HOME_START_PATH),
-    `- [${copy.console}](${siteConfig.productUrl})`,
+    `- [${copy.register}](${siteConfig.links.register})`,
+    link(copy.docs, HOME_START_PATH),
+    '',
+    ...copy.features.map((feature) => `- **${feature.title}** — ${feature.details}`),
     '',
     `## ${SITE_COPY[lang].docs}`,
     '',

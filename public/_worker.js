@@ -1,18 +1,43 @@
 /**
- * Cloudflare Pages 边缘 Worker：为静态导出的站点提供 Markdown 内容协商。
+ * Cloudflare Pages 边缘 Worker。静态导出没有服务端，下面这些只能在这一层完成：
  *
- * Next 静态导出不运行 proxy，页面的 HTML 与 Markdown 副本是两份独立静态文件，
- * 「同一 URL 按 Accept 返回不同表示」只能在这一层完成：
- * - 客户端更偏好 Markdown（Accept 协商）→ 改取 `/llms.mdx/<页面路径>/content.md`
- * - 首页没有源文件，映射到保留 slug：`/llms.mdx/<lang>/index/content.md`
- * - `.md` 便捷后缀（/introduction.md）→ 同一副本，不看 Accept
- * - 未翻译的回退页没有自己语言的副本 → 取默认语言的副本（与页面渲染的内容一致）
- * - Markdown 副本本体 → 补回静态导出丢失的 Content-Language / Link 头
+ * 1. 定价接口转发：模型目录组件请求同源 `/api/pricing`，这里原样转发到主站同一路径
+ *    （主站接口不带 CORS 头，浏览器跨域取不到）。dev 下由 src/proxy.ts 转发。
+ * 2. 旧文档站（VitePress）的地址兼容：订阅地址 /feed.xml、/feed.atom 永久转到 /rss.xml；
+ *    本站暂未提供的西班牙语、葡萄牙语页面临时转到同一路径的英文页。只在生产环境生效。
+ * 3. Markdown 内容协商——页面的 HTML 与 Markdown 副本是两份独立静态文件，
+ *    「同一 URL 按 Accept 返回不同表示」：
+ *    - 客户端更偏好 Markdown（Accept 协商）→ 改取 `/llms.mdx/<页面路径>/content.md`
+ *    - 首页没有源文件，映射到保留 slug：`/llms.mdx/<lang>/index/content.md`
+ *    - `.md` 便捷后缀（/start.md）→ 同一副本，不看 Accept
+ *    - 未翻译的回退页没有自己语言的副本 → 取默认语言的副本（与页面渲染的内容一致）
+ *    - Markdown 副本本体 → 补回静态导出丢失的 Content-Language / Link 头
  *
- * 映射规则与协商判定必须与 src/proxy.ts（dev 生效）保持一致，两处需同步修改：
+ * 协商的映射规则与判定必须与 src/proxy.ts（dev 生效）保持一致，两处需同步修改：
  * 只处理读请求、忽略路径结尾的斜杠、带扩展名的文件不参与协商（`.md` 后缀除外）。
- * LOCALES 与 src/lib/i18n.ts 的非默认语言保持一致，HOME_SLUG 与 src/lib/shared.ts 保持一致。
+ * LOCALES 与 src/lib/i18n.ts 的非默认语言保持一致，HOME_SLUG、PRICING_PATH 与
+ * src/lib/shared.ts 保持一致（本文件不经打包，无法 import）。
  */
+
+const PRICING_PATH = '/api/pricing';
+const PRICING_UPSTREAM = 'https://fishxcode.com/api/pricing';
+/** 回传给浏览器的上游响应头：只放行与内容相关的几项，Set-Cookie、cf-* 等一律不带 */
+const PRICING_RESPONSE_HEADERS = ['content-type', 'cache-control', 'etag', 'last-modified'];
+
+/** 旧站订阅地址 → 新地址（永久） */
+const LEGACY_PERMANENT_REDIRECTS = new Map([
+  ['/feed.xml', '/rss.xml'],
+  ['/feed.atom', '/rss.xml'],
+]);
+/**
+ * 旧站有、本站暂未提供的语言 → 临时改看的语言（302）。将来补上这些语言时删掉对应条目，
+ * 用 302 而不是 301，是为了不让浏览器永久缓存这次跳转。
+ */
+const LEGACY_LOCALE_FALLBACKS = new Map([
+  ['es', 'en'],
+  ['pt', 'en'],
+]);
+
 const CONTENT_ROUTE = '/llms.mdx';
 const LOCALES = new Set(['en', 'fr', 'ru', 'ja', 'vi', 'zh-TW']);
 /**
@@ -62,8 +87,8 @@ function acceptsMarkdown(request) {
 /**
  * 页面 URL → Markdown 副本路径。副本与页面路径一一镜像，只是挂到 /llms.mdx
  * 下并以 content.md 结尾，语言前缀原样保留：
- *   /introduction      → /llms.mdx/introduction/content.md
- *   /en/introduction   → /llms.mdx/en/introduction/content.md
+ *   /start             → /llms.mdx/start/content.md
+ *   /en/start          → /llms.mdx/en/start/content.md
  * 首页没有对应的源文件，映射到保留 slug：
  *   /                  → /llms.mdx/index/content.md
  *   /en                → /llms.mdx/en/index/content.md
@@ -73,7 +98,7 @@ function acceptsMarkdown(request) {
 function markdownPath(pathname) {
   if (pathname === CONTENT_ROUTE || pathname.startsWith(`${CONTENT_ROUTE}/`)) return null;
 
-  // 便捷后缀：/introduction.md、/en/introduction.md、/index.md
+  // 便捷后缀：/start.md、/en/start.md、/index.md
   if (pathname.endsWith('.md')) return `${CONTENT_ROUTE}${pathname.slice(0, -3)}/content.md`;
 
   const segments = pathname.split('/').filter(Boolean);
@@ -173,8 +198,65 @@ async function fetchMarkdown(env, request, url, target) {
   );
 }
 
+/**
+ * 定价接口转发：只允许读请求，查询串原样带上；上游连不上时返回 502 JSON，
+ * 让页面上的模型目录显示「加载失败 / 重试」，而不是拿到一个 HTML 错误页。
+ */
+async function proxyPricing(request, url) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD' } });
+  }
+
+  const upstreamUrl = new URL(PRICING_UPSTREAM);
+  upstreamUrl.search = url.search;
+
+  let upstream;
+  try {
+    // 主站接口只接受 GET（HEAD 会得到 404）；HEAD 照样向上游发 GET，回给浏览器时去掉响应体
+    upstream = await fetch(upstreamUrl, { headers: { Accept: 'application/json' } });
+  } catch {
+    return Response.json(
+      { success: false, message: 'pricing upstream unavailable' },
+      { status: 502, headers: { 'Cache-Control': 'no-store' } },
+    );
+  }
+
+  const headers = new Headers();
+  for (const name of PRICING_RESPONSE_HEADERS) {
+    const value = upstream.headers.get(name);
+    if (value) headers.set(name, value);
+  }
+  // 价格随时可能变化：上游没给缓存策略时，也不让浏览器与 CDN 缓存
+  if (!headers.has('Cache-Control')) headers.set('Cache-Control', 'no-store');
+
+  if (request.method === 'HEAD') {
+    await upstream.body?.cancel();
+    return new Response(null, { status: upstream.status, headers });
+  }
+  return new Response(upstream.body, { status: upstream.status, headers });
+}
+
+/** 旧文档站地址的跳转目标；不属于旧地址时返回 null */
+function legacyRedirect(url) {
+  const permanent = LEGACY_PERMANENT_REDIRECTS.get(url.pathname);
+  if (permanent) return Response.redirect(new URL(`${permanent}${url.search}`, url).toString(), 301);
+
+  const [, first, ...rest] = url.pathname.split('/');
+  const fallback = LEGACY_LOCALE_FALLBACKS.get(first);
+  if (fallback) {
+    return Response.redirect(new URL(`/${[fallback, ...rest].join('/')}${url.search}`, url).toString(), 302);
+  }
+  return null;
+}
+
 async function handle(request, env) {
   const url = new URL(request.url);
+
+  if (url.pathname === PRICING_PATH) return proxyPricing(request, url);
+
+  const redirect = legacyRedirect(url);
+  if (redirect) return redirect;
+
   // 映射判定统一忽略结尾斜杠（与 src/proxy.ts 一致）；交给静态资源的仍是原始请求
   const pathname = url.pathname.replace(/\/+$/, '') || '/';
 

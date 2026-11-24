@@ -70,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entries: MetadataRoute.Sitemap = [...homeEntries, ...docPages];
 
-  // 存在 / 与 /introduction 等指向同一内容的情况，统一去重
+  // 不同来源可能给出同一地址（仅差结尾斜杠），统一去重
   const seen = new Set<string>();
   return entries.filter((entry) => {
     const normalized = entry.url.replace(/\/$/, '');

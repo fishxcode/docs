@@ -5,7 +5,13 @@ import {
   localePath,
   type Locale,
 } from '@/lib/i18n';
-import { getDocCanonicalUrl, getPageImageUrl, getResourcePage, source } from '@/lib/source';
+import {
+  getDocCanonicalUrl,
+  getPageImageUrl,
+  getPageSummary,
+  getResourcePage,
+  source,
+} from '@/lib/source';
 import { getContentDates } from '@/lib/content-dates';
 import { siteConfig } from '@/lib/site';
 import { HOME_COPY } from '@/lib/home-copy';
@@ -20,8 +26,8 @@ import { HOME_COPY } from '@/lib/home-copy';
  *   HowTo）：只有文档页输出，抽不到结构就整节点省略，绝不凭空编造。
  *
  * 静态导出下所有值在构建期算好，不存在运行时请求。
- * 只输出能够从本仓库确认的事实：没有 logo 素材、社交账号、联系邮箱与文档许可，
- * 这些节点一律不写，等确认后再补。
+ * 只输出能够从本仓库确认的事实：logo 与社交账号来自旧文档站；联系邮箱与文档许可
+ * 尚无确认来源，一律不写，等确认后再补。
  */
 
 type DocPage = (typeof source)['$inferPage'];
@@ -65,6 +71,9 @@ export function organizationNode() {
     '@id': ORGANIZATION_ID,
     name: siteConfig.productName,
     url: siteConfig.productUrl,
+    // 用位图版图标（src/app/apple-icon.png，180×180）：部分消费方不接受 SVG 作为组织 logo
+    logo: absolute('/apple-icon.png'),
+    sameAs: [...siteConfig.socials],
     description: HOME_COPY[DEFAULT_LOCALE].description,
   };
 }
@@ -257,7 +266,7 @@ export function docGraph(page: DocPage, lang: Locale): Array<Record<string, unkn
   const contentLocale = contentLocaleOf(page, lang);
   const canonical = absolute(getDocCanonicalUrl(page, lang));
   const homeUrl = absolute(localePath(contentLocale, '/'));
-  const description = page.data.description?.trim() || page.data.title;
+  const description = getPageSummary(page);
 
   const breadcrumbs: Array<{ name: string; url: string }> = [
     { name: HOME_COPY[contentLocale].title, url: homeUrl },

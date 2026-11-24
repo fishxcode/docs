@@ -177,7 +177,7 @@ export function OgCard({ locale, title, description, section }: OgCardProps) {
         color: COLORS.title,
       }}
     >
-      <p style={sectionStyle}>{section ?? 'FishXcode Docs'}</p>
+      <p style={sectionStyle}>{section ?? `${siteConfig.productName} Docs`}</p>
       <p style={titleStyle}>{title}</p>
       {description ? (
         <p style={descriptionStyle}>{truncate(description, DESCRIPTION_MAX)}</p>
