@@ -3,13 +3,15 @@ import { isMarkdownPreferred } from 'fumadocs-core/negotiation';
 import { docsContentRoute, homeSlug, pricingRoute } from '@/lib/shared';
 import { siteConfig } from '@/lib/site';
 import { DEFAULT_LOCALE, LOCALES } from '@/lib/i18n';
+import { STATUS_DATA_ROUTES } from '@/lib/status';
 
 /**
- * 仅 dev 模式生效的定价接口转发与 Markdown 内容协商。静态导出（next build）不运行 proxy，
+ * 仅 dev 模式生效的公开接口转发与 Markdown 内容协商。静态导出（next build）不运行 proxy，
  * 生产环境由 public/_worker.js（Cloudflare Pages）承担同样的职责；Vercel 上由 vercel.json
  * 完成其中能用路由规则表达的部分，不含 Accept 协商。旧文档站地址的跳转只在生产环境做。
  *
- * 定价接口：/api/pricing 转发到主站同一路径，供模型目录组件在本地调试时取数。
+ * 公开接口：/api/pricing 与 /api/status-data/* 转发到固定上游白名单，供模型目录与
+ * 状态页在本地调试时取数。上游都不带 CORS 头，浏览器不能直接跨域读取。
  *
  * 内容协商两处的规则一一对应，修改任意一处都必须同步另一处：
  * 1. Markdown 副本本体（/llms.mdx/...）直接放行；
@@ -59,17 +61,60 @@ function markdownPath(pathname: string): string | null {
   return `${docsContentRoute}/${segments.join('/')}/content.md`;
 }
 
-export default function proxy(request: NextRequest) {
-  // 与 _worker.js 的生产实现一致：只转发读请求，查询串原样带上
-  if (request.nextUrl.pathname === pricingRoute) {
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
-      return new NextResponse(null, { status: 405, headers: { Allow: 'GET, HEAD' } });
-    }
-    return NextResponse.rewrite(new URL(`${pricingRoute}${request.nextUrl.search}`, siteConfig.productUrl));
-  }
+/**
+ * 主站 iframe 是 sandbox opaque origin：iframe 里请求本站公开接口也带
+ * Origin: null，必须显式允许跨域读取。生产环境的等价规则在 _worker.js 与
+ * vercel.json，三处必须保持同步。
+ */
+const PUBLIC_API_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+  'Access-Control-Allow-Headers': 'Accept',
+  'Cache-Control': 'public, max-age=60, stale-while-revalidate=60',
+  Vary: 'Origin',
+};
 
-  // 结尾斜杠不参与映射判定（与 _worker.js 一致）
+const STATUS_UPSTREAMS = new Map<string, string>([
+  [STATUS_DATA_ROUTES.overview, 'https://status.fishxcode.com/api/v1/status'],
+  [STATUS_DATA_ROUTES.perfSummary, 'https://fishxcode.com/api/perf-metrics/summary'],
+  [STATUS_DATA_ROUTES.perfModel, 'https://fishxcode.com/api/perf-metrics'],
+  [STATUS_DATA_ROUTES.pricing, `${siteConfig.productUrl}${pricingRoute}`],
+]);
+
+function publicUpstream(pathname: string, searchParams: URLSearchParams): URL | null {
+  if (pathname === pricingRoute) return new URL(`${pricingRoute}${searchParams.size ? `?${searchParams}` : ''}`, siteConfig.productUrl);
+  const upstream = STATUS_UPSTREAMS.get(pathname);
+  if (!upstream) return null;
+
+  const target = new URL(upstream);
+  for (const key of ['hours', 'model']) {
+    const value = searchParams.get(key);
+    if (value !== null) target.searchParams.set(key, value);
+  }
+  if (upstream.includes('/api/perf-metrics') && !target.searchParams.has('hours')) {
+    target.searchParams.set('hours', '24');
+  }
+  return target;
+}
+
+function rewritePublicApi(request: NextRequest, pathname: string) {
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { status: 204, headers: PUBLIC_API_HEADERS });
+  }
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new NextResponse(null, { status: 405, headers: { Allow: 'GET, HEAD, OPTIONS' } });
+  }
+  const target = publicUpstream(pathname, request.nextUrl.searchParams);
+  if (!target) return new NextResponse(null, { status: 404, headers: PUBLIC_API_HEADERS });
+  return NextResponse.rewrite(target, { headers: PUBLIC_API_HEADERS });
+}
+
+export default function proxy(request: NextRequest) {
+  // 与 _worker.js 的生产实现一致：只转发读请求，查询串按白名单带上
   const pathname = request.nextUrl.pathname.replace(/\/+$/, '') || '/';
+  if (pathname === pricingRoute || pathname.startsWith('/api/status-data/')) {
+    return rewritePublicApi(request, pathname);
+  }
 
   // Markdown 副本本体：直接放行，避免被后缀规则再次改写
   if (pathname === docsContentRoute || pathname.startsWith(`${docsContentRoute}/`)) {

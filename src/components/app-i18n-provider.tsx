@@ -11,6 +11,7 @@ import {
   type Locale,
 } from '@/lib/i18n';
 import { uiTranslations } from '@/lib/translations';
+import { isOpaqueOrigin } from '@/components/app-link';
 
 /**
  * 站点语言上下文。RootProvider 不传 i18n（词表/语言清单都由这里下发），
@@ -32,14 +33,17 @@ export function AppI18nProvider({ lang, children }: { lang: Locale; children: Re
       // 隐私模式下 localStorage 不可用，仅影响下次访问的默认语言
     }
 
+    // 平台 sandbox iframe（不透明源）里客户端路由拉 RSC 必被 CORS 拦截，改走整页跳转
+    const go = (url: string) => (isOpaqueOrigin ? window.location.assign(url) : router.push(url));
+
     const { path } = stripLocalePrefix(pathname ?? '/');
     const rest = path.replace(/^\//, '');
-    // 首页与未本地化的区块（如后续 /status 状态页）：切语言落到对应语言首页
-    if (rest === '') {
-      router.push(next === DEFAULT_LOCALE ? '/' : `/${next}`);
+    // 首页与未本地化的区块：切语言落到对应语言首页
+    if (rest === '' || rest.startsWith('status')) {
+      go(next === DEFAULT_LOCALE ? '/' : `/${next}`);
       return;
     }
-    router.push(next === DEFAULT_LOCALE ? `/${rest}` : `/${next}/${rest}`);
+    go(next === DEFAULT_LOCALE ? `/${rest}` : `/${next}/${rest}`);
   };
 
   return (

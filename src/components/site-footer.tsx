@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/app-link';
 import { source } from '@/lib/source';
 import { HOME_COPY } from '@/lib/home-copy';
 import { SITE_COPY } from '@/lib/site-copy';
