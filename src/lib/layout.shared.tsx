@@ -7,8 +7,8 @@ import { HOME_COPY } from './home-copy';
 import { localePath, type Locale } from './i18n';
 
 /**
- * 首页与文档区共用的布局选项：品牌、站外入口与 GitHub 链接。
- * 站外入口依次是控制台、服务状态、额度查询、企业服务与「立即注册」按钮，文字跟随页面语言。
+ * 首页与文档区共用的布局选项：品牌、导航入口与 GitHub 链接。
+ * 入口依次是控制台、站内服务状态、额度查询、企业服务与「立即注册」按钮，文字跟随页面语言。
  */
 export function baseOptions(lang: Locale): BaseLayoutProps {
   const copy = SITE_COPY[lang];
@@ -17,7 +17,8 @@ export function baseOptions(lang: Locale): BaseLayoutProps {
     nav: {
       title: (
         <>
-          <Image src={siteConfig.logo} alt="" width={24} height={24} className="size-6" />
+          {/* logo 是带深色底的方图，裁成圆形后与主站导航栏的样子一致 */}
+          <Image src={siteConfig.logo} alt="" width={24} height={24} className="size-6 rounded-full" />
           {siteConfig.productName}
         </>
       ),
@@ -26,7 +27,8 @@ export function baseOptions(lang: Locale): BaseLayoutProps {
     },
     links: [
       { text: copy.console, url: siteConfig.links.console, external: true },
-      { text: copy.status, url: siteConfig.links.status, external: true },
+      // 状态页仅提供默认语言版本，所有语言的导航都指向同一个中文页面
+      { text: copy.status, url: siteConfig.links.status, active: 'nested-url' },
       { text: copy.quota, url: siteConfig.links.quota, external: true },
       { text: copy.enterprise, url: siteConfig.links.enterprise, external: true },
       { type: 'button', text: HOME_COPY[lang].register, url: siteConfig.links.register, external: true },
