@@ -1,0 +1,171 @@
+---
+title: 常见问题
+---
+
+## 通用
+
+### FishXCode 是什么？
+
+FishXCode 是一个 AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用。
+
+### 支持哪些工具？
+
+目前支持以下工具：
+
+- **Claude Code** — Anthropic 官方 CLI
+- **OpenAI Codex** — OpenAI 官方编程助手
+- **RooCode** — VS Code AI 编程插件
+- **Qwen Code** — 阿里通义千问编程工具
+- **Droid CLI** — 轻量级 AI 编程 CLI
+- **OpenCode** — 开源 AI 编程终端工具
+
+### 数据隐私如何保障？
+
+FishXCode 仅作为 API 中转服务，不存储你的代码和对话内容。所有请求直接转发至对应的模型提供商。
+
+<Callout type="idea" title="建议">
+  敏感项目建议在使用前阅读各模型提供商的隐私政策。
+</Callout>
+
+## 账户与 Token
+
+### 如何注册？
+
+访问 [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW)，按提示完成注册即可。
+
+### 如何获取 API Token？
+
+注册后登录控制台，前往 [Token 管理页](https://fishxcode.com/console/token) 创建新的 Token。
+
+### Token 有效期多长？
+
+Token 在手动删除或重新生成前持续有效。建议定期轮换以确保安全。
+
+### 用量额度是多少？
+
+FishXCode 为每个用户提供用量额度，具体数量根据平台资源动态调整。请关注控制台中的用量信息。
+
+<Callout type="warn" title="注意">
+  额度用尽后请求会被拒绝，请合理规划用量。
+</Callout>
+
+## 工具配置
+
+### 环境变量设置后不生效怎么办？
+
+检查以下常见原因：
+
+1. **未重启终端** — 修改 `.bashrc` / `.zshrc` 后需要执行 `source ~/.bashrc` 或新开终端
+2. **变量名拼写错误** — 注意区分大小写，如 `ANTHROPIC_BASE_URL` 不能写成 `Anthropic_Base_Url`
+3. **多余的引号或空格** — `export KEY="value"` 中 value 前后不要有多余空格
+
+<Accordions type="single">
+  <Accordion title="快速排查命令">
+    ```bash
+    # 检查变量是否已设置
+    echo $ANTHROPIC_BASE_URL
+    echo $ANTHROPIC_AUTH_TOKEN
+
+    # 如果为空，说明变量未生效
+    ```
+  </Accordion>
+</Accordions>
+
+### 配置文件路径在哪里？
+
+| 工具 | 配置文件路径 |
+| - | - |
+| Claude Code | 环境变量方式配置 |
+| Codex | `~/.codex/config.toml` 和 `~/.codex/auth.json` |
+| RooCode | VS Code 设置 JSON |
+| Qwen Code | 环境变量方式配置 |
+
+### 连接不上 FishXCode 服务怎么办？
+
+1. 确认 `BASE_URL` 设置为 `https://api.fishxcode.com/`（注意末尾的 `/`）
+2. 检查网络是否能访问 `fishxcode.com`
+3. 如果在公司网络中，确认代理设置是否正确
+
+## 模型选择
+
+### 如何选择合适的模型？
+
+根据使用场景选择：
+
+| 场景 | 推荐模型 | 理由 |
+| - | - | - |
+| 日常编程 | `claude-sonnet-4-5-20250929` | 能力与速度均衡 |
+| 快速补全 | `claude-3-5-haiku-20241022` | 响应速度快 |
+| 复杂架构 | `claude-sonnet-4-5-20250514` | 推理能力强 |
+
+### 不同模型之间有什么差异？
+
+- **Sonnet 系列**：能力全面，适合大多数编程任务
+- **Haiku 系列**：轻量快速，适合简单补全和格式化任务
+- 具体的模型能力差异请参考各提供商的官方文档
+
+### 如何切换模型？
+
+通过环境变量 `ANTHROPIC_MODEL` 指定：
+
+```bash
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+```
+
+## 故障排除
+
+### 提示认证失败（Auth Error）
+
+<Callout type="warn" title="常见原因">
+  - Token 输入有误（多余空格或不完整）
+  - Token 已被删除或重新生成
+  - `API_KEY` 和 `AUTH_TOKEN` 未同时设置
+</Callout>
+
+解决方法：前往 [控制台](https://fishxcode.com/console/token) 确认 Token 状态，重新复制粘贴。
+
+### 如何查看和理解错误日志？
+
+进入 [控制台 → 使用日志](https://fishxcode.com/console/log)，将日志类型切换为 **错误日志**，可按时间、模型、Token、分组、请求 ID、错误消息和状态码筛选。
+
+<Callout type="idea" title="排查建议">
+  - 优先复制接口响应或日志中的 `request_id`，在使用日志中精确搜索同一次请求
+  - 用“错误消息”搜索 `content` 中的关键词，例如 `Invalid token`、`Upstream request failed`
+  - 用“状态码”快速聚合问题类型，例如 `400`、`401`、`403`、`413`、`429`、`500`、`502`、`503`、`504`
+  - 如果同一分组集中出现相同错误，优先按分组判断是配置问题、用量问题还是上游可用性问题
+</Callout>
+
+完整字段说明、状态码分类和常见错误表请查看 [错误日志说明](/error-logs)。
+
+### 分组健康状态怎么看？
+
+分组健康状态用于判断问题是个别请求异常，还是某个套餐、模型或上游分组集中异常。优先看 `success_rate`、`error_count` 和 `error_reasons`，再结合单条日志中的 `request_id` 定位具体请求。
+
+完整状态页、字段说明和排查流程请查看 [分组健康状态](/group-health)。
+
+### 请求超时（Timeout）
+
+可能原因：
+
+1. 网络延迟过高
+2. 请求的上下文过长，模型处理时间较久
+3. 当前服务负载较高
+
+建议：减小输入上下文，或稍后重试。
+
+### 触发频率或额度限制（Rate Limit）
+
+收到 `429` 状态码通常表示请求过于频繁，也可能表示上游账号日额度已用尽，或当前模型凭证正在冷却。
+
+<Callout type="idea" title="应对方法">
+  - 降低请求频率，间隔几秒后重试
+  - 避免在脚本中无间隔循环调用 API
+  - 检查是否有其他进程在同时使用同一 Token
+  - 如果日志包含 `Max 10/min` 或 `Max 5/min`，按提示把并发和每分钟请求数降到阈值以下
+  - 如果日志包含 `daily limit exceeded`，等待每日额度重置，或切换其他可用模型/分组
+  - 如果日志包含 `cooling down`，不要立即连续重试，等待冷却结束或临时切换模型
+</Callout>
+
+### 返回模型不可用（Model Not Available）
+
+检查指定的模型名称是否正确，参考 [快速开始](/start) 中的推荐模型列表。部分模型可能尚未在 FishXCode 上线。
