@@ -1,0 +1,469 @@
+---
+title: Dùng FishXCode trong OpenClaw
+navTitle: OpenClaw
+---
+
+<Callout type="info" title="Giới thiệu dự án">
+  OpenClaw là nền tảng trợ lý AI cá nhân mã nguồn mở, tự lưu trữ, kết nối các ứng dụng nhắn tin với AI Agent chạy trên phần cứng của chính bạn. Nền tảng được thiết kế cho lập trình viên và người dùng nâng cao muốn dùng trợ lý AI tự chủ mà không phải từ bỏ quyền kiểm soát dữ liệu.
+
+  - Trang web chính thức: [https://openclaw.ai](https://openclaw.ai)
+  - Tài liệu: [https://docs.openclaw.ai](https://docs.openclaw.ai)
+  - GitHub: [https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+</Callout>
+
+## Điều kiện tiên quyết
+
+- Đã cài OpenClaw (xem phần cài đặt bên dưới)
+- Đã có API Key FishXCode ([lấy trong bảng điều khiển](https://fishxcode.com/console/token))
+
+## Tính năng chính
+
+### Tích hợp đa kênh
+
+- **Hỗ trợ mọi nền tảng**: hỗ trợ Feishu (Lark), Discord, Slack, Microsoft Teams, v.v.
+- **Một gateway duy nhất**: quản lý mọi kênh qua một tiến trình Gateway duy nhất
+- **Hỗ trợ giọng nói**: hỗ trợ tương tác bằng giọng nói trên macOS/iOS/Android
+- **Giao diện Canvas**: có thể hiển thị giao diện Canvas tương tác
+
+### Tự lưu trữ và an toàn dữ liệu
+
+- **Hoàn toàn tự lưu trữ**: chạy trên máy hoặc máy chủ của chính bạn
+- **Mã nguồn mở**: giấy phép MIT, mã nguồn hoàn toàn minh bạch
+- **Lưu trữ dữ liệu cục bộ**: ngữ cảnh và kỹ năng được lưu cục bộ, không tải lên đám mây
+
+### Năng lực Agent thông minh
+
+- **Chạy liên tục**: hỗ trợ chạy nền lâu dài và bộ nhớ lâu dài
+- **Tác vụ định kỳ**: hỗ trợ tác vụ định kỳ cron
+- **Cô lập phiên**: cô lập phiên theo Agent/không gian làm việc/người gửi
+- **Định tuyến đa Agent**: hỗ trợ nhiều Agent cộng tác
+- **Gọi công cụ**: hỗ trợ sẵn việc gọi công cụ và thực thi mã
+
+## Cài đặt
+
+<Callout type="info" title="Yêu cầu môi trường">
+  - API Key FishXCode
+  - Cài bằng npm/git cần Node.js 22+; cài bằng một lệnh curl sẽ tự xử lý các phụ thuộc
+</Callout>
+
+```bash tab="curl (khuyên dùng)"
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+```bash tab="npm"
+npm install -g openclaw@latest
+```
+
+```bash tab="curl (chế độ git)"
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
+```
+
+```bash tab="Clone thủ công"
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw && pnpm install && pnpm run build
+pnpm run openclaw onboard
+```
+
+Sau khi cài xong, chạy trình hướng dẫn thiết lập ban đầu (cách clone thủ công đã bao gồm bước này trong các lệnh ở trên):
+
+```bash
+openclaw onboard
+```
+
+## Cấu hình
+
+### Vị trí tệp cấu hình
+
+Tệp cấu hình của OpenClaw nằm ở `~/.openclaw/openclaw.json`:
+
+- **macOS**: `/Users/tên-người-dùng/.openclaw/openclaw.json`
+- **Linux**: `/home/tên-người-dùng/.openclaw/openclaw.json`
+- **Windows**: `C:\Users\tên-người-dùng\.openclaw\openclaw.json`
+
+Nếu tệp chưa tồn tại, hãy tạo trước:
+
+```bash tab="macOS / Linux"
+mkdir -p ~/.openclaw
+touch ~/.openclaw/openclaw.json
+```
+
+```powershell tab="Windows (PowerShell)"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.openclaw"
+New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
+```
+
+<Callout type="idea" title="Mẹo">
+  Nếu trước đó bạn đã chạy `openclaw onboard`, tệp cấu hình sẽ được tạo tự động, bạn chỉ cần sửa trên nội dung sẵn có.
+</Callout>
+
+### Cấu trúc tệp cấu hình
+
+Cấu trúc tổng thể của `openclaw.json` gồm hai phần lớn:
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      // Cấu hình nhà cung cấp mô hình AI
+    }
+  },
+  "agents": {
+    "defaults": {
+      // Cấu hình mô hình mặc định, thư mục làm việc, v.v.
+    }
+  }
+}
+```
+
+- `models.providers` — định nghĩa nhà cung cấp dịch vụ, gồm địa chỉ, Key và danh sách mô hình
+- `models.mode` — khi đặt là `"merge"`, cấu hình tùy chỉnh sẽ được gộp với cấu hình mặc định có sẵn, **rất nên luôn thêm vào**
+- `agents.defaults.model.primary` — mô hình dùng mặc định, định dạng là `tên-provider/ID-mô-hình`
+- `api` — loại giao thức API, mô hình Anthropic dùng `"anthropic-messages"`, mô hình tương thích OpenAI dùng `"openai-responses"`
+
+### Cách cấu hình
+
+#### Cấu hình mô hình Anthropic (Claude)
+
+Ghi nội dung sau vào `openclaw.json`:
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-anthropic": {
+        "baseUrl": "https://api.fishxcode.com",
+        "apiKey": "sk-your-fishxcode-token",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-anthropic/claude-opus-4-6"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warn" title="Quan trọng">
+  - Hãy thay `sk-your-fishxcode-token` bằng token thực tế bạn lấy từ [bảng điều khiển FishXCode](https://fishxcode.com/console/token)
+  - **`baseUrl` của giao thức Anthropic không được kèm `/v1`**, SDK sẽ tự động nối đường dẫn
+</Callout>
+
+#### Cấu hình mô hình OpenAI (GPT)
+
+Khi gọi mô hình OpenAI qua FishXCode, trường `api` phải đặt là `openai-responses`:
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-openai": {
+        "baseUrl": "https://api.fishxcode.com/v1",
+        "apiKey": "sk-your-fishxcode-token",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5",
+            "name": "GPT-5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-openai/gpt-5"
+      }
+    }
+  }
+}
+```
+
+<Callout type="idea" title="Mẹo">
+  **Giao thức OpenAI cần kèm `/v1`**, tức là `https://api.fishxcode.com/v1`. Lý do là logic nối đường dẫn của hai SDK khác nhau.
+</Callout>
+
+#### Cấu hình đồng thời Anthropic + OpenAI (khuyên dùng)
+
+Thêm song song hai provider trong `models.providers` là có thể dùng mô hình của cả hai hãng cùng lúc:
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-anthropic": {
+        "baseUrl": "https://api.fishxcode.com",
+        "apiKey": "sk-your-fishxcode-token",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          },
+          {
+            "id": "claude-sonnet-4-5-20250929",
+            "name": "Claude Sonnet 4.5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          }
+        ]
+      },
+      "fishxcode-openai": {
+        "baseUrl": "https://api.fishxcode.com/v1",
+        "apiKey": "sk-your-fishxcode-token",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5",
+            "name": "GPT-5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          },
+          {
+            "id": "gpt-5-codex",
+            "name": "GPT-5 Codex",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-anthropic/claude-opus-4-6",
+        "fallbacks": [
+          "fishxcode-anthropic/claude-sonnet-4-5-20250929",
+          "fishxcode-openai/gpt-5"
+        ]
+      }
+    }
+  }
+}
+```
+
+Khi đổi mô hình mặc định, bạn chỉ cần sửa giá trị của `model.primary`:
+
+- `"fishxcode-anthropic/claude-opus-4-6"` → Claude Opus 4.6
+- `"fishxcode-anthropic/claude-sonnet-4-5-20250929"` → Claude Sonnet 4.5
+- `"fishxcode-openai/gpt-5"` → GPT-5
+- `"fishxcode-openai/gpt-5-codex"` → GPT-5 Codex
+
+### Giải thích các trường chính
+
+| Trường | Ý nghĩa | Anthropic (Claude) | OpenAI (GPT) |
+| - | - | - | - |
+| `baseUrl` | Địa chỉ proxy API | `https://api.fishxcode.com` | `https://api.fishxcode.com/v1` |
+| `apiKey` | API Key của bạn | `sk-your-fishxcode-token` | `sk-your-fishxcode-token` |
+| `api` | Loại giao thức API | `anthropic-messages` | `openai-responses` |
+| `mode` | Chế độ gộp cấu hình | `merge` (khuyên dùng) | `merge` (khuyên dùng) |
+| `models[].id` | ID mô hình | `claude-opus-4-6` | `gpt-5` |
+| `model.primary` | Mô hình mặc định | `fishxcode-anthropic/claude-opus-4-6` | `fishxcode-openai/gpt-5` |
+| `reasoning` | Có bật chế độ suy luận không | `false` (tùy mô hình) | `true` (GPT-5.x hỗ trợ) |
+
+## Kiểm tra cấu hình
+
+Chạy lệnh sau để xác nhận cấu hình đã có hiệu lực:
+
+```bash
+openclaw
+```
+
+Nếu cấu hình đúng, OpenClaw sẽ khởi động bình thường và gửi yêu cầu qua proxy FishXCode.
+
+Bạn cũng có thể kiểm tra danh sách mô hình bằng lệnh sau:
+
+```bash
+openclaw models list
+```
+
+Xem mô hình hiện tại và trạng thái xác thực:
+
+```bash
+openclaw models status
+```
+
+Chẩn đoán tổng hợp:
+
+```bash
+openclaw doctor
+```
+
+## Khởi động dịch vụ
+
+Sau khi cấu hình xong, khởi động OpenClaw:
+
+```bash
+openclaw start
+```
+
+Sau khi khởi động, bạn có thể tương tác với trợ lý AI qua các kênh đã cấu hình.
+
+Khởi động lại Gateway:
+
+```bash
+openclaw gateway restart
+```
+
+## Câu hỏi thường gặp
+
+### Bị chặn với lỗi 403
+
+**Triệu chứng**: provider đã cấu hình xong, dùng curl gọi trực tiếp API vẫn trả về 200 bình thường, nhưng yêu cầu do OpenClaw gửi đi thì luôn nhận 403 Your request was blocked.
+
+**Nguyên nhân**: tầng dưới của OpenClaw dùng `@anthropic-ai/sdk`, khi gửi yêu cầu sẽ kèm User-Agent của SDK chính thức (ví dụ `Anthropic/JS 0.73.0`), một số CDN hoặc WAF sẽ chặn loại UA này.
+
+**Cách xử lý**: thêm trường `headers` vào cấu hình provider để ghi đè UA:
+
+```json
+{
+  "fishxcode-anthropic": {
+    "baseUrl": "https://api.fishxcode.com",
+    "apiKey": "your-api-key",
+    "api": "anthropic-messages",
+    "headers": {
+      "User-Agent": "Mozilla/5.0"
+    },
+    "models": [...]
+  }
+}
+```
+
+### baseUrl không được kèm /v1 (giao thức Anthropic)
+
+**Triệu chứng**: yêu cầu bị 404 ngay, trong log thấy đường dẫn yêu cầu đã thành `/v1/v1/messages`.
+
+**Nguyên nhân**: Anthropic SDK sẽ tự động nối `/v1/messages` vào sau baseURL. Nếu baseUrl của bạn đã có `/v1`, yêu cầu thực tế sẽ bị lặp đường dẫn.
+
+**Cách xử lý**: với giao thức Anthropic, baseUrl chỉ ghi đến tên miền, không kèm `/v1`:
+
+```json
+{
+  "baseUrl": "https://api.fishxcode.com"
+}
+```
+
+<Callout type="idea" title="Mẹo">
+  Giao thức OpenAI cần kèm `/v1`, tức là `https://api.fishxcode.com/v1`. Lý do là logic nối đường dẫn của hai SDK khác nhau.
+</Callout>
+
+### Trường api chỉ chấp nhận ba giá trị
+
+**Triệu chứng**: khi khởi động báo Config invalid, hoặc không thấy provider bạn đã cấu hình trong danh sách mô hình.
+
+**Nguyên nhân**: trường `api` của OpenClaw được kiểm tra nghiêm ngặt, chỉ chấp nhận ba giá trị sau:
+
+| Giá trị | Định dạng tương ứng |
+| - | - |
+| `anthropic-messages` | Anthropic Messages API |
+| `openai-completions` | OpenAI Chat Completions |
+| `openai-responses` | OpenAI Responses API |
+
+Viết thành `openai-chat`, `openai`, `anthropic`, v.v. đều sẽ báo lỗi.
+
+**Cách xử lý**: khi dùng qua FishXCode, mô hình Claude điền `anthropic-messages`, mô hình GPT điền `openai-responses`.
+
+### openai-completions nhận phản hồi rỗng (không dùng cho mô hình GPT)
+
+**Triệu chứng**: đặt api là `openai-completions`, yêu cầu thành công (log `isError=false`), nhưng giao diện hiển thị tin nhắn rỗng.
+
+**Nguyên nhân**: bên trong OpenClaw xử lý luồng tin nhắn theo định dạng Anthropic, phản hồi định dạng OpenAI do `openai-completions` trả về trong một số trường hợp không ánh xạ đúng được.
+
+**Cách xử lý**: khi gọi mô hình GPT qua FishXCode, hãy dùng `openai-responses` thay vì `openai-completions`.
+
+### Đã cấu hình nhưng không có hiệu lực
+
+**Triệu chứng**: đã sửa `openclaw.json` nhưng OpenClaw vẫn dùng cấu hình cũ.
+
+**Nguyên nhân**: OpenClaw có hai nơi cấu hình provider cần đồng bộ:
+
+```
+~/.openclaw/openclaw.json              → models.providers
+~/.openclaw/agents/main/agent/models.json → providers
+```
+
+Chỉ sửa một nơi có thể khiến cấu hình không có hiệu lực.
+
+**Cách xử lý**: sau khi sửa, dùng lệnh sau để xác nhận:
+
+```bash
+openclaw models status
+```
+
+Hoặc khởi động lại OpenClaw Gateway:
+
+```bash
+openclaw gateway restart
+```
+
+### Lỗi định dạng JSON
+
+Các lỗi định dạng JSON thường gặp:
+
+- **Thừa dấu phẩy**: sau phần tử cuối cùng không được có dấu phẩy
+- **Thiếu dấu phẩy**: giữa hai cặp khóa-giá trị liền nhau phải có dấu phẩy ngăn cách
+- **Lỗi dấu ngoặc kép**: JSON chỉ chấp nhận dấu ngoặc kép thẳng `"`, không dùng được dấu ngoặc kép kiểu tiếng Trung hay dấu nháy đơn
+- **Dấu ngoặc không khớp**: mỗi `{` phải có `}` tương ứng, mỗi `[` phải có `]` tương ứng
+
+Có thể dùng lệnh sau để kiểm tra định dạng:
+
+```bash
+python3 -m json.tool ~/.openclaw/openclaw.json
+```
+
+### Trường reasoning là gì?
+
+`reasoning` kiểm soát việc có bật chế độ suy luận/suy nghĩ của mô hình hay không. Khi đặt là `true`, mô hình sẽ suy luận nội bộ trước khi đưa ra câu trả lời, nhưng sẽ tiêu tốn nhiều token hơn.
+
+Dòng GPT-5.x Codex thường hỗ trợ `reasoning`, còn mô hình Claude thì tùy phiên bản. Nếu không chắc, hãy đặt là `false`.
+
+### openai-completions và openai-responses khác nhau thế nào?
+
+- **openai-responses** — tương ứng với OpenAI Responses API (`/v1/responses`). **Dùng giá trị này khi dùng mô hình GPT qua FishXCode.**
+- **openai-completions** — tương ứng với OpenAI Chat Completions API (`/v1/chat/completions`), là định dạng tương thích chung, nhưng có thể gây phản hồi rỗng với mô hình GPT của FishXCode, **không khuyên dùng**.
+
+### Tra cứu nhanh công cụ kiểm tra lỗi
+
+| Lệnh | Công dụng |
+| - | - |
+| `openclaw models status` | Xem mô hình hiện tại và trạng thái xác thực |
+| `openclaw models list` | Xem danh sách mô hình đã cấu hình |
+| `openclaw doctor` | Chẩn đoán tổng hợp |
+| `openclaw gateway restart` | Khởi động lại Gateway |
+
+<Callout type="idea" title="Hướng kiểm tra lỗi cốt lõi">
+  Trước tiên dùng curl để xác nhận bản thân API FishXCode hoạt động bình thường, sau đó kiểm tra yêu cầu do OpenClaw gửi đi khác ở điểm nào (UA, đường dẫn, định dạng).
+</Callout>

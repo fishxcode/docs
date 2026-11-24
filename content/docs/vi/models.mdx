@@ -1,0 +1,49 @@
+---
+title: Mô hình được hỗ trợ
+---
+
+Nền tảng FishXCode hỗ trợ các mô hình AI từ nhiều nhà cung cấp, bao quát nhiều tình huống sử dụng và chuỗi công cụ khác nhau. Bạn có thể tự do chọn và chuyển đổi mô hình theo nhu cầu thực tế.
+
+<ModelCatalog />
+
+## Chuyển đổi mô hình
+
+### Claude Code
+
+Thiết lập mô hình chính qua biến môi trường:
+
+```bash tab="Linux/macOS"
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+claude
+```
+
+```powershell tab="Windows PowerShell"
+$env:ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929"
+claude
+```
+
+### Codex
+
+Chỉnh sửa `~/.codex/config.toml`, sửa trường `model`:
+
+```toml
+model = "gpt-5"
+```
+
+### RooCode / Qwen Code
+
+Sửa trực tiếp trường **Model** trong cấu hình nhà cung cấp. Có thể điền ID của bất kỳ mô hình tương thích nào ở trên.
+
+## Gợi ý chọn mô hình
+
+<Callout type="idea" title="Năng lực viết mã tốt nhất">
+  **claude-sonnet-4-5-20250929** — Năng lực viết mã tổng thể mạnh nhất, phù hợp với dự án phức tạp và các tác vụ ở cấp kiến trúc.
+</Callout>
+
+<Callout type="idea" title="Tốc độ phản hồi tốt nhất">
+  **claude-3-5-haiku-20241022** — Tốc độ phản hồi nhanh nhất, phù hợp với tình huống gọi tần suất cao và hoàn thành mã theo thời gian thực.
+</Callout>
+
+<Callout type="idea" title="Hiệu quả chi phí tốt nhất">
+  **claude-haiku-4-5-20251001** — Cân bằng tốt giữa tốc độ và chất lượng, phù hợp với hầu hết tác vụ phát triển hằng ngày.
+</Callout>

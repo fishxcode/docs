@@ -1,0 +1,60 @@
+---
+title: Dùng FishXCode trong Qwen Code
+navTitle: Qwen Code
+---
+
+## Cài đặt Qwen Code
+
+```bash tab="pnpm"
+pnpm install -g @qwen-code/qwen-code
+```
+
+```bash tab="npm"
+npm install -g @qwen-code/qwen-code
+```
+
+```bash tab="yarn"
+yarn global add @qwen-code/qwen-code
+```
+
+```bash tab="bunx"
+bunx --global @qwen-code/qwen-code
+```
+
+## Cấu hình biến môi trường
+
+```bash tab="Linux/macOS"
+export OPENAI_API_KEY="sk-xxx"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_MODEL="gpt-5"
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_API_KEY="sk-xxx"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_MODEL="gpt-5"
+```
+
+```cmd tab="Windows CMD"
+set OPENAI_API_KEY="sk-xxx"
+set OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+set OPENAI_MODEL="gpt-5"
+```
+
+<Callout type="warn" title="Quan trọng">
+  Hãy thay `sk-xxx` bằng token thực tế bạn lấy từ [bảng điều khiển FishXCode](https://fishxcode.com/console/token).
+</Callout>
+
+## Khởi động nhanh
+
+```bash
+cd my-project
+qwen
+```
+
+## Lưu cấu hình lâu dài
+
+Thêm biến môi trường vào tệp cấu hình của shell để không phải đặt thủ công mỗi lần:
+
+- **Linux/macOS**: thêm vào `~/.bashrc` hoặc `~/.zshrc`
+- **Windows PowerShell**: thêm vào `$PROFILE`

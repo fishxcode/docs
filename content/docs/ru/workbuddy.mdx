@@ -1,0 +1,132 @@
+---
+title: Использование FishXCode в WorkBuddy
+navTitle: WorkBuddy
+---
+
+> Впервые здесь? Сначала [зарегистрируйтесь и пополните баланс](/ru/account), затем получите API Key в [консоли FishXCode](https://fishxcode.com/console/token).
+
+## 1. Откройте файл конфигурации WorkBuddy
+
+WorkBuddy позволяет подключать собственные модели через локальный файл `models.json`. Расположение файла:
+
+- macOS / Linux: `~/.workbuddy/models.json`
+- Windows: `C:\Users\<имя_пользователя>\.workbuddy\models.json`
+
+Если каталога или файла нет, сначала создайте их.
+
+## 2. Настройка сторонних моделей FishXCode
+
+Для сторонних моделей WorkBuddy использует протокол, совместимый с OpenAI Chat Completions. Здесь `vendor: "OpenAI"` обозначает протокол интерфейса, а не то, что можно использовать только модели OpenAI: модели Claude тоже вызываются через OpenAI-совместимый интерфейс FishXCode.
+
+Запишите в `~/.workbuddy/models.json` следующее:
+
+```json
+{
+  "models": [
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    }
+  ],
+  "availableModels": [
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+<Callout type="warn" title="Важно">
+  - Замените `sk-your-fishxcode-token` на реальный API Key, созданный в консоли FishXCode.
+  - `availableModels` должен содержать ID моделей из `models[].id` выше, иначе WorkBuddy может не показать их в выпадающем списке.
+  - В `url` нужно указать полный адрес Chat Completions: `https://api.fishxcode.com/v1/chat/completions`.
+</Callout>
+
+## 3. Tencent Token Plan и FishXCode одновременно
+
+Если вам нужно сохранить и официальный Tencent Token Plan, поместите официальные модели и модели FishXCode в один и тот же `models.json`:
+
+```json
+{
+  "models": [
+    {
+      "id": "tc-code-latest",
+      "name": "Auto",
+      "vendor": "OpenAI",
+      "url": "https://api.lkeap.cloud.tencent.com/plan/v3/chat/completions",
+      "apiKey": "your-token-plan-api-key",
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 4096
+    },
+    {
+      "id": "hunyuan-2.0-instruct",
+      "name": "Tencent HY 2.0 Instruct",
+      "vendor": "OpenAI",
+      "url": "https://api.lkeap.cloud.tencent.com/plan/v3/chat/completions",
+      "apiKey": "your-token-plan-api-key",
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 4096
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    }
+  ],
+  "availableModels": [
+    "tc-code-latest",
+    "hunyuan-2.0-instruct",
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+## 4. Перезапуск и проверка
+
+1. Сохраните `models.json`
+2. Полностью закройте WorkBuddy
+3. Снова запустите WorkBuddy
+4. Откройте область выбора модели
+5. Выберите `gpt-5.5` или `claude-opus-4-7`
+6. Отправьте простой вопрос и проверьте ответ
+
+## Частые вопросы
+
+### Не видно добавленных моделей
+
+Сначала проверьте, есть ли нужный ID модели в `availableModels`, затем — является ли `models.json` корректным JSON.
+
+### Ошибка вызова или красное сообщение об ошибке
+
+Проверьте, что в `url` указан полный адрес `https://api.fishxcode.com/v1/chat/completions`, а не только `https://api.fishxcode.com/v1`.
+
+### Ошибка аутентификации
+
+Скопируйте API Key из консоли заново и убедитесь, что в нём нет лишних пробелов или переносов строк.

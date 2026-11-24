@@ -1,0 +1,49 @@
+---
+title: 対応モデル
+---
+
+FishXCode プラットフォームは複数のプロバイダーの AI モデルに対応しており、さまざまな利用シーンやツールチェーンをカバーしています。必要に応じて、モデルを自由に選択・切り替えできます。
+
+<ModelCatalog />
+
+## モデルの切り替え
+
+### Claude Code
+
+環境変数でメインモデルを設定します：
+
+```bash tab="Linux/macOS"
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+claude
+```
+
+```powershell tab="Windows PowerShell"
+$env:ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929"
+claude
+```
+
+### Codex
+
+`~/.codex/config.toml` を編集し、`model` フィールドを変更します：
+
+```toml
+model = "gpt-5"
+```
+
+### RooCode / Qwen Code
+
+プロバイダー設定の **Model** フィールドを直接変更するだけです。上記の互換モデルであれば、どの ID でも入力できます。
+
+## おすすめモデル
+
+<Callout type="idea" title="最高のコーディング能力">
+  **claude-sonnet-4-5-20250929** — 総合的なコーディング能力が最も高く、複雑なプロジェクトやアーキテクチャレベルのタスクに適しています。
+</Callout>
+
+<Callout type="idea" title="最速の応答速度">
+  **claude-3-5-haiku-20241022** — 応答速度が最も速く、高頻度の呼び出しやリアルタイム補完に適しています。
+</Callout>
+
+<Callout type="idea" title="最高のコストパフォーマンス">
+  **claude-haiku-4-5-20251001** — 速度と品質のバランスがよく、日常的な開発タスクの大半に適しています。
+</Callout>

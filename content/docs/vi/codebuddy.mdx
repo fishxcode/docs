@@ -1,0 +1,134 @@
+---
+title: Dùng FishXCode trong CodeBuddy
+navTitle: CodeBuddy
+---
+
+> Lần đầu sử dụng? Hãy hoàn tất [đăng ký tài khoản và nạp tiền](/vi/account) trước, rồi lấy API Key trong [bảng điều khiển FishXCode](https://fishxcode.com/console/token).
+
+## 1. Cài đặt và khởi động CodeBuddy Code
+
+Hướng dẫn này cấu hình công cụ dòng lệnh **CodeBuddy Code** của Tencent Cloud. Trước tiên hãy đảm bảo máy đã cài Node.js 18.0 trở lên, sau đó cài đặt:
+
+```bash
+npm install -g @tencent-ai/codebuddy-code
+```
+
+Kiểm tra phiên bản:
+
+```bash
+codebuddy --version
+```
+
+Khởi động CodeBuddy Code:
+
+```bash
+codebuddy
+```
+
+Lần khởi động đầu tiên, hãy hoàn tất đăng nhập theo lời nhắc. Sau đó, bạn có thể nhập `/model` trong dòng lệnh để kiểm tra mô hình tùy chỉnh đã được tải thành công chưa.
+
+## 2. Mở tệp cấu hình của CodeBuddy
+
+CodeBuddy Code hỗ trợ kết nối mô hình tùy chỉnh qua tệp `models.json` cục bộ. Vị trí tệp cấu hình:
+
+- macOS / Linux: `~/.codebuddy/models.json`
+- Windows: `C:\Users\<tên-người-dùng>\.codebuddy\models.json`
+
+Nếu thư mục hoặc tệp chưa tồn tại, hãy tạo trước.
+
+## 3. Ghi cấu hình mô hình FishXCode
+
+Cấu hình mô hình lớn bên thứ ba của CodeBuddy Code dùng giao thức tương thích OpenAI Chat Completions. Ở đây `vendor: "OpenAI"` biểu thị khả năng tương thích giao thức, không có nghĩa là chỉ điền được mô hình OpenAI; mô hình Claude cũng có thể được gọi qua giao diện tương thích OpenAI của FishXCode.
+
+Ghi nội dung dưới đây vào `~/.codebuddy/models.json`:
+
+```json
+{
+  "models": [
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    }
+  ],
+  "availableModels": [
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+<Callout type="warn" title="Quan trọng">
+  - Hãy thay `sk-your-fishxcode-token` bằng API Key thực tế bạn đã tạo trong bảng điều khiển FishXCode.
+  - `availableModels` phải chứa các ID mô hình trong `models[].id` ở trên, nếu không có thể sẽ không thấy mô hình mới thêm trong `/model`.
+  - Trạm trung chuyển bên thứ ba cần địa chỉ Chat Completions đầy đủ: `https://api.fishxcode.com/v1/chat/completions`.
+</Callout>
+
+## 4. Giữ cả Tencent Coding Plan và FishXCode
+
+Nếu bạn vẫn cần giữ Coding Plan chính thức của Tencent, có thể bổ sung mô hình FishXCode vào cùng một tệp `models.json`:
+
+```json
+{
+  "models": [
+    {
+      "id": "tc-code-latest",
+      "name": "Auto",
+      "vendor": "Tencent Cloud",
+      "apiKey": "YOUR_TENCENT_CODING_PLAN_KEY",
+      "url": "https://api.lkeap.cloud.tencent.com/coding/v3"
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    }
+  ],
+  "availableModels": [
+    "tc-code-latest",
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+## 5. Khởi động lại và chọn mô hình
+
+1. Lưu `~/.codebuddy/models.json`
+2. Thoát hẳn CodeBuddy Code đang chạy
+3. Chạy lại `codebuddy`
+4. Nhập `/model`
+5. Chọn `gpt-5.5` hoặc `claude-opus-4-7`
+6. Gửi prompt thử nghiệm, ví dụ `Giải thích cấu trúc dự án hiện tại`
+
+## Câu hỏi thường gặp
+
+### `/model` không thấy mô hình
+
+Trước tiên kiểm tra `availableModels`. ID mô hình phải xuất hiện đồng thời trong `models[].id` và `availableModels`.
+
+### Mô hình hiện ra nhưng gọi thất bại
+
+Ưu tiên kiểm tra `url`. Cấu hình mô hình bên thứ ba của FishXCode nên dùng địa chỉ đầy đủ `https://api.fishxcode.com/v1/chat/completions`.
+
+### Xác thực thất bại
+
+Hãy sao chép lại API Key trong bảng điều khiển, đảm bảo không có khoảng trắng hoặc ký tự xuống dòng thừa.

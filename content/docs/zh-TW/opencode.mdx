@@ -1,0 +1,80 @@
+---
+title: 在 OpenCode 中使用 FishXCode
+navTitle: OpenCode
+---
+
+## 安裝 OpenCode
+
+```bash tab="npm"
+npm install -g opencode-ai@latest
+```
+
+```bash tab="brew"
+brew install anomalyco/tap/opencode
+```
+
+```bash tab="scoop"
+scoop install opencode
+```
+
+## 配置 FishXCode
+
+1. 訪問 [https://fishxcode.com/console/token](https://fishxcode.com/console/token) 獲取 API Key
+2. 設定環境變數：
+
+```bash tab="Linux/macOS"
+export FISHXCODE_TOKEN=sk-xxx
+```
+
+```powershell tab="Windows PowerShell"
+$env:FISHXCODE_TOKEN="sk-xxx"
+```
+
+3. 在專案根目錄或 `~/.config/opencode/` 下建立 `opencode.json`：
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "fishxcode-anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "fishxcode-anthropic",
+      "options": {
+        "baseURL": "https://api.fishxcode.com/v1",
+        "apiKey": "{env:FISHXCODE_TOKEN}"
+      },
+      "models": {
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6"
+        }
+      }
+    },
+    "fishxcode-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "fishxcode-openai",
+      "options": {
+        "baseURL": "https://api.fishxcode.com/v1",
+        "apiKey": "{env:FISHXCODE_TOKEN}"
+      },
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    }
+  }
+}
+```
+
+<Callout type="warn" title="重要">
+  請將 `sk-xxx` 替換為你在 [FishXCode 控制台](https://fishxcode.com/console/token) 獲取的實際 Token。
+</Callout>
+
+## 啟動使用
+
+```bash
+cd my-project
+opencode
+```
+
+啟動後通過介面選擇 FishXCode 提供商下的模型即可開始使用。

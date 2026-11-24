@@ -1,0 +1,249 @@
+---
+title: Dùng FishXCode trong Claude Code
+description: Quy trình bắt đầu đầy đủ và các bước cấu hình chính để kết nối Claude Code với FishXCode.
+navTitle: Claude Code
+---
+
+> Lần đầu sử dụng? Hãy hoàn tất [đăng ký tài khoản và nạp tiền](/vi/account) trước.
+
+## 1. Chuẩn bị môi trường
+
+### Cài đặt Node.js
+
+Claude  Code được cài qua npm, nên trước tiên hãy đảm bảo Node.js đã sẵn sàng.
+
+```bash tab="macOS - Kiểm tra"
+node -v
+npm -v
+```
+
+```bash tab="macOS - Cài bằng Homebrew"
+brew install node
+```
+
+```bash tab="Windows - Kiểm tra (CMD/PowerShell)"
+node -v
+npm -v
+```
+
+Nếu chưa cài, hãy truy cập [nodejs.org/en/download](https://nodejs.org/en/download/current/) để tải gói cài đặt cho nền tảng của bạn. Sau khi cài xong, **Windows cần khởi động lại máy**.
+
+### Riêng Windows: cài Git Bash
+
+Claude  Code cần môi trường bash để chạy, người dùng Windows phải cài Git Bash:
+
+1. Địa chỉ tải: [git-scm.com/install/windows](https://git-scm.com/install), chọn phiên bản phù hợp để cài.
+2. Kiểm tra: nhấp chuột phải trên màn hình desktop, nếu thấy tùy chọn **Open Git Bash here** là đã cài thành công.
+
+---
+
+## 2. Cài Claude  Code qua ZCF
+
+```bash tab="npm"
+npx zcf
+```
+
+---
+
+## 3. Cấu hình FishXCode
+
+1. Trong terminal, nhập `npx zcf` rồi nhấn Enter.
+   Khi xuất hiện `Ok to proceed? (y)`, nhập `y` rồi nhấn Enter.
+
+2. Chọn ngôn ngữ hiển thị của ZCF:
+   Chọn **English**.
+
+3. Sau khi cài xong, chọn:
+   `1. Full Init - Install Claude Code + Import Workflows + Configure API or CCR Proxy + Configure MCP Services`
+
+4. Có sửa cấu hình ngôn ngữ của mẫu không:
+   Chọn `No`
+
+5. Ngôn ngữ đầu ra của AI:
+   Chọn `English`
+
+6. Có cài Claude không:
+   Chọn `Yes`
+
+7. Chế độ cấu hình API:
+   Chọn `Custom API Configuration`
+
+8. Nhà cung cấp API:
+   Chọn `Custom Configuration`
+
+9. Tên cấu hình:
+   Tự đặt một tên bằng tiếng Anh
+
+10. Kiểu xác thực:
+    Chọn `API Key`
+
+11. URL gốc của API:
+    ```
+    https://api.fishxcode.com
+    ```
+
+12. API Key:
+    Điền token được tạo trong bảng điều khiển FishXCode
+
+13. Cấu hình liên quan đến mô hình:
+    Nhấn Enter để bỏ qua với giá trị mặc định
+
+14. Loại quy trình làm việc:
+    Chọn `General Tools`
+
+15. Phong cách đầu ra:
+    Chọn theo sở thích cá nhân
+
+16. Có cấu hình MCP không:
+    Chọn `Yes`
+
+17. Dịch vụ MCP:
+    Dùng phím Space để chọn các dịch vụ cần thiết, rồi nhấn Enter để chạy
+
+18. Cấu hình CCometixLine:
+    Nhấn Enter luôn
+
+19. Khi quay về menu chính, nhập:
+    ```
+    q
+    ```
+
+20. Trong terminal, nhập:
+    ```
+    claude
+    ```
+    - Chọn `Yes, I trust this folder`
+    - Ở bước chọn API, nhất định phải chọn **YES (tùy chọn đầu tiên)**
+
+---
+
+## 4. Khởi động và sử dụng
+
+```bash
+cd my-project
+claude
+```
+
+---
+
+## 5. Chuyển đổi mô hình
+
+Trong giao diện hội thoại của Claude  Code, nhập `/model` để chuyển mô hình:
+
+| Tùy chọn | Mô hình thực tế | Mô tả |
+| - | - | - |
+| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | Tự động chọn theo tác vụ, khuyên dùng hằng ngày |
+| **Opus** | `claude-opus-4-5-20251101` | Khả năng suy luận mạnh nhất, tiêu hao cao hơn |
+| **Haiku** | `claude-haiku-4-5-20251001` | Nhẹ và nhanh |
+
+Bạn cũng có thể cố định mô hình qua biến môi trường:
+
+```bash tab="macOS/Linux"
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+claude
+```
+
+```powershell tab="Windows PowerShell"
+$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+claude
+```
+
+<Callout type="idea" title="Nâng cấp Claude Code">
+  Nếu thấy phiên bản mô hình chưa phải mới nhất, hãy chạy lệnh nâng cấp rồi khởi động lại các công cụ liên quan:
+
+  ```bash
+  npm install -g @anthropic-ai/claude-code
+  ```
+</Callout>
+
+---
+
+## 6. Tích hợp IDE
+
+### IntelliJ IDEA
+
+Đường dẫn thao tác: File → Settings → Plugins → Marketplace → tìm `claude code`, chọn **Claude  Code Terminal** và cài đặt:
+
+![Cài đặt Claude  Code Terminal](/img/start/idea-01-install.png)
+
+Sau khi cài xong, khởi động lại IDEA và kiểm tra plugin đã được tải:
+
+![Kiểm tra plugin đã được tải](/img/start/idea-02-verify.png)
+
+<Callout type="info">
+  Nếu không tìm thấy plugin trong Marketplace, nghĩa là phiên bản IDEA hiện tại quá cũ, bạn cần nâng cấp lên phiên bản mới nhất.
+</Callout>
+
+### VSCode
+
+Nhấn `Ctrl + Shift + X` để mở bảng Extensions, tìm `claude code`, chọn **Claude  Code for VSCode** để cài đặt.
+
+![Tìm và cài plugin Claude  Code](/img/start/vscode-01-install.png)
+
+Sau khi cài xong, plugin cung cấp ba cách kết nối:
+
+![Các cách kết nối của plugin Claude  Code](/img/start/vscode-02-login.png)
+
+Nên kết nối FishXCode qua cấu hình `settings.json`. Nhấn **biểu tượng bánh răng** ở góc dưới bên phải của plugin → **Edit in settings.json**:
+
+![Mở settings.json để chỉnh sửa](/img/start/vscode-03-settings.png)
+
+Thêm đoạn sau vào `settings.json` của VSCode:
+
+```json
+{
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.environmentVariables": [
+    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "thay bằng API Key của bạn" },
+    { "name": "ANTHROPIC_BASE_URL", "value": "https://api.fishxcode.com/" }
+  ]
+}
+```
+
+![Ví dụ cấu hình settings.json](/img/start/vscode-04-config.png)
+
+Sau khi lưu, hãy **thoát rồi mở lại VSCode**, plugin sẽ kết nối FishXCode bình thường.
+
+![Dùng Claude  Code trong VSCode](/img/start/vscode-05-demo.gif)
+
+---
+
+## 7. Câu hỏi thường gặp
+
+### Gặp lỗi 403
+
+Số dư token không đủ, hãy vào bảng điều khiển nạp tiền rồi thử lại.
+
+### Windows gặp lỗi kết nối hoặc lỗi 400/401
+
+Chạy lại lệnh `setx` trong PowerShell để ghi biến hệ thống, sau đó mở lại terminal:
+
+```powershell
+setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
+setx ANTHROPIC_BASE_URL "https://api.fishxcode.com/"
+```
+
+### Báo lỗi "Unable to connect to Anthropic services"
+
+Thông báo lỗi đầy đủ như sau:
+
+```
+Unable to connect to Anthropic services
+Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
+Please check your internet connection and network settings.
+```
+
+Nguyên nhân là Claude  Code chưa hoàn tất onboarding nên vẫn cố kết nối tới `api.anthropic.com` chính thức. **Không cần dùng VPN**, chỉ cần thêm `"hasCompletedOnboarding": true` vào cuối tệp `~/.claude.json` (lưu ý là tệp `.claude.json` trong thư mục home, không phải `.claude/settings.json`) để bỏ qua bước này:
+
+```json
+{
+  "installMethod": "unknown",
+  "autoUpdates": true,
+  "projects": { ... },
+  "hasCompletedOnboarding": true
+}
+```
+
+<Callout type="idea">
+  Trước khi thêm, nhớ bổ sung dấu phẩy vào cuối trường phía trước (theo yêu cầu cú pháp JSON). Sau khi sửa, chạy lại `claude` là kết nối bình thường.
+</Callout>

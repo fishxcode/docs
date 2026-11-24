@@ -1,0 +1,154 @@
+---
+title: Trạng thái sức khỏe nhóm
+description: Trạng thái sức khỏe nhóm, chi tiết token của đội nhóm, các trường xuất dữ liệu và quy trình khắc phục sự cố trên FishXCode.
+---
+
+Trạng thái sức khỏe nhóm dùng để xác định lỗi khi gọi API là vấn đề của riêng một yêu cầu, hay là vấn đề tập trung ở một gói, mô hình, nhóm của nhà cung cấp upstream hoặc thành viên trong đội nhóm. Quản trị viên doanh nghiệp và đội nhóm có thể dùng nó để nhanh chóng trả lời ba câu hỏi:
+
+- Nhóm nào có tỷ lệ thành công giảm trong khoảng thời gian đã chọn
+- Người dùng hoặc token nào chiếm phần lớn số yêu cầu, mức tiêu hao hoặc lỗi
+- Lỗi chỉ tập trung ở một token, hay đã ảnh hưởng đến toàn bộ nhóm
+
+Khi khắc phục lỗi API, hãy xem trạng thái sức khỏe nhóm trước, rồi mới mở từng bản ghi nhật ký sử dụng để xác định `request_id` cụ thể.
+
+<Callout type="info" title="Phạm vi dữ liệu">
+  Trang `status` công khai được nhúng trong trang này truy vấn trạng thái sức khỏe của các nhóm mà toàn bộ người dùng trên nền tảng FishXCode đang sử dụng trong khoảng thời gian đã chọn, phản ánh khả năng sẵn sàng của các nhóm trên toàn nền tảng, bảo đảm tính thời gian thực, công bằng và ổn định.
+
+  Mục **Nhật ký sử dụng → Trạng thái sức khỏe nhóm** trong bảng điều khiển thống kê dữ liệu hiển thị theo quyền của tài khoản hiện tại. Người dùng cá nhân thường chỉ thấy token của chính mình; quản trị viên doanh nghiệp và đội nhóm có thể xem tình hình sử dụng của đội nhóm theo các chiều người dùng, tên người dùng, token và nhóm.
+</Callout>
+
+<iframe src="https://status.fishxcode.com/group/global?view=list&sort=group&window=24h" title="Trạng thái sức khỏe nhóm FishXCode" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="my-6 h-[720px] w-full rounded-lg border bg-fd-card" />
+
+Nếu trang trạng thái ở trên không tải được, bạn có thể mở trực tiếp [Trạng thái sức khỏe nhóm FishXCode](https://status.fishxcode.com/group/global?view=list&sort=group&window=24h).
+
+Lối vào trong bảng điều khiển: [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/console/log). Trong chế độ xem nhật ký lỗi hoặc thống kê, hãy lọc theo khoảng thời gian, mô hình, token, nhóm, thông báo lỗi và mã trạng thái.
+
+## Ví dụ trong bảng điều khiển
+
+Dưới đây là ảnh chụp màn hình ví dụ của mục **Nhật ký sử dụng → Trạng thái sức khỏe nhóm** trong bảng điều khiển, hiển thị tỷ lệ thành công, số yêu cầu, mức tiêu hao, lượng trúng bộ nhớ đệm, thời gian xử lý trung bình, thời gian yêu cầu gần nhất và nguyên nhân thất bại của các nhóm.
+
+![Ví dụ trạng thái sức khỏe nhóm trong bảng điều khiển](/img/group-health.png)
+
+<Callout type="idea" title="Nguyên tắc sử dụng">
+  Xác định phạm vi ảnh hưởng trước, rồi mới xử lý từng lỗi riêng lẻ. Từng bản ghi nhật ký phù hợp để xác định một yêu cầu cụ thể, còn trạng thái sức khỏe nhóm phù hợp để đánh giá vấn đề có xảy ra tập trung hay không.
+</Callout>
+
+Khi cần giải thích một thông báo lỗi cụ thể, hãy xem [Giải thích nhật ký lỗi](/vi/error-logs).
+
+## Các trường hiển thị trong danh sách
+
+Danh sách trong bảng điều khiển và tệp xuất CSV có cùng các cột hiển thị. Danh sách hiển thị đồng thời hai loại dòng:
+
+- **Dòng nhóm**: Tổng hợp trạng thái sức khỏe chung của một nhóm trong khoảng thời gian hiện tại.
+- **Dòng token**: Hiển thị chi tiết người dùng và token trong một nhóm, giúp quản trị viên doanh nghiệp và đội nhóm xác định thành viên, dự án hoặc dịch vụ.
+
+| Trường hiển thị | Dòng áp dụng | Mô tả trường | Gợi ý sử dụng |
+| - | - | - | - |
+| Loại | Dòng nhóm, dòng token | Cho biết dòng hiện tại là dòng tổng hợp `Nhóm` hay dòng chi tiết `Token` | Xem dòng nhóm trước để đánh giá trạng thái chung, sau đó xem dòng token để xác định thành viên hoặc token cụ thể |
+| Nhóm | Dòng nhóm, dòng token | Các nhóm xuất hiện trong khoảng thời gian hiện tại, gồm nhóm trả theo mức dùng, nhóm của gói, nhóm mặc định hoặc nhóm dành cho mô hình cụ thể | Xác định vấn đề có tập trung ở một gói, mô hình hoặc pool tài nguyên của nhà cung cấp upstream nào không |
+| ID người dùng | Dòng token | ID của người dùng đang dùng token này | Dùng để xác định tài khoản thành viên khi doanh nghiệp khắc phục sự cố |
+| Tên người dùng | Dòng token | Tên của người dùng đang dùng token này | Dùng cho báo cáo đội nhóm, trao đổi với thành viên và kiểm tra quyền |
+| Token | Dòng token | Tên token được cấu hình trong bảng điều khiển | Xác định bất thường có chỉ tập trung ở một token hay không |
+| Tỷ lệ thành công | Dòng nhóm, dòng token | Tỷ lệ thành công = Số lần thành công / Tổng số yêu cầu | Nên chú ý khi dưới 80%; khi thấp hơn hẳn các dòng khác cùng nhóm, hãy ưu tiên kiểm tra nhóm hoặc token đó |
+| Số yêu cầu | Dòng nhóm, dòng token | Tổng số yêu cầu trong khoảng thời gian hiện tại | Khi mẫu quá nhỏ, đừng diễn giải quá mức tỷ lệ thành công |
+| Thành công | Dòng nhóm, dòng token | Số yêu cầu thành công trả về 2xx | Kết hợp với “Số yêu cầu” và “Lỗi” để đánh giá khả năng sẵn sàng chung |
+| Lỗi | Dòng nhóm, dòng token | Số yêu cầu trả về lỗi (4xx/5xx) | Khi số lỗi tăng, hãy ưu tiên xem “Nguyên nhân thất bại” và nhật ký lỗi |
+| Tiêu hao | Dòng nhóm, dòng token | Hạn mức đã tiêu hao cộng dồn trong khoảng thời gian hiện tại, khi xuất sẽ hiển thị dưới dạng số tiền | Dùng để hạch toán chi phí đội nhóm, phân bổ theo dự án và phát hiện tiêu hao bất thường |
+| Tỷ lệ trúng bộ nhớ đệm | Dòng nhóm, dòng token | Tỷ lệ trúng bộ nhớ đệm = Token trúng bộ nhớ đệm / Tổng số token | Càng cao càng tiết kiệm; phần trúng bộ nhớ đệm thường được tính giá thấp hoặc miễn phí |
+| Token bộ nhớ đệm | Dòng nhóm, dòng token | Số token trúng bộ nhớ đệm trong khoảng thời gian hiện tại | Phần này thường được tính với mức chiết khấu thấp, càng nhiều càng tiết kiệm |
+| Số yêu cầu dùng bộ nhớ đệm | Dòng nhóm, dòng token | Số yêu cầu trúng bộ nhớ đệm ít nhất một lần | Đo lường có bao nhiêu yêu cầu thực sự dùng đến bộ nhớ đệm |
+| Tỷ lệ yêu cầu dùng bộ nhớ đệm | Dòng nhóm, dòng token | Tỷ lệ yêu cầu dùng bộ nhớ đệm = Số yêu cầu trúng bộ nhớ đệm / Tổng số yêu cầu | Càng cao nghĩa là càng nhiều lượt gọi được hưởng ưu đãi bộ nhớ đệm |
+| Token bộ nhớ đệm trung bình | Dòng nhóm, dòng token | Số token trúng bộ nhớ đệm trung bình mỗi lần | Dùng để so sánh hiệu quả tận dụng bộ nhớ đệm giữa các thành viên, dịch vụ hoặc nhóm |
+| Thời gian xử lý trung bình | Dòng nhóm, dòng token | Thời gian xử lý trung bình của mỗi yêu cầu, tính bằng giây | Càng thấp nghĩa là nhà cung cấp upstream phản hồi càng nhanh; khi thời gian tăng, hãy kiểm tra ngữ cảnh dài, đầu ra dài và chuỗi gọi công cụ |
+| Thời gian bắt đầu | Dòng nhóm, dòng token | Thời điểm nhóm hoặc token này xuất hiện lần đầu trong khoảng thời gian hiện tại | Xác định thời điểm vấn đề hoặc lượt gọi bắt đầu |
+| Yêu cầu gần nhất | Dòng nhóm, dòng token | Thời điểm nhóm hoặc token này xuất hiện gần nhất trong khoảng thời gian hiện tại | Đánh giá vấn đề hoặc lượt gọi có còn đang tiếp diễn hay không |
+| Nguyên nhân thất bại | Dòng nhóm | Một số nguyên nhân thất bại xuất hiện nhiều nhất, kèm mã trạng thái và số lần; để trống hoặc `-` khi không có lỗi | Ưu tiên xử lý lỗi xuất hiện nhiều nhất, đừng chỉ nhìn bản ghi nhật ký cuối cùng |
+
+<Callout type="info" title="Nguồn của các trường">
+  Các trường hiển thị được tổng hợp từ dữ liệu thống kê phía máy chủ. Khi sử dụng hằng ngày, hãy căn cứ theo danh sách trong bảng điều khiển và các cột xuất CSV; chỉ khi tích hợp API hoặc khắc phục sự cố kỹ thuật mới cần đối chiếu thêm với tên trường gốc.
+</Callout>
+
+<Callout type="idea" title="Xác định vấn đề trong đội nhóm">
+  Xem dòng nhóm trước để đánh giá có phải là vấn đề của pool tài nguyên không, sau đó xem dòng token để xác định có phải do một người dùng hoặc token cụ thể gây ra không. Nếu tỷ lệ thành công của nhóm bình thường nhưng một token có tỷ lệ lỗi cao, thường nên ưu tiên kiểm tra token, tên mô hình, cấu hình client hoặc phần thân yêu cầu của thành viên đó.
+</Callout>
+
+## Giải thích về xuất CSV
+
+Xuất CSV là xuất danh sách hiện tại với cùng các cột, phù hợp để doanh nghiệp và đội nhóm làm báo cáo tuần, phân bổ chi phí, rà soát sự cố và đối soát mức sử dụng của thành viên.
+
+Sau khi xuất, bạn có thể mở xem trước bằng [Trình xem CSV trực tuyến](https://tools.beer/zh/csv/viewer/). Công cụ này hỗ trợ kéo thả hoặc chọn tệp CSV, cũng có thể dán văn bản CSV, phù hợp để kiểm tra nhanh nội dung các cột và nguyên nhân thất bại.
+
+| Cách hiển thị khi xuất | Mô tả |
+| - | - |
+| Dòng nhóm | `Loại` là `Nhóm`; ID người dùng, tên người dùng và token thường để trống, biểu thị dòng tổng hợp chung của nhóm đó |
+| Dòng token | `Loại` là `Token`; hiển thị ID người dùng, tên người dùng và tên token, biểu thị chi tiết thành viên hoặc token trong nhóm đó |
+| Định dạng số tiền | `Tiêu hao` hiển thị theo định dạng số tiền của bảng điều khiển, ví dụ `¥905.48` |
+| Định dạng phần trăm | Tỷ lệ thành công, tỷ lệ trúng bộ nhớ đệm và tỷ lệ yêu cầu dùng bộ nhớ đệm được xuất dưới dạng phần trăm |
+| Định dạng số | Số lớn có thể có dấu phân cách hàng nghìn, tiện đọc trực tiếp hoặc nhập vào công cụ bảng tính |
+| Định dạng thời gian | Thời gian bắt đầu và yêu cầu gần nhất được xuất theo giờ địa phương, tiện đối chiếu với thời điểm xảy ra sự cố |
+| Nguyên nhân thất bại | Nhiều lỗi xuất hiện thường xuyên sẽ được gộp lại, kèm số lần xuất hiện ở cuối; để trống hoặc `-` khi không có lỗi |
+
+## Quy trình khắc phục sự cố
+
+### 1. Xác định phạm vi ảnh hưởng
+
+Trước tiên xem các dòng tổng hợp có `Loại=Nhóm`. Nếu “Tỷ lệ thành công” gần mức bình thường và “Lỗi” rất thấp, thường đó là lỗi ngẫu nhiên; bạn có thể sao chép `request_id` của yêu cầu đó để tiếp tục kiểm tra.
+
+Nếu “Tỷ lệ thành công” của một nhóm thấp hơn hẳn các nhóm khác, hoặc “Lỗi” tăng tập trung, hãy ưu tiên kiểm tra theo nhóm: mô hình, token, tài khoản của nhà cung cấp upstream, quyền của gói và trạng thái tài nguyên của nền tảng.
+
+Với doanh nghiệp hoặc đội nhóm, hãy xem tiếp các dòng chi tiết `Loại=Token` trong nhóm đó. Nếu chỉ một người dùng hoặc token gặp bất thường, hãy ưu tiên kiểm tra cấu hình client, token, tên mô hình, phần thân yêu cầu và chiến lược xử lý đồng thời của thành viên đó.
+
+### 2. Xem tiếp các nguyên nhân lỗi hàng đầu
+
+“Nguyên nhân thất bại” thường được hiển thị theo số lần xuất hiện. Khi khắc phục, hãy xử lý lỗi xuất hiện nhiều nhất trước, sau đó mới xem các lỗi ít gặp. Lỗi xuất hiện nhiều phản ánh loại sự cố chính trong khoảng thời gian hiện tại.
+
+| Loại lỗi | Từ khóa thường gặp trong nhật ký | Nguyên nhân sơ bộ | Ưu tiên kiểm tra |
+| - | - | - | - |
+| Giới hạn tần suất | `Account RPM limit exceeded`, `Max 10/min`, `Max 5/min` | Vấn đề sử dụng hoặc giới hạn từ nhà cung cấp upstream | Số yêu cầu đồng thời hoặc số yêu cầu mỗi phút quá cao |
+| Giới hạn hạn mức ngày | `Account daily limit exceeded` | Giới hạn từ nhà cung cấp upstream | Tài khoản của nhà cung cấp upstream đã dùng hết hạn mức hôm nay |
+| Thông tin xác thực trong thời gian nghỉ | `All credentials ... are cooling down` | Giới hạn từ nhà cung cấp upstream | Toàn bộ thông tin xác thực của nhà cung cấp upstream cho mô hình hiện tại đều đang trong thời gian nghỉ |
+| Phần thân yêu cầu quá lớn | `status_code=413`, `openai_error` | Vấn đề sử dụng | Ngữ cảnh, tệp, hình ảnh hoặc kết quả công cụ quá lớn |
+| Quyền hoặc xác thực | `401`, `403`, `Invalid API key`, `pending admin approval` | Vấn đề sử dụng hoặc trạng thái tài khoản | Quyền của token, gói, nhóm hoặc mô hình bất thường |
+| Không có tài nguyên khả dụng | `No available accounts`, `No available channel`, `auth_unavailable` | Vấn đề nền tảng hoặc vấn đề cấu hình | Nhóm hiện tại không có tài khoản, kênh hoặc tài nguyên xác thực khả dụng |
+| Lỗi phía nhà cung cấp upstream | `502`, `all upstreams failed`, `Upstream request failed` | Vấn đề phía nhà cung cấp upstream | Dịch vụ của nhà cung cấp upstream hoặc mạng trung gian bất thường |
+| Hết thời gian chờ gateway | `504`, `521`, `522`, `524` | Vấn đề phía nhà cung cấp upstream hoặc đường truyền | Hết thời gian chờ khi kết nối, đọc dữ liệu hoặc nhận phản hồi từ nhà cung cấp upstream |
+| Bảo vệ tài nguyên nền tảng | `system disk overloaded`, `Service Unavailable` | Vấn đề nền tảng | Node của nền tảng hoặc tài nguyên của nhà cung cấp upstream tạm thời không khả dụng |
+| Định dạng API hình ảnh | `gpt-image-2`, `prompt is required`, `multipart form` | Vấn đề sử dụng | Sai đường dẫn API hình ảnh, prompt hoặc định dạng tải lên |
+| Định dạng gọi công cụ | `tool_use`, `tool_result`, `Invalid schema` | Vấn đề sử dụng | Thông điệp công cụ của client hoặc JSON Schema không đáp ứng yêu cầu |
+
+### 3. Xử lý theo phạm vi ảnh hưởng
+
+| Hiện tượng | Nguyên nhân có khả năng hơn | Cách xử lý đề xuất |
+| - | - | - |
+| Chỉ một token báo lỗi | Vấn đề về cấu hình, quyền của token hoặc định dạng yêu cầu ở máy cục bộ | Sao chép lại token, kiểm tra cấu hình client và phần thân yêu cầu |
+| Chỉ một mô hình báo lỗi | Vấn đề về quyền mô hình, kênh mô hình hoặc tài nguyên mô hình của nhà cung cấp upstream | Chuyển sang mô hình cùng loại, xác nhận gói hiện tại có hỗ trợ mô hình đó không |
+| Chỉ một nhóm có tỷ lệ thành công thấp | Vấn đề về pool tài nguyên của nhóm, quyền của gói hoặc tài khoản của nhà cung cấp upstream | Chuyển nhóm/mô hình; khi liên hệ hỗ trợ, hãy cung cấp tên nhóm và khoảng thời gian |
+| Nhiều nhóm cùng lúc gặp `502`, `504`, `521`, `522`, `524` | Nhà cung cấp upstream hoặc đường truyền mạng bất thường | Thử lại sau, giảm các tác vụ dài; nếu lỗi kéo dài, hãy liên hệ hỗ trợ |
+| Nhiều yêu cầu đều gặp `413` | Phần thân yêu cầu quá lớn | Rút ngắn ngữ cảnh, chia nhỏ tệp, nén hình ảnh hoặc giảm kết quả công cụ |
+| Nhiều yêu cầu đều gặp `429` | Tần suất yêu cầu quá cao, hết hạn mức ngày hoặc thông tin xác thực trong thời gian nghỉ | Giảm số yêu cầu đồng thời; dựa vào nhật ký để phân biệt RPM, daily limit và cooling down |
+
+### 4. Kết hợp mức tiêu hao và bộ nhớ đệm
+
+| Hiện tượng | Nguyên nhân có khả năng hơn | Cách xử lý đề xuất |
+| - | - | - |
+| “Tiêu hao” cao hơn hẳn các token khác trong cùng nhóm | Ngữ cảnh lớn, đầu ra dài, gọi tần suất cao hoặc tác vụ lặp lại | Kết hợp số yêu cầu, thời gian xử lý trung bình và nhật ký lỗi để xác định dịch vụ hoặc thành viên cụ thể |
+| “Tỷ lệ trúng bộ nhớ đệm” cao nhưng “Tỷ lệ yêu cầu dùng bộ nhớ đệm” thấp | Một số ít yêu cầu lớn trúng bộ nhớ đệm | Kiểm tra xem có phải chỉ một số tác vụ cố định đang tái sử dụng ngữ cảnh không |
+| “Tỷ lệ yêu cầu dùng bộ nhớ đệm” cao nhưng “Token bộ nhớ đệm trung bình” thấp | Nhiều yêu cầu trúng bộ nhớ đệm nhưng mỗi lần tiết kiệm được ít | Kiểm tra ngữ cảnh có quá ngắn hoặc nội dung bộ nhớ đệm có thiếu ổn định không |
+| “Thời gian xử lý trung bình” của một token cao bất thường | Tác vụ phía client nặng, ngữ cảnh dài, đầu ra dài hoặc nhà cung cấp upstream phản hồi chậm | So sánh số yêu cầu, bộ nhớ đệm, nguyên nhân thất bại và từng bản ghi nhật ký của token đó |
+
+## Thông tin cần cung cấp khi nhờ hỗ trợ
+
+Với các vấn đề đơn giản, bạn nên tự kiểm tra trước bằng [Giải thích nhật ký lỗi](/vi/error-logs) và [Giải thích trạng thái sức khỏe nhóm](/vi/group-health). Nếu vẫn chưa giải quyết được, bạn có thể nhấn biểu tượng sao chép trong chi tiết nhật ký lỗi tại `console/log` để sao chép toàn bộ nội dung cần kiểm tra chỉ với một lần nhấn. Khi liên hệ hỗ trợ, nên cung cấp đầy đủ các thông tin sau trong một lần cho bộ phận kỹ thuật, giúp giảm việc xác nhận qua lại:
+
+- ID người dùng
+- Khoảng thời gian: thời điểm vấn đề bắt đầu và lần xuất hiện gần nhất
+- Tên nhóm: `group`
+- Tên mô hình: mô hình mà yêu cầu sử dụng
+- Mã trạng thái: ví dụ `429`, `413`, `502`, `503`
+- Nội dung lỗi: `error_reasons.content`
+- ID yêu cầu: `request_id` trong bản ghi nhật ký hoặc phản hồi API
+- Phạm vi ảnh hưởng: một token, một mô hình, một nhóm hay nhiều nhóm cùng lúc gặp bất thường
+
+<Callout type="idea" title="Kết luận nhanh">
+  `401` / `403` thì kiểm tra quyền, `413` thì kiểm tra phần thân yêu cầu, `429` thì kiểm tra tần suất và hạn mức, `502` / `504` / `524` thì kiểm tra nhà cung cấp upstream và tác vụ dài, `503` thì kiểm tra tài nguyên có đang tạm thời không khả dụng hay không.
+</Callout>

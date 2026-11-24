@@ -1,0 +1,222 @@
+---
+title: Dùng FishXCode trong Claude Desktop
+navTitle: Claude Desktop
+---
+
+## Phạm vi áp dụng
+
+Bài viết này áp dụng cho chế độ **kết nối suy luận bên thứ ba cho Cowork / Code** trong phiên bản mới của Claude Desktop, tức là `third-party inference` trong tài liệu chính thức của Anthropic.
+
+Nếu bạn muốn:
+
+- dùng **Cowork** của Claude trên ứng dụng desktop
+- dùng **Code** của Claude trên ứng dụng desktop
+- chuyển tiếp yêu cầu tới FishXCode qua API / gateway tùy chỉnh
+
+thì đây chính là cách cấu hình bạn cần.
+
+<Callout type="warn" title="Lưu ý">
+  Đây không phải cách cũ "chỉ cần đăng nhập tài khoản Claude là trò chuyện được". Sau khi kết nối suy luận bên thứ ba, bạn chủ yếu dùng hai thẻ **Cowork** và **Code**.
+</Callout>
+
+## Chuẩn bị trước
+
+Trước khi bắt đầu, hãy chuẩn bị:
+
+1. Cài Claude Desktop phiên bản mới nhất
+2. Chuẩn bị một token FishXCode
+3. Xác nhận token của bạn truy cập được các mô hình Claude
+
+Địa chỉ lấy token:
+
+- [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+Nên chuẩn bị sẵn các mô hình sau làm lựa chọn:
+
+- `claude-sonnet-4-5-20250929`
+- `claude-opus-4-5-20251101`
+- `claude-haiku-4-5-20251001`
+
+## Cách 1: Cấu hình trực tiếp trong Claude Desktop (khuyên dùng)
+
+Anthropic chính thức khuyến nghị ưu tiên thiết lập qua giao diện cấu hình suy luận bên thứ ba có sẵn trong ứng dụng desktop.
+
+### 1. Bật Developer mode
+
+Trên thanh menu trên cùng của Claude Desktop, lần lượt vào:
+
+```text
+Help → Troubleshooting → Enable Developer mode
+```
+
+Sau khi bật, menu của ứng dụng sẽ xuất hiện các mục liên quan đến `Developer`.
+
+### 2. Mở cấu hình suy luận bên thứ ba
+
+Tiếp tục vào:
+
+```text
+Developer → Configure third-party inference
+```
+
+Thao tác này sẽ mở quy trình cấu hình suy luận bên thứ ba do Anthropic cung cấp chính thức.
+
+### 3. Chọn chế độ Gateway
+
+Ở mục loại nhà cung cấp, chọn:
+
+```text
+Gateway
+```
+
+Các dịch vụ API tùy chỉnh / trung chuyển như FishXCode tương ứng với chế độ `gateway`.
+
+### 4. Điền cấu hình FishXCode
+
+Điền các thông tin chính như sau:
+
+- Gateway URL: `https://api.fishxcode.com`
+- Authentication: `x-api-key`
+- API Key: token FishXCode của bạn
+
+Nếu giao diện yêu cầu điền danh sách mô hình, nên điền trước:
+
+```text
+claude-sonnet-4-5-20250929
+claude-opus-4-5-20251101
+claude-haiku-4-5-20251001
+```
+
+Nếu giao diện cho phép bật `Code`, hãy giữ ở trạng thái bật.
+
+### 5. Áp dụng cục bộ
+
+Sau khi cấu hình xong, ưu tiên chọn:
+
+```text
+Apply locally
+```
+
+Thao tác này sẽ ghi cấu hình suy luận bên thứ ba vào cấu hình Claude Desktop cục bộ của người dùng hiện tại.
+
+Sau khi cấu hình thành công, mở lại Claude Desktop, thông thường bạn sẽ thấy giao diện làm việc **Cowork / Code** khả dụng.
+
+## Cách 2: Quản lý qua tệp cấu hình cục bộ (nâng cao)
+
+Nếu bạn muốn sao lưu, di chuyển hoặc kiểm tra lỗi cấu hình, có thể xem vị trí mà Claude Desktop ghi cấu hình cục bộ.
+
+Các đường dẫn thường gặp như sau:
+
+### macOS
+
+```text
+~/Library/Application Support/Claude-3p/claude_desktop_config.json
+```
+
+### Windows
+
+```text
+%APPDATA%\Claude-3p\claude_desktop_config.json
+```
+
+### Linux
+
+```text
+~/.config/Claude-3p/claude_desktop_config.json
+```
+
+<Callout type="idea" title="Mẹo">
+  Tệp cục bộ thực tế dùng nhóm cấu hình suy luận bên thứ ba `enterpriseConfig`. Cách an toàn hơn không phải là tự viết JSON, mà là hoàn tất cấu hình trong ứng dụng trước, rồi đưa kết quả được tạo ra vào bản sao lưu hoặc đồng bộ.
+</Callout>
+
+## Cấu hình khuyên dùng cho FishXCode
+
+Nếu bạn muốn tự đối chiếu các trường, hãy chú ý những mục sau:
+
+| Trường | Giá trị khuyên dùng |
+| - | - |
+| `inferenceProvider` | `gateway` |
+| `inferenceGatewayBaseUrl` | `https://api.fishxcode.com` |
+| `inferenceGatewayAuthScheme` | `x-api-key` |
+| `inferenceGatewayApiKey` | Token FishXCode của bạn |
+| `inferenceModels` | Danh sách mô hình Claude |
+| `isClaudeCodeForDesktopEnabled` | `true` |
+
+Ví dụ danh sách mô hình khuyên dùng:
+
+```text
+claude-sonnet-4-5-20250929
+claude-opus-4-5-20251101
+claude-haiku-4-5-20251001
+```
+
+## Cách sử dụng
+
+Sau khi cấu hình xong, bạn có thể dùng trực tiếp trong Claude Desktop:
+
+- vào **Cowork** để hỏi đáp chung, phân tích tài liệu, cộng tác trên tệp
+- vào **Code** để chỉnh sửa mã, làm việc với terminal, xử lý tác vụ kỹ thuật
+
+Nếu thấy bộ chọn mô hình, nên ưu tiên chọn:
+
+- Dùng hằng ngày: `claude-sonnet-4-5-20250929`
+- Suy luận phức tạp: `claude-opus-4-5-20251101`
+- Nhẹ và nhanh: `claude-haiku-4-5-20251001`
+
+## Câu hỏi thường gặp
+
+### Vì sao tôi không tìm thấy `Enable Developer mode`?
+
+Trước tiên hãy xác nhận hai điều:
+
+1. Bạn đang dùng phiên bản Claude Desktop tương đối mới
+2. Bạn đang xem thanh menu hệ thống thật sự, chứ không phải các nút bên trong cửa sổ
+
+Nếu đã nâng cấp mà vẫn không thấy, hãy thoát hẳn Claude Desktop rồi mở lại một lần.
+
+### Windows báo `Virtual Machine Platform not available` thì làm sao?
+
+Nếu Claude Desktop báo:
+
+```text
+Claude's workspace requires the Virtual Machine Platform on Windows. Enable this feature, then restart.
+```
+
+nghĩa là Windows hiện chưa bật **Virtual Machine Platform**. Hãy mở PowerShell với quyền quản trị viên và chạy:
+
+```powershell
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+Sau khi chạy xong, khởi động lại Windows rồi mở lại Claude Desktop.
+
+### Vì sao cấu hình xong vẫn không thấy Cowork / Code?
+
+Kiểm tra theo thứ tự sau:
+
+1. Xác nhận đã bật Developer mode
+2. Xác nhận đã chạy `Configure third-party inference`
+3. Xác nhận đã chọn `Gateway`
+4. Xác nhận `gatewayUrl` là `https://api.fishxcode.com`
+5. Xác nhận token còn hiệu lực và truy cập được mô hình Claude
+6. Sau khi hoàn tất, thoát hẳn Claude Desktop rồi mở lại
+
+### Vì sao Gateway URL không phải `https://api.fishxcode.com/v1`?
+
+Vì chế độ gateway suy luận bên thứ ba của Claude Desktop dùng cấu hình gateway kiểu Anthropic, không phải đường dẫn `/v1/chat/completions` tương thích OpenAI. Ở đây cần điền địa chỉ gốc của gateway:
+
+```text
+https://api.fishxcode.com
+```
+
+### Đã cấu hình xong nhưng yêu cầu báo lỗi xác thực thì làm sao?
+
+Ưu tiên kiểm tra:
+
+1. Phương thức xác thực đã chọn `x-api-key` chưa
+2. Ô API Key có được điền trực tiếp token FishXCode không
+3. Token có bị hết hạn, bị xóa hoặc không đủ quyền không
+
+### Có thể tự sửa tệp JSON cục bộ không?
+
+Có, nhưng không nên dựa vào việc tự viết JSON cho "lần cấu hình đầu tiên". Lý do rất đơn giản: các trường suy luận bên thứ ba của Claude Desktop sẽ thay đổi theo phiên bản, hoàn tất cấu hình ngay trong ứng dụng sẽ ổn định hơn, và khi có sự cố cũng dễ khôi phục hơn.

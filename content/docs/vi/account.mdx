@@ -1,0 +1,161 @@
+---
+title: Đăng ký và quản lý tài khoản
+description: Hướng dẫn đăng ký tài khoản FishXCode, lấy API Key, nạp tiền và bảo mật tài khoản.
+navTitle: Đăng ký tài khoản
+---
+
+> Đã có tài khoản? Xem ngay [Bắt đầu nhanh](/vi/start) để cấu hình công cụ.
+> Muốn nắm toàn cảnh nền tảng? Hãy xem [Điều hướng nền tảng](/vi/platform).
+
+## 1. Lấy API Key
+
+### 1. Đăng ký tài khoản
+
+Truy cập [fishxcode.com](https://fishxcode.com/register?aff=9CTW) và nhấn **Đăng ký**:
+
+![Trang chủ FishXCode](/img/start/api-01-home.png)
+
+Chọn cách đăng ký (GitHub, LinuxDO hoặc tên người dùng):
+
+![Chọn cách đăng ký](/img/start/api-02-register.png)
+
+Điền tên người dùng, mật khẩu và xác nhận mật khẩu để hoàn tất đăng ký:
+
+![Điền thông tin đăng ký](/img/start/api-03-register-form.png)
+
+### 2. Đăng nhập
+
+Sau khi đăng ký, hãy đăng nhập bằng tên người dùng và mật khẩu:
+
+![Trang đăng nhập](/img/start/api-04-login.png)
+
+Sau khi đăng nhập, bạn sẽ vào bảng điều khiển:
+
+![Trang chủ bảng điều khiển](/img/start/api-05-console.png)
+
+### 3. Tạo token
+
+Vào **Bảng điều khiển → Quản lý token → Thêm token** và điền biểu mẫu:
+
+![Thêm token](/img/start/api-06-token-create.png)
+
+- Ở mục **Nhóm token**, nên chọn **Kênh chính thức**. Nhóm này gồm toàn bộ dòng mô hình Claude và tự động chọn mô hình theo độ phức tạp của tác vụ, bạn không cần chuyển đổi thủ công. Kênh và mô hình cụ thể có thể thay đổi theo thực tế trên trang web chính thức, hãy xem [trang giá](https://fishxcode.com/pricing) để biết thông tin mới nhất.
+
+Sau khi tạo xong, nhấn nút **Sao chép** trong danh sách token để lấy API Key (định dạng `sk-xxx`):
+
+![Sao chép token](/img/start/api-07-token-copy.png)
+
+### 4. Nạp tiền
+
+Vào **Bảng điều khiển → Quản lý ví**, hỗ trợ Alipay, WeChat hoặc mã đổi thưởng:
+
+![Trang nạp tiền](/img/start/api-08-wallet.png)
+
+| Phương thức | Thao tác |
+| - | - |
+| Alipay | Nhập/chọn số tiền → Alipay |
+| WeChat | Nhập/chọn số tiền → WeChat |
+| Mã đổi thưởng | Nhập mã ở khu vực đổi mã → Nhấn đổi hạn mức |
+
+<Callout type="idea" title="Giải thích hệ số">
+  `0.5x` trong tên nhóm là hệ số tiêu thụ, giá trị càng nhỏ thì bạn nhận được càng nhiều token. Ví dụ, `0.5x` nghĩa là 1 CNY dùng được 10 triệu token chính thức (theo giá gốc chính thức chỉ được 5 triệu).
+</Callout>
+
+---
+
+## 2. Quản lý token
+
+### Giải thích nhóm token
+
+Khi tạo token, bạn cần chọn nhóm. Mỗi nhóm quyết định phạm vi mô hình khả dụng và hệ số tiêu thụ:
+
+| Loại nhóm | Mô tả | Trường hợp phù hợp |
+| - | - | - |
+| **Kênh chính thức** | Gồm toàn bộ dòng mô hình Claude, định tuyến tự động | Khuyên dùng cho đa số người dùng |
+| **Nhóm hệ số thấp** | Hệ số tiêu thụ thấp hơn, hiệu quả chi phí cao hơn | Gọi API tần suất cao, cần tiết kiệm chi phí |
+
+<Callout type="idea" title="Khuyến nghị">
+  Nếu chưa chắc nên chọn nhóm nào, bạn cứ chọn **Kênh chính thức**. Hệ thống sẽ tự động chọn mô hình phù hợp nhất theo độ phức tạp của tác vụ.
+</Callout>
+
+### Khuyến nghị bảo mật token
+
+- **Thay định kỳ**: nên thay token mỗi 30-90 ngày để giảm nguy cơ rò rỉ
+- **Không lưu dạng văn bản thuần**: tránh ghi API Key trực tiếp vào mã nguồn hoặc commit lên kho Git, nên dùng biến môi trường
+- **Phân quyền tối thiểu**: tạo token riêng cho từng dự án để dễ quản lý và theo dõi
+- **Xử lý khi rò rỉ**: nếu nghi ngờ token bị lộ, hãy xóa ngay token đó trong bảng điều khiển và tạo token mới
+
+### Sửa và xóa token
+
+Tại trang **Bảng điều khiển → Quản lý token**:
+
+- **Xem chi tiết**: nhấn vào tên token để xem nhóm, phạm vi mô hình và thời gian tạo
+- **Sao chép token**: nhấn nút sao chép trong danh sách
+- **Xóa token**: nhấn nút xóa, token sẽ mất hiệu lực ngay sau khi xóa và các công cụ đang dùng token đó sẽ không gọi API được nữa
+
+<Callout type="warn" title="Lưu ý">
+  Thao tác xóa không thể hoàn tác, hãy chắc chắn bạn không còn dùng token rồi mới xóa.
+</Callout>
+
+---
+
+## 3. Bảo mật tài khoản
+
+### Mật khẩu và an toàn đăng nhập
+
+- Dùng **mật khẩu mạnh** (từ 8 ký tự trở lên, gồm chữ hoa, chữ thường và chữ số)
+- Không dùng cùng một mật khẩu trên nhiều nền tảng
+- Nếu quên mật khẩu, bạn có thể đặt lại qua quy trình khôi phục mật khẩu ở trang đăng nhập
+
+### Liên kết đăng nhập bên thứ ba
+
+FishXCode hỗ trợ các cách đăng nhập bên thứ ba sau:
+
+| Phương thức | Mô tả |
+| - | - |
+| **GitHub** | Khuyên dùng cho lập trình viên, ủy quyền đăng nhập chỉ với một cú nhấp |
+| **LinuxDO** | Thành viên cộng đồng có thể đăng nhập trực tiếp |
+
+Sau khi liên kết tài khoản bên thứ ba, bạn có thể đăng nhập bằng ủy quyền của nền tảng đó mà không cần nhập mật khẩu.
+
+### Phát hiện và xử lý bất thường
+
+Nếu phát hiện các tình huống bất thường dưới đây, bạn nên xử lý ngay:
+
+1. **Chi tiêu tăng bất thường** → kiểm tra token có bị lộ không, khi cần hãy xóa toàn bộ token và tạo lại
+2. **Không đăng nhập được** → thử khôi phục mật khẩu; nếu vẫn không được, hãy liên hệ bộ phận hỗ trợ chính thức
+3. **Số dư bị trừ bất thường** → tra cứu các lượt gọi cụ thể trong nhật ký sử dụng để xác nhận đó có phải là mức tiêu hao bình thường không
+
+<Callout type="idea" title="Liên hệ hỗ trợ">
+  Nếu gặp vấn đề bất thường về tài khoản, hãy nhận trợ giúp qua trang [Liên hệ với chúng tôi](https://fishxcode.com/contact).
+</Callout>
+
+---
+
+## 4. Câu hỏi thường gặp
+
+### Không nhận được mã xác minh khi đăng ký?
+
+1. Kiểm tra email đã nhập đúng chưa (chú ý chính tả và tên miền)
+2. Xem thư mục thư rác/spam
+3. Chờ 1-2 phút rồi thử lại, tránh gửi yêu cầu liên tục
+4. Nếu vẫn không nhận được, hãy thử đổi email khác hoặc dùng đăng nhập bên thứ ba
+
+### Xem token đã tạo ở đâu?
+
+Vào **Bảng điều khiển → Quản lý token**, các token đã tạo sẽ hiển thị trong danh sách. Nhấn nút sao chép để lấy API Key định dạng `sk-xxx`.
+
+### Nạp tiền nhưng chưa được cộng vào tài khoản?
+
+1. Xác nhận thanh toán đã thành công (xem lịch sử giao dịch Alipay/WeChat)
+2. Chờ 1-5 phút, hệ thống có thể chậm trễ trong giây lát
+3. Làm mới trang ví trong bảng điều khiển
+4. Nếu quá 10 phút vẫn chưa được cộng, hãy liên hệ bộ phận chăm sóc khách hàng chính thức và gửi kèm ảnh chụp màn hình thanh toán
+
+### Làm sao xem chi tiết chi tiêu?
+
+Vào **Bảng điều khiển → Nhật ký sử dụng** để xem thông tin của từng lượt gọi API:
+
+- Thời gian gọi và tên mô hình
+- Lượng token tiêu thụ và chi phí
+- IP yêu cầu và bản ghi chi tiết

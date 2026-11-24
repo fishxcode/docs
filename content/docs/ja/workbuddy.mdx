@@ -1,0 +1,132 @@
+---
+title: WorkBuddy で FishXCode を使う
+navTitle: WorkBuddy
+---
+
+> 初めてご利用の方は、先に [アカウント登録とチャージ](/ja/account) を完了し、[FishXCode コンソール](https://fishxcode.com/console/token) で API Key を取得してください。
+
+## 1. WorkBuddy の設定ファイルを開く
+
+WorkBuddy では、ローカルの `models.json` でカスタムモデルを接続できます。設定ファイルの場所は次のとおりです。
+
+- macOS / Linux：`~/.workbuddy/models.json`
+- Windows：`C:\Users\<ユーザー名>\.workbuddy\models.json`
+
+ディレクトリやファイルがない場合は、先に作成してください。
+
+## 2. FishXCode のサードパーティモデルを設定する
+
+WorkBuddy のサードパーティモデル設定では、OpenAI Chat Completions 互換のプロトコルを使います。ここでの `vendor: "OpenAI"` はインターフェースのプロトコルを表すもので、OpenAI のモデルしか使えないという意味ではありません。Claude モデルも FishXCode の OpenAI 互換インターフェース経由で呼び出せます。
+
+次の内容を `~/.workbuddy/models.json` に書き込みます。
+
+```json
+{
+  "models": [
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-あなたのFishXCode-Token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-あなたのFishXCode-Token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    }
+  ],
+  "availableModels": [
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+<Callout type="warn" title="重要">
+  - `sk-あなたのFishXCode-Token` は、FishXCode コンソールで作成した実際の API Key に置き換えてください。
+  - `availableModels` には、上記の `models[].id` にあるモデル ID を必ず含めてください。含まれていないと、WorkBuddy のドロップダウンリストに表示されないことがあります。
+  - `url` には、Chat Completions の完全なアドレス `https://api.fishxcode.com/v1/chat/completions` を入力する必要があります。
+</Callout>
+
+## 3. Tencent の Token Plan と FishXCode を併用する
+
+Tencent 公式の Token Plan も引き続き使いたい場合は、公式のモデルと FishXCode のモデルを同じ `models.json` にまとめて記述できます。
+
+```json
+{
+  "models": [
+    {
+      "id": "tc-code-latest",
+      "name": "Auto",
+      "vendor": "OpenAI",
+      "url": "https://api.lkeap.cloud.tencent.com/plan/v3/chat/completions",
+      "apiKey": "your-token-plan-api-key",
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 4096
+    },
+    {
+      "id": "hunyuan-2.0-instruct",
+      "name": "Tencent HY 2.0 Instruct",
+      "vendor": "OpenAI",
+      "url": "https://api.lkeap.cloud.tencent.com/plan/v3/chat/completions",
+      "apiKey": "your-token-plan-api-key",
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 4096
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-あなたのFishXCode-Token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-あなたのFishXCode-Token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    }
+  ],
+  "availableModels": [
+    "tc-code-latest",
+    "hunyuan-2.0-instruct",
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+## 4. 再起動して確認する
+
+1. `models.json` を保存します
+2. WorkBuddy を完全に終了します
+3. WorkBuddy を再起動します
+4. モデルの選択エリアを開きます
+5. `gpt-5.5` または `claude-opus-4-7` を選択します
+6. 簡単な質問を送信して、応答を確認します
+
+## よくある質問
+
+### 追加したモデルが表示されない
+
+まず `availableModels` に該当するモデル ID が含まれているかを確認し、次に `models.json` が正しい JSON になっているかを確認してください。
+
+### 呼び出しに失敗する、または赤いエラーが表示される
+
+`url` が完全なアドレス `https://api.fishxcode.com/v1/chat/completions` になっているか確認してください。`https://api.fishxcode.com/v1` だけを入力しないでください。
+
+### 認証に失敗する
+
+コンソールから API Key をコピーし直し、余分なスペースや改行が含まれていないか確認してください。

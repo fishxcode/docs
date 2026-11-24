@@ -1,0 +1,134 @@
+---
+title: Использование FishXCode в CodeBuddy
+navTitle: CodeBuddy
+---
+
+> Впервые здесь? Сначала [зарегистрируйтесь и пополните баланс](/ru/account), затем получите API Key в [консоли FishXCode](https://fishxcode.com/console/token).
+
+## 1. Установка и запуск CodeBuddy Code
+
+В этом руководстве настраивается инструмент командной строки **CodeBuddy Code** от Tencent Cloud. Убедитесь, что у вас установлен Node.js 18.0 или новее, затем установите инструмент:
+
+```bash
+npm install -g @tencent-ai/codebuddy-code
+```
+
+Проверьте версию:
+
+```bash
+codebuddy --version
+```
+
+Запустите CodeBuddy Code:
+
+```bash
+codebuddy
+```
+
+При первом запуске выполните вход, следуя подсказкам. Позже можно ввести в командной строке `/model`, чтобы проверить, загрузились ли собственные модели.
+
+## 2. Откройте файл конфигурации CodeBuddy
+
+CodeBuddy Code позволяет подключать собственные модели через локальный файл `models.json`. Расположение файла:
+
+- macOS / Linux: `~/.codebuddy/models.json`
+- Windows: `C:\Users\<имя_пользователя>\.codebuddy\models.json`
+
+Если каталога или файла нет, сначала создайте их.
+
+## 3. Добавьте конфигурацию моделей FishXCode
+
+Для сторонних больших моделей CodeBuddy Code использует протокол, совместимый с OpenAI Chat Completions. Здесь `vendor: "OpenAI"` означает совместимость по протоколу, а не то, что можно указывать только модели OpenAI: модели Claude тоже вызываются через OpenAI-совместимый интерфейс FishXCode.
+
+Запишите в `~/.codebuddy/models.json` следующее:
+
+```json
+{
+  "models": [
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    }
+  ],
+  "availableModels": [
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+<Callout type="warn" title="Важно">
+  - Замените `sk-your-fishxcode-token` на реальный API Key, созданный в консоли FishXCode.
+  - `availableModels` должен содержать ID моделей из `models[].id` выше, иначе новые модели могут не появиться в `/model`.
+  - Для сторонних шлюзов нужен полный адрес Chat Completions: `https://api.fishxcode.com/v1/chat/completions`.
+</Callout>
+
+## 4. Tencent Coding Plan и FishXCode одновременно
+
+Если вам нужно сохранить и официальный Tencent Coding Plan, добавьте модели FishXCode в тот же `models.json`:
+
+```json
+{
+  "models": [
+    {
+      "id": "tc-code-latest",
+      "name": "Auto",
+      "vendor": "Tencent Cloud",
+      "apiKey": "YOUR_TENCENT_CODING_PLAN_KEY",
+      "url": "https://api.lkeap.cloud.tencent.com/coding/v3"
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "apiKey": "sk-your-fishxcode-token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    }
+  ],
+  "availableModels": [
+    "tc-code-latest",
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+## 5. Перезапуск и выбор модели
+
+1. Сохраните `~/.codebuddy/models.json`
+2. Полностью закройте запущенный CodeBuddy Code
+3. Снова выполните `codebuddy`
+4. Введите `/model`
+5. Выберите `gpt-5.5` или `claude-opus-4-7`
+6. Отправьте тестовый запрос, например `Объясни структуру текущего проекта`
+
+## Частые вопросы
+
+### `/model` не показывает модели
+
+Сначала проверьте `availableModels`: ID модели должен присутствовать и в `models[].id`, и в `availableModels`.
+
+### Модель видна, но вызовы не проходят
+
+Сначала проверьте `url`: для сторонних моделей FishXCode нужен полный адрес `https://api.fishxcode.com/v1/chat/completions`.
+
+### Ошибка аутентификации
+
+Скопируйте API Key из консоли заново и убедитесь, что в нём нет лишних пробелов или переносов строк.

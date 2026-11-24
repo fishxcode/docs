@@ -1,0 +1,249 @@
+---
+title: 在 Claude Code 中使用 FishXCode
+description: 用 Claude Code 接入 FishXCode 的完整上手流程和關鍵配置步驟。
+navTitle: Claude Code
+---
+
+> 首次使用？請先完成 [帳戶註冊與充值](/zh-TW/account)。
+
+## 一、環境準備
+
+### 安裝 Node.js
+
+Claude  Code 通過 npm 安裝，需先確認 Node.js 已就緒。
+
+```bash tab="macOS - 驗證"
+node -v
+npm -v
+```
+
+```bash tab="macOS - Homebrew 安裝"
+brew install node
+```
+
+```bash tab="Windows - 驗證（CMD/PowerShell）"
+node -v
+npm -v
+```
+
+若未安裝，前往 [nodejs.org/zh-cn/download](https://nodejs.cn/download/current/) 下載對應平臺安裝包，安裝完成後 **Windows 需重啟**。
+
+### Windows 額外：安裝 Git Bash
+
+Claude  Code 依賴 bash 執行環境，Windows 使用者需安裝 Git Bash：
+
+1. 下載地址：[git-scm.com/install/windows](https://git-scm.com/install)，選擇對應版本安裝。
+2. 驗證：右鍵桌面，出現 **Open Git Bash here** 選項即安裝成功。
+
+---
+
+## 二、通過ZCF安裝 Claude  Code
+
+```bash tab="npm"
+npx zcf
+```
+
+---
+
+## 三、配置 FishXCode
+
+1. 終端輸入 `npx zcf`，回車執行。
+   出現 `Ok to proceed? (y)` 時輸入 `y` 回車。
+
+2. 選擇 ZCF 顯示語言：
+   選擇 **簡體中文**。
+
+3. 安裝完成後，選擇：
+   `1. 完整初始化 - 安裝 Claude Code + 匯入工作流 + 配置 API 或 CCR 代理 + 配置 MCP 服務`
+
+4. 是否修改模板語言配置：
+   選擇 `No`
+
+5. AI 輸出語言：
+   選擇 `簡體中文`
+
+6. 是否安裝 Claude：
+   選擇 `Yes`
+
+7. API 配置模式：
+   選擇 `自定義 API 配置`
+
+8. API 供應商：
+   選擇 `自定義配置`
+
+9. 配置名稱：
+   自定義英文名稱
+
+10. 認證型別：
+    選擇 `API Key`
+
+11. API 基礎 URL：
+    ```
+    https://api.fishxcode.com
+    ```
+
+12. API 金鑰：
+    填寫 FishXCode 控制台生成的令牌
+
+13. 模型相關配置：
+    預設回車跳過即可
+
+14. 工作流型別：
+    選擇 `通用工具`
+
+15. 輸出風格：
+    根據個人喜好選擇
+
+16. 是否配置 MCP：
+    選擇 `Yes`
+
+17. MCP 服務：
+    使用空格選擇需要的服務，回車執行
+
+18. 配置 CCometixLine：
+    直接回車
+
+19. 返回主選單後輸入：
+    ```
+    q
+    ```
+
+20. 終端輸入：
+    ```
+    claude
+    ```
+    - 選擇 `Yes, I trust this folder`
+    - API 選擇，一定要選擇 **YES（第一個）**
+
+---
+
+## 四、啟動使用
+
+```bash
+cd my-project
+claude
+```
+
+---
+
+## 五、模型切換
+
+在 Claude  Code 對話介面中輸入 `/model` 即可切換模型：
+
+| 選項 | 實際模型 | 說明 |
+| - | - | - |
+| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | 根據任務自動選擇，推薦日常使用 |
+| **Opus** | `claude-opus-4-5-20251101` | 最強推理能力，消耗較高 |
+| **Haiku** | `claude-haiku-4-5-20251001` | 輕量快速 |
+
+也可通過環境變數固定模型：
+
+```bash tab="macOS/Linux"
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+claude
+```
+
+```powershell tab="Windows PowerShell"
+$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+claude
+```
+
+<Callout type="idea" title="升級 Claude Code">
+  如發現模型版本不是最新，執行升級命令後重啟相關工具：
+
+  ```bash
+  npm install -g @anthropic-ai/claude-code
+  ```
+</Callout>
+
+---
+
+## 六、IDE 整合
+
+### IntelliJ IDEA
+
+操作路徑：檔案 → 設定 → 外掛 → Marketplace → 搜尋 `claude code`，找到 **Claude  Code Terminal** 並安裝：
+
+![安裝 Claude  Code Terminal](/img/start/idea-01-install.png)
+
+安裝完成後重啟 IDEA，驗證外掛已載入：
+
+![驗證外掛已載入](/img/start/idea-02-verify.png)
+
+<Callout type="info">
+  若在外掛市場搜尋不到，說明當前 IDEA 版本過低，需升級至最新版本。
+</Callout>
+
+### VSCode
+
+按 `Ctrl + Shift + X` 開啟擴充套件面板，搜尋 `claude code`，找到 **Claude  Code for VSCode** 安裝。
+
+![搜尋並安裝 Claude  Code 外掛](/img/start/vscode-01-install.png)
+
+安裝完成後，外掛提供三種接入方式：
+
+![Claude  Code 外掛接入方式](/img/start/vscode-02-login.png)
+
+推薦通過 `settings.json` 配置接入 FishXCode。點選外掛右下角**齒輪圖示** → **在 settings.json 中編輯**：
+
+![開啟 settings.json 編輯](/img/start/vscode-03-settings.png)
+
+在 VSCode 的 `settings.json` 中新增：
+
+```json
+{
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.environmentVariables": [
+    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "替換為您的 API Key" },
+    { "name": "ANTHROPIC_BASE_URL", "value": "https://api.fishxcode.com/" }
+  ]
+}
+```
+
+![settings.json 配置示例](/img/start/vscode-04-config.png)
+
+儲存後**退出並重新開啟 VSCode**，外掛即可正常連線 FishXCode。
+
+![在 VSCode 中使用 Claude  Code](/img/start/vscode-05-demo.gif)
+
+---
+
+## 七、常見問題
+
+### 出現 403 錯誤
+
+Token 餘額不足，前往控制台充值後重試。
+
+### Windows 出現連線異常或 400/401 錯誤
+
+在 PowerShell 中重新執行 `setx` 命令寫入系統變數，然後重新開啟終端：
+
+```powershell
+setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
+setx ANTHROPIC_BASE_URL "https://api.fishxcode.com/"
+```
+
+### 提示"Unable to connect to Anthropic services"
+
+完整錯誤如下：
+
+```
+Unable to connect to Anthropic services
+Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
+Please check your internet connection and network settings.
+```
+
+這是因為 Claude  Code 尚未完成 onboarding，仍嘗試連線官方 `api.anthropic.com`。**無需科學上網**，在 `~/.claude.json`（注意是 home 目錄下的 `.claude.json`，不是 `.claude/settings.json`）末尾新增 `"hasCompletedOnboarding": true` 即可跳過：
+
+```json
+{
+  "installMethod": "unknown",
+  "autoUpdates": true,
+  "projects": { ... },
+  "hasCompletedOnboarding": true
+}
+```
+
+<Callout type="idea">
+  新增前注意在上一個欄位末尾補逗號（JSON 語法要求）。修改後重新執行 `claude` 即可正常連線。
+</Callout>

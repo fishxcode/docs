@@ -1,0 +1,41 @@
+---
+title: Использование FishXCode в Droid CLI
+navTitle: Droid CLI
+---
+
+## Установка Droid CLI
+
+```bash tab="macOS/Linux"
+curl -fsSL https://app.factory.ai/cli | sh
+```
+
+```powershell tab="Windows"
+irm https://app.factory.ai/cli/windows | iex
+```
+
+## Настройка модели
+
+Откройте `~/.factory/config.json` и замените его содержимое следующим:
+
+```json
+{
+  "custom_models": [
+    {
+      "model_display_name": "fishxcode-gpt5",
+      "model": "gpt-5",
+      "base_url": "https://api.fishxcode.com/v1",
+      "api_key": "YOUR_FISHXCODE_KEY",
+      "provider": "generic-chat-completion-api",
+      "max_tokens": 1280000
+    }
+  ]
+}
+```
+
+<Callout type="warn" title="Важно">
+  Замените `YOUR_FISHXCODE_KEY` на ваш API Key FishXCode.
+</Callout>
+
+## Запуск
+
+После настройки введите в командной строке `droid`, в открывшемся интерфейсе введите `/model` и выберите `fishxcode-gpt5` в разделе Custom Model — можно начинать работу.

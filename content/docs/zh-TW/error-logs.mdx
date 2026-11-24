@@ -1,0 +1,131 @@
+---
+title: 錯誤日誌說明
+description: FishXCode 控制台錯誤日誌欄位、狀態碼含義、常見錯誤和排障流程。
+---
+
+錯誤日誌用於定位單次請求失敗的具體原因。排查時建議先檢視 [分組健康狀態](/zh-TW/group-health) 判斷影響範圍，再用錯誤日誌裡的 `request_id` 定位單條請求。
+
+入口：[控制台 → 使用日誌](https://fishxcode.com/console/log)。將日誌型別切換為 **錯誤日誌** 後，可按時間、模型、Token、分組、請求 ID、錯誤訊息和狀態碼篩選。
+
+<Callout type="idea" title="快速判斷">
+  - `request_id` 用於定位單條請求
+  - `status_code` 用於按錯誤型別聚合
+  - `content` 用於搜尋具體錯誤關鍵詞
+  - `group` 用於判斷問題是否集中在某個分組
+</Callout>
+
+## 欄位說明
+
+| 欄位 | 含義 | 排查價值 |
+| - | - | - |
+| 時間 | 請求失敗發生的時間 | 判斷問題是否持續發生 |
+| 模型 | 請求使用的模型名 | 判斷是否隻影響某個模型 |
+| Token | 請求使用的 API Key 或 Token 名稱 | 判斷是否隻影響某個 Token |
+| 分組 | 請求所屬套餐、模型或上游資源分組 | 判斷是否是分組集中異常 |
+| 請求 ID | 單次請求的唯一標識，通常為 `request_id` | 聯絡支援時優先提供 |
+| 錯誤訊息 | 失敗原因文本，通常包含 `content` | 用關鍵詞定位具體錯誤 |
+| 狀態碼 | HTTP 或上游狀態碼，例如 `401`、`429`、`502` | 用於快速歸類錯誤 |
+
+## 排查順序
+
+1. 複製介面響應或日誌中的 `request_id`，先精確搜尋單次請求。
+2. 如果沒有 `request_id`，按時間範圍、模型和 Token 縮小範圍。
+3. 用狀態碼聚合錯誤型別，例如 `401`、`413`、`429`、`502`、`503`。
+4. 用錯誤訊息搜尋關鍵詞，例如 `Invalid API key`、`daily limit exceeded`、`Upstream request failed`。
+5. 如果同一分組集中出現相同錯誤，進入 [分組健康狀態](/zh-TW/group-health) 判斷影響範圍。
+
+## 問題歸因
+
+錯誤日誌可以幫助初步判斷問題屬於“使用問題”、“上游問題”還是“平臺問題”。歸因不是隻看狀態碼，還要結合影響範圍：
+
+| 歸因 | 判斷標準 | 典型表現 | 優先處理 |
+| - | - | - | - |
+| 使用問題 | 隻影響單個請求、單個 Token 或特定客戶端配置 | 請求體格式錯誤、引數不匹配、Token 複製錯誤、上下文過大、介面路徑錯誤 | 檢查本地配置、請求體、模型名、Token 和工具版本 |
+| 上游問題 | 多個請求集中出現上游失敗、閘道器超時或上游限額 | `Upstream request failed`、`all upstreams failed`、`bad response status code 502/524`、上游帳號限流 | 稍後重試，降低併發，必要時切換模型或分組 |
+| 平臺問題 | 平臺節點、資源池或通道不可用 | `system disk overloaded`、`No available accounts`、`No available channel`、平臺側 `Service Unavailable` | 稍後重試；持續出現時聯絡支援並提供分組、時間範圍和 `request_id` |
+| 需結合分組判斷 | 單條日誌無法準確判斷責任方 | `429`、`502`、`503` 這類可能由多種原因觸發的錯誤 | 檢視 [分組健康狀態](/zh-TW/group-health)，確認是否集中發生 |
+
+<Callout type="warn" title="注意">
+  不要只憑一條 `502` 或 `503` 判斷責任方。單個請求失敗可能是偶發上游抖動；同一分組在同一時間段大量失敗，才更適合按上游或平臺資源問題處理。
+</Callout>
+
+## 狀態碼分類
+
+| 狀態碼 | 常見含義 | 初步歸因 | 優先處理 |
+| - | - | - | - |
+| `400` | 請求體格式、引數或工具訊息不符合要求 | 使用問題 | 檢查客戶端請求體、介面路徑和工具 schema |
+| `401` | Token 無效、未啟用或認證失敗 | 使用問題 | 重新複製 Token，確認 Token 狀態 |
+| `403` | 上游拒絕訪問，常見於許可權或模型訪問限制 | 使用問題或上游問題 | 檢查套餐、分組和模型許可權 |
+| `413` | 請求體過大 | 使用問題 | 縮短上下文，拆分檔案，壓縮圖片 |
+| `429` | 頻率限制、日額度限制或憑證冷卻 | 需結合分組判斷 | 降低併發，等待額度或冷卻恢復 |
+| `500` | 中轉層或上游包裝後的內部錯誤 | 需結合錯誤訊息判斷 | 結合錯誤訊息判斷真實原因 |
+| `502` | 上游服務或中間網路異常 | 上游問題或鏈路問題 | 稍後重試，必要時切換模型/分組 |
+| `503` | 服務、通道、帳號或平臺資源暫不可用 | 上游問題或平臺問題 | 稍後重試，持續出現時聯絡支援 |
+| `504` / `521` / `522` / `524` | 閘道器連線、讀取或響應超時 | 上游問題或鏈路問題 | 減少長任務，稍後重試 |
+
+## 常見錯誤訊息
+
+| 錯誤日誌內容 | 含義 | 初步歸因 | 建議處理 |
+| - | - | - | - |
+| `status_code=401, Invalid token` | Token 無效、複製錯誤或已失效 | 使用問題 | 重新複製控制台 Token，確認沒有多餘空格 |
+| `status_code=401, Invalid API key or key is pending admin approval` | API Key 無效，或新 Key 仍在等待稽核/啟用 | 使用問題或帳號狀態 | 確認使用的是控制台最新 Token；如果剛建立或更換套餐，等待生效後重試，仍失敗請聯絡支援 |
+| `status_code=403, bad response status code 403` | 上游拒絕當前請求，常見於許可權、帳號狀態或模型訪問限制 | 使用問題或上游問題 | 檢查 Token、套餐分組和模型許可權；持續出現時切換模型或聯絡支援並提供 `request_id` |
+| `status_code=413, openai_error` / `bad response status code 413` | 請求體過大，常見於上下文、檔案、圖片或工具結果過大 | 使用問題 | 縮短上下文，減少一次性上傳內容，拆分大檔案或壓縮圖片後重試 |
+| `status_code=429, Account RPM limit exceeded` | 上游帳號觸發每分鐘請求限制 | 使用問題或上游限制 | 降低併發和重試頻率，稍後再試 |
+| `status_code=429, Account daily limit exceeded` | 上游帳號觸發每日請求上限 | 上游限制 | 等待每日額度重置，或切換其他可用模型/分組 |
+| `status_code=429, All credentials for model ... are cooling down` | 當前模型的上游憑證都處於冷卻期 | 上游限制 | 降低重試頻率，等待冷卻結束；緊急任務可臨時切換模型 |
+| `status_code=500, 請求失敗 [429]: {"message":"Too many requests, please wait before trying again."}` | 上游以 `429` 形式返回限流，但被中轉層包裝為 `500` | 使用問題或上游限制 | 按限流處理：降低併發、延長重試間隔，避免立即連續重試 |
+| `status_code=500, auth_unavailable: no auth available` | 當前模型或分組暫時沒有可用的上游認證資源 | 平臺問題 | 稍後重試；若持續出現，切換可用模型/分組，或聯絡支援確認套餐和分組狀態 |
+| `status_code=502, Upstream request failed` / `bad response status code 502` / `all upstreams failed` | 上游服務或中間網路返回異常，或所有可用上游均請求失敗 | 上游問題 | 稍後重試；若持續出現，切換模型或聯絡支援並提供 `request_id` |
+| `status_code=502, openai_error` | OpenAI 相容上游返回異常，但中轉層未獲得更具體原因 | 上游問題 | 先按上游異常處理；若同一請求穩定復現，減少上下文並提供 `request_id` 給支援 |
+| `status_code=502, The origin web server returned an invalid or incomplete response to Cloudflare` | 上游源站經 Cloudflare 返回異常響應 | 上游問題 | 通常為臨時上游故障，稍後重試 |
+| `status_code=500, upstream error: do request failed` | 請求傳送到上游時失敗，常見於網路連線或上游臨時不可達 | 上游問題或鏈路問題 | 稍後重試；持續出現時提供 `request_id` 給支援排查 |
+| `status_code=520, bad response status code 520` | Cloudflare 返回未知錯誤，通常表示上游響應異常或連線被中斷 | 上游問題或鏈路問題 | 稍後重試；若集中出現，按上游故障處理 |
+| `status_code=521` / `522` / `504` / `524` | Cloudflare 或上游閘道器連線、讀取或響應超時異常 | 上游問題或鏈路問題 | 先稍後重試；如果只在長任務中出現，減少上下文、輸出長度或工具呼叫鏈路 |
+| `status_code=503, Service Unavailable` | 上游服務暫不可用或當前分組無可用資源 | 需結合分組判斷 | 稍後重試；持續出現時切換模型/分組，或聯絡支援確認資源狀態 |
+| `status_code=503, system disk overloaded` | 服務節點磁碟水位過高，平臺為保護服務臨時拒絕請求 | 平臺問題 | 這是平臺側容量/節點狀態問題，稍後重試；持續出現請聯絡支援 |
+| `status_code=503, No available accounts: no available accounts` | 當前分組沒有可用上游帳號 | 平臺問題 | 切換模型/分組或稍後重試；若長時間存在，聯絡支援確認資源池 |
+| `status_code=503, No available channel for model ... under group ...` | 當前分組下沒有該模型的可用通道 | 使用問題或平臺問題 | 檢查模型名稱和套餐支援範圍，切換到該分組支援的模型 |
+| `status_code=503, model gpt-image-2 is only supported on /v1/images/generations and /v1/images/edits` | 影像模型被用於錯誤介面 | 使用問題 | 將影像生成/編輯請求傳送到對應 images 介面 |
+| `status_code=500, Image source is a local path that is not readable from this server` | 請求中包含上游當前無法讀取的本地圖片路徑，可能導致終端輸入無響應 | 使用問題 | 前端專案可優先檢查 `lock` 系列依賴檔案：刪除相關鎖檔案，或移除鎖檔案中異常的 `png` 欄位後重新開啟會話；如需繼續傳圖，請改用公網 `http(s)` 圖片 URL，或傳入 `data:image/...` base64 |
+| `status_code=500, failed to parse multipart form` | 影像或檔案上傳請求體格式不符合介面要求 | 使用問題 | 檢查 `multipart/form-data` 欄位名、檔案欄位和請求頭；不要手動寫錯 boundary |
+| `status_code=400, Invalid request: prompt is required` / `解析 Images 請求失敗: prompt 不能為空` | 影像生成/編輯請求缺少 `prompt` | 使用問題 | 補齊非空 `prompt`，並確認請求發往影像介面 |
+| `status_code=400, Unsupported parameter: messages` | 請求介面和引數格式不匹配，常見於把 Chat/Responses 引數發到不支援 `messages` 的介面 | 使用問題 | 檢查當前工具的 `base_url`、介面路徑和模型型別；按目標介面文件調整請求體 |
+| `tool_use ids were found without tool_result blocks immediately after` | 工具呼叫訊息序列不符合 Claude 協議要求 | 使用問題 | 保持每個 `tool_use` 後緊跟對應 `tool_result`；如果由工具自動生成，升級客戶端或重新開啟會話 |
+| `Invalid schema for function ... None is not of type 'array'` | 工具函式 schema 不符合模型要求，通常是 `parameters` 或陣列欄位為空/型別錯誤 | 使用問題 | 檢查 MCP/工具定義，確保陣列欄位提供 `[]`，函式引數 schema 符合 JSON Schema |
+| `status_code=500, not implemented` | 當前介面、模型能力或工具呼叫路徑暫未實現 | 使用問題或平臺問題 | 確認使用的是受支援的介面和模型；必要時切換模型或聯絡支援確認相容性 |
+
+## 按型別處理
+
+### 認證與許可權
+
+重點看 `401`、`403`、`Invalid API key`、`pending admin approval`、`No available channel`。先確認 Token 是否來自控制台、是否複製完整、是否具備當前模型和分組許可權。
+
+### 請求格式
+
+重點看 `400`、`413`、`Unsupported parameter`、`prompt is required`、`Invalid schema`。先檢查介面路徑、請求體欄位、工具 schema、影像請求引數和上下文大小。
+
+### 限流與額度
+
+重點看 `429`、`Max 10/min`、`daily limit exceeded`、`cooling down`。不要無間隔重試；按日誌中的限制降低併發，或等待額度/憑證恢復。
+
+### 上游與平臺資源
+
+重點看 `502`、`503`、`504`、`520`、`521`、`522`、`524`、`Service Unavailable`、`system disk overloaded`。先稍後重試；若同一分組集中出現，檢視 [分組健康狀態](/zh-TW/group-health)。
+
+## 聯絡支援需要的資訊
+
+遇到簡單問題時，建議先檢視 [錯誤日誌說明](/zh-TW/error-logs) 和 [分組健康狀態說明](/zh-TW/group-health) 自查。仍無法解決時，可以在 `console/log` 的錯誤日誌詳情中點選複製圖示，一鍵複製排查內容。聯絡支援時，建議一次性提供以下資訊給技術排查，減少來回確認：
+
+- 使用者 ID
+- 時間範圍：問題開始和最後出現的時間
+- 分組名：`group`
+- 模型名：請求使用的模型
+- 狀態碼：例如 `429`、`413`、`502`、`503`
+- 錯誤內容：`error_reasons.content`
+- 請求 ID：單條日誌或介面響應中的 `request_id`
+- 影響範圍：單個 Token、單個模型、單個分組，還是多個分組同時異常
+
+<Callout type="idea" title="結論">
+  錯誤日誌解釋“這一條請求為什麼失敗”，分組健康狀態判斷“這個問題是不是集中發生”。兩者結合使用，排查效率最高。
+</Callout>

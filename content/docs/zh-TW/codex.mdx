@@ -1,0 +1,85 @@
+---
+title: 在 Codex 中使用 FishXCode
+navTitle: OpenAI Codex
+---
+
+## 安裝 Codex
+
+```bash tab="pnpm"
+pnpm install -g @openai/codex
+```
+
+```bash tab="npm"
+npm install -g @openai/codex
+```
+
+```bash tab="yarn"
+yarn global add @openai/codex
+```
+
+```bash tab="bunx"
+bunx --global @openai/codex
+```
+
+## 配置環境變數
+
+1. 訪問 [https://fishxcode.com/console/token](https://fishxcode.com/console/token) 獲取 API Key
+
+2. 建立 `~/.codex/config.toml` 檔案，新增配置：
+
+   ```toml
+   model_provider = "fishxcode"
+   model = "gpt-5.4"
+   review_model = "gpt-5.4"
+   model_reasoning_effort = "medium"
+   model_reasoning_summary = "detailed"
+   disable_response_storage = true
+   preferred_auth_method = "apikey"
+   model_verbosity = "high"
+
+   [model_providers.fishxcode]
+   name = "OpenAI using Chat Completions"
+   base_url = "https://api.fishxcode.com/v1"
+   wire_api = "responses"
+   requires_openai_auth = true
+
+   [features]
+   skills = true
+   image_generation = false
+
+   ```
+
+3. 建立 `~/.codex/auth.json` 檔案，將 `OPENAI_API_KEY` 的值設定為你的 FishXCode API Key：
+
+   ```json
+   {
+     "OPENAI_API_KEY": "your_api_key_here"
+   }
+   ```
+
+## 直接啟動使用
+
+```bash
+cd my-project
+codex
+```
+
+## 在 VSCode 中使用
+
+1. 安裝 Codex 擴充套件
+
+2. 進入設定，切換為 JSON 配置模式
+
+3. 新增配置項：
+
+   ```json
+   {
+     "chatgpt.apiBase": "https://api.fishxcode.com/v1",
+     "chatgpt.config": {
+       "preferred_auth_method": "api_key",
+       "model_provider": "fishxcode"
+     }
+   }
+   ```
+
+4. 點選 Codex 圖示開始使用

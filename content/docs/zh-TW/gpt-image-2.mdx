@@ -1,0 +1,225 @@
+---
+title: GPT-Image-2 繪圖教程
+navTitle: GPT-Image-2 繪圖
+---
+
+## 前置準備
+
+在開始前，你需要先準備好：
+
+1. 一個 FishXCode 帳號
+2. 一個可用的 API Token
+3. 確認當前 Token 可以訪問 `gpt-image-2`
+
+獲取 Token：
+
+- 控制台地址：[https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+<Callout type="idea" title="提示">
+  如果你在控制台裡看得到模型分組或許可權配置，請確保當前 Token 覆蓋了 `gpt-image-2`。如果不確定，先新建一個預設可用的 Token 進行測試。
+</Callout>
+
+## 開源視覺化工具
+
+如果你不想先寫程式碼，可以直接使用 FishXCode 提供的開源 GPT-Image-2 工具進行測試和出圖：
+
+- 線上體驗：[https://fishxcode-gpt-image-2.lovable.app/](https://fishxcode-gpt-image-2.lovable.app/)
+- 開源倉庫：[https://github.com/fishxcode/gpt-image-2](https://github.com/fishxcode/gpt-image-2)
+
+<Callout type="idea" title="使用建議">
+  先在工具中驗證 Token、提示詞和圖片引數是否可用，再把同樣的引數遷移到自己的程式碼或工作流中。
+</Callout>
+
+## 方式一：使用 Images API 生成圖片
+
+這是最直接的方式，對應 OpenAI 相容的圖片生成介面。
+
+- 請求地址：`https://api.fishxcode.com/v1/images/generations`
+- 模型名稱：`gpt-image-2`
+
+### Python 示例
+
+```python
+import base64
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-你的FishXCode-Token",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+result = client.images.generate(
+    model="gpt-image-2",
+    prompt="一隻戴著宇航員頭盔的橘貓，坐在月球表面，電影級光影，超清細節",
+    size="1024x1024"
+)
+
+image_base64 = result.data[0].b64_json
+
+with open("gpt-image-2-output.png", "wb") as f:
+    f.write(base64.b64decode(image_base64))
+```
+
+### Node.js 示例
+
+```javascript
+import fs from "node:fs";
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "sk-你的FishXCode-Token",
+  baseURL: "https://api.fishxcode.com/v1",
+});
+
+const result = await client.images.generate({
+  model: "gpt-image-2",
+  prompt: "一座漂浮在雲海上的未來城市，賽博朋克霓虹風格，超高細節",
+  size: "1024x1024",
+});
+
+const imageBase64 = result.data[0].b64_json;
+fs.writeFileSync("gpt-image-2-output.png", Buffer.from(imageBase64, "base64"));
+```
+
+### curl 示例
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/images/generations \
+  --header "Authorization: Bearer sk-你的FishXCode-Token" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "一張極簡產品海報，白色背景，中央是一枚懸浮的透明玻璃鍵盤，商業攝影風格",
+    "size": "1024x1024"
+  }'
+```
+
+<Callout type="warn" title="注意">
+  Images API 返回的核心結果通常是 `b64_json`，需要你在本地把 Base64 解碼成圖片檔案。
+</Callout>
+
+## 方式二：通過 Chat Completions 呼叫圖片生成
+
+如果你的工作流已經基於 `/v1/chat/completions`，也可以直接在對話接口裡呼叫 `gpt-image-2`。
+
+- 請求地址：`https://api.fishxcode.com/v1/chat/completions`
+- 模型名稱：`gpt-image-2`
+
+### Python 示例
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-你的FishXCode-Token",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+response = client.chat.completions.create(
+    model="gpt-image-2",
+    messages=[
+        {
+            "role": "user",
+            "content": "畫一隻戴墨鏡的柴犬，坐在復古紅色敞篷車裡，公路旅行風格"
+        }
+    ]
+)
+
+print(response)
+```
+
+### curl 示例
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/chat/completions \
+  --header "Authorization: Bearer sk-你的FishXCode-Token" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "messages": [
+      {
+        "role": "user",
+        "content": "畫一間日落時分的日式咖啡館，暖色電影感構圖"
+      }
+    ]
+  }'
+```
+
+<Callout type="idea" title="提示">
+  如果你只是為了“穩定拿到圖片結果”，優先用 `/v1/images/generations`。如果你需要把圖片生成嵌進現有對話工作流，再考慮 `/v1/chat/completions`。
+</Callout>
+
+## 常用引數說明
+
+`gpt-image-2` 常見可用引數如下：
+
+| 引數 | 含義 | 示例 |
+| - | - | - |
+| `model` | 模型 ID | `gpt-image-2` |
+| `prompt` | 繪圖提示詞 | `一隻機械風貓頭鷹` |
+| `size` | 輸出尺寸 | `1024x1024` |
+| `n` | 生成張數 | `1` |
+| `background` | 背景模式 | `transparent` / `white` |
+| `quality` | 輸出質量 | `high` / `medium` |
+
+<Callout type="warn" title="注意">
+  不同 SDK 或代理層對引數的相容程度可能不同。如果你傳了某個引數後報錯，先退回到最小可執行引數集合：`model + prompt + size`。
+</Callout>
+
+## Cherry Studio 中使用 GPT-Image-2
+
+如果你習慣在 Cherry Studio 中直接出圖，可以這樣配置：
+
+### 1. 新建 OpenAI 相容提供商
+
+在 Cherry Studio 中新增自定義提供商：
+
+- API Key：你的 FishXCode Token
+- Base URL：`https://api.fishxcode.com/v1`
+
+### 2. 新增模型
+
+模型名稱填寫：
+
+```text
+gpt-image-2
+```
+
+如果 Cherry Studio 允許配置模型型別，請選擇圖片生成或相容 OpenAI Images 的模型型別。
+
+### 3. 開始出圖
+
+建立新會話或進入圖片生成功能頁後，選擇 `gpt-image-2`，輸入提示詞即可生成圖片。
+
+<Callout type="idea" title="提示">
+  如果 Cherry Studio 中看不到圖片結果，先檢查兩件事：
+
+  - Base URL 是否寫成了 `https://api.fishxcode.com/v1`
+  - 當前版本的 Cherry Studio 是否對 OpenAI 圖片介面做了完整適配
+</Callout>
+
+## 常見問題
+
+### 為什麼返回成功了，卻沒有看到圖片檔案？
+
+因為很多介面返回的是 `b64_json`，不是直接落盤檔案。你需要自己做一次 Base64 解碼並寫入 `.png` 檔案。
+
+### 應該優先用哪個介面？
+
+- 只做出圖：優先 `POST /v1/images/generations`
+- 想把圖片生成接進既有聊天工作流：再考慮 `POST /v1/chat/completions`
+
+### 報模型不存在或無許可權怎麼辦？
+
+按下面順序排查：
+
+1. 確認模型名寫的是 `gpt-image-2`
+2. 確認 Token 來自 [FishXCode 控制台](https://fishxcode.com/console/token)
+3. 確認當前 Token 具備 `gpt-image-2` 的訪問許可權
+4. 確認 Base URL 寫的是 `https://api.fishxcode.com/v1`
+
+### 為什麼引數傳多了會報錯？
+
+因為不同客戶端、不同 SDK 版本、不同代理層的相容實現並不完全一致。先用最小引數跑通，再逐步加 `quality`、`background`、`n` 之類的可選引數。

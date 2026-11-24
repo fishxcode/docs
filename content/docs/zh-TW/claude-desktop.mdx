@@ -1,0 +1,222 @@
+---
+title: 在 Claude Desktop 中使用 FishXCode
+navTitle: Claude Desktop
+---
+
+## 適用範圍
+
+本文適用於 Claude Desktop 新版的 **Cowork / Code 第三方推理接入** 模式，也就是 Anthropic 官方文件中的 `third-party inference`。
+
+如果你想要的是：
+
+- 在桌面端使用 Claude 的 **Cowork**
+- 在桌面端使用 Claude 的 **Code**
+- 通過自定義 API / 閘道器把請求轉到 FishXCode
+
+那麼走的就是這套配置方式。
+
+<Callout type="warn" title="注意">
+  這不是舊版“直接登入 Claude 帳號即可聊天”的路徑。接入第三方推理後，你主要會用到的是 **Cowork** 和 **Code** 標籤頁。
+</Callout>
+
+## 前置準備
+
+開始前請先準備：
+
+1. 安裝最新版 Claude Desktop
+2. 準備一個 FishXCode Token
+3. 確認你的 Token 可訪問 Claude 模型
+
+Token 獲取地址：
+
+- [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+建議優先準備這些模型作為候選：
+
+- `claude-sonnet-4-5-20250929`
+- `claude-opus-4-5-20251101`
+- `claude-haiku-4-5-20251001`
+
+## 方式一：在 Claude Desktop 裡直接配置（推薦）
+
+Anthropic 官方推薦優先通過桌面端內建的第三方推理配置介面完成設定。
+
+### 1. 啟用 Developer mode
+
+在 Claude Desktop 頂部選單中依次進入：
+
+```text
+Help → Troubleshooting → Enable Developer mode
+```
+
+啟用後，應用選單裡會出現 `Developer` 相關入口。
+
+### 2. 開啟第三方推理配置
+
+繼續進入：
+
+```text
+Developer → Configure third-party inference
+```
+
+這裡會開啟一套 Anthropic 官方提供的第三方推理配置流程。
+
+### 3. 選擇 Gateway 模式
+
+在提供商型別裡，選擇：
+
+```text
+Gateway
+```
+
+FishXCode 這類自定義 API / 中轉服務，對應的就是 `gateway` 模式。
+
+### 4. 填寫 FishXCode 配置
+
+核心資訊按下面填寫：
+
+- Gateway URL：`https://api.fishxcode.com`
+- Authentication：`x-api-key`
+- API Key：你的 FishXCode Token
+
+如果介面要求填寫模型列表，建議先填：
+
+```text
+claude-sonnet-4-5-20250929
+claude-opus-4-5-20251101
+claude-haiku-4-5-20251001
+```
+
+如果介面支援啟用 `Code`，保持開啟即可。
+
+### 5. 應用到本地
+
+完成配置後，優先選擇：
+
+```text
+Apply locally
+```
+
+這會把第三方推理配置寫入當前使用者的本地 Claude Desktop 配置中。
+
+配置成功後，重新開啟 Claude Desktop，通常就能看到可用的 **Cowork / Code** 工作介面。
+
+## 方式二：通過本地配置檔案管理（進階）
+
+如果你想備份、遷移或排查配置，可以檢視 Claude Desktop 本地寫入的位置。
+
+常見路徑如下：
+
+### macOS
+
+```text
+~/Library/Application Support/Claude-3p/claude_desktop_config.json
+```
+
+### Windows
+
+```text
+%APPDATA%\Claude-3p\claude_desktop_config.json
+```
+
+### Linux
+
+```text
+~/.config/Claude-3p/claude_desktop_config.json
+```
+
+<Callout type="idea" title="提示">
+  本地檔案裡實際使用的是 `enterpriseConfig` 這組第三方推理配置。更穩妥的做法不是手寫 JSON，而是先在應用內完成配置，再把生成結果納入備份或同步。
+</Callout>
+
+## FishXCode 推薦配置
+
+如果你要手動核對欄位，重點關注下面幾項：
+
+| 欄位 | 建議值 |
+| - | - |
+| `inferenceProvider` | `gateway` |
+| `inferenceGatewayBaseUrl` | `https://api.fishxcode.com` |
+| `inferenceGatewayAuthScheme` | `x-api-key` |
+| `inferenceGatewayApiKey` | 你的 FishXCode Token |
+| `inferenceModels` | Claude 模型列表 |
+| `isClaudeCodeForDesktopEnabled` | `true` |
+
+推薦模型列表示例：
+
+```text
+claude-sonnet-4-5-20250929
+claude-opus-4-5-20251101
+claude-haiku-4-5-20251001
+```
+
+## 使用方式
+
+配置完成後，你可以直接在 Claude Desktop 中：
+
+- 進入 **Cowork** 做通用問答、文件分析、檔案協作
+- 進入 **Code** 做程式碼編輯、終端協作、工程任務
+
+如果模型選擇器可見，優先選擇：
+
+- 日常使用：`claude-sonnet-4-5-20250929`
+- 複雜推理：`claude-opus-4-5-20251101`
+- 輕量快速：`claude-haiku-4-5-20251001`
+
+## 常見問題
+
+### 為什麼我找不到 `Enable Developer mode`？
+
+先確認兩件事：
+
+1. 你使用的是較新的 Claude Desktop 版本
+2. 你看的是真正的系統選單欄，而不是視窗內部按鈕
+
+如果升級後仍然找不到，先徹底退出 Claude Desktop，再重新開啟一次。
+
+### Windows 提示 `Virtual Machine Platform not available` 怎麼辦？
+
+如果 Claude Desktop 提示：
+
+```text
+Claude's workspace requires the Virtual Machine Platform on Windows. Enable this feature, then restart.
+```
+
+說明當前 Windows 沒有啟用 **Virtual Machine Platform**。請用管理員身份開啟 PowerShell，執行：
+
+```powershell
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+執行完成後重啟 Windows，再重新開啟 Claude Desktop。
+
+### 為什麼我配置完後還是看不到 Cowork / Code？
+
+按下面順序排查：
+
+1. 確認已經啟用 Developer mode
+2. 確認已執行 `Configure third-party inference`
+3. 確認選擇的是 `Gateway`
+4. 確認 `gatewayUrl` 寫的是 `https://api.fishxcode.com`
+5. 確認 Token 有效且可訪問 Claude 模型
+6. 完成後徹底退出 Claude Desktop 再重開
+
+### Gateway URL 為什麼不是 `https://api.fishxcode.com/v1`？
+
+因為 Claude Desktop 的第三方推理閘道器模式走的是 Anthropic 風格閘道器配置，不是 OpenAI 相容的 `/v1/chat/completions` 路徑。這裡應填寫閘道器根地址：
+
+```text
+https://api.fishxcode.com
+```
+
+### 配好了，但請求報認證錯誤怎麼辦？
+
+優先檢查：
+
+1. 認證方式是否選成了 `x-api-key`
+2. API Key 是否直接填入了 FishXCode Token
+3. Token 是否已失效、被刪除或許可權不足
+
+### 能不能手動改本地 JSON？
+
+可以，但不建議把“第一次配置”建立在手寫 JSON 上。原因很簡單：Claude Desktop 的第三方推理欄位會隨著版本演進，直接在應用內完成配置更穩，出問題也更容易回滾。

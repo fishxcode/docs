@@ -1,0 +1,93 @@
+---
+title: 工具對比
+---
+
+選擇適合你的 AI 程式設計工具。以下是 FishXCode 平臺支援的各工具全面對比。
+
+## 基本資訊
+
+| 工具 | 開發者 | 型別 |
+| - | - | - |
+| **Claude Code** | Anthropic | CLI 終端工具 |
+| **OpenAI Codex** | OpenAI | CLI + VSCode 擴充套件 |
+| **RooCode** | Roo Veterinary | VSCode 擴充套件 |
+| **Qwen Code** | 阿里巴巴 | CLI 終端工具 |
+| **Droid CLI** | Factory AI | CLI 終端工具 |
+| **OpenCode** | OpenCode AI | CLI 終端工具 (TUI) |
+
+## 平臺支援
+
+| 工具 | macOS | Windows | Linux |
+| - | :-: | :-: | :-: |
+| **Claude Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **OpenAI Codex** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **RooCode** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **Qwen Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **Droid CLI** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **OpenCode** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+
+## IDE 整合
+
+| 工具 | 終端 | VSCode | 其他 IDE |
+| - | :-: | :-: | :-: |
+| **Claude Code** | :white_check_mark: | - | - |
+| **OpenAI Codex** | :white_check_mark: | :white_check_mark: | - |
+| **RooCode** | - | :white_check_mark: | - |
+| **Qwen Code** | :white_check_mark: | - | - |
+| **Droid CLI** | :white_check_mark: | - | - |
+| **OpenCode** | :white_check_mark: | - | - |
+
+## 配置方式
+
+| 工具 | 環境變數 | 配置檔案 | GUI 設定 |
+| - | :-: | :-: | :-: |
+| **Claude Code** | :white_check_mark: | - | - |
+| **OpenAI Codex** | :white_check_mark: | TOML + JSON | VSCode 設定 |
+| **RooCode** | - | - | :white_check_mark: |
+| **Qwen Code** | :white_check_mark: | - | - |
+| **Droid CLI** | - | JSON | CLI 互動 |
+| **OpenCode** | :white_check_mark: | JSON | TUI 互動 |
+
+## FishXCode 相容性
+
+| 工具 | 支援狀態 | 接入難度 | 備註 |
+| - | :-: | :-: | - |
+| **Claude Code** | :white_check_mark: 已支援 | 簡單 | 設定環境變數即可 |
+| **OpenAI Codex** | :white_check_mark: 已支援 | 中等 | 需配置 TOML 和 JSON 檔案 |
+| **RooCode** | :white_check_mark: 已支援 | 簡單 | GUI 介面配置提供商 |
+| **Qwen Code** | :white_check_mark: 已支援 | 簡單 | 設定環境變數即可 |
+| **Droid CLI** | :white_check_mark: 已支援 | 中等 | 需編輯 JSON 配置檔案 |
+| **OpenCode** | :white_check_mark: 已支援 | 中等 | 需編輯 JSON 配置檔案 |
+
+## 核心特性
+
+| 工具 | 核心亮點 |
+| - | - |
+| **Claude Code** | 強大的程式碼理解與生成能力，原生終端體驗，支援多模型切換 |
+| **OpenAI Codex** | CLI 與 VSCode 雙模式，GPT 系列模型支援，生態成熟 |
+| **RooCode** | 純 VSCode 圖形化體驗，OpenAI Compatible 協議，零終端門檻 |
+| **Qwen Code** | 阿里通義系列加持，對中文程式碼場景最佳化，輕量易用 |
+| **Droid CLI** | 自定義模型靈活，支援超大上下文視窗，專注終端工作流 |
+| **OpenCode** | 開源 TUI 介面，支援 75+ 模型，內建 build/plan 雙模式 Agent，GitHub Copilot 整合 |
+
+## 如何選擇
+
+<Callout type="idea" title="偏好終端工作流">
+  如果你習慣在終端中完成所有操作，推薦 **Claude Code** 或 **OpenAI Codex**。兩者都提供流暢的命令列體驗，其中 Claude Code 配置最簡單，Codex 則額外支援 VSCode。
+</Callout>
+
+<Callout type="idea" title="偏好 VSCode 圖形化">
+  如果你更喜歡在 VSCode 中操作，推薦 **RooCode** 或 **OpenAI Codex**。RooCode 提供純圖形化體驗且配置簡單，Codex 則兼具終端和編輯器兩種模式。
+</Callout>
+
+<Callout type="idea" title="追求最簡配置">
+  如果你希望最快上手，推薦 **Claude Code**、**RooCode** 或 **Qwen Code**。三者均可在數分鐘內完成配置並開始使用。
+</Callout>
+
+<Callout type="idea" title="需要高度自定義">
+  如果你需要靈活的模型配置和超大上下文支援，推薦 **Droid CLI**。它支援自定義模型引數，最大可配置 128 萬 Token 上下文。
+</Callout>
+
+<Callout type="idea" title="中文開發場景">
+  如果你的專案以中文為主，推薦 **Qwen Code**。它對中文程式碼註釋和文件有更好的理解和生成能力。
+</Callout>

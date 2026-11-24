@@ -1,0 +1,85 @@
+---
+title: Dùng FishXCode trong Codex
+navTitle: OpenAI Codex
+---
+
+## Cài đặt Codex
+
+```bash tab="pnpm"
+pnpm install -g @openai/codex
+```
+
+```bash tab="npm"
+npm install -g @openai/codex
+```
+
+```bash tab="yarn"
+yarn global add @openai/codex
+```
+
+```bash tab="bunx"
+bunx --global @openai/codex
+```
+
+## Cấu hình biến môi trường
+
+1. Truy cập [https://fishxcode.com/console/token](https://fishxcode.com/console/token) để lấy API Key
+
+2. Tạo tệp `~/.codex/config.toml` và thêm cấu hình:
+
+   ```toml
+   model_provider = "fishxcode"
+   model = "gpt-5.4"
+   review_model = "gpt-5.4"
+   model_reasoning_effort = "medium"
+   model_reasoning_summary = "detailed"
+   disable_response_storage = true
+   preferred_auth_method = "apikey"
+   model_verbosity = "high"
+
+   [model_providers.fishxcode]
+   name = "OpenAI using Chat Completions"
+   base_url = "https://api.fishxcode.com/v1"
+   wire_api = "responses"
+   requires_openai_auth = true
+
+   [features]
+   skills = true
+   image_generation = false
+
+   ```
+
+3. Tạo tệp `~/.codex/auth.json`, đặt giá trị của `OPENAI_API_KEY` là API Key FishXCode của bạn:
+
+   ```json
+   {
+     "OPENAI_API_KEY": "your_api_key_here"
+   }
+   ```
+
+## Khởi động trực tiếp
+
+```bash
+cd my-project
+codex
+```
+
+## Dùng trong VSCode
+
+1. Cài extension Codex
+
+2. Vào phần cài đặt, chuyển sang chế độ cấu hình JSON
+
+3. Thêm các mục cấu hình:
+
+   ```json
+   {
+     "chatgpt.apiBase": "https://api.fishxcode.com/v1",
+     "chatgpt.config": {
+       "preferred_auth_method": "api_key",
+       "model_provider": "fishxcode"
+     }
+   }
+   ```
+
+4. Nhấn biểu tượng Codex để bắt đầu sử dụng

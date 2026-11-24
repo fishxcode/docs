@@ -1,0 +1,189 @@
+---
+title: Hướng dẫn ZCF
+navTitle: Kết nối nhanh qua ZCF
+---
+
+[ZCF](https://github.com/UfoMiao/zcf) là công cụ tăng cường không cần cấu hình dành cho Claude  Code / Codex, chỉ một lệnh `zcf init` là hoàn tất toàn bộ khâu khởi tạo như cấu hình API, nhập quy trình làm việc và tích hợp dịch vụ MCP.
+
+> Chưa có tài khoản? Hãy hoàn tất [đăng ký tài khoản](/vi/account) trước để lấy API Key.
+
+---
+
+## Tham số thường dùng
+
+### Cấu hình API
+
+| Tham số | Mô tả |
+| - | - |
+| `-p custom` | Dùng nhà cung cấp tùy chỉnh (FishXCode dùng cách này) |
+| `-t api_key` | Cách viết tương đương, hiệu quả giống `-p custom` |
+| `-k "sk-xxx"` | API Key |
+| `-u "https://api.fishxcode.com/"` | Base URL của FishXCode |
+| `-M "claude-sonnet-4-5-20250929"` | Chỉ định mô hình chính |
+| `-H "claude-haiku-4-5-20251001"` | Chỉ định mô hình nhanh |
+
+Ví dụ chỉ định mô hình:
+
+```bash
+npx zcf i -s -t api_key -k "sk-xxx" -u "https://api.fishxcode.com/" \
+  -M "claude-sonnet-4-5-20250929" \
+  -H "claude-haiku-4-5-20251001"
+```
+
+### Quy trình làm việc
+
+| Tham số | Mô tả |
+| - | - |
+| `-w all` | Cài tất cả quy trình làm việc |
+| `-w sixStepsWorkflow,gitWorkflow` | Cài các quy trình làm việc được chỉ định |
+| `-w skip` | Bỏ qua |
+
+Quy trình làm việc có thể chọn: `commonTools` / `sixStepsWorkflow` / `featPlanUx` / `gitWorkflow` / `bmadWorkflow`
+
+### Dịch vụ MCP
+
+| Tham số | Mô tả |
+| - | - |
+| `-m all` | Cài tất cả MCP |
+| `-m context7,open-websearch` | Cài các dịch vụ được chỉ định |
+| `-m skip` | Bỏ qua |
+
+Dịch vụ có thể chọn: `context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` / `Playwright` / `exa` / `serena`
+
+### Khác
+
+| Tham số | Mô tả |
+| - | - |
+| `-g en` | Đặt đồng loạt ngôn ngữ giao diện, mẫu và đầu ra AI sang tiếng Anh |
+| `-s` | Chế độ không tương tác, bỏ qua mọi lời nhắc |
+| `-r backup` | Chiến lược xử lý cấu hình (`backup` / `merge` / `docs-only` / `skip`) |
+| `-x false` | Không cài thanh trạng thái CCometixLine |
+
+---
+
+## Lệnh quy trình làm việc
+
+Sau khi cài xong, bạn có thể dùng các lệnh slash sau trong Claude  Code:
+
+| Lệnh | Mô tả |
+| - | - |
+| `/zcf:workflow` | Quy trình phát triển sáu giai đoạn (Nghiên cứu → Lên ý tưởng → Lập kế hoạch → Thực thi → Tối ưu → Đánh giá) |
+| `/zcf:feat` | Phát triển tính năng mới, gồm lập kế hoạch và thiết kế UI/UX |
+| `/zcf:git-commit` | Tự động tạo thông điệp Git commit |
+| `/zcf:git-rollback` | Khôi phục phiên bản cũ theo kiểu tương tác |
+| `/zcf:git-worktree` | Quản lý Git Worktree |
+| `/zcf:bmad-init` | Quy trình phát triển Agile cấp doanh nghiệp |
+
+---
+
+## Giới thiệu dịch vụ MCP
+
+MCP (Model Context Protocol) cho phép Claude  Code truy cập các công cụ và dịch vụ bên ngoài, ZCF tích hợp sẵn các dịch vụ sau:
+
+| Dịch vụ | Mô tả | Có cần Key không |
+| - | - | - |
+| `context7` | Tra cứu tài liệu và ví dụ mã mới nhất của thư viện | Không |
+| `open-websearch` | Tìm kiếm web DuckDuckGo/Bing/Brave | Không |
+| `spec-workflow` | Quy trình có cấu trúc Yêu cầu → Thiết kế → Triển khai | Không |
+| `mcp-deepwiki` | Tra cứu tài liệu kho GitHub | Không |
+| `Playwright` | Tự động hóa thao tác trình duyệt | Không |
+| `exa` | Tìm kiếm ngữ nghĩa Exa AI | Có (`EXA_API_KEY`) |
+| `serena` | Trợ lý IDE, truy xuất mã theo ngữ nghĩa | Không |
+
+### Giới thiệu từng dịch vụ
+
+**context7** — Tra cứu tài liệu và ví dụ mã mới nhất của bất kỳ thư viện nào, tránh để AI dùng API đã lỗi thời:
+
+```
+Hãy tra cứu tài liệu và ví dụ mới nhất về hook useState của React
+```
+
+**open-websearch** — Hỗ trợ tìm kiếm trên nhiều công cụ DuckDuckGo, Bing, Brave, không cần API Key:
+
+```
+Tìm các tính năng mới nhất của TypeScript 5.0
+```
+
+**spec-workflow** — Quy trình có cấu trúc từ yêu cầu đến triển khai, gồm phân tích yêu cầu, thiết kế kỹ thuật và chia nhỏ tác vụ:
+
+```bash
+npx -y @pimzino/spec-workflow-mcp@latest --dashboard  # Khởi động dashboard trực quan
+```
+
+**mcp-deepwiki** — Tra cứu tài liệu kho GitHub:
+
+```
+Tra cứu tài liệu Composition API trong kho vuejs/core
+```
+
+**Playwright** — Điều khiển trình duyệt để chụp màn hình, điền biểu mẫu, mô phỏng tương tác; lần chạy đầu tiên cần tải trình duyệt.
+
+**exa** — Tìm kiếm web theo ngữ nghĩa của Exa AI, cần cấu hình API Key:
+
+```bash
+export EXA_API_KEY="your-api-key"  # Lấy tại dashboard.exa.ai
+```
+
+**serena** — Truy xuất mã theo ngữ nghĩa và gợi ý chỉnh sửa thông minh, mang lại năng lực tương tự IDE.
+
+### Vị trí tệp cấu hình
+
+Sau khi cài ZCF, cấu hình MCP được ghi vào `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context-labs/context7"]
+    },
+    "open-websearch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-open-websearch"]
+    }
+  }
+}
+```
+
+<Callout type="idea" title="Người dùng Windows">
+  ZCF sẽ tự động sửa định dạng đường dẫn Windows. Nếu gặp sự cố kết nối MCP, hãy chạy `npx zcf` → chọn `4. Configure MCP` để tự động khắc phục.
+</Callout>
+
+---
+
+## Cập nhật
+
+```bash
+npx zcf update
+# hoặc
+npx zcf u -s -g en
+```
+
+Cập nhật chỉ đồng bộ mẫu quy trình làm việc và prompt, **không thay đổi cấu hình API**.
+
+---
+
+## Câu hỏi thường gặp
+
+### settings.json hiện có có bị ghi đè không?
+
+ZCF tự động sao lưu vào `~/.claude/backup/YYYY-MM-DD_HH-mm-ss/` trước khi sửa, và cung cấp bốn chiến lược xử lý:
+
+```bash
+npx zcf i -s -r backup    # Sao lưu rồi ghi đè (mặc định)
+npx zcf i -s -r merge     # Gộp thông minh
+npx zcf i -s -r docs-only # Chỉ cập nhật tài liệu quy trình làm việc
+npx zcf i -s -r skip      # Bỏ qua, không thay đổi
+```
+
+### Làm sao quay về cấu hình thủ công?
+
+`settings.json` do ZCF tạo ra có định dạng chuẩn, có thể chỉnh sửa trực tiếp. Xem chi tiết tại [Cấu hình Claude  Code](/vi/start).
+
+### Yêu cầu phiên bản Node.js
+
+ZCF cần Node.js >= 18:
+
+```bash
+node --version
+```

@@ -1,0 +1,150 @@
+---
+title: Использование FishXCode в QClaw
+navTitle: QClaw
+---
+
+> Впервые здесь? Сначала [зарегистрируйтесь и пополните баланс](/ru/account), затем получите API Key в [консоли FishXCode](https://fishxcode.com/console/token).
+
+## 1. Параметры подключения
+
+Для подключения сторонних API больших моделей в QClaw в первую очередь используйте протокол OpenAI Compatible. Даже если вы вызываете модели Claude, указывайте параметры OpenAI-совместимого интерфейса.
+
+| Параметр | Значение |
+| - | - |
+| Protocol | `OpenAI Compatible` |
+| Base URL | `https://api.fishxcode.com/v1` |
+| API Key | API Key, созданный в консоли FishXCode |
+| Модель OpenAI | `gpt-5.5` |
+| Модель Claude | `claude-opus-4-7` |
+
+Если QClaw требует полный Endpoint, используйте:
+
+```text
+https://api.fishxcode.com/v1/chat/completions
+```
+
+## 2. Настройка через интерфейс
+
+Если в вашей версии QClaw есть графический интерфейс, заполните поля так:
+
+```text
+Provider: OpenAI Compatible
+Base URL: https://api.fishxcode.com/v1
+API Key: sk-your-fishxcode-token
+Model: claude-opus-4-7
+```
+
+Чтобы использовать модель GPT, замените `Model` на:
+
+```text
+gpt-5.5
+```
+
+## 3. Настройка через config.yaml
+
+Если ваша версия QClaw использует `~/.qclaw/config.yaml`, возьмите за основу этот шаблон:
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-your-fishxcode-token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+Чтобы переключиться на модель OpenAI, достаточно заменить `model`:
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-your-fishxcode-token
+  model: gpt-5.5
+  max_tokens: 8192
+```
+
+Если клиент требует полный адрес интерфейса, используйте такой вариант:
+
+```yaml
+llm:
+  provider: openai-compatible
+  url: https://api.fishxcode.com/v1/chat/completions
+  api_key: sk-your-fishxcode-token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+<Callout type="warn" title="Важно">
+  В разных версиях QClaw названия полей могут отличаться, например `base_url`, `baseURL`, `apiBase` или `url`. Если после сохранения настройки не применились, в первую очередь проверьте названия полей и путь к файлу конфигурации, который QClaw читает на самом деле.
+</Callout>
+
+## 4. Настройка через переменные окружения
+
+Если QClaw поддерживает переменные окружения, можно использовать и их:
+
+```bash tab="Linux/macOS"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_API_KEY="sk-your-fishxcode-token"
+export QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_API_KEY="sk-your-fishxcode-token"
+$env:QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+Чтобы использовать модель GPT, замените значение `QCLAW_MODEL` на `gpt-5.5`.
+
+## 5. Проверка конфигурации
+
+Сначала проверьте через OpenAI-совместимый интерфейс, что API Key работает:
+
+```bash tab="Модель Claude"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-your-fishxcode-token" \
+  -d '{
+    "model": "claude-opus-4-7",
+    "messages": [
+      { "role": "user", "content": "Скажи одним предложением, кто ты" }
+    ]
+  }'
+```
+
+```bash tab="Модель GPT"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-your-fishxcode-token" \
+  -d '{
+    "model": "gpt-5.5",
+    "messages": [
+      { "role": "user", "content": "Скажи одним предложением, кто ты" }
+    ]
+  }'
+```
+
+Если запрос через curl не проходит, в QClaw тоже вряд ли всё заработает. Сначала проверьте API Key, доступ к модели и Base URL.
+
+1. Сохраните настройки или `config.yaml`
+2. Перезапустите QClaw
+3. Выберите `gpt-5.5` или `claude-opus-4-7`
+4. Отправьте короткий вопрос, например `Скажи одним предложением, кто ты`
+5. Если пришёл нормальный ответ, подключение работает
+
+## Частые вопросы
+
+### 404 или неверный адрес интерфейса
+
+Если указываете Base URL, используйте `https://api.fishxcode.com/v1`. Если указываете полный URL — `https://api.fishxcode.com/v1/chat/completions`.
+
+### Можно ли использовать модели Claude?
+
+Можно — при условии, что FishXCode сейчас поддерживает эту модель, а QClaw вызывает её по протоколу OpenAI Compatible. В качестве имени модели укажите `claude-opus-4-7`.
+
+### Ошибка аутентификации
+
+Скопируйте API Key заново, убедитесь, что в нём нет лишних пробелов, и проверьте, что ключ не удалён и не отключён.

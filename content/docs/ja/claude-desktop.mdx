@@ -1,0 +1,222 @@
+---
+title: Claude Desktop で FishXCode を使う
+navTitle: Claude Desktop
+---
+
+## 対象範囲
+
+この記事は、Claude Desktop の新しい **Cowork / Code のサードパーティ推論接続**モード、つまり Anthropic 公式ドキュメントでいう `third-party inference` を対象としています。
+
+次のような使い方をしたい場合：
+
+- デスクトップアプリで Claude の **Cowork** を使う
+- デスクトップアプリで Claude の **Code** を使う
+- カスタム API / ゲートウェイ経由でリクエストを FishXCode に転送する
+
+この設定方法を使います。
+
+<Callout type="warn" title="注意">
+  これは従来の「Claude アカウントにログインするだけでチャットできる」方法ではありません。サードパーティ推論を接続した後は、主に **Cowork** と **Code** のタブを使います。
+</Callout>
+
+## 事前準備
+
+始める前に、次のものを準備してください。
+
+1. 最新版の Claude Desktop をインストールする
+2. FishXCode のトークンを用意する
+3. そのトークンで Claude モデルにアクセスできることを確認する
+
+トークンの取得先：
+
+- [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+候補として、まず次のモデルを用意しておくことをおすすめします。
+
+- `claude-sonnet-4-5-20250929`
+- `claude-opus-4-5-20251101`
+- `claude-haiku-4-5-20251001`
+
+## 方法 1：Claude Desktop で直接設定する（推奨）
+
+Anthropic 公式は、デスクトップアプリに組み込まれたサードパーティ推論の設定画面で設定することを推奨しています。
+
+### 1. Developer mode を有効にする
+
+Claude Desktop の上部メニューから、次の順に進みます。
+
+```text
+Help → Troubleshooting → Enable Developer mode
+```
+
+有効にすると、アプリのメニューに `Developer` 関連の項目が表示されます。
+
+### 2. サードパーティ推論の設定を開く
+
+続けて次に進みます。
+
+```text
+Developer → Configure third-party inference
+```
+
+Anthropic 公式が提供するサードパーティ推論の設定フローが開きます。
+
+### 3. Gateway モードを選択する
+
+プロバイダーの種類で、次を選択します。
+
+```text
+Gateway
+```
+
+FishXCode のようなカスタム API / 中継サービスは、`gateway` モードに該当します。
+
+### 4. FishXCode の設定を入力する
+
+主な項目は次のように入力します。
+
+- Gateway URL：`https://api.fishxcode.com`
+- Authentication：`x-api-key`
+- API Key：FishXCode のトークン
+
+画面でモデル一覧の入力を求められた場合は、まず次を入力することをおすすめします。
+
+```text
+claude-sonnet-4-5-20250929
+claude-opus-4-5-20251101
+claude-haiku-4-5-20251001
+```
+
+画面で `Code` を有効にできる場合は、オンのままにしてください。
+
+### 5. ローカルに適用する
+
+設定が完了したら、次を選択します。
+
+```text
+Apply locally
+```
+
+サードパーティ推論の設定が、現在のユーザーのローカルの Claude Desktop 設定に書き込まれます。
+
+設定に成功したら Claude Desktop を開き直すと、通常は **Cowork / Code** の作業画面が使えるようになります。
+
+## 方法 2：ローカルの設定ファイルで管理する（上級者向け）
+
+設定をバックアップ・移行したり、問題を調査したりしたい場合は、Claude Desktop がローカルに書き込んだ場所を確認できます。
+
+主なパスは次のとおりです。
+
+### macOS
+
+```text
+~/Library/Application Support/Claude-3p/claude_desktop_config.json
+```
+
+### Windows
+
+```text
+%APPDATA%\Claude-3p\claude_desktop_config.json
+```
+
+### Linux
+
+```text
+~/.config/Claude-3p/claude_desktop_config.json
+```
+
+<Callout type="idea" title="ヒント">
+  ローカルファイルで実際に使われているのは、`enterpriseConfig` にまとめられたサードパーティ推論の設定です。JSON を手書きするよりも、まずアプリ内で設定を済ませ、生成された内容をバックアップや同期の対象にするほうが確実です。
+</Callout>
+
+## FishXCode の推奨設定
+
+項目を手動で確認する場合は、次の項目に注目してください。
+
+| 項目 | 推奨値 |
+| - | - |
+| `inferenceProvider` | `gateway` |
+| `inferenceGatewayBaseUrl` | `https://api.fishxcode.com` |
+| `inferenceGatewayAuthScheme` | `x-api-key` |
+| `inferenceGatewayApiKey` | FishXCode のトークン |
+| `inferenceModels` | Claude モデルの一覧 |
+| `isClaudeCodeForDesktopEnabled` | `true` |
+
+推奨モデル一覧の例：
+
+```text
+claude-sonnet-4-5-20250929
+claude-opus-4-5-20251101
+claude-haiku-4-5-20251001
+```
+
+## 使い方
+
+設定が完了したら、Claude Desktop で次のように使えます。
+
+- **Cowork** で、一般的な質問応答、ドキュメント分析、ファイルを使った共同作業を行う
+- **Code** で、コード編集、ターミナルでの共同作業、エンジニアリングタスクを行う
+
+モデルセレクターが表示される場合は、次を優先して選択してください。
+
+- 日常の利用：`claude-sonnet-4-5-20250929`
+- 複雑な推論：`claude-opus-4-5-20251101`
+- 軽量・高速：`claude-haiku-4-5-20251001`
+
+## よくある質問
+
+### `Enable Developer mode` が見つからないのはなぜですか？
+
+まず次の 2 点を確認してください。
+
+1. 比較的新しいバージョンの Claude Desktop を使っていること
+2. ウィンドウ内のボタンではなく、システムのメニューバーを見ていること
+
+アップデートしても見つからない場合は、Claude Desktop を完全に終了してから、もう一度開いてください。
+
+### Windows で `Virtual Machine Platform not available` と表示される場合は？
+
+Claude Desktop に次のメッセージが表示された場合：
+
+```text
+Claude's workspace requires the Virtual Machine Platform on Windows. Enable this feature, then restart.
+```
+
+Windows で **Virtual Machine Platform** が有効になっていません。管理者として PowerShell を開き、次を実行してください。
+
+```powershell
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+実行が完了したら Windows を再起動し、Claude Desktop を開き直してください。
+
+### 設定したのに Cowork / Code が表示されないのはなぜですか？
+
+次の順に確認してください。
+
+1. Developer mode が有効になっていること
+2. `Configure third-party inference` を実行したこと
+3. `Gateway` を選択したこと
+4. `gatewayUrl` が `https://api.fishxcode.com` になっていること
+5. トークンが有効で、Claude モデルにアクセスできること
+6. 設定後に Claude Desktop を完全に終了してから開き直したこと
+
+### Gateway URL が `https://api.fishxcode.com/v1` ではないのはなぜですか？
+
+Claude Desktop のサードパーティ推論のゲートウェイモードは Anthropic 形式のゲートウェイ設定を使っており、OpenAI 互換の `/v1/chat/completions` パスではないためです。ここにはゲートウェイのルートアドレスを入力してください。
+
+```text
+https://api.fishxcode.com
+```
+
+### 設定したのに、リクエストで認証エラーになる場合は？
+
+まず次を確認してください。
+
+1. 認証方式が `x-api-key` になっているか
+2. API Key に FishXCode のトークンをそのまま入力しているか
+3. トークンが失効・削除されていないか、権限が不足していないか
+
+### ローカルの JSON を手動で編集してもよいですか？
+
+可能ですが、「初回の設定」を JSON の手書きで行うことはおすすめしません。理由は単純で、Claude Desktop のサードパーティ推論の項目はバージョンとともに変わるため、アプリ内で設定するほうが安定し、問題が起きたときも元に戻しやすいからです。
