@@ -12,10 +12,12 @@
  * 2. 各张按语言维护的文案表补一项：translations.ts、home-copy.ts、site-copy.ts、
  *    discovery.ts、rss-feed.ts、content-dates.ts、og.tsx——它们都是
  *    `Record<Locale, …>`，漏了 tsc 会直接报错；
- * 3. 把 `src/app/en/` 复制为 `src/app/{lang}/`，并把其中的 'en' 换成新语言；
+ * 3. 把 `src/app/en/` 复制为 `src/app/{lang}/`，并把其中的 'en' 换成新语言——
+ *    包括 `(docs)/layout.tsx` 里 JSX 写法的 `lang="en"`，漏了这一处页面会用英文界面；
  * 4. `public/_worker.js` 的 LOCALES 加上新语言——它是不经打包的纯 JS，无法 import
  *    本文件。漏了线上该语言的首页与未翻译页面拿不到 Markdown 副本，已翻译页面的
- *    Content-Language 也会标成中文；
+ *    Content-Language 也会标成中文。BCP 47 标签与前缀不同时（如 pt → pt-BR）还要加进
+ *    同文件的 CONTENT_LANGUAGE_TAGS；`public/_headers` 里按语言的 Content-Language 规则也照抄一份；
  * 5. 正文放进 `content/docs/{lang}/`，尚未翻译的页面自动回退显示中文。
  *
  * 其余（sitemap、RSS、llms.txt、hreflang、搜索索引、浏览器语言探测）自动跟随。
@@ -24,7 +26,7 @@
 export const DEFAULT_LOCALE = 'zh';
 
 /** 顺序即语言切换下拉的展示顺序 */
-export const LOCALES = ['zh', 'en', 'fr', 'ru', 'ja', 'vi', 'zh-TW'] as const;
+export const LOCALES = ['zh', 'en', 'fr', 'es', 'pt', 'ru', 'ja', 'vi', 'zh-TW'] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
@@ -33,6 +35,8 @@ export const LOCALE_ITEMS: ReadonlyArray<{ name: string; locale: Locale }> = [
   { name: '简体中文', locale: 'zh' },
   { name: 'English', locale: 'en' },
   { name: 'Français', locale: 'fr' },
+  { name: 'Español', locale: 'es' },
+  { name: 'Português', locale: 'pt' },
   { name: 'Русский', locale: 'ru' },
   { name: '日本語', locale: 'ja' },
   { name: 'Tiếng Việt', locale: 'vi' },
@@ -48,6 +52,9 @@ export const HTML_LANG: Record<Locale, string> = {
   zh: 'zh-CN',
   en: 'en',
   fr: 'fr',
+  es: 'es',
+  // 正文是巴西葡语
+  pt: 'pt-BR',
   ru: 'ru',
   ja: 'ja',
   vi: 'vi',
@@ -59,6 +66,8 @@ export const OG_LOCALE: Record<Locale, string> = {
   zh: 'zh_CN',
   en: 'en_US',
   fr: 'fr_FR',
+  es: 'es_ES',
+  pt: 'pt_BR',
   ru: 'ru_RU',
   ja: 'ja_JP',
   vi: 'vi_VN',

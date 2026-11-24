@@ -189,6 +189,182 @@ const frTranslations: Record<string, string> = {
   'Ask AI(AI chat button)': 'Demander à l’IA',
 };
 
+const esTranslations: Record<string, string> = {
+  displayName: 'Español',
+
+  // ── Búsqueda ──
+  'Search(search trigger)': 'Buscar en la documentación',
+  'Search(search dialog)': 'Buscar en la documentación',
+  'Open Search(search trigger)(aria-label)': 'Abrir búsqueda',
+  'Close Search(search dialog)(aria-label)': 'Cerrar búsqueda',
+  'No results found(search dialog)': 'No se encontraron resultados',
+  'Search failed(search dialog)': 'La búsqueda falló',
+  'Search failed, showing results for {query}(search dialog)':
+    'La búsqueda falló; mostrando resultados para «{query}»',
+
+  // ── Tema ──
+  'Toggle Theme(theme switcher)(aria-label)': 'Cambiar tema',
+  'Light(theme switcher)(aria-label)': 'Claro',
+  'Dark(theme switcher)(aria-label)': 'Oscuro',
+  'System(theme switcher)(aria-label)': 'Sistema',
+  'Theme(site menu)': 'Tema',
+
+  // ── Barra lateral y navegación ──
+  'Toggle Menu(home layout header)(aria-label)': 'Mostrar u ocultar el menú',
+  'Show Sidebar(sidebar)': 'Mostrar barra lateral',
+  'Hide Sidebar(sidebar)': 'Ocultar barra lateral',
+  'Open Sidebar(aria-label)': 'Abrir barra lateral',
+  'Open Sidebar(sidebar)(aria-label)': 'Abrir barra lateral',
+  'Close Sidebar(aria-label)': 'Cerrar barra lateral',
+  'Close Sidebar(sidebar)(aria-label)': 'Cerrar barra lateral',
+  'Collapse Sidebar(sidebar)(aria-label)': 'Contraer barra lateral',
+
+  // ── Índice ──
+  'Table of Contents(inline table of contents)': 'Índice',
+  'On this page(table of contents)': 'En esta página',
+  'No Headings(table of contents)': 'Sin encabezados',
+
+  // ── Acciones de la página ──
+  'Copy Markdown(page actions)': 'Copiar como Markdown',
+  'Copied Markdown(page actions)': 'Markdown copiado',
+  'View as Markdown(page actions)': 'Ver como Markdown',
+  'Edit on GitHub(edit page)': 'Editar en GitHub',
+  'Last updated on(page footer)': 'Última actualización el',
+  'Open(page actions)': 'Abrir',
+  'Open in GitHub(page actions)': 'Abrir en GitHub',
+  'Open in ChatGPT(page actions)': 'Abrir en ChatGPT',
+  'Open in Claude(page actions)': 'Abrir en Claude',
+  'Open in Cursor(page actions)': 'Abrir en Cursor',
+  'Open in Scira AI(page actions)': 'Abrir en Scira AI',
+  'Read {url}, I want to ask questions about it.(page actions)':
+    'Lee {url}; quiero hacer preguntas sobre su contenido.',
+
+  // ── Bloques de código ──
+  'Copy Text(code block)(aria-label)': 'Copiar',
+  'Copied Text(code block)(aria-label)': 'Copiado',
+  'Copy Link(accordion)(aria-label)': 'Copiar enlace',
+  'Copied Link(accordion)(aria-label)': 'Enlace copiado',
+
+  // ── Anclas ──
+  'Copy Anchor Link(heading anchor)(aria-label)': 'Copiar enlace al encabezado',
+  'Copied Anchor Link(heading anchor)(aria-label)': 'Enlace al encabezado copiado',
+
+  // ── Visor de imágenes ──
+  'Image Viewer(image zoom)(aria-label)': 'Visor de imágenes',
+  'Close(image zoom)(aria-label)': 'Cerrar',
+  'Previous Image(image zoom)(aria-label)': 'Imagen anterior',
+  'Next Image(image zoom)(aria-label)': 'Imagen siguiente',
+
+  // ── Paginación ──
+  'Previous Page(pagination)': 'Página anterior',
+  'Next Page(pagination)': 'Página siguiente',
+
+  // ── 404 ──
+  'Page Not Found(404 not found page)': 'Página no encontrada',
+  'Back to Home(404 not found page)': 'Volver al inicio',
+  'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.(404 not found page)':
+    'Es posible que la página que buscas se haya eliminado, haya cambiado de nombre o no esté disponible temporalmente.',
+
+  // ── Selector de idioma ──
+  'Choose a language(language switcher)': 'Elegir idioma',
+  'Language(language switcher)': 'Idioma',
+  'Close Banner(banner)(aria-label)': 'Cerrar aviso',
+
+  // ── Otros ──
+  'Skip to Content(skip link)': 'Ir al contenido',
+  'Layout Tab(layout tab trigger)': 'Pestaña de diseño',
+  'Options(aria-label)': 'Opciones',
+  'Ask AI(AI chat button)': 'Preguntar a la IA',
+};
+
+const ptTranslations: Record<string, string> = {
+  displayName: 'Português',
+
+  // ── Pesquisa ──
+  'Search(search trigger)': 'Pesquisar na documentação',
+  'Search(search dialog)': 'Pesquisar na documentação',
+  'Open Search(search trigger)(aria-label)': 'Abrir pesquisa',
+  'Close Search(search dialog)(aria-label)': 'Fechar pesquisa',
+  'No results found(search dialog)': 'Nenhum resultado encontrado',
+  'Search failed(search dialog)': 'A pesquisa falhou',
+  'Search failed, showing results for {query}(search dialog)':
+    'A pesquisa falhou; mostrando resultados para “{query}”',
+
+  // ── Tema ──
+  'Toggle Theme(theme switcher)(aria-label)': 'Alternar tema',
+  'Light(theme switcher)(aria-label)': 'Claro',
+  'Dark(theme switcher)(aria-label)': 'Escuro',
+  'System(theme switcher)(aria-label)': 'Sistema',
+  'Theme(site menu)': 'Tema',
+
+  // ── Barra lateral e navegação ──
+  'Toggle Menu(home layout header)(aria-label)': 'Alternar menu',
+  'Show Sidebar(sidebar)': 'Mostrar barra lateral',
+  'Hide Sidebar(sidebar)': 'Ocultar barra lateral',
+  'Open Sidebar(aria-label)': 'Abrir barra lateral',
+  'Open Sidebar(sidebar)(aria-label)': 'Abrir barra lateral',
+  'Close Sidebar(aria-label)': 'Fechar barra lateral',
+  'Close Sidebar(sidebar)(aria-label)': 'Fechar barra lateral',
+  'Collapse Sidebar(sidebar)(aria-label)': 'Recolher barra lateral',
+
+  // ── Sumário ──
+  'Table of Contents(inline table of contents)': 'Sumário',
+  'On this page(table of contents)': 'Nesta página',
+  'No Headings(table of contents)': 'Sem títulos',
+
+  // ── Ações da página ──
+  'Copy Markdown(page actions)': 'Copiar como Markdown',
+  'Copied Markdown(page actions)': 'Markdown copiado',
+  'View as Markdown(page actions)': 'Ver como Markdown',
+  'Edit on GitHub(edit page)': 'Editar no GitHub',
+  'Last updated on(page footer)': 'Última atualização em',
+  'Open(page actions)': 'Abrir',
+  'Open in GitHub(page actions)': 'Abrir no GitHub',
+  'Open in ChatGPT(page actions)': 'Abrir no ChatGPT',
+  'Open in Claude(page actions)': 'Abrir no Claude',
+  'Open in Cursor(page actions)': 'Abrir no Cursor',
+  'Open in Scira AI(page actions)': 'Abrir no Scira AI',
+  'Read {url}, I want to ask questions about it.(page actions)':
+    'Leia {url}; quero fazer perguntas sobre o conteúdo.',
+
+  // ── Blocos de código ──
+  'Copy Text(code block)(aria-label)': 'Copiar',
+  'Copied Text(code block)(aria-label)': 'Copiado',
+  'Copy Link(accordion)(aria-label)': 'Copiar link',
+  'Copied Link(accordion)(aria-label)': 'Link copiado',
+
+  // ── Âncoras ──
+  'Copy Anchor Link(heading anchor)(aria-label)': 'Copiar link do título',
+  'Copied Anchor Link(heading anchor)(aria-label)': 'Link do título copiado',
+
+  // ── Visualizador de imagens ──
+  'Image Viewer(image zoom)(aria-label)': 'Visualizador de imagens',
+  'Close(image zoom)(aria-label)': 'Fechar',
+  'Previous Image(image zoom)(aria-label)': 'Imagem anterior',
+  'Next Image(image zoom)(aria-label)': 'Próxima imagem',
+
+  // ── Paginação ──
+  'Previous Page(pagination)': 'Página anterior',
+  'Next Page(pagination)': 'Próxima página',
+
+  // ── 404 ──
+  'Page Not Found(404 not found page)': 'Página não encontrada',
+  'Back to Home(404 not found page)': 'Voltar ao início',
+  'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.(404 not found page)':
+    'A página que você procura pode ter sido removida, renomeada ou estar temporariamente indisponível.',
+
+  // ── Seletor de idioma ──
+  'Choose a language(language switcher)': 'Escolher idioma',
+  'Language(language switcher)': 'Idioma',
+  'Close Banner(banner)(aria-label)': 'Fechar aviso',
+
+  // ── Outros ──
+  'Skip to Content(skip link)': 'Ir para o conteúdo',
+  'Layout Tab(layout tab trigger)': 'Aba de layout',
+  'Options(aria-label)': 'Opções',
+  'Ask AI(AI chat button)': 'Perguntar à IA',
+};
+
 const ruTranslations: Record<string, string> = {
   displayName: 'Русский',
 
@@ -544,6 +720,8 @@ export const uiTranslations: Record<Locale, Record<string, string>> = {
   zh: zhTranslations,
   en: {},
   fr: frTranslations,
+  es: esTranslations,
+  pt: ptTranslations,
   ru: ruTranslations,
   ja: jaTranslations,
   vi: viTranslations,

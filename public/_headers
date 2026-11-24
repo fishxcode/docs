@@ -92,6 +92,34 @@
   Content-Type: application/rss+xml; charset=utf-8
   Cache-Control: public, max-age=0, must-revalidate
 
+/es/llms.txt
+  Content-Language: es
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/es/llms-full.txt
+  Content-Language: es
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/es/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/pt/llms.txt
+  Content-Language: pt-BR
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/pt/llms-full.txt
+  Content-Language: pt-BR
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/pt/rss.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
 /ru/llms.txt
   Content-Language: ru
   Content-Type: text/plain; charset=utf-8
@@ -162,6 +190,12 @@
 
 /llms.mdx/fr/*
   Content-Language: fr
+
+/llms.mdx/es/*
+  Content-Language: es
+
+/llms.mdx/pt/*
+  Content-Language: pt-BR
 
 /llms.mdx/ru/*
   Content-Language: ru

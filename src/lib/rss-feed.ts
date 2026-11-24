@@ -25,6 +25,8 @@ const CHANNEL_TITLE: Record<Locale, string> = {
   zh: `${siteConfig.productName} 文档`,
   en: `${siteConfig.productName} Documentation`,
   fr: `Documentation ${siteConfig.productName}`,
+  es: `Documentación de ${siteConfig.productName}`,
+  pt: `Documentação do ${siteConfig.productName}`,
   ru: `Документация ${siteConfig.productName}`,
   ja: `${siteConfig.productName} ドキュメント`,
   vi: `Tài liệu ${siteConfig.productName}`,
