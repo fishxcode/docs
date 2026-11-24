@@ -531,7 +531,7 @@ function PerfPanel({ name, enabled }: { name: string; enabled: boolean }) {
   if (!enabled) return null;
   if (loading && !detail) return <LoadingState label="正在获取 24 小时性能数据…" />;
   if (error) return <ErrorState message={error} />;
-  if (!detail) return <p className="text-sm text-fd-muted-foreground">该模型在最近 24 小时内没有真实调用记录。</p>;
+  if (!detail?.summary) return <p className="text-sm text-fd-muted-foreground">该模型在最近 24 小时内没有真实调用记录。</p>;
 
   const latencySeries = detail.series.map((point) => ({ ts: point.ts, value: point.avg_latency_ms }));
   const tpsSeries = detail.series.map((point) => ({ ts: point.ts, value: point.avg_tps }));

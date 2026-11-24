@@ -4,6 +4,7 @@ import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 import type { MDXComponents } from 'mdx/types';
 import { ModelCatalog } from '@/components/model-catalog-lazy';
+import { ClientGuide } from '@/components/client-guide';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -15,6 +16,7 @@ export function getMDXComponents(components?: MDXComponents) {
     Accordion,
     Accordions,
     ModelCatalog,
+    ClientGuide,
     ...components,
   } satisfies MDXComponents;
 }

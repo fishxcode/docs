@@ -171,7 +171,7 @@ export interface PerfDetailResponse {
   data?: {
     model_name: string;
     series_schema?: string;
-    summary: PerfSummary;
+    summary: PerfSummary | null;
     series: PerfPoint[];
     window_start: string;
     window_end: string;
