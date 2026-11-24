@@ -2,33 +2,153 @@ import { siteConfig } from './site';
 import { docsImageRoute, joinRoute } from './shared';
 import { DEFAULT_LOCALE, type Locale } from './i18n';
 
-type HomeCopy = {
+/*
+ * 首页的全部可见内容都由本文件决定（首页「最近更新」与 sitemap 的 lastmod 都取本文件的
+ * 提交时间，见 HOME_COPY_SOURCE），所以语言无关的业务数据也放在这里，不拆到别处。
+ */
+
+/** 把文案里的 {name} 占位符替换成实际值；没有对应值的占位符原样保留 */
+export function fmt(template: string, values: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => (key in values ? String(values[key]) : match));
+}
+
+// ─────────────────────────────────────────────── 语言无关的业务数据
+
+/**
+ * Codex Pro 号池月包三档（美元）。实际成本倍率 = 售价 ÷ 额度，展示用的字符串由数字推导，
+ * 不单独手写。与 content/docs/subscription-plans/index.mdx 一致，调价时两处同步。
+ */
+const PLANS = [
+  { price: 260, quota: 2000 },
+  { price: 30, quota: 200 },
+  { price: 3.6, quota: 20 },
+] as const;
+
+const usd = (amount: number) =>
+  `$${amount.toLocaleString('en-US', { minimumFractionDigits: Number.isInteger(amount) ? 0 : 2 })}`;
+const multiplier = (ratio: number) => `${Number(ratio.toFixed(2))}x`;
+
+export const HOME_PLANS = PLANS.map((plan) => ({
+  price: usd(plan.price),
+  quota: usd(plan.quota),
+  ratio: multiplier(plan.price / plan.quota),
+}));
+
+/** 月包里最低的实际成本倍率（首屏徽标用） */
+export const HOME_LOWEST_PLAN_RATIO = multiplier(Math.min(...PLANS.map((plan) => plan.price / plan.quota)));
+
+export type GroupCategory = 'codex' | 'claude' | 'other';
+
+/** 在售分组与倍率。与 content/docs/billing-groups.mdx 一致，调整时两处同步 */
+export const HOME_GROUPS: ReadonlyArray<{ name: string; ratio: string; category: GroupCategory }> = (
+  [
+    ['codex-plus', 0.2, 'codex'],
+    ['codex-pro', 0.4, 'codex'],
+    ['codex-team', 0.15, 'codex'],
+    ['codex-officially', 2, 'codex'],
+    ['claude', 1.5, 'claude'],
+    ['claudemax', 2.6, 'claude'],
+    ['kiro-svip', 0.2, 'other'],
+    ['china', 0.8, 'other'],
+    ['grok', 0.5, 'other'],
+    ['fishxlab', 2, 'other'],
+  ] as const
+).map(([name, ratio, category]) => ({ name, ratio: multiplier(ratio), category }));
+
+/**
+ * 首页展示的客户端教程，顺序同侧边栏。path 是文档页路径（渲染时加语言前缀）；
+ * 没有 icon 的显示首字母；featured 的出现在首屏图标跑马灯里。
+ */
+export const HOME_CLIENTS: ReadonlyArray<{ name: string; path: string; icon?: string; featured?: boolean }> = [
+  { name: 'Claude Code', path: '/start', icon: '/img/clients/claude-code.png', featured: true },
+  { name: 'Claude Desktop', path: '/claude-desktop', icon: '/img/clients/claude-code.png' },
+  { name: 'ZCF', path: '/zcf' },
+  { name: 'Codex', path: '/codex', icon: '/img/clients/codex.png', featured: true },
+  { name: 'Codex Desktop', path: '/codex-desktop', icon: '/img/clients/codex.png' },
+  { name: 'Cursor', path: '/cursor', icon: '/img/clients/cursor.png', featured: true },
+  { name: 'Roo Code', path: '/roocode', icon: '/img/clients/roo-code.png', featured: true },
+  { name: 'Qwen Code', path: '/qwencode', icon: '/img/clients/qwen-code.png', featured: true },
+  { name: 'Droid', path: '/droid', icon: '/img/clients/droid.png' },
+  { name: 'OpenCode', path: '/opencode', icon: '/img/clients/opencode.png', featured: true },
+  { name: 'Hermes', path: '/hermes', icon: '/img/clients/hermes.png' },
+  { name: 'OpenClaw', path: '/openclaw', icon: '/img/clients/openclaw.png', featured: true },
+  { name: 'WorkBuddy', path: '/workbuddy', icon: '/img/clients/workbuddy.png' },
+  { name: 'CodeBuddy', path: '/codebuddy', icon: '/img/clients/codebuddy.png', featured: true },
+  { name: 'QClaw', path: '/qclaw' },
+];
+
+/** 模型供应商标签：取自定价接口里有在售模型的厂商，统一链接到模型列表页 */
+export const HOME_PROVIDERS = ['OpenAI', 'Anthropic Claude', 'Google Gemini', 'xAI Grok', 'Qwen', 'DeepSeek', 'GLM'];
+
+/** 模型列表页（供应商标签的链接目标） */
+export const HOME_MODELS_PATH = '/models';
+
+/** 接入地址，与教程一致：Claude Code 等走 Anthropic 端点，Codex 等走 OpenAI 兼容端点 */
+export const HOME_ENDPOINTS = {
+  anthropic: 'https://api.fishxcode.com',
+  openai: 'https://api.fishxcode.com/v1',
+} as const;
+
+/** 首屏代码窗口的接入示例：令牌一律从环境变量读取，模型取当前在售型号 */
+export const HOME_CODE_SAMPLES: ReadonlyArray<{ label: string; lang: string; code: string }> = [
+  {
+    label: 'Claude Code',
+    lang: 'bash',
+    code: `export ANTHROPIC_BASE_URL="${HOME_ENDPOINTS.anthropic}"
+export ANTHROPIC_AUTH_TOKEN="$FISHXCODE_API_KEY"
+
+claude`,
+  },
+  {
+    label: 'Codex',
+    lang: 'toml',
+    code: `# ~/.codex/config.toml
+model_provider = "fishxcode"
+model = "gpt-5.4"
+
+[model_providers.fishxcode]
+name = "FishXCode"
+base_url = "${HOME_ENDPOINTS.openai}"
+wire_api = "responses"
+requires_openai_auth = true`,
+  },
+  {
+    label: 'cURL',
+    lang: 'bash',
+    code: `curl ${HOME_ENDPOINTS.openai}/chat/completions \\
+  -H "Authorization: Bearer $FISHXCODE_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "gpt-5.4",
+    "messages": [{ "role": "user", "content": "Hello, FishXCode!" }]
+  }'`,
+  },
+];
+
+// ─────────────────────────────────────────────── 各语言文案
+
+export type HomeCopy = {
   /** 页面 <title>、分享卡片、页脚品牌与结构化数据里的站点名 */
   title: string;
-  /** 首页大标题（品牌名）下的一句话定位 */
-  headline: string;
-  /** 定位下方的说明 */
-  tagline: string;
   /** meta description；页脚、RSS 与结构化数据也用它介绍本站 */
   description: string;
   /** 主按钮：注册（站外，地址见 siteConfig.links.register） */
   register: string;
   /** 次按钮：进入文档（HOME_START_PATH） */
   docs: string;
+  /** 「为什么选择」区块的四张卡片；首页 Markdown 副本也逐条列出 */
   features: ReadonlyArray<{ title: string; details: string }>;
   updated: string;
 };
 
 /**
- * 各语言首页文案（纯数据，零组件依赖），按当前业务定位撰写：一站式 AI 模型接入与账号服务平台。
- * localized-home-page.tsx、首页 Markdown 副本、分享图、页脚与结构化数据共用，
+ * 首页与全站共用的文案：首页、首页 Markdown 副本、分享图、页脚、导航注册按钮、RSS 与
+ * 结构化数据都会读。按当前业务定位撰写：一站式 AI 模型接入与账号服务平台。
  * 新增语言在此补充一项即可。zh 为原文，其余语言为译文。
  */
 export const HOME_COPY: Record<Locale, HomeCopy> = {
   zh: {
     title: `${siteConfig.productName} - 一站式 AI 模型接入平台`,
-    headline: '主流 AI 模型一网打尽',
-    tagline: '覆盖 Claude、Codex、Kiro、Grok、国产模型与多模态模型，满足开发、创作与企业级应用需求',
     description: siteConfig.description,
     register: '立即注册',
     docs: '使用文档',
@@ -51,9 +171,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   en: {
     title: `${siteConfig.productName} - One-Stop AI Model Access`,
-    headline: 'All mainstream AI models in one place',
-    tagline:
-      'Claude, Codex, Kiro, Grok, Chinese and multimodal models for development, creative work and enterprise applications',
     description:
       'A one-stop platform for AI model access and accounts: Claude, Codex, Kiro, Grok, Chinese and multimodal models. Stable, cost-effective and ready to use.',
     register: 'Register Now',
@@ -67,11 +184,11 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Many groups, flexible choice',
         details:
-          'Groups for Codex, Claude, Kiro, Grok, Chinese and multimodal models. Pick the pool and ratio for each job.',
+          'Groups for Codex, Claude, Kiro, Grok, Chinese and multimodal models. Pick the pool and multiplier for each job.',
       },
       {
         title: 'Cost-effective, pay as you go',
-        details: 'Pay from your balance for what you use, or pick a fixed-quota pool plan for heavy Codex work.',
+        details: 'Pay from your balance for what you use, or pick a fixed-credit pool pack for heavy Codex work.',
       },
       {
         title: 'Built for teams and enterprises',
@@ -82,9 +199,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   fr: {
     title: `${siteConfig.productName} - Accès unifié aux modèles d'IA`,
-    headline: "Tous les grands modèles d'IA au même endroit",
-    tagline:
-      'Claude, Codex, Kiro, Grok, modèles chinois et multimodaux pour le développement, la création et les usages en entreprise',
     description:
       "Plateforme unifiée d'accès aux modèles d'IA et de gestion de comptes : Claude, Codex, Kiro, Grok, modèles chinois et multimodaux. Stable, économique et prête à l'emploi.",
     register: "S'inscrire",
@@ -98,12 +212,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'De nombreux groupes au choix',
         details:
-          'Des groupes pour Codex, Claude, Kiro, Grok, les modèles chinois et multimodaux : choisissez le pool et le ratio selon l’usage.',
+          'Des groupes pour Codex, Claude, Kiro, Grok, les modèles chinois et multimodaux : choisissez le pool et le multiplicateur selon l’usage.',
       },
       {
         title: 'Économique, à la demande',
         details:
-          'Payez à l’usage depuis votre solde, ou choisissez un forfait mensuel à quota fixe pour un usage intensif de Codex.',
+          'Payez à l’usage depuis votre solde, ou choisissez un forfait mensuel à crédit fixe pour un usage intensif de Codex.',
       },
       {
         title: 'Pensé pour les équipes et les entreprises',
@@ -115,9 +229,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   es: {
     title: `${siteConfig.productName} - Acceso unificado a modelos de IA`,
-    headline: 'Todos los grandes modelos de IA en un solo lugar',
-    tagline:
-      'Claude, Codex, Kiro, Grok, modelos chinos y multimodales para desarrollo, creación y aplicaciones empresariales',
     description:
       'Plataforma integral de acceso a modelos de IA y gestión de cuentas: Claude, Codex, Kiro, Grok, modelos chinos y multimodales. Estable, económica y lista para usar.',
     register: 'Registrarse',
@@ -131,12 +242,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Muchos grupos para elegir',
         details:
-          'Grupos para Codex, Claude, Kiro, Grok, modelos chinos y multimodales: elige el pool y el ratio según tu caso.',
+          'Grupos para Codex, Claude, Kiro, Grok, modelos chinos y multimodales: elige el pool y el multiplicador según tu caso.',
       },
       {
         title: 'Económico, pago por uso',
         details:
-          'Paga desde tu saldo solo por lo que usas, o elige un plan mensual de cuota fija para uso intensivo de Codex.',
+          'Paga desde tu saldo solo por lo que usas, o elige un paquete mensual de crédito fijo para uso intensivo de Codex.',
       },
       {
         title: 'Para equipos y empresas',
@@ -147,9 +258,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   pt: {
     title: `${siteConfig.productName} - Acesso unificado a modelos de IA`,
-    headline: 'Todos os principais modelos de IA em um só lugar',
-    tagline:
-      'Claude, Codex, Kiro, Grok, modelos chineses e multimodais para desenvolvimento, criação e aplicações empresariais',
     description:
       'Plataforma completa de acesso a modelos de IA e gestão de contas: Claude, Codex, Kiro, Grok, modelos chineses e multimodais. Estável, econômica e pronta para usar.',
     register: 'Cadastrar',
@@ -163,12 +271,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Vários grupos para escolher',
         details:
-          'Grupos para Codex, Claude, Kiro, Grok, modelos chineses e multimodais: escolha o pool e a proporção para cada caso.',
+          'Grupos para Codex, Claude, Kiro, Grok, modelos chineses e multimodais: escolha o pool e o multiplicador para cada caso.',
       },
       {
         title: 'Econômico, pague pelo uso',
         details:
-          'Pague pelo saldo apenas o que usar, ou escolha um plano mensal de cota fixa para uso intenso do Codex.',
+          'Pague pelo saldo apenas o que usar, ou escolha um pacote mensal de crédito fixo para uso intenso do Codex.',
       },
       {
         title: 'Para equipes e empresas',
@@ -179,9 +287,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   ru: {
     title: `${siteConfig.productName} - единый доступ к моделям ИИ`,
-    headline: 'Все ведущие модели ИИ в одном месте',
-    tagline:
-      'Claude, Codex, Kiro, Grok, китайские и мультимодальные модели для разработки, творчества и корпоративных задач',
     description:
       'Единая платформа доступа к моделям ИИ и аккаунтам: Claude, Codex, Kiro, Grok, китайские и мультимодальные модели. Стабильно, выгодно и сразу готово к работе.',
     register: 'Зарегистрироваться',
@@ -211,9 +316,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   ja: {
     title: `${siteConfig.productName} - AI モデルのワンストップ接続`,
-    headline: '主要な AI モデルをひとつの場所で',
-    tagline:
-      'Claude・Codex・Kiro・Grok・中国系モデル・マルチモーダルモデルに対応し、開発・制作・企業利用のニーズに応えます',
     description:
       'AI モデル接続とアカウントサービスのワンストッププラットフォーム。Claude・Codex・Kiro・Grok・中国系モデル・マルチモーダルモデルに対応し、安定・高コスパ・すぐに使えます。',
     register: '今すぐ登録',
@@ -230,7 +332,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
       {
         title: '高コスパ、使った分だけ',
-        details: '残高から使った分だけ従量課金。Codex を多用するなら固定枠の月額プランも選べます。',
+        details: '残高から使った分だけ従量課金。Codex を多用するなら固定枠の月額パックも選べます。',
       },
       {
         title: '法人・チーム利用に対応',
@@ -241,9 +343,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   vi: {
     title: `${siteConfig.productName} - Truy cập mô hình AI một điểm`,
-    headline: 'Mọi mô hình AI chủ lưu ở một nơi',
-    tagline:
-      'Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và đa phương thức cho phát triển, sáng tạo và doanh nghiệp',
     description:
       'Nền tảng truy cập mô hình AI và tài khoản một điểm: Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và đa phương thức. Ổn định, tiết kiệm và dùng được ngay.',
     register: 'Đăng ký ngay',
@@ -272,8 +371,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
   'zh-TW': {
     title: `${siteConfig.productName} - 一站式 AI 模型接入平台`,
-    headline: '主流 AI 模型一網打盡',
-    tagline: '涵蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型，滿足開發、創作與企業級應用需求',
     description:
       '一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型，穩定、高性價比、即開即用。',
     register: '立即註冊',
@@ -294,6 +391,774 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       { title: '支援企業接入，批量客製', details: '團隊與企業批量呼叫、客製化方案與專屬技術支援。' },
     ],
     updated: '文件持續更新中 · 最近更新 ',
+  },
+};
+
+type StepCopy = { title: string; description: string };
+
+/**
+ * 首页各区块的文案（只在首页与首页 Markdown 副本里用），区块顺序与 localized-home-page.tsx 一致。
+ * 占位符：{ratio} 实际成本倍率，{quota} 月包额度，{count} 教程数量。
+ * zh 为原稿；zh-TW 由 OpenCC 从 zh 转换后人工校对；其余语言为译文。
+ */
+export type HomePageCopy = {
+  hero: {
+    /** 首屏徽标，链接到月包页 */
+    badge: string;
+    /** 两行大标题，第二行用品牌色 */
+    title: readonly [string, string];
+    description: string;
+    /** 三条要点，依次链接到计费规则、服务状态、企业站 */
+    points: readonly [string, string, string];
+    /** 代码窗口的无障碍名称、复制按钮文字与复制结果提示 */
+    codeLabel: string;
+    copy: string;
+    copied: string;
+    copyFailed: string;
+  };
+  providers: { title: string; note: string };
+  why: { title: string; description: string };
+  pricing: {
+    title: string;
+    description: string;
+    plansTitle: string;
+    planQuota: string;
+    planRatio: string;
+    planTerms: string;
+    planGroup: string;
+    plansCta: string;
+    groupsTitle: string;
+    categories: Record<GroupCategory, string>;
+    groupsNote: string;
+    groupsCta: string;
+  };
+  clients: { title: string; description: string };
+  steps: { title: string; description: string; items: readonly [StepCopy, StepCopy, StepCopy]; cta: string };
+  cta: {
+    title: string;
+    description: string;
+    enterprise: string;
+    supportTitle: string;
+    supportBody: string;
+    email: string;
+    wechat: string;
+  };
+};
+
+export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
+  zh: {
+    hero: {
+      badge: 'Codex Pro 号池月包 · 实际成本低至 {ratio}',
+      title: ['主流 AI 模型', '一网打尽'],
+      description:
+        '覆盖 Claude、Codex、Kiro、Grok、国产模型与多模态模型，一个账号接入你常用的编程工具，满足开发、创作与企业级应用需求。',
+      points: ['官方号池，稳定直连', '服务状态公开可查', '企业接入，专属支持'],
+      codeLabel: '接入示例',
+      copy: '复制代码',
+      copied: '已复制',
+      copyFailed: '复制失败，请手动选中代码复制',
+    },
+    providers: {
+      title: '已接入的模型供应商',
+      note: '可用模型、分组与价格以模型列表为准。',
+    },
+    why: {
+      title: '一个账号，接入主流 AI 模型',
+      description: '官方资源直连，按场景选择分组，余额按量计费或购买月包，个人开发与团队协作都适用。',
+    },
+    pricing: {
+      title: '按量计费，或选 Codex 月包',
+      description: '余额按模型价格乘以分组倍率扣费，用多少扣多少；高频 Codex 开发可以买固定额度的号池月包。',
+      plansTitle: 'Codex Pro 号池月包',
+      planQuota: '{quota} 额度',
+      planRatio: '实际成本 {ratio}',
+      planTerms: '1 个自然月有效，额度不重置',
+      planGroup: '用 codex-sub-june 分组创建令牌，该分组固定 1x 倍率',
+      plansCta: '月包购买与使用',
+      groupsTitle: '在售分组与倍率',
+      categories: {
+        codex: 'Codex 系列',
+        claude: 'Claude 系列',
+        other: '其他模型',
+      },
+      groupsNote: '倍率越低，同一请求扣得越少；以站内实时信息为准。',
+      groupsCta: '计费规则与分组',
+    },
+    clients: {
+      title: '接入你正在用的工具',
+      description:
+        '{count} 款编程工具与 Agent 的分步教程：Claude Code 走 Anthropic 端点，Codex 等工具走 OpenAI 兼容端点。',
+    },
+    steps: {
+      title: '三步发出第一个请求',
+      description: '注册后在控制台充值、创建令牌，再把接入地址和令牌填进客户端。',
+      items: [
+        {
+          title: '注册并充值',
+          description: '创建 FishXCode 账号，按需充值余额或购买 Codex 月包。',
+        },
+        {
+          title: '创建令牌，选对分组',
+          description: '在控制台「令牌管理」新建令牌，分组决定可用模型与扣费倍率。',
+        },
+        {
+          title: '配置客户端',
+          description: '把接入地址与令牌填入客户端，即可开始调用。',
+        },
+      ],
+      cta: '查看完整教程',
+    },
+    cta: {
+      title: '从你的下一个想法开始',
+      description: '注册账号，创建一个令牌，让熟悉的工具连接更多模型。',
+      enterprise: '企业服务',
+      supportTitle: '需要帮助？',
+      supportBody: '迁移、额度、令牌、套餐或接入问题，可以通过在线客服、邮件或微信联系我们。',
+      email: '邮箱',
+      wechat: '微信',
+    },
+  },
+  en: {
+    hero: {
+      badge: 'Codex Pro pool monthly pack · effective cost from {ratio}',
+      title: ['Every major AI model,', 'in one place'],
+      description:
+        'Claude, Codex, Kiro, Grok, Chinese and multimodal models through one account, ready for the coding tools you already use, for development, creative work and enterprise applications.',
+      points: ['Official pools, direct connections', 'Public service status', 'Enterprise onboarding and support'],
+      codeLabel: 'Integration examples',
+      copy: 'Copy code',
+      copied: 'Copied',
+      copyFailed: 'Copy failed. Select the code and copy it manually.',
+    },
+    providers: {
+      title: 'Connected model providers',
+      note: 'See the model list for current availability, groups and pricing.',
+    },
+    why: {
+      title: 'One account for mainstream AI models',
+      description:
+        'Official resources, a group for every scenario, and pay-as-you-go billing or monthly packs, for individual developers and teams alike.',
+    },
+    pricing: {
+      title: 'Pay as you go, or pick a Codex monthly pack',
+      description:
+        'Your balance pays the model price times the group multiplier, only for what you use. For heavy Codex work, a fixed-credit pool pack lowers the cost.',
+      plansTitle: 'Codex Pro pool monthly pack',
+      planQuota: '{quota} credit',
+      planRatio: 'Effective cost multiplier {ratio}',
+      planTerms: 'Valid for 1 calendar month; credit does not reset',
+      planGroup: 'Create tokens in the codex-sub-june group, which has a fixed 1x multiplier',
+      plansCta: 'Buying and using the pack',
+      groupsTitle: 'Groups on sale and their multipliers',
+      categories: {
+        codex: 'Codex',
+        claude: 'Claude',
+        other: 'Other models',
+      },
+      groupsNote: 'A lower multiplier deducts less for the same request. Live values on the platform prevail.',
+      groupsCta: 'Billing rules and groups',
+    },
+    clients: {
+      title: 'Connect the tools you already use',
+      description:
+        'Step-by-step guides for {count} coding tools and agents. Claude Code uses the Anthropic endpoint; Codex and the others use the OpenAI-compatible endpoint.',
+    },
+    steps: {
+      title: 'Your first request in three steps',
+      description:
+        'Sign up, then top up and create a token in the console, and put the endpoint and token into your client.',
+      items: [
+        {
+          title: 'Sign up and top up',
+          description: 'Create a FishXCode account, then top up your balance or buy a Codex monthly pack.',
+        },
+        {
+          title: 'Create a token in the right group',
+          description:
+            'Create a token under Token Management in the console. Its group decides the available models and the multiplier.',
+        },
+        {
+          title: 'Configure your client',
+          description: 'Enter the endpoint and token in your client and start making requests.',
+        },
+      ],
+      cta: 'Read the full guide',
+    },
+    cta: {
+      title: 'Start with your next idea',
+      description: 'Create an account and a token, and bring more models to the tools you know.',
+      enterprise: 'Enterprise',
+      supportTitle: 'Need a hand?',
+      supportBody:
+        'For migration, balance, token, plan or integration questions, reach us through live chat, email or WeChat.',
+      email: 'Email',
+      wechat: 'WeChat',
+    },
+  },
+  fr: {
+    hero: {
+      badge: 'Forfait mensuel du pool Codex Pro · coût réel dès {ratio}',
+      title: ["Les grands modèles d'IA,", 'tous au même endroit'],
+      description:
+        'Claude, Codex, Kiro, Grok, modèles chinois et multimodaux, réunis sur un seul compte et accessibles depuis vos outils de programmation habituels, que ce soit pour le développement, la création ou les usages en entreprise.',
+      points: [
+        'Pools officiels, connexion directe et stable',
+        'État du service consultable par tous',
+        'Accès entreprise, support dédié',
+      ],
+      codeLabel: "Exemples d'intégration",
+      copy: 'Copier le code',
+      copied: 'Copié',
+      copyFailed: 'Échec de la copie. Sélectionnez le code et copiez-le manuellement.',
+    },
+    providers: {
+      title: 'Fournisseurs de modèles pris en charge',
+      note: 'Disponibilité, groupes et prix à jour : consultez la liste des modèles.',
+    },
+    why: {
+      title: "Un seul compte pour les grands modèles d'IA",
+      description:
+        "Ressources officielles en connexion directe, un groupe pour chaque besoin, paiement à l'usage depuis votre solde ou forfait mensuel : idéal pour développer en solo comme en équipe.",
+    },
+    pricing: {
+      title: "Payez à l'usage ou choisissez un forfait mensuel Codex",
+      description:
+        'Votre solde est débité selon votre consommation réelle : prix du modèle × multiplicateur du groupe. Pour un usage intensif de Codex, privilégiez un forfait mensuel du pool à crédit fixe.',
+      plansTitle: 'Forfait mensuel du pool Codex Pro',
+      planQuota: '{quota} de crédit',
+      planRatio: 'Multiplicateur de coût réel {ratio}',
+      planTerms: 'Valable 1 mois civil, sans réinitialisation du crédit',
+      planGroup: 'Créez vos tokens dans le groupe codex-sub-june, dont le multiplicateur est fixé à 1x',
+      plansCta: 'Acheter et utiliser le forfait',
+      groupsTitle: 'Groupes disponibles et leurs multiplicateurs',
+      categories: {
+        codex: 'Série Codex',
+        claude: 'Série Claude',
+        other: 'Autres modèles',
+      },
+      groupsNote:
+        'Plus le multiplicateur est bas, moins la même requête coûte cher. Les informations en temps réel du site font foi.',
+      groupsCta: 'Règles de facturation et groupes',
+    },
+    clients: {
+      title: 'Connectez les outils que vous utilisez déjà',
+      description:
+        "Des guides pas à pas pour {count} outils de programmation et agents. Claude Code passe par l'endpoint Anthropic ; Codex et les autres outils, par l'endpoint compatible OpenAI.",
+    },
+    steps: {
+      title: 'Votre première requête en trois étapes',
+      description:
+        "Inscrivez-vous, rechargez votre solde et créez un token dans la console, puis renseignez l'endpoint et le token dans votre client.",
+      items: [
+        {
+          title: 'Inscrivez-vous et rechargez',
+          description:
+            'Créez votre compte FishXCode, puis rechargez votre solde ou achetez un forfait mensuel Codex selon vos besoins.',
+        },
+        {
+          title: 'Créez un token dans le bon groupe',
+          description:
+            'Ajoutez un token depuis « Gestion des tokens » dans la console : son groupe détermine les modèles disponibles et le multiplicateur de facturation.',
+        },
+        {
+          title: 'Configurez votre client',
+          description: "Saisissez l'endpoint et le token dans votre client, puis lancez vos premiers appels.",
+        },
+      ],
+      cta: 'Voir le guide complet',
+    },
+    cta: {
+      title: 'Tout commence par votre prochaine idée',
+      description: 'Créez un compte et un token, puis connectez vos outils habituels à davantage de modèles.',
+      enterprise: 'Entreprises',
+      supportTitle: "Besoin d'aide ?",
+      supportBody:
+        'Migration, crédit, tokens, forfaits ou intégration : contactez-nous par chat en ligne, par e-mail ou sur WeChat.',
+      email: 'E-mail',
+      wechat: 'WeChat',
+    },
+  },
+  es: {
+    hero: {
+      badge: 'Paquete mensual del pool Codex Pro · coste real desde {ratio}',
+      title: ['Los grandes modelos de IA,', 'todos en un solo lugar'],
+      description:
+        'Claude, Codex, Kiro, Grok, modelos chinos y multimodales con una sola cuenta y directamente desde tus herramientas de programación habituales, ya sea para desarrollo, creación o aplicaciones empresariales.',
+      points: [
+        'Pools oficiales, conexión directa y estable',
+        'Estado del servicio visible para todos',
+        'Acceso empresarial, soporte dedicado',
+      ],
+      codeLabel: 'Ejemplos de integración',
+      copy: 'Copiar código',
+      copied: 'Copiado',
+      copyFailed: 'No se pudo copiar. Selecciona el código y cópialo manualmente.',
+    },
+    providers: {
+      title: 'Proveedores de modelos integrados',
+      note: 'Disponibilidad, grupos y precios vigentes: consulta la lista de modelos.',
+    },
+    why: {
+      title: 'Una sola cuenta para los grandes modelos de IA',
+      description:
+        'Conexión directa a recursos oficiales, un grupo para cada necesidad, pago por uso con saldo o paquete mensual: ideal tanto para desarrolladores individuales como para equipos.',
+    },
+    pricing: {
+      title: 'Paga por uso o elige un paquete mensual de Codex',
+      description:
+        'Del saldo se descuenta el precio del modelo por el multiplicador del grupo: pagas solo lo que usas. Para un uso intensivo de Codex, opta por un paquete mensual del pool con crédito fijo.',
+      plansTitle: 'Paquete mensual del pool Codex Pro',
+      planQuota: '{quota} de crédito',
+      planRatio: 'Multiplicador de coste real {ratio}',
+      planTerms: 'Válido durante 1 mes natural; el crédito no se restablece',
+      planGroup: 'Crea los tokens en el grupo codex-sub-june, que tiene un multiplicador fijo de 1x',
+      plansCta: 'Comprar y usar el paquete',
+      groupsTitle: 'Grupos a la venta y sus multiplicadores',
+      categories: {
+        codex: 'Serie Codex',
+        claude: 'Serie Claude',
+        other: 'Otros modelos',
+      },
+      groupsNote:
+        'A menor multiplicador, menos se descuenta por la misma solicitud. Prevalece la información en tiempo real del sitio.',
+      groupsCta: 'Reglas de facturación y grupos',
+    },
+    clients: {
+      title: 'Conecta las herramientas que ya usas',
+      description:
+        'Guías paso a paso para {count} herramientas de programación y agentes. Claude Code usa el endpoint de Anthropic; Codex y las demás herramientas, el endpoint compatible con OpenAI.',
+    },
+    steps: {
+      title: 'Tu primera solicitud en tres pasos',
+      description:
+        'Regístrate, recarga saldo y crea un token en la consola; luego configura el endpoint y el token en tu cliente.',
+      items: [
+        {
+          title: 'Regístrate y recarga',
+          description:
+            'Crea tu cuenta en FishXCode y recarga saldo o compra un paquete mensual de Codex, según lo que necesites.',
+        },
+        {
+          title: 'Crea un token en el grupo adecuado',
+          description:
+            'Agrega un token en «Gestión de tokens» de la consola: el grupo determina los modelos disponibles y el multiplicador de cobro.',
+        },
+        {
+          title: 'Configura tu cliente',
+          description: 'Introduce el endpoint y el token en tu cliente y empieza a hacer llamadas.',
+        },
+      ],
+      cta: 'Ver la guía completa',
+    },
+    cta: {
+      title: 'Todo empieza con tu próxima idea',
+      description: 'Crea una cuenta y un token, y conecta tus herramientas de siempre a más modelos.',
+      enterprise: 'Empresas',
+      supportTitle: '¿Necesitas ayuda?',
+      supportBody:
+        'Para dudas sobre migración, crédito, tokens, planes o integración, escríbenos por el chat en línea, por correo o por WeChat.',
+      email: 'Correo',
+      wechat: 'WeChat',
+    },
+  },
+  pt: {
+    hero: {
+      badge: 'Pacote mensal do pool Codex Pro · custo real a partir de {ratio}',
+      title: ['Os principais modelos de IA,', 'todos em um só lugar'],
+      description:
+        'Claude, Codex, Kiro, Grok, modelos chineses e multimodais em uma só conta, direto nas ferramentas de programação que você já usa, seja para desenvolvimento, criação ou aplicações empresariais.',
+      points: [
+        'Pools oficiais, conexão direta e estável',
+        'Status do serviço visível para todos',
+        'Acesso empresarial, suporte dedicado',
+      ],
+      codeLabel: 'Exemplos de integração',
+      copy: 'Copiar código',
+      copied: 'Copiado',
+      copyFailed: 'Não foi possível copiar. Selecione o código e copie manualmente.',
+    },
+    providers: {
+      title: 'Provedores de modelos integrados',
+      note: 'Disponibilidade, grupos e preços atuais: consulte a lista de modelos.',
+    },
+    why: {
+      title: 'Uma só conta para os principais modelos de IA',
+      description:
+        'Conexão direta com recursos oficiais, um grupo para cada necessidade, pagamento por uso com saldo ou pacote mensal: ideal tanto para quem desenvolve sozinho quanto para equipes.',
+    },
+    pricing: {
+      title: 'Pague pelo uso ou escolha um pacote mensal Codex',
+      description:
+        'Do saldo é descontado o preço do modelo vezes o multiplicador do grupo: você paga só pelo que usa. Para uso intenso do Codex, opte por um pacote mensal do pool com crédito fixo.',
+      plansTitle: 'Pacote mensal do pool Codex Pro',
+      planQuota: '{quota} de crédito',
+      planRatio: 'Multiplicador de custo real {ratio}',
+      planTerms: 'Válido por 1 mês-calendário; o crédito não é redefinido',
+      planGroup: 'Crie os tokens no grupo codex-sub-june, que tem multiplicador fixo de 1x',
+      plansCta: 'Comprar e usar o pacote',
+      groupsTitle: 'Grupos à venda e seus multiplicadores',
+      categories: {
+        codex: 'Série Codex',
+        claude: 'Série Claude',
+        other: 'Outros modelos',
+      },
+      groupsNote:
+        'Quanto menor o multiplicador, menos é descontado pela mesma requisição. Prevalecem as informações em tempo real do site.',
+      groupsCta: 'Regras de cobrança e grupos',
+    },
+    clients: {
+      title: 'Conecte as ferramentas que você já usa',
+      description:
+        'Guias passo a passo para {count} ferramentas de programação e agentes. O Claude Code usa o endpoint da Anthropic; o Codex e as demais ferramentas, o endpoint compatível com OpenAI.',
+    },
+    steps: {
+      title: 'Sua primeira requisição em três passos',
+      description:
+        'Cadastre-se, recarregue o saldo e crie um token no console; depois configure o endpoint e o token no seu cliente.',
+      items: [
+        {
+          title: 'Cadastre-se e recarregue',
+          description:
+            'Crie sua conta no FishXCode e recarregue o saldo ou compre um pacote mensal Codex, conforme precisar.',
+        },
+        {
+          title: 'Crie um token no grupo certo',
+          description:
+            'Adicione um token em “Gerenciamento de tokens” no console: o grupo define os modelos disponíveis e o multiplicador de cobrança.',
+        },
+        {
+          title: 'Configure seu cliente',
+          description: 'Insira o endpoint e o token no seu cliente e comece a fazer chamadas.',
+        },
+      ],
+      cta: 'Ver o guia completo',
+    },
+    cta: {
+      title: 'Tudo começa com a sua próxima ideia',
+      description: 'Crie uma conta e um token e conecte suas ferramentas de sempre a mais modelos.',
+      enterprise: 'Empresas',
+      supportTitle: 'Precisa de ajuda?',
+      supportBody:
+        'Para dúvidas sobre migração, crédito, tokens, planos ou integração, fale com a gente pelo chat de atendimento, por e-mail ou pelo WeChat.',
+      email: 'E-mail',
+      wechat: 'WeChat',
+    },
+  },
+  ru: {
+    hero: {
+      badge: 'Месячный пакет пула Codex Pro · фактическая стоимость от {ratio}',
+      title: ['Все ведущие модели ИИ', 'в одном месте'],
+      description:
+        'Claude, Codex, Kiro, Grok, китайские и мультимодальные модели через один аккаунт — прямо в привычных инструментах для программирования. Подходит для разработки, творчества и корпоративных задач.',
+      points: [
+        'Официальные пулы, прямое подключение',
+        'Статус сервиса в открытом доступе',
+        'Корпоративное подключение и поддержка',
+      ],
+      codeLabel: 'Примеры подключения',
+      copy: 'Копировать код',
+      copied: 'Скопировано',
+      copyFailed: 'Не удалось скопировать. Выделите код и скопируйте вручную.',
+    },
+    providers: {
+      title: 'Подключённые провайдеры моделей',
+      note: 'Актуальные модели, группы и цены смотрите в списке моделей.',
+    },
+    why: {
+      title: 'Один аккаунт для ведущих моделей ИИ',
+      description:
+        'Прямое подключение к официальным ресурсам, группы под разные задачи, оплата по факту с баланса или месячный пакет — для индивидуальных разработчиков и команд.',
+    },
+    pricing: {
+      title: 'Оплата по факту или месячный пакет Codex',
+      description:
+        'Цена модели умножается на коэффициент группы и списывается с баланса — вы платите только за то, что используете. Для интенсивной разработки с Codex есть месячный пакет пула с фиксированной квотой.',
+      plansTitle: 'Месячный пакет пула Codex Pro',
+      planQuota: 'Квота {quota}',
+      planRatio: 'Фактический коэффициент стоимости {ratio}',
+      planTerms: 'Действует 1 календарный месяц, квота не сбрасывается',
+      planGroup: 'Создайте токен в группе codex-sub-june: её коэффициент фиксирован и равен 1x',
+      plansCta: 'Покупка и использование пакета',
+      groupsTitle: 'Доступные группы и коэффициенты',
+      categories: {
+        codex: 'Серия Codex',
+        claude: 'Серия Claude',
+        other: 'Другие модели',
+      },
+      groupsNote:
+        'Чем ниже коэффициент, тем меньше спишется за тот же запрос. Окончательными считаются актуальные данные на сайте.',
+      groupsCta: 'Правила тарификации и группы',
+    },
+    clients: {
+      title: 'Подключите инструменты, которыми уже пользуетесь',
+      description:
+        'Пошаговые инструкции для {count} инструментов разработки и агентов: Claude Code подключается через эндпоинт Anthropic, а Codex и остальные — через OpenAI-совместимый эндпоинт.',
+    },
+    steps: {
+      title: 'Первый запрос — за три шага',
+      description:
+        'Зарегистрируйтесь, пополните баланс и создайте токен в консоли, затем укажите адрес API и токен в клиенте.',
+      items: [
+        {
+          title: 'Зарегистрируйтесь и пополните баланс',
+          description:
+            'Создайте аккаунт FishXCode и, в зависимости от задач, пополните баланс или купите месячный пакет Codex.',
+        },
+        {
+          title: 'Создайте токен в нужной группе',
+          description:
+            'Создать токен можно в консоли, в разделе «Управление токенами». От группы зависят доступные модели и коэффициент списания.',
+        },
+        {
+          title: 'Настройте клиент',
+          description: 'Укажите адрес API и токен в клиенте — и можно отправлять запросы.',
+        },
+      ],
+      cta: 'Открыть полную инструкцию',
+    },
+    cta: {
+      title: 'Начните со своей следующей идеи',
+      description: 'Зарегистрируйтесь, создайте токен — и подключите больше моделей к привычным инструментам.',
+      enterprise: 'Для бизнеса',
+      supportTitle: 'Нужна помощь?',
+      supportBody:
+        'По вопросам миграции, баланса, токенов, тарифов или подключения пишите нам в онлайн-чат, на почту или в WeChat.',
+      email: 'Эл. почта',
+      wechat: 'WeChat',
+    },
+  },
+  ja: {
+    hero: {
+      badge: 'Codex Pro アカウントプール月額パック · 実質コスト {ratio} から',
+      title: ['主要な AI モデルを', 'ひとつの場所で'],
+      description:
+        'Claude・Codex・Kiro・Grok・中国系モデル・マルチモーダルモデルに対応。ひとつのアカウントで使い慣れたコーディングツールにそのまま接続でき、開発・制作・企業利用のニーズに応えます。',
+      points: ['公式プールに安定して直接接続', 'サービス状況を公開中', '法人導入に対応、専任サポート付き'],
+      codeLabel: '接続例',
+      copy: 'コードをコピー',
+      copied: 'コピーしました',
+      copyFailed: 'コピーできませんでした。コードを選択して手動でコピーしてください。',
+    },
+    providers: {
+      title: '対応しているモデルプロバイダー',
+      note: '利用できるモデル・グループ・価格は、モデル一覧の表示が優先されます。',
+    },
+    why: {
+      title: 'ひとつのアカウントで、主要な AI モデルに接続',
+      description:
+        '公式リソースに直接接続し、用途に合わせてグループを選べます。残高からの従量課金のほか月額パックも用意しており、個人開発にもチーム開発にも対応します。',
+    },
+    pricing: {
+      title: '従量課金か、Codex 月額パックか',
+      description:
+        '使った分だけ、モデル価格にグループ倍率を掛けた額を残高から差し引きます。Codex を高頻度で使う開発なら、利用枠が固定のアカウントプール月額パックも選べます。',
+      plansTitle: 'Codex Pro アカウントプール月額パック',
+      planQuota: '利用枠 {quota}',
+      planRatio: '実質コスト倍率 {ratio}',
+      planTerms: '有効期間は 1 暦月、利用枠はリセットされません',
+      planGroup: 'codex-sub-june グループでトークンを作成します（倍率は 1x 固定）',
+      plansCta: '月額パックの購入と使い方',
+      groupsTitle: '販売中のグループと倍率',
+      categories: {
+        codex: 'Codex シリーズ',
+        claude: 'Claude シリーズ',
+        other: 'その他のモデル',
+      },
+      groupsNote:
+        '倍率が低いほど、同じリクエストでの差し引き額は少なくなります。サイト上のリアルタイム情報が優先されます。',
+      groupsCta: '課金ルールとグループ',
+    },
+    clients: {
+      title: 'お使いのツールにそのまま接続',
+      description:
+        '{count} 種類のコーディングツールとエージェントの接続手順をステップごとに解説。Claude Code は Anthropic エンドポイント、Codex などは OpenAI 互換エンドポイントを使います。',
+    },
+    steps: {
+      title: '最初のリクエストまで 3 ステップ',
+      description:
+        '登録後、コンソールでチャージしてトークンを作成し、ベース URL とトークンをクライアントに設定します。',
+      items: [
+        {
+          title: '登録してチャージ',
+          description:
+            'FishXCode のアカウントを作成し、必要に応じて残高をチャージするか、Codex 月額パックを購入します。',
+        },
+        {
+          title: '適切なグループでトークンを作成',
+          description:
+            'コンソールの「トークン管理」で新しいトークンを作成します。グループによって、使えるモデルと課金倍率が決まります。',
+        },
+        {
+          title: 'クライアントを設定',
+          description: 'ベース URL とトークンをクライアントに入力すれば、すぐに呼び出しを始められます。',
+        },
+      ],
+      cta: '詳しい手順を見る',
+    },
+    cta: {
+      title: '次のアイデアから始めましょう',
+      description: 'アカウントを登録してトークンを作成すれば、使い慣れたツールでもっと多くのモデルを使えます。',
+      enterprise: '法人向け',
+      supportTitle: 'お困りですか？',
+      supportBody:
+        '移行、残高、トークン、プラン、接続に関するご質問は、チャットサポート・メール・WeChat でお問い合わせください。',
+      email: 'メール',
+      wechat: 'WeChat',
+    },
+  },
+  vi: {
+    hero: {
+      badge: 'Gói tháng pool tài khoản Codex Pro · chi phí thực tế chỉ từ {ratio}',
+      title: ['Mọi mô hình AI chủ lưu', 'ở một nơi'],
+      description:
+        'Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và đa phương thức trong một tài khoản, kết nối ngay với công cụ lập trình bạn quen dùng, đáp ứng nhu cầu phát triển, sáng tạo và ứng dụng doanh nghiệp.',
+      points: [
+        'Pool chính thức, kết nối trực tiếp ổn định',
+        'Trạng thái dịch vụ công khai',
+        'Tích hợp doanh nghiệp, hỗ trợ riêng',
+      ],
+      codeLabel: 'Ví dụ kết nối',
+      copy: 'Sao chép mã',
+      copied: 'Đã sao chép',
+      copyFailed: 'Không sao chép được. Hãy chọn đoạn mã và sao chép thủ công.',
+    },
+    providers: {
+      title: 'Các nhà cung cấp mô hình đã kết nối',
+      note: 'Mô hình khả dụng, nhóm và giá căn cứ theo danh sách mô hình.',
+    },
+    why: {
+      title: 'Một tài khoản, kết nối các mô hình AI chủ lưu',
+      description:
+        'Kết nối trực tiếp tài nguyên chính thức, chọn nhóm theo tình huống sử dụng, trả theo mức dùng từ số dư hoặc mua gói tháng, phù hợp cho cả phát triển cá nhân lẫn cộng tác nhóm.',
+    },
+    pricing: {
+      title: 'Trả theo mức dùng, hoặc chọn gói tháng Codex',
+      description:
+        'Số dư được trừ theo giá mô hình nhân hệ số nhóm, dùng bao nhiêu trừ bấy nhiêu; khi phát triển với Codex tần suất cao, bạn có thể mua gói tháng pool tài khoản với hạn mức cố định.',
+      plansTitle: 'Gói tháng pool tài khoản Codex Pro',
+      planQuota: 'Hạn mức {quota}',
+      planRatio: 'Hệ số chi phí thực tế {ratio}',
+      planTerms: 'Hiệu lực 1 tháng dương lịch, hạn mức không đặt lại',
+      planGroup: 'Tạo token bằng nhóm codex-sub-june, nhóm này có hệ số cố định 1x',
+      plansCta: 'Mua và sử dụng gói tháng',
+      groupsTitle: 'Các nhóm đang mở bán và hệ số',
+      categories: {
+        codex: 'Dòng Codex',
+        claude: 'Dòng Claude',
+        other: 'Mô hình khác',
+      },
+      groupsNote:
+        'Hệ số càng thấp thì cùng một yêu cầu bị trừ càng ít; căn cứ theo thông tin thời gian thực trên trang.',
+      groupsCta: 'Quy tắc tính phí và nhóm',
+    },
+    clients: {
+      title: 'Kết nối công cụ bạn đang dùng',
+      description:
+        'Hướng dẫn từng bước cho {count} công cụ lập trình và agent: Claude Code dùng endpoint Anthropic, Codex và các công cụ khác dùng endpoint tương thích OpenAI.',
+    },
+    steps: {
+      title: 'Gửi yêu cầu đầu tiên chỉ với ba bước',
+      description:
+        'Sau khi đăng ký, hãy nạp tiền và tạo token trong bảng điều khiển, rồi điền địa chỉ API và token vào client.',
+      items: [
+        {
+          title: 'Đăng ký và nạp tiền',
+          description: 'Tạo tài khoản FishXCode, nạp số dư hoặc mua gói tháng Codex tùy nhu cầu.',
+        },
+        {
+          title: 'Tạo token, chọn đúng nhóm',
+          description:
+            'Tạo token mới tại mục “Quản lý token” trong bảng điều khiển; nhóm quyết định mô hình khả dụng và hệ số trừ phí.',
+        },
+        {
+          title: 'Cấu hình client',
+          description: 'Điền địa chỉ API và token vào client là có thể bắt đầu gửi yêu cầu.',
+        },
+      ],
+      cta: 'Xem hướng dẫn đầy đủ',
+    },
+    cta: {
+      title: 'Bắt đầu từ ý tưởng tiếp theo của bạn',
+      description: 'Đăng ký tài khoản, tạo một token và để những công cụ quen thuộc kết nối với nhiều mô hình hơn.',
+      enterprise: 'Doanh nghiệp',
+      supportTitle: 'Cần hỗ trợ?',
+      supportBody:
+        'Nếu có thắc mắc về chuyển đổi nền tảng, số dư, token, gói dịch vụ hoặc kết nối, hãy liên hệ chúng tôi qua chat trực tuyến, email hoặc WeChat.',
+      email: 'Email',
+      wechat: 'WeChat',
+    },
+  },
+  'zh-TW': {
+    hero: {
+      badge: 'Codex Pro 號池月包 · 實際成本低至 {ratio}',
+      title: ['主流 AI 模型', '一網打盡'],
+      description:
+        '覆蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型，一個帳號接入你常用的程式設計工具，滿足開發、創作與企業級應用需求。',
+      points: ['官方號池，穩定直連', '服務狀態公開可查', '企業接入，專屬支援'],
+      codeLabel: '接入示例',
+      copy: '複製程式碼',
+      copied: '已複製',
+      copyFailed: '複製失敗，請手動選取程式碼複製',
+    },
+    providers: {
+      title: '已接入的模型供應商',
+      note: '可用模型、分組與價格以模型列表為準。',
+    },
+    why: {
+      title: '一個帳號，接入主流 AI 模型',
+      description: '官方資源直連，按場景選擇分組，餘額按量計費或購買月包，個人開發與團隊協作都適用。',
+    },
+    pricing: {
+      title: '按量計費，或選 Codex 月包',
+      description: '餘額按模型價格乘以分組倍率扣費，用多少扣多少；高頻 Codex 開發可以買固定額度的號池月包。',
+      plansTitle: 'Codex Pro 號池月包',
+      planQuota: '{quota} 額度',
+      planRatio: '實際成本 {ratio}',
+      planTerms: '1 個自然月有效，額度不重置',
+      planGroup: '用 codex-sub-june 分組建立令牌，該分組固定 1x 倍率',
+      plansCta: '月包購買與使用',
+      groupsTitle: '在售分組與倍率',
+      categories: {
+        codex: 'Codex 系列',
+        claude: 'Claude 系列',
+        other: '其他模型',
+      },
+      groupsNote: '倍率越低，同一請求扣得越少；以站內即時資訊為準。',
+      groupsCta: '計費規則與分組',
+    },
+    clients: {
+      title: '接入你正在用的工具',
+      description:
+        '{count} 款程式設計工具與 Agent 的分步教程：Claude Code 走 Anthropic 端點，Codex 等工具走 OpenAI 相容端點。',
+    },
+    steps: {
+      title: '三步發出第一個請求',
+      description: '註冊後在控制台充值、建立令牌，再把接入地址和令牌填進客戶端。',
+      items: [
+        {
+          title: '註冊並充值',
+          description: '建立 FishXCode 帳號，按需充值餘額或購買 Codex 月包。',
+        },
+        {
+          title: '建立令牌，選對分組',
+          description: '在控制台「令牌管理」新建令牌，分組決定可用模型與扣費倍率。',
+        },
+        {
+          title: '配置客戶端',
+          description: '把接入地址與令牌填入客戶端，即可開始呼叫。',
+        },
+      ],
+      cta: '檢視完整教程',
+    },
+    cta: {
+      title: '從你的下一個想法開始',
+      description: '註冊帳號，建立一個令牌，讓熟悉的工具連線更多模型。',
+      enterprise: '企業服務',
+      supportTitle: '需要幫助？',
+      supportBody: '遷移、額度、令牌、套餐或接入問題，可以透過線上客服、郵件或微信聯絡我們。',
+      email: '電子郵件',
+      wechat: '微信',
+    },
   },
 };
 

@@ -1,16 +1,25 @@
-import Image from 'next/image';
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { baseOptions } from '@/lib/layout.shared';
 import { AppI18nProvider } from '@/components/app-i18n-provider';
 import { SiteStructuredData } from '@/components/doc-structured-data';
 import { SiteFooter } from '@/components/site-footer';
+import { SupportWidget } from '@/components/support-widget';
+import { getHeroCodeTabs } from '@/components/home/code-samples';
+import {
+  BottomCta,
+  ClientsSection,
+  HeroSection,
+  PricingSection,
+  ProvidersStrip,
+  StepsSection,
+  WhySection,
+} from '@/components/home/sections';
 import { docAlternates, localePath, OG_LOCALE, type Locale } from '@/lib/i18n';
 import { getRepoDates } from '@/lib/content-dates';
 import { getHomeMarkdownUrl } from '@/lib/discovery';
 import { machineResourceTypes } from '@/lib/machine-resources';
-import { HOME_COPY, HOME_COPY_SOURCE, HOME_START_PATH, getHomeImage } from '@/lib/home-copy';
+import { HOME_COPY, HOME_COPY_SOURCE, HOME_PAGE_COPY, getHomeImage } from '@/lib/home-copy';
 import { siteConfig } from '@/lib/site';
 
 /**
@@ -19,7 +28,7 @@ import { siteConfig } from '@/lib/site';
  * 语言目录是静态段（src/app/{lang}/(home)/page.tsx），语言在工厂里闭包
  * 固定，路由文件只做薄壳转发。外壳（语言上下文 + HomeLayout）也收在这里，
  * 各语言无需再各放一份 (home)/layout.tsx。
- * 文案表见 src/lib/home-copy.ts，新增语言补一行。
+ * 区块组件在 src/components/home/，文案与业务数据都在 src/lib/home-copy.ts，新增语言补一项。
  */
 export function createLocalizedHomePage(lang: Locale) {
   return {
@@ -63,73 +72,37 @@ export function createLocalizedHomePage(lang: Locale) {
       };
     },
 
-    Page() {
-      const copy = HOME_COPY[lang];
-      // 首页可见文案全部来自 home-copy.ts，它就是"决定首页内容的文件"；
+    async Page() {
+      const shared = HOME_COPY[lang];
+      const copy = HOME_PAGE_COPY[lang];
+      const codeTabs = await getHeroCodeTabs();
+      // 首页可见内容全部来自 home-copy.ts，它就是「决定首页内容的文件」；
       // sitemap 的首页 lastmod 也取它（HOME_COPY_SOURCE），两处同源
       const lastModified = getRepoDates(HOME_COPY_SOURCE)?.modified;
+      const sectionProps = { lang, shared, copy };
 
       return (
         <AppI18nProvider lang={lang}>
           {/* 站点级 JSON-LD（Organization / WebSite / SoftwareApplication）按页面语言输出，
-              url 与 inLanguage 跟随语言版本。HomeLayout 的根节点是 flex-1 的 <main>，
-              页脚因此贴在短页面的底部 */}
+              url 与 inLanguage 跟随语言版本 */}
           <SiteStructuredData lang={lang} />
           {/* 告诉机器客户端：本站的 llms.txt 在哪（文档页有同样的声明） */}
           <link rel="describedby" type="text/plain" href={localePath(lang, '/llms.txt')} />
+          {/* HomeLayout 的根节点就是 flex-1 的 <main>，区块直接放进去；页脚因此贴在短页面的底部 */}
           <HomeLayout {...baseOptions(lang)}>
-            <div className="flex flex-1 flex-col justify-center px-6 py-20">
-              <div className="mx-auto w-full max-w-5xl">
-                <div className="mx-auto max-w-3xl text-center">
-                  <Image
-                    src={siteConfig.logo}
-                    alt=""
-                    width={96}
-                    height={96}
-                    priority
-                    className="mx-auto mb-6 size-24"
-                  />
-                  <h1 className="text-4xl font-bold md:text-5xl">{siteConfig.productName}</h1>
-                  <p className="mt-3 text-2xl font-semibold md:text-3xl">{copy.headline}</p>
-                  <p className="mt-4 text-lg text-fd-muted-foreground">{copy.tagline}</p>
-                  <div className="mt-10 flex flex-wrap justify-center gap-4">
-                    <a
-                      href={siteConfig.links.register}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="rounded-lg bg-fd-primary px-6 py-3 font-medium text-fd-primary-foreground transition-colors hover:opacity-90"
-                    >
-                      {copy.register}
-                    </a>
-                    <Link
-                      href={localePath(lang, HOME_START_PATH)}
-                      className="rounded-lg border border-fd-border px-6 py-3 font-medium transition-colors hover:bg-fd-accent"
-                    >
-                      {copy.docs}
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 四张卖点卡片排成两列：外语说明较长，四列会把卡片挤得过窄 */}
-                <ul className="mt-16 grid gap-4 sm:grid-cols-2">
-                  {copy.features.map((feature) => (
-                    <li key={feature.title} className="rounded-xl border border-fd-border bg-fd-card p-5">
-                      <h2 className="font-semibold text-fd-card-foreground">{feature.title}</h2>
-                      <p className="mt-2 text-sm text-fd-muted-foreground">{feature.details}</p>
-                    </li>
-                  ))}
-                </ul>
-
-                {lastModified ? (
-                  <p className="mt-16 text-center text-xs text-fd-muted-foreground">
-                    {copy.updated}
-                    {lastModified.slice(0, 10)}
-                  </p>
-                ) : null}
-              </div>
+            <div className="home-motion flex flex-1 flex-col">
+              <HeroSection {...sectionProps} codeTabs={codeTabs} />
+              <ProvidersStrip {...sectionProps} />
+              <WhySection {...sectionProps} />
+              <PricingSection {...sectionProps} />
+              <ClientsSection {...sectionProps} lastModified={lastModified} />
+              <StepsSection {...sectionProps} />
+              <BottomCta {...sectionProps} />
             </div>
           </HomeLayout>
           <SiteFooter lang={lang} />
+          {/* 在线客服只在首页：页面加载完、浏览器空闲时才加载 SDK，嵌在 iframe 里时不加载 */}
+          <SupportWidget />
         </AppI18nProvider>
       );
     },
