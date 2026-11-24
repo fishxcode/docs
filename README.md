@@ -1,8 +1,10 @@
 # FishXCode 文档
 
+简体中文 | [English](README.en.md)
+
 FishXCode 的文档站，线上地址 <https://docs.fishxcode.com>。
 
-基于 Next.js 16、React 19 与 Fumadocs 16，支持七种语言，构建时静态导出到 `out/`，
+基于 Next.js 16、React 19 与 Fumadocs 16，支持九种语言，构建时静态导出到 `out/`，
 部署在 Cloudflare Pages。站内搜索使用按语言生成的本地索引，不依赖外部搜索服务；
 同时为 AI 客户端提供 Markdown 正文、llms.txt、RSS 与站点地图。
 
@@ -74,14 +76,16 @@ pnpm dev
 | 简体中文（默认） | `zh` | 无 |
 | English | `en` | `/en` |
 | Français | `fr` | `/fr` |
+| Español | `es` | `/es` |
+| Português (Brasil) | `pt` | `/pt` |
 | Русский | `ru` | `/ru` |
 | 日本語 | `ja` | `/ja` |
 | Tiếng Việt | `vi` | `/vi` |
 | 繁體中文 | `zh-TW` | `/zh-TW` |
 
-- 目前简体中文、English、Français 有完整正文，其余语言的页面回退显示中文。
-- 翻译放在 `content/docs/{lang}/` 下，与中文版保持相同的相对路径。
-- 没有翻译的页面在该语言下回退显示中文正文，canonical 指回中文版，并且不进入该语言的
+- 九种语言都有完整正文。中文是原文，其余语言的翻译放在 `content/docs/{lang}/` 下，
+  与中文版保持相同的相对路径；改了中文页面后要同步各语言的译文。
+- 某种语言缺了某页的译文时，该页回退显示中文正文，canonical 指回中文版，并且不进入该语言的
   站点地图、RSS、llms.txt 和 hreflang。
 - 访问站点根路径时按浏览器语言跳转到对应语言；用户手动切换过语言后，以用户的选择为准。
 - 新增语言的完整步骤写在 `src/lib/i18n.ts` 顶部的注释里。其中 `public/_worker.js` 的语言清单
