@@ -1,0 +1,80 @@
+---
+title: OpenCode で FishXCode を使う
+navTitle: OpenCode
+---
+
+## OpenCode をインストールする
+
+```bash tab="npm"
+npm install -g opencode-ai@latest
+```
+
+```bash tab="brew"
+brew install anomalyco/tap/opencode
+```
+
+```bash tab="scoop"
+scoop install opencode
+```
+
+## FishXCode を設定する
+
+1. [https://fishxcode.com/console/token](https://fishxcode.com/console/token) にアクセスして API Key を取得します
+2. 環境変数を設定します。
+
+```bash tab="Linux/macOS"
+export FISHXCODE_TOKEN=sk-xxx
+```
+
+```powershell tab="Windows PowerShell"
+$env:FISHXCODE_TOKEN="sk-xxx"
+```
+
+3. プロジェクトのルートディレクトリまたは `~/.config/opencode/` に `opencode.json` を作成します。
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "fishxcode-anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "fishxcode-anthropic",
+      "options": {
+        "baseURL": "https://api.fishxcode.com/v1",
+        "apiKey": "{env:FISHXCODE_TOKEN}"
+      },
+      "models": {
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6"
+        }
+      }
+    },
+    "fishxcode-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "fishxcode-openai",
+      "options": {
+        "baseURL": "https://api.fishxcode.com/v1",
+        "apiKey": "{env:FISHXCODE_TOKEN}"
+      },
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    }
+  }
+}
+```
+
+<Callout type="warn" title="重要">
+  `sk-xxx` は、[FishXCode コンソール](https://fishxcode.com/console/token) で取得した実際のトークンに置き換えてください。
+</Callout>
+
+## 起動して使う
+
+```bash
+cd my-project
+opencode
+```
+
+起動後、画面で FishXCode プロバイダーのモデルを選択すれば使い始められます。

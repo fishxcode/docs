@@ -1,0 +1,60 @@
+---
+title: 在 Qwen Code 中使用 FishXCode
+navTitle: Qwen Code
+---
+
+## 安裝 Qwen Code
+
+```bash tab="pnpm"
+pnpm install -g @qwen-code/qwen-code
+```
+
+```bash tab="npm"
+npm install -g @qwen-code/qwen-code
+```
+
+```bash tab="yarn"
+yarn global add @qwen-code/qwen-code
+```
+
+```bash tab="bunx"
+bunx --global @qwen-code/qwen-code
+```
+
+## 配置環境變數
+
+```bash tab="Linux/macOS"
+export OPENAI_API_KEY="sk-xxx"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_MODEL="gpt-5"
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_API_KEY="sk-xxx"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_MODEL="gpt-5"
+```
+
+```cmd tab="Windows CMD"
+set OPENAI_API_KEY="sk-xxx"
+set OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+set OPENAI_MODEL="gpt-5"
+```
+
+<Callout type="warn" title="重要">
+  請將 `sk-xxx` 替換為你在 [FishXCode 控制台](https://fishxcode.com/console/token) 獲取的實際 Token。
+</Callout>
+
+## 快速啟動
+
+```bash
+cd my-project
+qwen
+```
+
+## 持久化配置
+
+將環境變數新增到 shell 配置檔案以避免每次手動設定：
+
+- **Linux/macOS**: 新增到 `~/.bashrc` 或 `~/.zshrc`
+- **Windows PowerShell**: 新增到 `$PROFILE`

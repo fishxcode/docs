@@ -1,0 +1,62 @@
+---
+title: FishXCode Subscription Plans（サブスクリプションプラン）
+description: FishXCode のサブスクリプションプランの入口、分類、課金ルールについて説明します。
+navTitle: プラン概要
+---
+
+このページでは、FishXCode のサブスクリプションプランの入口、分類、課金ルールをまとめています。価格、在庫、購入制限、有効期間、期間ごとの上限は料金ページの内容が優先されます。
+
+よく使う入口：
+
+- [すべてのサブスクリプションプラン](https://fishxcode.com/pricing?currency=CNY&plan_series=all&tab=subscription-plans)
+- [Claude シリーズのプラン](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans)
+- [Codex シリーズのプラン](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans&plan_series=codex)
+- [回数制シリーズのプラン](https://fishxcode.com/pricing?currency=CNY&plan_series=mixed&plan_sort=price_asc&tab=subscription-plans)
+- [サイトの課金ルールとグループの紹介](/ja/billing-groups)
+
+## 1. プランの分類
+
+| シリーズ | 入口 | 説明 |
+| - | - | - |
+| Claude シリーズ | [Claude シリーズ](/ja/subscription-plans/claude) | ClaudeMax による公式アカウントのサブスクリプションと Claude Code ホスティングサービス |
+| Codex シリーズ | [Codex シリーズ](/ja/subscription-plans/codex) | 利用枠と有効期間で管理。個人やチームで利用枠に応じて使うのに適している |
+| 回数制シリーズ | [回数制シリーズ](/ja/subscription-plans/by-number-of-times) | 成功したリクエスト数で累計。Claude、Codex 関連のモデルに対応 |
+
+## 2. ルールの概要
+
+- Claude シリーズは公式アカウントのサブスクリプションです。購入の入口は [Claude シリーズ](/ja/subscription-plans/claude) をご覧ください。
+- Codex シリーズは従量の利用枠と有効期間で制限されるもので、単純な回数売りではありません。
+- 回数制シリーズは回数制のプランです。1 日の上限、月間上限、総回数はプランの設定に従い、対応する Claude と Codex シリーズのモデルで使えます。
+- Claude Opus 4.8 と GPT-5.5 は、回数制シリーズでは `2.5 × 実際に成功したリクエスト数` として累計されます。
+- モデルの価格、トークングループ、倍率、プランの適用範囲の関係を理解したい場合は、まず [サイトの課金ルールとグループの紹介](/ja/billing-groups) をご覧ください。
+
+## 3. 購入の流れ
+
+1. [料金ページ](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans) を開きます。
+2. 「サブスクリプションプラン」に切り替えます。
+3. シリーズで Claude、Codex、回数制のプランを絞り込みます。
+4. プランの詳細を開き、価格、有効期間、利用枠、回数、対応モデル、リセットのルール、購入制限を確認します。
+5. 支払い後、コンソールのプランまたはサブスクリプションのページで状態を確認します。
+6. プランで専用の Key が発行される場合は、画面の案内に従って Base URL と Key をコピーし、対応するツールに設定します。
+
+## 4. 補足
+
+### 価格は料金ページが優先されます
+
+プランの価格、在庫、購入制限、割引、販売状況は変更されることがあります。このドキュメントではルールのみを説明しており、具体的な価格は公式サイトの料金ページが優先されます。
+
+### 回数制でも、すべてのモデルが 1 回として数えられるわけではありません
+
+By number of times シリーズは、成功したリクエスト数を基準にしています。Claude Opus 4.8 と GPT-5.5 は `2.5 × 実際に成功したリクエスト数` として累計されます。
+
+### Codex シリーズと By number of times シリーズの違い
+
+Codex シリーズは利用枠と有効期間で管理されます。By number of times シリーズはリクエスト数、1 日の上限、月間上限、総回数で管理されます。
+
+### 有効期限切れ、使い切り、上限到達
+
+有効期間、総利用枠、総回数、1 日の上限、月間上限のいずれかに達すると、システムはプランのルールに従って以降の利用を制限します。その後は、期間のリセットを待つか、新しいプランを購入するか、残高での利用に切り替えてください。
+
+### 利用時の問題
+
+まず、プランの有効期間、当日または当月の上限、モデルの適用範囲を確認してください。次に、[エラーログ解説](/ja/error-logs) と [グループ稼働状況](/ja/group-health) を確認してください。アフターサポートに連絡する際は、注文番号、リクエスト日時、リクエスト ID をお知らせください。

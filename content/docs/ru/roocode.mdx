@@ -1,0 +1,25 @@
+---
+title: Использование FishXCode в RooCode
+navTitle: RooCode
+---
+
+## Установка RooCode в VSCode
+
+1. Найдите в VSCode расширение [RooCode](https://marketplace.visualstudio.com/items?itemName=RooVeterinaryInc.roo-cline) и установите его
+2. Получите API Key на странице [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+## Добавление провайдера
+
+После установки откройте RooCode, перейдите к настройке провайдеров и добавьте провайдера типа OpenAI Compatible:
+
+| Параметр | Значение |
+| - | - |
+| **OpenAI Base URL** | `https://api.fishxcode.com/v1` |
+| **API Key** | Ключ, созданный в FishXCode |
+| **Модель** | `gpt-5` |
+
+<Callout type="idea" title="Совет">
+  Можно указать и другую модель, например `glm-4.5`, `glm-4.6` или `deepseek-v3.1`.
+</Callout>
+
+Сохраните настройки — и можно начинать работу.

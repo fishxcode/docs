@@ -1,0 +1,134 @@
+---
+title: 在 CodeBuddy 中使用 FishXCode
+navTitle: CodeBuddy
+---
+
+> 首次使用？請先完成 [帳戶註冊與充值](/zh-TW/account)，並在 [FishXCode 控制台](https://fishxcode.com/console/token) 獲取 API Key。
+
+## 一、安裝並啟動 CodeBuddy Code
+
+本教程配置的是騰訊雲 **CodeBuddy Code** 命令列工具。請先確認本地已安裝 Node.js 18.0 或更高版本，然後安裝：
+
+```bash
+npm install -g @tencent-ai/codebuddy-code
+```
+
+檢查版本：
+
+```bash
+codebuddy --version
+```
+
+啟動 CodeBuddy Code：
+
+```bash
+codebuddy
+```
+
+首次啟動時按提示完成登入。後續可在命令列中輸入 `/model` 檢查自定義模型是否載入成功。
+
+## 二、開啟 CodeBuddy 配置檔案
+
+CodeBuddy Code 支援通過本地 `models.json` 接入自定義模型。配置檔案位置：
+
+- macOS / Linux：`~/.codebuddy/models.json`
+- Windows：`C:\Users\<使用者名稱>\.codebuddy\models.json`
+
+如果目錄或檔案不存在，請先建立。
+
+## 三、寫入 FishXCode 模型配置
+
+CodeBuddy Code 的第三方大模型配置走 OpenAI Chat Completions 相容協議。這裡的 `vendor: "OpenAI"` 表示協議相容，不代表只能填寫 OpenAI 模型；Claude 模型也可以通過 FishXCode 的 OpenAI 相容介面呼叫。
+
+將下面內容寫入 `~/.codebuddy/models.json`：
+
+```json
+{
+  "models": [
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "apiKey": "sk-你的FishXCode-Token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "apiKey": "sk-你的FishXCode-Token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    }
+  ],
+  "availableModels": [
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+<Callout type="warn" title="重要">
+  - 請將 `sk-你的FishXCode-Token` 替換為你在 FishXCode 控制台建立的實際 API Key。
+  - `availableModels` 必須包含上面 `models[].id` 中的模型 ID，否則 `/model` 裡可能看不到新增模型。
+  - 第三方中轉站需要完整 Chat Completions 地址：`https://api.fishxcode.com/v1/chat/completions`。
+</Callout>
+
+## 四、保留騰訊 Coding Plan 與 FishXCode
+
+如果你還需要保留騰訊官方 Coding Plan，可以在同一個 `models.json` 中追加 FishXCode 模型：
+
+```json
+{
+  "models": [
+    {
+      "id": "tc-code-latest",
+      "name": "Auto",
+      "vendor": "Tencent Cloud",
+      "apiKey": "YOUR_TENCENT_CODING_PLAN_KEY",
+      "url": "https://api.lkeap.cloud.tencent.com/coding/v3"
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "apiKey": "sk-你的FishXCode-Token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "apiKey": "sk-你的FishXCode-Token",
+      "url": "https://api.fishxcode.com/v1/chat/completions"
+    }
+  ],
+  "availableModels": [
+    "tc-code-latest",
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+## 五、重啟並選擇模型
+
+1. 儲存 `~/.codebuddy/models.json`
+2. 完全退出正在執行的 CodeBuddy Code
+3. 重新執行 `codebuddy`
+4. 輸入 `/model`
+5. 選擇 `gpt-5.5` 或 `claude-opus-4-7`
+6. 傳送測試提示詞，例如 `解釋當前專案結構`
+
+## 常見問題
+
+### `/model` 看不到模型
+
+先檢查 `availableModels`。模型 ID 必須同時出現在 `models[].id` 和 `availableModels` 中。
+
+### 模型出現但呼叫失敗
+
+優先檢查 `url`。FishXCode 第三方模型配置應使用完整地址 `https://api.fishxcode.com/v1/chat/completions`。
+
+### 鑑權失敗
+
+請重新複製控制台中的 API Key，確認沒有多餘空格或換行。

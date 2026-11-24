@@ -1,0 +1,85 @@
+---
+title: Codex で FishXCode を使う
+navTitle: OpenAI Codex
+---
+
+## Codex をインストールする
+
+```bash tab="pnpm"
+pnpm install -g @openai/codex
+```
+
+```bash tab="npm"
+npm install -g @openai/codex
+```
+
+```bash tab="yarn"
+yarn global add @openai/codex
+```
+
+```bash tab="bunx"
+bunx --global @openai/codex
+```
+
+## 環境変数を設定する
+
+1. [https://fishxcode.com/console/token](https://fishxcode.com/console/token) にアクセスして API Key を取得します
+
+2. `~/.codex/config.toml` ファイルを作成し、次の設定を追加します。
+
+   ```toml
+   model_provider = "fishxcode"
+   model = "gpt-5.4"
+   review_model = "gpt-5.4"
+   model_reasoning_effort = "medium"
+   model_reasoning_summary = "detailed"
+   disable_response_storage = true
+   preferred_auth_method = "apikey"
+   model_verbosity = "high"
+
+   [model_providers.fishxcode]
+   name = "OpenAI using Chat Completions"
+   base_url = "https://api.fishxcode.com/v1"
+   wire_api = "responses"
+   requires_openai_auth = true
+
+   [features]
+   skills = true
+   image_generation = false
+
+   ```
+
+3. `~/.codex/auth.json` ファイルを作成し、`OPENAI_API_KEY` の値に FishXCode の API Key を設定します。
+
+   ```json
+   {
+     "OPENAI_API_KEY": "your_api_key_here"
+   }
+   ```
+
+## そのまま起動して使う
+
+```bash
+cd my-project
+codex
+```
+
+## VSCode で使う
+
+1. Codex 拡張機能をインストールします
+
+2. 設定を開き、JSON で編集するモードに切り替えます
+
+3. 次の設定項目を追加します。
+
+   ```json
+   {
+     "chatgpt.apiBase": "https://api.fishxcode.com/v1",
+     "chatgpt.config": {
+       "preferred_auth_method": "api_key",
+       "model_provider": "fishxcode"
+     }
+   }
+   ```
+
+4. Codex アイコンをクリックして使い始めます

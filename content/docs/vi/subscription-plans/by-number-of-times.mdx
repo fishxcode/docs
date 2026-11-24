@@ -1,0 +1,109 @@
+---
+title: Gói tính phí theo lượt
+description: Mô hình khả dụng, số lượt yêu cầu, giới hạn mỗi ngày, thời gian cấp phát và quy tắc cộng dồn hệ số 2,5 của gói tính phí theo lượt FishXCode.
+navTitle: Gói theo lượt
+---
+
+Hệ thống cộng dồn mức tiêu hao theo số lượt yêu cầu thành công, đồng thời giới hạn số lượt mỗi ngày, mỗi tháng và tổng số lượt theo cấu hình của gói. Số lượt được tính theo nhật ký của nền tảng, thông thường mỗi bản ghi yêu cầu thành công được tính là một lượt yêu cầu cơ bản.
+
+Xem các [gói tính phí theo lượt](https://fishxcode.com/pricing?currency=CNY&plan_series=mixed&plan_sort=price_asc&tab=subscription-plans) hiện có
+
+## 1. Giới thiệu gói
+
+- Quyền lợi được cộng dồn theo số lượt yêu cầu thành công.
+- Mỗi gói có tổng số lượt, giới hạn mỗi ngày, giới hạn mỗi tháng hoặc giới hạn theo chu kỳ khác của riêng mình.
+- Giới hạn thực tế được áp dụng theo nội dung hiển thị trên trang gói.
+- Dòng tính phí theo lượt chỉ dành cho cá nhân sử dụng.
+- Dòng tính phí theo lượt không thể hủy giới hạn hạn mức trong ngày.
+- Tất cả gói tính phí theo lượt đều giới hạn tối đa 10 yêu cầu mỗi phút.
+- Trang gói hiển thị tổng số lượt, giới hạn mỗi ngày, thời điểm đặt lại, chi phí mỗi lượt, giá gốc và giá ưu đãi. Giới hạn mỗi ngày thường được đặt lại lúc 08:00 theo giờ UTC+8, quy tắc cuối cùng theo trang mua.
+- Sau khi mua, bạn có thể tạo Key mới dựa trên gói; số lượt yêu cầu của Key đó sẽ được tính vào tổng số lượt, giới hạn mỗi ngày, giới hạn mỗi tháng và giới hạn tần suất của gói mà Key thuộc về.
+
+![Ví dụ trang mua gói tính phí theo lượt](/img/plans/subscription-plans.png)
+
+## 2. Mô hình khả dụng
+
+Các mô hình khả dụng của gói tính phí theo lượt gồm:
+
+- `claude-haiku-4-5-20251001`
+- `claude-opus-4-5-20251101`
+- `claude-opus-4-6`
+- `claude-opus-4-7`
+- `claude-opus-4-8`
+- `claude-sonnet-4-5-20250929`
+- `claude-sonnet-4-6`
+- `gpt-5.5`
+
+Phạm vi khả dụng nói trên bao gồm các mô hình dòng Claude và Codex tương ứng. Mô hình khả dụng thực tế vẫn được áp dụng theo trang gói, bảng điều khiển và kết quả trả về của API.
+
+## 3. Quy tắc cộng dồn số lượt
+
+Gói tính phí theo lượt lấy "lượt" làm đơn vị cơ bản. Mô hình chi phí cao được quy đổi theo hệ số:
+
+| Mô hình | Cách cộng dồn số lượt |
+| - | - |
+| Claude Opus 4.8 | `2.5 × số lượt yêu cầu thành công thực tế` |
+| GPT-5.5 | `2.5 × số lượt yêu cầu thành công thực tế` |
+| Mô hình khác | `1 × số lượt yêu cầu thành công thực tế` |
+
+Ví dụ:
+
+- Dùng Claude Opus 4.8 yêu cầu thành công 1 lần, được tính là 2,5 lượt.
+- Dùng GPT-5.5 yêu cầu thành công 10 lần, được tính là 25 lượt.
+- Dùng mô hình khả dụng khác yêu cầu thành công 10 lần, được tính là 10 lượt.
+
+Về cách tính số lượt, nhật ký của nền tảng là căn cứ chính. Thông thường, mỗi bản ghi yêu cầu thành công trong bảng điều khiển tương ứng với một lượt yêu cầu cơ bản; với Claude Opus 4.8 hoặc GPT-5.5, số lượt được cộng dồn theo hệ số 2,5.
+
+Tổng số lượt của gói có thể quy đổi ra lượng yêu cầu thực tế dùng được theo hệ số của mô hình. Ví dụ, gói 100 lượt nếu dùng toàn bộ cho mô hình khác thì dùng được khoảng 100 yêu cầu thành công; nếu dùng toàn bộ cho Claude Opus 4.8 hoặc GPT-5.5 thì dùng được khoảng 40 yêu cầu thành công.
+
+## 4. Thời gian cấp phát
+
+Sau khi đặt hàng:
+
+- Thẻ ngày thường được cấp trong vòng 10 phút.
+- Thẻ tháng do quyền lợi cao hơn nên sẽ được tự động gửi lên máy chủ của nhà cung cấp upstream; sau khi nhà cung cấp upstream xác nhận kích hoạt mới tiến hành kích hoạt và bàn giao, thường hoàn tất trong vòng 30 phút.
+
+Thời gian cấp phát thực tế chịu ảnh hưởng bởi tồn kho, xác nhận từ nhà cung cấp upstream và xử lý thủ công, theo thông báo trên trang hoặc thông báo của bộ phận chăm sóc khách hàng.
+
+## 5. Giới hạn mỗi ngày và mỗi tháng
+
+Nếu gói có giới hạn mỗi ngày và giới hạn mỗi tháng, số lượt sau khi quy đổi theo hệ số sẽ được cộng dồn vào chu kỳ tương ứng. Khi chạm giới hạn trong ngày, trong tháng hoặc tổng giới hạn của gói, quyền lợi của gói sẽ bị tạm dừng hoặc hạn chế theo quy tắc.
+
+Giới hạn mỗi ngày, giới hạn mỗi tháng, tổng số lượt và thời điểm đặt lại có thể khác nhau tùy gói, trước khi mua hãy xem nội dung hiển thị trên trang gói.
+
+Dòng tính phí theo lượt không thể hủy giới hạn hạn mức trong ngày, vui lòng xác nhận trước khi mua rằng giới hạn mỗi ngày đáp ứng được cường độ sử dụng của bạn.
+
+Tất cả gói tính phí theo lượt đều giới hạn tối đa 10 yêu cầu mỗi phút. Khi vượt giới hạn tần suất, hãy giảm số yêu cầu đồng thời hoặc thử lại sau.
+
+Giới hạn mỗi ngày thường được đặt lại lúc 08:00 theo giờ UTC+8. Ví dụ, nếu hôm nay bạn đã dùng đến giới hạn 500 lượt mỗi ngày, cần chờ đến sau 08:00 theo giờ UTC+8 ngày hôm sau thì số lượt dùng được trong ngày mới được đặt lại.
+
+Ví dụ: một thẻ tháng hiển thị `500 lượt/ngày, tổng 15000 lượt/tháng, đặt lại hằng tháng`, nghĩa là mỗi ngày dùng tối đa 500 lượt yêu cầu cơ bản, tổng lượng trong một tháng là 15000 lượt, giới hạn mỗi ngày được đặt lại lúc 08:00 theo giờ UTC+8, còn tổng lượng của tháng được đặt lại hằng tháng theo quy tắc của gói.
+
+## 6. Giá và chi phí mỗi lượt
+
+"Chi phí mỗi lượt" trên trang gói giúp bạn đánh giá mức độ đáng tiền của gói:
+
+- Chi phí mỗi lượt theo giá gốc = giá gốc / tổng số lượt của gói.
+- Chi phí mỗi lượt sau ưu đãi = giá ưu đãi / tổng số lượt của gói.
+
+Ví dụ: một gói có tổng 15000 lượt mỗi tháng, giá gốc `¥336.00`, thì chi phí mỗi lượt theo giá gốc là `¥0.0224`; khi giá ưu đãi có thời hạn là `¥320.00`, chi phí mỗi lượt sau ưu đãi khoảng `¥0.0213`.
+
+Nếu dùng Claude Opus 4.8 hoặc GPT-5.5, cần quy đổi số lượt theo hệ số 2,5 trước rồi mới đánh giá chi phí thực tế của mỗi lượt yêu cầu.
+
+## 7. Xác nhận trước khi mua
+
+- Tổng số lượt của gói.
+- Giới hạn mỗi ngày và giới hạn mỗi tháng.
+- Thời điểm đặt lại, đặc biệt là giới hạn mỗi ngày có được đặt lại lúc 08:00 theo giờ UTC+8 không.
+- Giá gốc, giá ưu đãi và chi phí mỗi lượt sau quy đổi.
+- Có dùng Claude Opus 4.8 hoặc GPT-5.5 không; nếu có, cần tính mức tiêu hao theo hệ số 2,5.
+- Có chấp nhận việc chỉ dành cho cá nhân, giới hạn 10 yêu cầu mỗi phút và không thể hủy giới hạn hạn mức trong ngày không.
+- Có cần tạo Key mới dựa trên gói không; số lượt quyền lợi của Key mới sẽ được tính vào giới hạn của gói đó.
+- Có cần hóa đơn không.
+
+## 8. Nâng cấp, hoàn tiền và hóa đơn
+
+- Sau khi mua thẻ ngày, nếu cần nâng cấp lên bất kỳ thẻ tháng nào, bạn có thể liên hệ bộ phận chăm sóc khách hàng để xử lý.
+- Thẻ tháng không thể đổi.
+- Quy tắc hoàn tiền được áp dụng theo trang gói, thông báo trong trang và [Chính sách hoàn tiền](/vi/refund).
+- Dòng tính phí theo lượt có thể xuất hóa đơn.

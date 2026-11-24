@@ -1,0 +1,225 @@
+---
+title: Hướng dẫn tạo ảnh với GPT-Image-2
+navTitle: Tạo ảnh với GPT-Image-2
+---
+
+## Chuẩn bị trước
+
+Trước khi bắt đầu, bạn cần chuẩn bị sẵn:
+
+1. Một tài khoản FishXCode
+2. Một API token khả dụng
+3. Xác nhận token hiện tại có thể truy cập `gpt-image-2`
+
+Lấy token:
+
+- Địa chỉ bảng điều khiển: [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+<Callout type="idea" title="Mẹo">
+  Nếu bạn thấy phần cấu hình nhóm mô hình hoặc quyền trong bảng điều khiển, hãy đảm bảo token hiện tại bao gồm `gpt-image-2`. Nếu không chắc, hãy tạo một token mới khả dụng theo mặc định để thử trước.
+</Callout>
+
+## Công cụ trực quan mã nguồn mở
+
+Nếu chưa muốn viết mã, bạn có thể dùng ngay công cụ GPT-Image-2 mã nguồn mở do FishXCode cung cấp để thử nghiệm và tạo ảnh:
+
+- Dùng thử trực tuyến: [https://fishxcode-gpt-image-2.lovable.app/](https://fishxcode-gpt-image-2.lovable.app/)
+- Kho mã nguồn mở: [https://github.com/fishxcode/gpt-image-2](https://github.com/fishxcode/gpt-image-2)
+
+<Callout type="idea" title="Gợi ý sử dụng">
+  Trước tiên hãy dùng công cụ để kiểm tra token, prompt và các tham số hình ảnh có hoạt động không, rồi chuyển các tham số tương tự sang mã hoặc quy trình làm việc của riêng bạn.
+</Callout>
+
+## Cách 1: Tạo ảnh bằng Images API
+
+Đây là cách trực tiếp nhất, tương ứng với API tạo ảnh tương thích OpenAI.
+
+- Địa chỉ yêu cầu: `https://api.fishxcode.com/v1/images/generations`
+- Tên mô hình: `gpt-image-2`
+
+### Ví dụ Python
+
+```python
+import base64
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-your-fishxcode-token",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+result = client.images.generate(
+    model="gpt-image-2",
+    prompt="Một chú mèo cam đội mũ bảo hiểm phi hành gia, ngồi trên bề mặt Mặt Trăng, ánh sáng điện ảnh, chi tiết siêu nét",
+    size="1024x1024"
+)
+
+image_base64 = result.data[0].b64_json
+
+with open("gpt-image-2-output.png", "wb") as f:
+    f.write(base64.b64decode(image_base64))
+```
+
+### Ví dụ Node.js
+
+```javascript
+import fs from "node:fs";
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "sk-your-fishxcode-token",
+  baseURL: "https://api.fishxcode.com/v1",
+});
+
+const result = await client.images.generate({
+  model: "gpt-image-2",
+  prompt: "Một thành phố tương lai lơ lửng trên biển mây, phong cách neon cyberpunk, chi tiết cực cao",
+  size: "1024x1024",
+});
+
+const imageBase64 = result.data[0].b64_json;
+fs.writeFileSync("gpt-image-2-output.png", Buffer.from(imageBase64, "base64"));
+```
+
+### Ví dụ curl
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/images/generations \
+  --header "Authorization: Bearer sk-your-fishxcode-token" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "Một áp phích sản phẩm tối giản, nền trắng, chính giữa là một bàn phím kính trong suốt lơ lửng, phong cách chụp ảnh thương mại",
+    "size": "1024x1024"
+  }'
+```
+
+<Callout type="warn" title="Lưu ý">
+  Kết quả chính mà Images API trả về thường là `b64_json`, bạn cần tự giải mã chuỗi Base64 thành tệp hình ảnh trên máy.
+</Callout>
+
+## Cách 2: Gọi tạo ảnh qua Chat Completions
+
+Nếu quy trình làm việc của bạn đã dựa trên `/v1/chat/completions`, bạn cũng có thể gọi `gpt-image-2` trực tiếp trong API hội thoại.
+
+- Địa chỉ yêu cầu: `https://api.fishxcode.com/v1/chat/completions`
+- Tên mô hình: `gpt-image-2`
+
+### Ví dụ Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-your-fishxcode-token",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+response = client.chat.completions.create(
+    model="gpt-image-2",
+    messages=[
+        {
+            "role": "user",
+            "content": "Vẽ một chú chó Shiba đeo kính râm, ngồi trong chiếc xe mui trần màu đỏ cổ điển, phong cách du lịch đường dài"
+        }
+    ]
+)
+
+print(response)
+```
+
+### Ví dụ curl
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/chat/completions \
+  --header "Authorization: Bearer sk-your-fishxcode-token" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Vẽ một quán cà phê kiểu Nhật lúc hoàng hôn, bố cục điện ảnh với tông màu ấm"
+      }
+    ]
+  }'
+```
+
+<Callout type="idea" title="Mẹo">
+  Nếu bạn chỉ cần “nhận kết quả hình ảnh một cách ổn định”, hãy ưu tiên dùng `/v1/images/generations`. Nếu cần tích hợp tạo ảnh vào quy trình hội thoại hiện có, hãy cân nhắc `/v1/chat/completions`.
+</Callout>
+
+## Giải thích các tham số thường dùng
+
+Các tham số thường dùng của `gpt-image-2` như sau:
+
+| Tham số | Ý nghĩa | Ví dụ |
+| - | - | - |
+| `model` | ID mô hình | `gpt-image-2` |
+| `prompt` | Prompt mô tả ảnh cần vẽ | `một chú cú phong cách cơ khí` |
+| `size` | Kích thước đầu ra | `1024x1024` |
+| `n` | Số ảnh tạo ra | `1` |
+| `background` | Chế độ nền | `transparent` / `white` |
+| `quality` | Chất lượng đầu ra | `high` / `medium` |
+
+<Callout type="warn" title="Lưu ý">
+  Mức độ tương thích tham số có thể khác nhau giữa các SDK hoặc lớp proxy. Nếu truyền một tham số nào đó mà bị lỗi, hãy quay về bộ tham số tối thiểu chạy được: `model + prompt + size`.
+</Callout>
+
+## Dùng GPT-Image-2 trong Cherry Studio
+
+Nếu bạn quen tạo ảnh trực tiếp trong Cherry Studio, có thể cấu hình như sau:
+
+### 1. Thêm nhà cung cấp tương thích OpenAI
+
+Thêm nhà cung cấp tùy chỉnh trong Cherry Studio:
+
+- API Key: token FishXCode của bạn
+- Base URL: `https://api.fishxcode.com/v1`
+
+### 2. Thêm mô hình
+
+Điền tên mô hình:
+
+```text
+gpt-image-2
+```
+
+Nếu Cherry Studio cho phép cấu hình loại mô hình, hãy chọn loại tạo ảnh hoặc loại mô hình tương thích OpenAI Images.
+
+### 3. Bắt đầu tạo ảnh
+
+Sau khi tạo phiên mới hoặc mở trang tính năng tạo ảnh, chọn `gpt-image-2` và nhập prompt là có thể tạo ảnh.
+
+<Callout type="idea" title="Mẹo">
+  Nếu không thấy kết quả hình ảnh trong Cherry Studio, hãy kiểm tra hai điều sau trước:
+
+  - Base URL có được điền là `https://api.fishxcode.com/v1` không
+  - Phiên bản Cherry Studio hiện tại đã hỗ trợ đầy đủ API hình ảnh của OpenAI chưa
+</Callout>
+
+## Câu hỏi thường gặp
+
+### Vì sao yêu cầu trả về thành công nhưng không thấy tệp hình ảnh?
+
+Vì nhiều API trả về `b64_json` chứ không trực tiếp lưu thành tệp. Bạn cần tự giải mã Base64 và ghi vào tệp `.png`.
+
+### Nên ưu tiên dùng API nào?
+
+- Chỉ cần tạo ảnh: ưu tiên `POST /v1/images/generations`
+- Muốn tích hợp tạo ảnh vào quy trình chat sẵn có: hãy cân nhắc `POST /v1/chat/completions`
+
+### Phải làm gì khi báo lỗi mô hình không tồn tại hoặc không có quyền?
+
+Kiểm tra theo thứ tự sau:
+
+1. Xác nhận tên mô hình được viết là `gpt-image-2`
+2. Xác nhận token được lấy từ [bảng điều khiển FishXCode](https://fishxcode.com/console/token)
+3. Xác nhận token hiện tại có quyền truy cập `gpt-image-2`
+4. Xác nhận Base URL được điền là `https://api.fishxcode.com/v1`
+
+### Vì sao truyền nhiều tham số lại bị lỗi?
+
+Vì cách triển khai tương thích của các client, phiên bản SDK và lớp proxy khác nhau không hoàn toàn giống nhau. Hãy chạy thành công với bộ tham số tối thiểu trước, rồi mới thêm dần các tham số tùy chọn như `quality`, `background`, `n`.

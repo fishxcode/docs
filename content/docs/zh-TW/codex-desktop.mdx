@@ -1,0 +1,193 @@
+---
+title: 在 Codex Desktop 中使用 FishXCode
+description: 用 Codex Desktop 接入 FishXCode 的安裝、配置複用、登入和常見功能說明。
+navTitle: Codex Desktop
+---
+
+> 首次使用？請先完成 [帳戶註冊與充值](/zh-TW/account)，並在 [FishXCode 控制台](https://fishxcode.com/console/token) 建立可用 Token。
+
+## 適用範圍
+
+本文適用於 OpenAI Codex 桌面端接入 FishXCode。命令列版 Codex 的安裝和配置可直接參考 [在 Codex 中使用 FishXCode](/zh-TW/codex)，桌面端也建議複用同一套 `~/.codex` 配置，減少重複維護。
+
+<Callout type="idea" title="推薦路徑">
+  先寫好本地 Codex 配置，再開啟 Codex Desktop 登入。這樣桌面端和 CLI 使用同一套 FishXCode API 地址、模型和 Token。
+</Callout>
+
+## 一、安裝 Codex Desktop
+
+Windows 使用者可在 Microsoft Store 搜尋 `Codex`，找到官方應用後安裝：
+
+![從 Microsoft Store 安裝 Codex Desktop](/img/start/codex-desktop/microsoft-store-codex.png)
+
+安裝完成後，先不要急著登入，建議先完成下一步本地配置。若無法訪問 Microsoft Store，請優先使用 OpenAI 官方釋出渠道或可信的軟體分發渠道下載安裝包。
+
+## 二、複用 Codex 配置接入 FishXCode
+
+Codex Desktop 與 Codex CLI 建議使用同一套使用者配置。配置內容與 [Codex 命令列教程](/zh-TW/codex) 保持一致。
+
+### 1. 建立配置目錄
+
+```bash tab="macOS/Linux"
+mkdir -p ~/.codex
+```
+
+```powershell tab="Windows PowerShell"
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+```
+
+### 2. 寫入 `config.toml`
+
+在 `~/.codex/config.toml` 中寫入：
+
+```toml
+model_provider = "fishxcode"
+model = "gpt-5.4"
+review_model = "gpt-5.4"
+model_reasoning_effort = "medium"
+model_reasoning_summary = "detailed"
+disable_response_storage = true
+preferred_auth_method = "apikey"
+model_verbosity = "high"
+
+[model_providers.fishxcode]
+name = "OpenAI using Chat Completions"
+base_url = "https://api.fishxcode.com/v1"
+wire_api = "responses"
+requires_openai_auth = true
+
+[features]
+skills = true
+image_generation = false
+
+```
+
+<Callout type="info">
+  `model` 和 `review_model` 可按你的套餐和分組改成其它可用模型。若不確定，先使用 `gpt-5.4`。
+</Callout>
+
+### 3. 寫入 `auth.json`
+
+在 `~/.codex/auth.json` 中寫入 FishXCode Token：
+
+```json
+{
+  "OPENAI_API_KEY": "your_api_key_here"
+}
+```
+
+<Callout type="warn" title="注意">
+  `auth.json` 包含金鑰，不要提交到 Git，也不要發給他人。
+</Callout>
+
+## 三、登入 Codex Desktop
+
+開啟 Codex Desktop 後，如果出現登入頁，選擇 **使用其他方式登入**：
+
+![選擇使用其他方式登入](/img/start/codex-desktop/codex-login-options.png)
+
+然後貼上 FishXCode 控制台中複製的 Token。若你已經寫入 `~/.codex/auth.json`，仍然遇到登入提示，也可以在這裡再次貼上同一個 Token。
+
+如果需要複製 Token，可在 FishXCode 控制台令牌頁找到對應 Token，點選金鑰旁的複製按鈕。截圖中不展示覆制選單，避免教程圖片暴露不必要的金鑰資訊。
+
+登入後進入專案目錄，選擇要讓 Codex 操作的資料夾，即可開始使用。
+
+## 四、可選：用 CC Switch 管理多渠道
+
+如果你同時維護多個 Codex 渠道，可以使用 CC Switch 做快速切換；如果只使用 FishXCode，一個 `~/.codex/config.toml` 通常已經足夠。
+
+在 FishXCode 控制台令牌頁找到目標令牌後，點選 `codex_sub_june` 分組對應行的 **匯入**：
+
+![在 FishXCode 控制台點選 Codex 分組匯入](/img/start/codex-desktop/cc-switch-import-channel.png)
+
+CC Switch 匯入彈窗中選擇 `Codex` 應用後，核心欄位建議保持：
+
+| 欄位 | FishXCode 推薦值 |
+| - | - |
+| API 端點 | `https://api.fishxcode.com/v1` |
+| API 金鑰 | FishXCode Token |
+| 主模型 | `gpt-5.4` 或你的套餐可用模型 |
+
+主模型切換到 `gpt-5.4` 後點擊 **測試**，看到“測試通過 / 模型連通性測試成功”後再匯入：
+
+![在 CC Switch 匯入彈窗中測試 gpt-5.4](/img/start/codex-desktop/cc-switch-select-model.png)
+
+瀏覽器喚起 CC Switch 後，核對 API 端點、模型和備註資訊，確認無誤再點選 **匯入**：
+
+![確認匯入 FishXCode Codex 配置](/img/start/codex-desktop/cc-switch-import-success.png)
+
+配置完成後，確認當前切換到 FishXCode 對應渠道，再重新開啟 Codex Desktop。
+
+## 五、常用功能
+
+### 模型、推理強度和許可權
+
+Codex Desktop 的輸入框附近通常會顯示模型、推理強度、許可權模式和工作目錄：
+
+![Codex Desktop 對話方塊選項](/img/start/codex-desktop/codex-dialog-options.png)
+
+建議日常使用：
+
+- 模型：選擇 FishXCode 可用模型，例如 `gpt-5.4`
+- 推理強度：普通任務用中等，高複雜度任務再調高
+- 許可權模式：需要頻繁改程式碼時可使用完全訪問模式；不熟悉專案時先保持手動確認
+- 工作目錄：選擇當前要分析或修改的專案目錄
+
+### `/` 和 `@`
+
+在輸入框中可以使用兩個常見快捷入口：
+
+| 符號 | 用途 |
+| - | - |
+| `/` | 開啟命令或 Skill 列表 |
+| `@` | 引用當前專案中的檔案或目錄 |
+
+如果符號沒有觸發選單，先確認 `/` 或 `@` 前有空格，且輸入框焦點在 Codex Desktop 內。
+
+### 計劃模式
+
+複雜任務建議先使用 Plan Mode。Codex 會先拆解任務、提出澄清問題，確認後再執行。
+
+![進入計劃模式](/img/start/codex-desktop/codex-plan-mode.png)
+
+當 Codex 提出澄清問題時，按實際需求選擇方向：
+
+![回答澄清問題](/img/start/codex-desktop/codex-clarify-question.png)
+
+確認計劃後再讓 Codex 執行，並在過程中檢查變更範圍：
+
+![執行計劃並跟蹤進度](/img/start/codex-desktop/codex-execute-plan.png)
+
+## 六、常見問題
+
+### 登入後請求仍然沒有走 FishXCode？
+
+按順序檢查：
+
+1. `~/.codex/config.toml` 是否存在
+2. `model_provider` 是否為 `fishxcode`
+3. `base_url` 是否為 `https://api.fishxcode.com/v1`
+4. `~/.codex/auth.json` 中是否寫入 FishXCode Token
+5. 修改配置後是否徹底退出並重新開啟 Codex Desktop
+
+### 報 401 或 403 怎麼辦？
+
+優先檢查 Token 是否複製完整、是否啟用、餘額是否充足，以及當前模型是否在你的套餐或分組中可用。
+
+### 模型顯示和預期不一致？
+
+先確認 `config.toml` 中的 `model`，再檢查 Codex Desktop 內部模型選擇器。如果使用 CC Switch，還要確認當前切換的是 FishXCode 渠道。
+
+### 出現 CC Switch 未配置提示？
+
+如果你使用 CC Switch 並看到類似提示，說明當前渠道沒有切換好：
+
+![CC Switch 未配置好時的提示](/img/start/codex-desktop/cc-switch-not-configured.png)
+
+處理方式：
+
+1. 完全退出 Codex Desktop，包括托盤程序
+2. 開啟 CC Switch，確認已切換到 FishXCode 渠道
+3. 重新開啟 Codex Desktop
+
+如果你不使用 CC Switch，則回到第二步，直接檢查 `~/.codex/config.toml` 和 `~/.codex/auth.json`。

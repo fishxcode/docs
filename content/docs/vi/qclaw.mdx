@@ -1,0 +1,150 @@
+---
+title: Dùng FishXCode trong QClaw
+navTitle: QClaw
+---
+
+> Lần đầu sử dụng? Hãy hoàn tất [đăng ký tài khoản và nạp tiền](/vi/account) trước, rồi lấy API Key trong [bảng điều khiển FishXCode](https://fishxcode.com/console/token).
+
+## 1. Xác nhận thông số kết nối
+
+Khi kết nối API mô hình lớn bên thứ ba, QClaw ưu tiên dùng giao thức OpenAI Compatible. Kể cả khi gọi mô hình Claude, bạn vẫn điền thông số của giao diện tương thích OpenAI.
+
+| Mục cấu hình | Giá trị |
+| - | - |
+| Protocol | `OpenAI Compatible` |
+| Base URL | `https://api.fishxcode.com/v1` |
+| API Key | API Key tạo trong bảng điều khiển FishXCode |
+| Mô hình OpenAI | `gpt-5.5` |
+| Mô hình Claude | `claude-opus-4-7` |
+
+Nếu QClaw yêu cầu điền Endpoint đầy đủ, hãy dùng:
+
+```text
+https://api.fishxcode.com/v1/chat/completions
+```
+
+## 2. Cấu hình qua giao diện cài đặt
+
+Nếu phiên bản QClaw của bạn có giao diện đồ họa, hãy điền như sau:
+
+```text
+Provider: OpenAI Compatible
+Base URL: https://api.fishxcode.com/v1
+API Key: sk-your-fishxcode-token
+Model: claude-opus-4-7
+```
+
+Nếu muốn dùng mô hình GPT, đổi `Model` thành:
+
+```text
+gpt-5.5
+```
+
+## 3. Cấu hình qua config.yaml
+
+Nếu phiên bản QClaw của bạn dùng `~/.qclaw/config.yaml`, có thể tham khảo mẫu dưới đây:
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-your-fishxcode-token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+Khi chuyển sang mô hình OpenAI, chỉ cần thay `model`:
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-your-fishxcode-token
+  model: gpt-5.5
+  max_tokens: 8192
+```
+
+Nếu client yêu cầu địa chỉ API đầy đủ, có thể đổi thành:
+
+```yaml
+llm:
+  provider: openai-compatible
+  url: https://api.fishxcode.com/v1/chat/completions
+  api_key: sk-your-fishxcode-token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+<Callout type="warn" title="Quan trọng">
+  Tên trường có thể khác nhau tùy phiên bản QClaw, ví dụ `base_url`, `baseURL`, `apiBase` hoặc `url`. Nếu lưu xong mà không có hiệu lực, hãy ưu tiên kiểm tra tên trường và đường dẫn tệp cấu hình mà QClaw thực sự đọc.
+</Callout>
+
+## 4. Cấu hình qua biến môi trường
+
+Nếu QClaw hỗ trợ biến môi trường, bạn cũng có thể dùng:
+
+```bash tab="Linux/macOS"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_API_KEY="sk-your-fishxcode-token"
+export QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_API_KEY="sk-your-fishxcode-token"
+$env:QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+Khi cần dùng mô hình GPT, đổi `QCLAW_MODEL` thành `gpt-5.5`.
+
+## 5. Kiểm tra cấu hình
+
+Trước tiên, dùng giao diện tương thích OpenAI để kiểm tra API Key có hợp lệ không:
+
+```bash tab="Mô hình Claude"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-your-fishxcode-token" \
+  -d '{
+    "model": "claude-opus-4-7",
+    "messages": [
+      { "role": "user", "content": "Hãy cho biết bạn là ai trong một câu" }
+    ]
+  }'
+```
+
+```bash tab="Mô hình GPT"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-your-fishxcode-token" \
+  -d '{
+    "model": "gpt-5.5",
+    "messages": [
+      { "role": "user", "content": "Hãy cho biết bạn là ai trong một câu" }
+    ]
+  }'
+```
+
+Nếu curl không thông, thì trong QClaw cũng khó thành công. Hãy kiểm tra API Key, quyền truy cập mô hình và Base URL trước.
+
+1. Lưu cài đặt hoặc `config.yaml`
+2. Khởi động lại QClaw
+3. Chọn `gpt-5.5` hoặc `claude-opus-4-7`
+4. Gửi một câu hỏi ngắn, ví dụ `Hãy cho biết bạn là ai trong một câu`
+5. Nhận được phản hồi bình thường là kết nối thành công
+
+## Câu hỏi thường gặp
+
+### 404 hoặc sai địa chỉ API
+
+Nếu điền Base URL, hãy dùng `https://api.fishxcode.com/v1`. Nếu điền URL đầy đủ, hãy dùng `https://api.fishxcode.com/v1/chat/completions`.
+
+### Có dùng được mô hình Claude không
+
+Được. Điều kiện là FishXCode hiện hỗ trợ mô hình đó và QClaw gọi qua giao thức OpenAI Compatible. Tên mô hình điền `claude-opus-4-7`.
+
+### Xác thực thất bại
+
+Hãy sao chép lại API Key, đảm bảo không có khoảng trắng thừa, và kiểm tra Key đó chưa bị xóa hoặc vô hiệu hóa.

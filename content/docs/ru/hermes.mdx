@@ -1,0 +1,219 @@
+---
+title: Использование FishXCode в Hermes
+navTitle: Hermes
+---
+
+<Callout type="info" title="О проекте">
+  Hermes Agent — универсальный ИИ-агент от Nous Research с поддержкой диалогов в CLI, вызова инструментов, памяти, навыков, шлюзов и заданий по расписанию. Он может подключаться как к официально поддерживаемым облачным сервисам, так и к любому OpenAI-совместимому эндпоинту.
+
+  - Официальный сайт: [https://hermes-agent.nousresearch.com](https://hermes-agent.nousresearch.com)
+  - Документация: [https://hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs)
+  - GitHub: [https://github.com/NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)
+  - Web3Hermes: [https://web3hermes.com](https://web3hermes.com)
+</Callout>
+
+## Предварительные условия
+
+- Получен API Key FishXCode ([получить в консоли](https://fishxcode.com/console/token))
+- На компьютере доступен `git`
+- На компьютере доступен `python3`
+
+## Установка Hermes
+
+<Callout type="info" title="Требования к окружению">
+  - macOS / Linux / WSL2
+  - В Windows можно установить напрямую через PowerShell, но по-прежнему лучше использовать WSL2
+  - Установщик сам позаботится о зависимостях — Python, Node.js, ripgrep, ffmpeg и других, — заранее ставить их не нужно
+</Callout>
+
+### Рекомендуется: установка Web3Hermes
+
+Если вам нужен браузерный интерфейс для компьютера, лучше адаптированный для пользователей из материкового Китая, рекомендуем в первую очередь установить [Web3Hermes](https://web3hermes.com). Это лёгкий веб-интерфейс на базе Hermes Agent; официальный README: [Web3CZ/Web3Hermes](https://raw.githubusercontent.com/Web3CZ/Web3Hermes/refs/heads/main/README.md).
+
+```bash
+git clone https://github.com/Web3CZ/Web3Hermes.git
+cd Web3Hermes
+python3 bootstrap.py
+```
+
+Также можно воспользоваться скриптом запуска в каталоге проекта:
+
+```bash
+./start.sh
+```
+
+По умолчанию сервис запускается по адресу `http://127.0.0.1:8787`.
+
+### Установка Hermes Agent CLI
+
+```bash tab="Зеркало для материкового Китая (рекомендуется)"
+curl -fsSL https://res1.hermesagent.org.cn/install.sh | bash
+```
+
+```bash tab="Официальный установщик"
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+```
+
+```powershell tab="Windows PowerShell"
+irm https://res1.hermesagent.org.cn/install.ps1 | iex
+```
+
+После установки перезагрузите конфигурацию терминала:
+
+```bash
+source ~/.zshrc
+```
+
+Если вы используете `bash`, выполните вместо этого:
+
+```bash
+source ~/.bashrc
+```
+
+В Windows PowerShell достаточно закрыть терминал и открыть его снова.
+
+<Callout type="idea" title="Совет">
+  Если вы устанавливаете Hermes из сети материкового Китая, в первую очередь используйте зеркало `https://hermesagent.org.cn` — так установка обычно проходит успешнее.
+</Callout>
+
+## Настройка FishXCode
+
+Для настройки Hermes официально рекомендует интерактивную команду `hermes model`. Для FishXCode выберите **Custom endpoint**, поскольку FishXCode предоставляет OpenAI-совместимый интерфейс.
+
+Если хотите выполнить всю первоначальную настройку за один раз сразу после установки, можно запустить:
+
+```bash
+hermes setup
+```
+
+Если нужно только донастроить права инструментов, выполните:
+
+```bash
+hermes tools
+```
+
+### Способ 1. Интерактивная настройка через `hermes model` (рекомендуется)
+
+Выполните:
+
+```bash
+hermes model
+```
+
+Заполните поля по подсказкам:
+
+- Provider: `Custom endpoint (self-hosted / VLLM / etc.)`
+- API base URL: `https://api.fishxcode.com/v1`
+- API key: ваш токен FishXCode
+- Model name: `gpt-5.4`
+- Context length: рекомендуем не меньше `65536`
+
+После настройки Hermes запишет модель, провайдера и адрес в `~/.hermes/config.yaml`.
+
+<Callout type="warn" title="Важно">
+  У Hermes есть минимальные требования к контексту рабочей модели. Для собственного эндпоинта выбирайте модели с контекстным окном не меньше `64K`, иначе многошаговые вызовы инструментов и задачи с длинным контекстом могут сразу отклоняться или работать некорректно.
+</Callout>
+
+### Способ 2. Ручное редактирование файла конфигурации
+
+Основной файл конфигурации Hermes — `~/.hermes/config.yaml`. Если каталога ещё нет, сначала создайте его:
+
+```bash
+mkdir -p ~/.hermes
+touch ~/.hermes/config.yaml
+touch ~/.hermes/.env
+```
+
+Затем запишите токен в `~/.hermes/.env`:
+
+```bash
+OPENAI_API_KEY=sk-ваш-токен-FishXCode
+```
+
+После этого добавьте в `~/.hermes/config.yaml`:
+
+```yaml
+model:
+  default: gpt-5.4
+  provider: custom
+  base_url: https://api.fishxcode.com/v1
+```
+
+<Callout type="idea" title="Совет">
+  Для собственного эндпоинта Hermes в первую очередь читает `provider`, `default` и `base_url` из `config.yaml`. API Key можно указать прямо в `config.yaml` или, как показано выше, в переменной `OPENAI_API_KEY` в файле `~/.hermes/.env`. Чтобы не хранить ключ в открытом виде, рекомендуем `.env`.
+</Callout>
+
+## Смена модели
+
+Чтобы использовать другую модель, поддерживаемую FishXCode, достаточно изменить `model.default` или заново запустить `hermes model`.
+
+Например:
+
+```yaml
+model:
+  default: claude-sonnet-4-5-20250929
+  provider: custom
+  base_url: https://api.fishxcode.com/v1
+```
+
+<Callout type="warn" title="Внимание">
+  Это работает, только если модель доступна через OpenAI-совместимый интерфейс FishXCode, а её контекстное окно удовлетворяет минимальным требованиям Hermes. Если не уверены в точном ID модели, сначала посмотрите страницу [Поддерживаемые модели](/ru/models), а затем укажите его в поле `default`.
+</Callout>
+
+## Запуск
+
+Чтобы сразу перейти к диалогу:
+
+```bash
+hermes
+```
+
+Можно также сразу отправить тестовое сообщение:
+
+```bash
+hermes chat -q "Ответь одним предложением: FishXCode подключён"
+```
+
+Если настройка прошла успешно, внутри сеанса можно переключаться между уже подключёнными моделями командой `/model`.
+
+## Проверка конфигурации
+
+В первую очередь выполните три проверки:
+
+```bash
+hermes doctor
+```
+
+```bash
+hermes config check
+```
+
+```bash
+hermes chat -q "Ответь только ok" -Q
+```
+
+Если последняя команда вернула нормальный ответ, подключение к FishXCode работает.
+
+## Частые вопросы
+
+### Почему нужно выбирать `Custom endpoint`?
+
+Потому что Hermes официально относит любой OpenAI-совместимый интерфейс к `provider: custom`. FishXCode подключается именно так, поэтому отдельный адаптер для Hermes не нужен.
+
+### Почему не работают `OPENAI_BASE_URL` и `LLM_MODEL`?
+
+Hermes официально перестал читать эти две устаревшие переменные окружения. Теперь модель, провайдер и адрес эндпоинта задаются в `~/.hermes/config.yaml`, и полагаться на старые переменные больше не стоит.
+
+### Ключ указан, но аутентификация не проходит — что делать?
+
+Проверьте по порядку:
+
+1. В `base_url` указано `https://api.fishxcode.com/v1`
+2. Токен получен в [консоли FishXCode](https://fishxcode.com/console/token)
+3. В `model.default` указан действительный ID модели, например `gpt-5.4`
+4. Контекст модели не меньше `65536`
+5. Запустите `hermes config check` и `hermes doctor`, чтобы увидеть конкретную ошибку
+
+### Можно ли установить Hermes прямо в Windows?
+
+Можно установить через PowerShell, но ради стабильности и совместимости по-прежнему лучше использовать WSL2. Для автоматизации браузера, управления зависимостями и Unix-подобных рабочих процессов WSL2 обычно работает надёжнее.

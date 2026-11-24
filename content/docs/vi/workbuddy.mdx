@@ -1,0 +1,132 @@
+---
+title: Dùng FishXCode trong WorkBuddy
+navTitle: WorkBuddy
+---
+
+> Lần đầu sử dụng? Hãy hoàn tất [đăng ký tài khoản và nạp tiền](/vi/account) trước, rồi lấy API Key trong [bảng điều khiển FishXCode](https://fishxcode.com/console/token).
+
+## 1. Mở tệp cấu hình của WorkBuddy
+
+WorkBuddy hỗ trợ kết nối mô hình tùy chỉnh qua tệp `models.json` cục bộ. Vị trí tệp cấu hình:
+
+- macOS / Linux: `~/.workbuddy/models.json`
+- Windows: `C:\Users\<tên-người-dùng>\.workbuddy\models.json`
+
+Nếu thư mục hoặc tệp chưa tồn tại, hãy tạo trước.
+
+## 2. Cấu hình mô hình bên thứ ba FishXCode
+
+Cấu hình mô hình bên thứ ba của WorkBuddy dùng giao thức tương thích OpenAI Chat Completions. Ở đây `vendor: "OpenAI"` chỉ giao thức của API, không có nghĩa là chỉ dùng được mô hình OpenAI; mô hình Claude cũng có thể được gọi qua giao diện tương thích OpenAI của FishXCode.
+
+Ghi nội dung dưới đây vào `~/.workbuddy/models.json`:
+
+```json
+{
+  "models": [
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    }
+  ],
+  "availableModels": [
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+<Callout type="warn" title="Quan trọng">
+  - Hãy thay `sk-your-fishxcode-token` bằng API Key thực tế bạn đã tạo trong bảng điều khiển FishXCode.
+  - `availableModels` phải chứa các ID mô hình trong `models[].id` ở trên, nếu không WorkBuddy có thể không hiển thị chúng trong danh sách thả xuống.
+  - `url` cần điền địa chỉ Chat Completions đầy đủ: `https://api.fishxcode.com/v1/chat/completions`.
+</Callout>
+
+## 3. Giữ cả Tencent Token Plan và FishXCode
+
+Nếu bạn vẫn cần giữ Token Plan chính thức của Tencent, có thể đặt mô hình chính thức và mô hình FishXCode trong cùng một tệp `models.json`:
+
+```json
+{
+  "models": [
+    {
+      "id": "tc-code-latest",
+      "name": "Auto",
+      "vendor": "OpenAI",
+      "url": "https://api.lkeap.cloud.tencent.com/plan/v3/chat/completions",
+      "apiKey": "your-token-plan-api-key",
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 4096
+    },
+    {
+      "id": "hunyuan-2.0-instruct",
+      "name": "Tencent HY 2.0 Instruct",
+      "vendor": "OpenAI",
+      "url": "https://api.lkeap.cloud.tencent.com/plan/v3/chat/completions",
+      "apiKey": "your-token-plan-api-key",
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 4096
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "FishXCode GPT-5.5",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    },
+    {
+      "id": "claude-opus-4-7",
+      "name": "FishXCode Claude Opus 4.7",
+      "vendor": "OpenAI",
+      "url": "https://api.fishxcode.com/v1/chat/completions",
+      "apiKey": "sk-your-fishxcode-token",
+      "maxInputTokens": 200000,
+      "maxOutputTokens": 8192
+    }
+  ],
+  "availableModels": [
+    "tc-code-latest",
+    "hunyuan-2.0-instruct",
+    "gpt-5.5",
+    "claude-opus-4-7"
+  ]
+}
+```
+
+## 4. Khởi động lại và kiểm tra
+
+1. Lưu `models.json`
+2. Thoát hẳn WorkBuddy
+3. Khởi động lại WorkBuddy
+4. Mở khu vực chọn mô hình
+5. Chọn `gpt-5.5` hoặc `claude-opus-4-7`
+6. Gửi một câu hỏi đơn giản để kiểm tra phản hồi
+
+## Câu hỏi thường gặp
+
+### Không thấy mô hình mới thêm
+
+Trước tiên kiểm tra `availableModels` đã chứa ID mô hình tương ứng chưa, sau đó kiểm tra `models.json` có phải là JSON hợp lệ không.
+
+### Gọi thất bại hoặc báo lỗi màu đỏ
+
+Hãy kiểm tra `url` đã là địa chỉ đầy đủ `https://api.fishxcode.com/v1/chat/completions` chưa, đừng chỉ điền `https://api.fishxcode.com/v1`.
+
+### Xác thực thất bại
+
+Hãy sao chép lại API Key trong bảng điều khiển, đảm bảo không có khoảng trắng hoặc ký tự xuống dòng thừa.

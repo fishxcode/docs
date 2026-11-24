@@ -1,0 +1,193 @@
+---
+title: Dùng FishXCode trong Codex Desktop
+description: Hướng dẫn cài đặt, dùng lại cấu hình, đăng nhập và các tính năng thường dùng khi kết nối Codex Desktop với FishXCode.
+navTitle: Codex Desktop
+---
+
+> Lần đầu sử dụng? Hãy hoàn tất [đăng ký tài khoản và nạp tiền](/vi/account) trước, rồi tạo một token khả dụng trong [bảng điều khiển FishXCode](https://fishxcode.com/console/token).
+
+## Phạm vi áp dụng
+
+Bài viết này hướng dẫn kết nối ứng dụng desktop OpenAI Codex với FishXCode. Cách cài đặt và cấu hình Codex bản dòng lệnh có thể xem trực tiếp tại [Dùng FishXCode trong Codex](/vi/codex); bản desktop cũng nên dùng lại cùng bộ cấu hình `~/.codex` để không phải duy trì hai nơi.
+
+<Callout type="idea" title="Cách làm khuyên dùng">
+  Viết sẵn cấu hình Codex cục bộ trước, rồi mới mở Codex Desktop để đăng nhập. Như vậy bản desktop và CLI sẽ dùng chung một địa chỉ API, mô hình và token FishXCode.
+</Callout>
+
+## 1. Cài đặt Codex Desktop
+
+Người dùng Windows có thể tìm `Codex` trong Microsoft Store, chọn ứng dụng chính thức rồi cài đặt:
+
+![Cài Codex Desktop từ Microsoft Store](/img/start/codex-desktop/microsoft-store-codex.png)
+
+Sau khi cài xong, đừng vội đăng nhập, nên hoàn tất bước cấu hình cục bộ tiếp theo trước. Nếu không truy cập được Microsoft Store, hãy ưu tiên tải gói cài đặt từ kênh phát hành chính thức của OpenAI hoặc kênh phân phối phần mềm đáng tin cậy.
+
+## 2. Dùng lại cấu hình Codex để kết nối FishXCode
+
+Codex Desktop và Codex CLI nên dùng chung một bộ cấu hình người dùng. Nội dung cấu hình giống với [hướng dẫn Codex dòng lệnh](/vi/codex).
+
+### 1. Tạo thư mục cấu hình
+
+```bash tab="macOS/Linux"
+mkdir -p ~/.codex
+```
+
+```powershell tab="Windows PowerShell"
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+```
+
+### 2. Ghi `config.toml`
+
+Ghi nội dung sau vào `~/.codex/config.toml`:
+
+```toml
+model_provider = "fishxcode"
+model = "gpt-5.4"
+review_model = "gpt-5.4"
+model_reasoning_effort = "medium"
+model_reasoning_summary = "detailed"
+disable_response_storage = true
+preferred_auth_method = "apikey"
+model_verbosity = "high"
+
+[model_providers.fishxcode]
+name = "OpenAI using Chat Completions"
+base_url = "https://api.fishxcode.com/v1"
+wire_api = "responses"
+requires_openai_auth = true
+
+[features]
+skills = true
+image_generation = false
+
+```
+
+<Callout type="info">
+  Bạn có thể đổi `model` và `review_model` sang mô hình khả dụng khác tùy theo gói và nhóm của mình. Nếu chưa chắc, hãy dùng `gpt-5.4` trước.
+</Callout>
+
+### 3. Ghi `auth.json`
+
+Ghi token FishXCode vào `~/.codex/auth.json`:
+
+```json
+{
+  "OPENAI_API_KEY": "your_api_key_here"
+}
+```
+
+<Callout type="warn" title="Lưu ý">
+  `auth.json` chứa khóa bí mật, đừng commit lên Git và cũng đừng gửi cho người khác.
+</Callout>
+
+## 3. Đăng nhập Codex Desktop
+
+Sau khi mở Codex Desktop, nếu xuất hiện trang đăng nhập, hãy chọn **Đăng nhập bằng phương thức khác**:
+
+![Chọn đăng nhập bằng phương thức khác](/img/start/codex-desktop/codex-login-options.png)
+
+Sau đó dán token đã sao chép từ bảng điều khiển FishXCode. Nếu bạn đã ghi `~/.codex/auth.json` mà vẫn gặp lời nhắc đăng nhập, cũng có thể dán lại cùng token đó tại đây.
+
+Nếu cần sao chép token, hãy tìm token tương ứng trên trang token của bảng điều khiển FishXCode và nhấn nút sao chép bên cạnh khóa. Ảnh chụp màn hình không hiển thị menu sao chép để tránh lộ thông tin khóa không cần thiết trong ảnh hướng dẫn.
+
+Sau khi đăng nhập, vào thư mục dự án và chọn thư mục bạn muốn Codex thao tác là có thể bắt đầu sử dụng.
+
+## 4. Tùy chọn: quản lý nhiều kênh bằng CC Switch
+
+Nếu bạn đồng thời duy trì nhiều kênh Codex, có thể dùng CC Switch để chuyển đổi nhanh; nếu chỉ dùng FishXCode, một tệp `~/.codex/config.toml` thường là đủ.
+
+Trên trang token của bảng điều khiển FishXCode, tìm token cần dùng rồi nhấn **Nhập** ở hàng tương ứng với nhóm `codex_sub_june`:
+
+![Nhấn nhập nhóm Codex trong bảng điều khiển FishXCode](/img/start/codex-desktop/cc-switch-import-channel.png)
+
+Trong hộp thoại nhập của CC Switch, sau khi chọn ứng dụng `Codex`, nên giữ các trường chính như sau:
+
+| Trường | Giá trị khuyên dùng cho FishXCode |
+| - | - |
+| Endpoint API | `https://api.fishxcode.com/v1` |
+| API Key | Token FishXCode |
+| Mô hình chính | `gpt-5.4` hoặc mô hình khả dụng trong gói của bạn |
+
+Chuyển mô hình chính sang `gpt-5.4` rồi nhấn **Kiểm tra**, khi thấy "Kiểm tra thành công / Kiểm tra kết nối mô hình thành công" thì mới nhập:
+
+![Kiểm tra gpt-5.4 trong hộp thoại nhập của CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
+
+Khi trình duyệt mở CC Switch, hãy đối chiếu endpoint API, mô hình và ghi chú, xác nhận chính xác rồi nhấn **Nhập**:
+
+![Xác nhận nhập cấu hình Codex của FishXCode](/img/start/codex-desktop/cc-switch-import-success.png)
+
+Sau khi cấu hình xong, hãy xác nhận CC Switch đang ở kênh tương ứng của FishXCode, rồi mở lại Codex Desktop.
+
+## 5. Tính năng thường dùng
+
+### Mô hình, mức độ suy luận và quyền
+
+Gần ô nhập của Codex Desktop thường hiển thị mô hình, mức độ suy luận, chế độ quyền và thư mục làm việc:
+
+![Các tùy chọn trong khung hội thoại Codex Desktop](/img/start/codex-desktop/codex-dialog-options.png)
+
+Gợi ý cho việc dùng hằng ngày:
+
+- Mô hình: chọn mô hình khả dụng của FishXCode, ví dụ `gpt-5.4`
+- Mức độ suy luận: tác vụ thông thường dùng mức trung bình, chỉ tăng lên khi gặp tác vụ phức tạp
+- Chế độ quyền: khi cần sửa mã thường xuyên có thể dùng chế độ toàn quyền truy cập; khi chưa quen dự án, hãy giữ chế độ xác nhận thủ công
+- Thư mục làm việc: chọn thư mục dự án mà bạn đang cần phân tích hoặc chỉnh sửa
+
+### `/` và `@`
+
+Trong ô nhập, bạn có thể dùng hai lối tắt thường gặp:
+
+| Ký hiệu | Công dụng |
+| - | - |
+| `/` | Mở danh sách lệnh hoặc Skill |
+| `@` | Tham chiếu tệp hoặc thư mục trong dự án hiện tại |
+
+Nếu ký hiệu không mở ra menu, hãy kiểm tra trước `/` hoặc `@` có khoảng trắng không, và con trỏ có đang ở ô nhập của Codex Desktop không.
+
+### Chế độ lập kế hoạch
+
+Với tác vụ phức tạp, nên dùng Plan Mode trước. Codex sẽ chia nhỏ tác vụ, đặt câu hỏi làm rõ, rồi mới thực thi sau khi bạn xác nhận.
+
+![Vào chế độ lập kế hoạch](/img/start/codex-desktop/codex-plan-mode.png)
+
+Khi Codex đặt câu hỏi làm rõ, hãy chọn hướng phù hợp với nhu cầu thực tế:
+
+![Trả lời câu hỏi làm rõ](/img/start/codex-desktop/codex-clarify-question.png)
+
+Xác nhận kế hoạch rồi mới để Codex thực thi, đồng thời kiểm tra phạm vi thay đổi trong quá trình thực hiện:
+
+![Thực thi kế hoạch và theo dõi tiến độ](/img/start/codex-desktop/codex-execute-plan.png)
+
+## 6. Câu hỏi thường gặp
+
+### Đã đăng nhập nhưng yêu cầu vẫn không đi qua FishXCode?
+
+Kiểm tra theo thứ tự:
+
+1. `~/.codex/config.toml` có tồn tại không
+2. `model_provider` có phải là `fishxcode` không
+3. `base_url` có phải là `https://api.fishxcode.com/v1` không
+4. `~/.codex/auth.json` đã ghi token FishXCode chưa
+5. Sau khi sửa cấu hình, bạn đã thoát hẳn rồi mở lại Codex Desktop chưa
+
+### Báo lỗi 401 hoặc 403 thì làm sao?
+
+Ưu tiên kiểm tra token đã được sao chép đầy đủ chưa, có đang bật không, số dư có đủ không, và mô hình hiện tại có khả dụng trong gói hoặc nhóm của bạn không.
+
+### Mô hình hiển thị không như mong đợi?
+
+Trước tiên xác nhận `model` trong `config.toml`, rồi kiểm tra bộ chọn mô hình bên trong Codex Desktop. Nếu dùng CC Switch, cần xác nhận thêm kênh đang được chọn là kênh FishXCode.
+
+### Xuất hiện thông báo CC Switch chưa được cấu hình?
+
+Nếu bạn dùng CC Switch và thấy thông báo tương tự, nghĩa là kênh hiện tại chưa được chuyển đúng:
+
+![Thông báo khi CC Switch chưa được cấu hình đúng](/img/start/codex-desktop/cc-switch-not-configured.png)
+
+Cách xử lý:
+
+1. Thoát hoàn toàn Codex Desktop, bao gồm cả tiến trình ở khay hệ thống
+2. Mở CC Switch, xác nhận đã chuyển sang kênh FishXCode
+3. Mở lại Codex Desktop
+
+Nếu không dùng CC Switch, hãy quay lại bước 2 để kiểm tra trực tiếp `~/.codex/config.toml` và `~/.codex/auth.json`.

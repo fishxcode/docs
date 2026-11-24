@@ -1,0 +1,80 @@
+---
+title: Dùng FishXCode trong OpenCode
+navTitle: OpenCode
+---
+
+## Cài đặt OpenCode
+
+```bash tab="npm"
+npm install -g opencode-ai@latest
+```
+
+```bash tab="brew"
+brew install anomalyco/tap/opencode
+```
+
+```bash tab="scoop"
+scoop install opencode
+```
+
+## Cấu hình FishXCode
+
+1. Truy cập [https://fishxcode.com/console/token](https://fishxcode.com/console/token) để lấy API Key
+2. Đặt biến môi trường:
+
+```bash tab="Linux/macOS"
+export FISHXCODE_TOKEN=sk-xxx
+```
+
+```powershell tab="Windows PowerShell"
+$env:FISHXCODE_TOKEN="sk-xxx"
+```
+
+3. Tạo `opencode.json` trong thư mục gốc của dự án hoặc trong `~/.config/opencode/`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "fishxcode-anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "fishxcode-anthropic",
+      "options": {
+        "baseURL": "https://api.fishxcode.com/v1",
+        "apiKey": "{env:FISHXCODE_TOKEN}"
+      },
+      "models": {
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6"
+        }
+      }
+    },
+    "fishxcode-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "fishxcode-openai",
+      "options": {
+        "baseURL": "https://api.fishxcode.com/v1",
+        "apiKey": "{env:FISHXCODE_TOKEN}"
+      },
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    }
+  }
+}
+```
+
+<Callout type="warn" title="Quan trọng">
+  Hãy thay `sk-xxx` bằng token thực tế bạn lấy từ [bảng điều khiển FishXCode](https://fishxcode.com/console/token).
+</Callout>
+
+## Khởi động và sử dụng
+
+```bash
+cd my-project
+opencode
+```
+
+Sau khi khởi động, chọn mô hình thuộc nhà cung cấp FishXCode trên giao diện là có thể bắt đầu sử dụng.

@@ -1,0 +1,131 @@
+---
+title: Giải thích nhật ký lỗi
+description: Các trường nhật ký lỗi trong bảng điều khiển FishXCode, ý nghĩa mã trạng thái, lỗi thường gặp và quy trình khắc phục sự cố.
+---
+
+Nhật ký lỗi dùng để xác định nguyên nhân cụ thể khiến một yêu cầu thất bại. Khi khắc phục sự cố, nên xem [trạng thái sức khỏe nhóm](/vi/group-health) trước để đánh giá phạm vi ảnh hưởng, sau đó dùng `request_id` trong nhật ký lỗi để xác định từng yêu cầu.
+
+Lối vào: [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/console/log). Sau khi chuyển loại nhật ký sang **Nhật ký lỗi**, bạn có thể lọc theo thời gian, mô hình, token, nhóm, ID yêu cầu, thông báo lỗi và mã trạng thái.
+
+<Callout type="idea" title="Đánh giá nhanh">
+  - `request_id` dùng để xác định một yêu cầu cụ thể
+  - `status_code` dùng để gom lỗi theo loại
+  - `content` dùng để tìm từ khóa lỗi cụ thể
+  - `group` dùng để đánh giá vấn đề có tập trung ở một nhóm hay không
+</Callout>
+
+## Giải thích các trường
+
+| Trường | Ý nghĩa | Tác dụng khi khắc phục sự cố |
+| - | - | - |
+| Thời gian | Thời điểm yêu cầu thất bại | Đánh giá vấn đề có đang tiếp diễn không |
+| Mô hình | Tên mô hình mà yêu cầu sử dụng | Đánh giá có phải chỉ ảnh hưởng đến một mô hình không |
+| Token | Tên API Key hoặc token mà yêu cầu sử dụng | Đánh giá có phải chỉ ảnh hưởng đến một token không |
+| Nhóm | Nhóm gói, mô hình hoặc tài nguyên của nhà cung cấp upstream mà yêu cầu thuộc về | Đánh giá có phải nhóm đang gặp bất thường tập trung không |
+| ID yêu cầu | Mã định danh duy nhất của một yêu cầu, thường là `request_id` | Ưu tiên cung cấp khi liên hệ hỗ trợ |
+| Thông báo lỗi | Văn bản mô tả nguyên nhân thất bại, thường chứa `content` | Dùng từ khóa để xác định lỗi cụ thể |
+| Mã trạng thái | Mã trạng thái HTTP hoặc của nhà cung cấp upstream, ví dụ `401`, `429`, `502` | Dùng để phân loại lỗi nhanh |
+
+## Thứ tự khắc phục sự cố
+
+1. Sao chép `request_id` trong phản hồi API hoặc nhật ký, tìm chính xác yêu cầu đó trước.
+2. Nếu không có `request_id`, hãy thu hẹp phạm vi theo khoảng thời gian, mô hình và token.
+3. Dùng mã trạng thái để gom loại lỗi, ví dụ `401`, `413`, `429`, `502`, `503`.
+4. Dùng thông báo lỗi để tìm từ khóa, ví dụ `Invalid API key`, `daily limit exceeded`, `Upstream request failed`.
+5. Nếu cùng một lỗi xuất hiện tập trung trong một nhóm, hãy vào [trạng thái sức khỏe nhóm](/vi/group-health) để đánh giá phạm vi ảnh hưởng.
+
+## Xác định nguyên nhân
+
+Nhật ký lỗi giúp đánh giá sơ bộ vấn đề thuộc “vấn đề sử dụng”, “vấn đề phía nhà cung cấp upstream” hay “vấn đề nền tảng”. Việc xác định nguyên nhân không chỉ dựa vào mã trạng thái mà còn phải kết hợp với phạm vi ảnh hưởng:
+
+| Nguyên nhân | Tiêu chí đánh giá | Biểu hiện điển hình | Ưu tiên xử lý |
+| - | - | - | - |
+| Vấn đề sử dụng | Chỉ ảnh hưởng đến một yêu cầu, một token hoặc một cấu hình client cụ thể | Sai định dạng phần thân yêu cầu, tham số không khớp, sao chép sai token, ngữ cảnh quá lớn, sai đường dẫn API | Kiểm tra cấu hình cục bộ, phần thân yêu cầu, tên mô hình, token và phiên bản công cụ |
+| Vấn đề phía nhà cung cấp upstream | Nhiều yêu cầu cùng gặp lỗi từ nhà cung cấp upstream, hết thời gian chờ gateway hoặc vượt hạn mức của nhà cung cấp upstream | `Upstream request failed`, `all upstreams failed`, `bad response status code 502/524`, tài khoản của nhà cung cấp upstream bị giới hạn tần suất | Thử lại sau, giảm số yêu cầu đồng thời, chuyển mô hình hoặc nhóm khi cần |
+| Vấn đề nền tảng | Node, pool tài nguyên hoặc kênh của nền tảng không khả dụng | `system disk overloaded`, `No available accounts`, `No available channel`, `Service Unavailable` phía nền tảng | Thử lại sau; nếu lỗi kéo dài, hãy liên hệ hỗ trợ và cung cấp nhóm, khoảng thời gian và `request_id` |
+| Cần kết hợp với nhóm để đánh giá | Một bản ghi nhật ký không đủ để xác định chính xác bên chịu trách nhiệm | Các lỗi như `429`, `502`, `503` có thể do nhiều nguyên nhân gây ra | Xem [trạng thái sức khỏe nhóm](/vi/group-health) để xác nhận lỗi có xảy ra tập trung hay không |
+
+<Callout type="warn" title="Lưu ý">
+  Đừng chỉ dựa vào một lỗi `502` hoặc `503` để xác định bên chịu trách nhiệm. Một yêu cầu thất bại có thể chỉ là dao động ngẫu nhiên từ nhà cung cấp upstream; chỉ khi cùng một nhóm thất bại hàng loạt trong cùng khoảng thời gian thì mới nên xử lý như vấn đề tài nguyên của nhà cung cấp upstream hoặc của nền tảng.
+</Callout>
+
+## Phân loại mã trạng thái
+
+| Mã trạng thái | Ý nghĩa thường gặp | Nguyên nhân sơ bộ | Ưu tiên xử lý |
+| - | - | - | - |
+| `400` | Định dạng phần thân yêu cầu, tham số hoặc thông điệp công cụ không đáp ứng yêu cầu | Vấn đề sử dụng | Kiểm tra phần thân yêu cầu của client, đường dẫn API và schema công cụ |
+| `401` | Token không hợp lệ, chưa được kích hoạt hoặc xác thực thất bại | Vấn đề sử dụng | Sao chép lại token, xác nhận trạng thái token |
+| `403` | Nhà cung cấp upstream từ chối truy cập, thường do giới hạn về quyền hoặc quyền truy cập mô hình | Vấn đề sử dụng hoặc vấn đề phía nhà cung cấp upstream | Kiểm tra quyền của gói, nhóm và mô hình |
+| `413` | Phần thân yêu cầu quá lớn | Vấn đề sử dụng | Rút ngắn ngữ cảnh, chia nhỏ tệp, nén hình ảnh |
+| `429` | Giới hạn tần suất, giới hạn hạn mức ngày hoặc thông tin xác thực trong thời gian nghỉ | Cần kết hợp với nhóm để đánh giá | Giảm số yêu cầu đồng thời, chờ hạn mức được khôi phục hoặc hết thời gian nghỉ |
+| `500` | Lỗi nội bộ của lớp trung chuyển hoặc lỗi của nhà cung cấp upstream đã được đóng gói lại | Cần dựa vào thông báo lỗi để đánh giá | Kết hợp thông báo lỗi để xác định nguyên nhân thực sự |
+| `502` | Dịch vụ của nhà cung cấp upstream hoặc mạng trung gian bất thường | Vấn đề phía nhà cung cấp upstream hoặc đường truyền | Thử lại sau, chuyển mô hình/nhóm khi cần |
+| `503` | Dịch vụ, kênh, tài khoản hoặc tài nguyên nền tảng tạm thời không khả dụng | Vấn đề phía nhà cung cấp upstream hoặc vấn đề nền tảng | Thử lại sau; nếu lỗi kéo dài, hãy liên hệ hỗ trợ |
+| `504` / `521` / `522` / `524` | Hết thời gian chờ khi kết nối, đọc dữ liệu hoặc nhận phản hồi qua gateway | Vấn đề phía nhà cung cấp upstream hoặc đường truyền | Giảm các tác vụ dài, thử lại sau |
+
+## Thông báo lỗi thường gặp
+
+| Nội dung nhật ký lỗi | Ý nghĩa | Nguyên nhân sơ bộ | Cách xử lý đề xuất |
+| - | - | - | - |
+| `status_code=401, Invalid token` | Token không hợp lệ, sao chép sai hoặc đã hết hiệu lực | Vấn đề sử dụng | Sao chép lại token từ bảng điều khiển, đảm bảo không có khoảng trắng thừa |
+| `status_code=401, Invalid API key or key is pending admin approval` | API Key không hợp lệ, hoặc Key mới vẫn đang chờ duyệt/kích hoạt | Vấn đề sử dụng hoặc trạng thái tài khoản | Xác nhận bạn đang dùng token mới nhất từ bảng điều khiển; nếu vừa tạo token hoặc vừa đổi gói, hãy chờ có hiệu lực rồi thử lại, nếu vẫn lỗi hãy liên hệ hỗ trợ |
+| `status_code=403, bad response status code 403` | Nhà cung cấp upstream từ chối yêu cầu hiện tại, thường do quyền, trạng thái tài khoản hoặc giới hạn truy cập mô hình | Vấn đề sử dụng hoặc vấn đề phía nhà cung cấp upstream | Kiểm tra token, nhóm của gói và quyền mô hình; nếu lỗi kéo dài, hãy chuyển mô hình hoặc liên hệ hỗ trợ và cung cấp `request_id` |
+| `status_code=413, openai_error` / `bad response status code 413` | Phần thân yêu cầu quá lớn, thường do ngữ cảnh, tệp, hình ảnh hoặc kết quả công cụ quá lớn | Vấn đề sử dụng | Rút ngắn ngữ cảnh, giảm lượng nội dung tải lên một lần, chia nhỏ tệp lớn hoặc nén hình ảnh rồi thử lại |
+| `status_code=429, Account RPM limit exceeded` | Tài khoản của nhà cung cấp upstream chạm giới hạn số yêu cầu mỗi phút | Vấn đề sử dụng hoặc giới hạn từ nhà cung cấp upstream | Giảm số yêu cầu đồng thời và tần suất thử lại, thử lại sau |
+| `status_code=429, Account daily limit exceeded` | Tài khoản của nhà cung cấp upstream chạm giới hạn số yêu cầu mỗi ngày | Giới hạn từ nhà cung cấp upstream | Chờ hạn mức ngày được đặt lại, hoặc chuyển sang mô hình/nhóm khả dụng khác |
+| `status_code=429, All credentials for model ... are cooling down` | Toàn bộ thông tin xác thực của nhà cung cấp upstream cho mô hình hiện tại đều đang trong thời gian nghỉ | Giới hạn từ nhà cung cấp upstream | Giảm tần suất thử lại, chờ hết thời gian nghỉ; với tác vụ khẩn cấp có thể tạm chuyển mô hình |
+| `status_code=500, 请求失败 [429]: {"message":"Too many requests, please wait before trying again."}` | Nhà cung cấp upstream trả về giới hạn tần suất dưới dạng `429`, nhưng lớp trung chuyển đóng gói lại thành `500` | Vấn đề sử dụng hoặc giới hạn từ nhà cung cấp upstream | Xử lý như giới hạn tần suất: giảm số yêu cầu đồng thời, kéo dài khoảng cách giữa các lần thử lại, tránh thử lại liên tục ngay lập tức |
+| `status_code=500, auth_unavailable: no auth available` | Mô hình hoặc nhóm hiện tại tạm thời không có tài nguyên xác thực khả dụng từ nhà cung cấp upstream | Vấn đề nền tảng | Thử lại sau; nếu lỗi kéo dài, hãy chuyển sang mô hình/nhóm khả dụng, hoặc liên hệ hỗ trợ để xác nhận trạng thái gói và nhóm |
+| `status_code=502, Upstream request failed` / `bad response status code 502` / `all upstreams failed` | Dịch vụ của nhà cung cấp upstream hoặc mạng trung gian trả về bất thường, hoặc mọi nhà cung cấp upstream khả dụng đều thất bại | Vấn đề phía nhà cung cấp upstream | Thử lại sau; nếu lỗi kéo dài, hãy chuyển mô hình hoặc liên hệ hỗ trợ và cung cấp `request_id` |
+| `status_code=502, openai_error` | Nhà cung cấp upstream tương thích OpenAI trả về bất thường, nhưng lớp trung chuyển không nhận được nguyên nhân cụ thể hơn | Vấn đề phía nhà cung cấp upstream | Trước tiên hãy xử lý như lỗi phía nhà cung cấp upstream; nếu cùng một yêu cầu luôn tái hiện lỗi, hãy giảm ngữ cảnh và cung cấp `request_id` cho bộ phận hỗ trợ |
+| `status_code=502, The origin web server returned an invalid or incomplete response to Cloudflare` | Máy chủ gốc của nhà cung cấp upstream trả về phản hồi bất thường qua Cloudflare | Vấn đề phía nhà cung cấp upstream | Thường là sự cố tạm thời từ nhà cung cấp upstream, hãy thử lại sau |
+| `status_code=500, upstream error: do request failed` | Gửi yêu cầu đến nhà cung cấp upstream thất bại, thường do kết nối mạng hoặc nhà cung cấp upstream tạm thời không truy cập được | Vấn đề phía nhà cung cấp upstream hoặc đường truyền | Thử lại sau; nếu lỗi kéo dài, hãy cung cấp `request_id` cho bộ phận hỗ trợ kiểm tra |
+| `status_code=520, bad response status code 520` | Cloudflare trả về lỗi không xác định, thường cho thấy phản hồi từ nhà cung cấp upstream bất thường hoặc kết nối bị gián đoạn | Vấn đề phía nhà cung cấp upstream hoặc đường truyền | Thử lại sau; nếu xuất hiện tập trung, hãy xử lý như sự cố phía nhà cung cấp upstream |
+| `status_code=521` / `522` / `504` / `524` | Cloudflare hoặc gateway của nhà cung cấp upstream gặp lỗi hết thời gian chờ khi kết nối, đọc dữ liệu hoặc phản hồi | Vấn đề phía nhà cung cấp upstream hoặc đường truyền | Trước tiên hãy thử lại sau; nếu chỉ xảy ra với tác vụ dài, hãy giảm ngữ cảnh, độ dài đầu ra hoặc chuỗi gọi công cụ |
+| `status_code=503, Service Unavailable` | Dịch vụ của nhà cung cấp upstream tạm thời không khả dụng hoặc nhóm hiện tại không có tài nguyên khả dụng | Cần kết hợp với nhóm để đánh giá | Thử lại sau; nếu lỗi kéo dài, hãy chuyển mô hình/nhóm, hoặc liên hệ hỗ trợ để xác nhận trạng thái tài nguyên |
+| `status_code=503, system disk overloaded` | Mức sử dụng ổ đĩa của node dịch vụ quá cao, nền tảng tạm thời từ chối yêu cầu để bảo vệ dịch vụ | Vấn đề nền tảng | Đây là vấn đề về dung lượng/trạng thái node phía nền tảng, hãy thử lại sau; nếu lỗi kéo dài, vui lòng liên hệ hỗ trợ |
+| `status_code=503, No available accounts: no available accounts` | Nhóm hiện tại không có tài khoản khả dụng của nhà cung cấp upstream | Vấn đề nền tảng | Chuyển mô hình/nhóm hoặc thử lại sau; nếu tình trạng kéo dài, hãy liên hệ hỗ trợ để xác nhận pool tài nguyên |
+| `status_code=503, No available channel for model ... under group ...` | Trong nhóm hiện tại không có kênh khả dụng cho mô hình này | Vấn đề sử dụng hoặc vấn đề nền tảng | Kiểm tra tên mô hình và phạm vi hỗ trợ của gói, chuyển sang mô hình được nhóm này hỗ trợ |
+| `status_code=503, model gpt-image-2 is only supported on /v1/images/generations and /v1/images/edits` | Mô hình hình ảnh bị gọi qua sai API | Vấn đề sử dụng | Gửi yêu cầu tạo/chỉnh sửa hình ảnh đến API images tương ứng |
+| `status_code=500, Image source is a local path that is not readable from this server` | Yêu cầu chứa đường dẫn hình ảnh cục bộ mà nhà cung cấp upstream hiện không đọc được, có thể khiến terminal không phản hồi khi nhập liệu | Vấn đề sử dụng | Với dự án frontend, hãy ưu tiên kiểm tra các tệp khóa phụ thuộc dòng `lock`: xóa các tệp khóa liên quan, hoặc xóa trường `png` bất thường trong tệp khóa rồi mở lại phiên; nếu cần tiếp tục gửi ảnh, hãy dùng URL hình ảnh công khai `http(s)` hoặc truyền vào `data:image/...` base64 |
+| `status_code=500, failed to parse multipart form` | Định dạng phần thân yêu cầu tải lên hình ảnh hoặc tệp không đáp ứng yêu cầu của API | Vấn đề sử dụng | Kiểm tra tên trường `multipart/form-data`, trường tệp và header yêu cầu; không tự viết sai boundary |
+| `status_code=400, Invalid request: prompt is required` / `解析 Images 请求失败: prompt 不能为空` | Yêu cầu tạo/chỉnh sửa hình ảnh thiếu `prompt` | Vấn đề sử dụng | Bổ sung `prompt` không rỗng và xác nhận yêu cầu được gửi đến API hình ảnh |
+| `status_code=400, Unsupported parameter: messages` | API được gọi và định dạng tham số không khớp, thường gặp khi gửi tham số Chat/Responses đến API không hỗ trợ `messages` | Vấn đề sử dụng | Kiểm tra `base_url`, đường dẫn API và loại mô hình của công cụ hiện tại; điều chỉnh phần thân yêu cầu theo tài liệu của API mục tiêu |
+| `tool_use ids were found without tool_result blocks immediately after` | Chuỗi thông điệp gọi công cụ không đáp ứng yêu cầu của giao thức Claude | Vấn đề sử dụng | Đảm bảo mỗi `tool_use` được theo ngay sau bởi `tool_result` tương ứng; nếu do công cụ tự động tạo ra, hãy nâng cấp client hoặc mở phiên mới |
+| `Invalid schema for function ... None is not of type 'array'` | Schema của hàm công cụ không đáp ứng yêu cầu của mô hình, thường do `parameters` hoặc trường mảng bị rỗng/sai kiểu | Vấn đề sử dụng | Kiểm tra định nghĩa MCP/công cụ, đảm bảo trường mảng có giá trị `[]` và schema tham số của hàm tuân theo JSON Schema |
+| `status_code=500, not implemented` | API, năng lực mô hình hoặc đường gọi công cụ hiện tại chưa được triển khai | Vấn đề sử dụng hoặc vấn đề nền tảng | Xác nhận bạn đang dùng API và mô hình được hỗ trợ; khi cần, hãy chuyển mô hình hoặc liên hệ hỗ trợ để xác nhận khả năng tương thích |
+
+## Xử lý theo loại
+
+### Xác thực và quyền
+
+Tập trung vào `401`, `403`, `Invalid API key`, `pending admin approval`, `No available channel`. Trước tiên hãy xác nhận token có được lấy từ bảng điều khiển không, đã sao chép đầy đủ chưa và có quyền với mô hình, nhóm hiện tại không.
+
+### Định dạng yêu cầu
+
+Tập trung vào `400`, `413`, `Unsupported parameter`, `prompt is required`, `Invalid schema`. Trước tiên hãy kiểm tra đường dẫn API, các trường trong phần thân yêu cầu, schema công cụ, tham số yêu cầu hình ảnh và kích thước ngữ cảnh.
+
+### Giới hạn tần suất và hạn mức
+
+Tập trung vào `429`, `Max 10/min`, `daily limit exceeded`, `cooling down`. Đừng thử lại liên tục mà không có khoảng nghỉ; hãy giảm số yêu cầu đồng thời theo giới hạn trong nhật ký, hoặc chờ hạn mức/thông tin xác thực được khôi phục.
+
+### Tài nguyên của nhà cung cấp upstream và nền tảng
+
+Tập trung vào `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Trước tiên hãy thử lại sau; nếu lỗi xuất hiện tập trung trong cùng một nhóm, hãy xem [trạng thái sức khỏe nhóm](/vi/group-health).
+
+## Thông tin cần cung cấp khi liên hệ hỗ trợ
+
+Với các vấn đề đơn giản, bạn nên tự kiểm tra trước bằng [Giải thích nhật ký lỗi](/vi/error-logs) và [Giải thích trạng thái sức khỏe nhóm](/vi/group-health). Nếu vẫn chưa giải quyết được, bạn có thể nhấn biểu tượng sao chép trong chi tiết nhật ký lỗi tại `console/log` để sao chép toàn bộ nội dung cần kiểm tra chỉ với một lần nhấn. Khi liên hệ hỗ trợ, nên cung cấp đầy đủ các thông tin sau trong một lần cho bộ phận kỹ thuật, giúp giảm việc xác nhận qua lại:
+
+- ID người dùng
+- Khoảng thời gian: thời điểm vấn đề bắt đầu và lần xuất hiện gần nhất
+- Tên nhóm: `group`
+- Tên mô hình: mô hình mà yêu cầu sử dụng
+- Mã trạng thái: ví dụ `429`, `413`, `502`, `503`
+- Nội dung lỗi: `error_reasons.content`
+- ID yêu cầu: `request_id` trong bản ghi nhật ký hoặc phản hồi API
+- Phạm vi ảnh hưởng: một token, một mô hình, một nhóm hay nhiều nhóm cùng lúc gặp bất thường
+
+<Callout type="idea" title="Kết luận">
+  Nhật ký lỗi giải thích “vì sao yêu cầu này thất bại”, còn trạng thái sức khỏe nhóm đánh giá “vấn đề này có xảy ra tập trung hay không”. Kết hợp cả hai sẽ giúp khắc phục sự cố hiệu quả nhất.
+</Callout>

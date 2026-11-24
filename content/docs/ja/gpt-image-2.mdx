@@ -1,0 +1,225 @@
+---
+title: GPT-Image-2 画像生成チュートリアル
+navTitle: GPT-Image-2 画像生成
+---
+
+## 事前準備
+
+始める前に、次のものを用意してください：
+
+1. FishXCode のアカウント
+2. 利用可能な API トークン
+3. 現在のトークンで `gpt-image-2` にアクセスできることの確認
+
+トークンの取得：
+
+- コンソール：[https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+<Callout type="idea" title="ヒント">
+  コンソールでモデルのグループや権限の設定が表示される場合は、現在のトークンの対象に `gpt-image-2` が含まれていることを確認してください。わからない場合は、まずデフォルトで利用できるトークンを新規作成してテストしましょう。
+</Callout>
+
+## オープンソースの GUI ツール
+
+まだコードを書きたくない場合は、FishXCode が提供するオープンソースの GPT-Image-2 ツールで、そのままテストや画像生成ができます：
+
+- オンラインで試す：[https://fishxcode-gpt-image-2.lovable.app/](https://fishxcode-gpt-image-2.lovable.app/)
+- オープンソースリポジトリ：[https://github.com/fishxcode/gpt-image-2](https://github.com/fishxcode/gpt-image-2)
+
+<Callout type="idea" title="使い方のヒント">
+  まずツールでトークン、プロンプト、画像パラメーターが問題なく使えることを確認してから、同じパラメーターを自分のコードやワークフローに移しましょう。
+</Callout>
+
+## 方法 1：Images API で画像を生成する
+
+最も直接的な方法で、OpenAI 互換の画像生成 API に対応しています。
+
+- リクエスト URL：`https://api.fishxcode.com/v1/images/generations`
+- モデル名：`gpt-image-2`
+
+### Python の例
+
+```python
+import base64
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-あなたのFishXCode-Token",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+result = client.images.generate(
+    model="gpt-image-2",
+    prompt="宇宙飛行士のヘルメットをかぶった茶トラ猫が月面に座っている、映画のような光と影、超高精細なディテール",
+    size="1024x1024"
+)
+
+image_base64 = result.data[0].b64_json
+
+with open("gpt-image-2-output.png", "wb") as f:
+    f.write(base64.b64decode(image_base64))
+```
+
+### Node.js の例
+
+```javascript
+import fs from "node:fs";
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "sk-あなたのFishXCode-Token",
+  baseURL: "https://api.fishxcode.com/v1",
+});
+
+const result = await client.images.generate({
+  model: "gpt-image-2",
+  prompt: "雲海の上に浮かぶ未来都市、サイバーパンクのネオンスタイル、超高精細",
+  size: "1024x1024",
+});
+
+const imageBase64 = result.data[0].b64_json;
+fs.writeFileSync("gpt-image-2-output.png", Buffer.from(imageBase64, "base64"));
+```
+
+### curl の例
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/images/generations \
+  --header "Authorization: Bearer sk-あなたのFishXCode-Token" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "ミニマルな製品ポスター、白い背景、中央に浮かぶ透明なガラスのキーボード、商業写真のスタイル",
+    "size": "1024x1024"
+  }'
+```
+
+<Callout type="warn" title="注意">
+  Images API が返す主な結果は通常 `b64_json` です。ローカルで Base64 をデコードして画像ファイルにする必要があります。
+</Callout>
+
+## 方法 2：Chat Completions で画像生成を呼び出す
+
+ワークフローがすでに `/v1/chat/completions` をベースにしている場合は、チャット API から直接 `gpt-image-2` を呼び出すこともできます。
+
+- リクエスト URL：`https://api.fishxcode.com/v1/chat/completions`
+- モデル名：`gpt-image-2`
+
+### Python の例
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-あなたのFishXCode-Token",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+response = client.chat.completions.create(
+    model="gpt-image-2",
+    messages=[
+        {
+            "role": "user",
+            "content": "サングラスをかけた柴犬がレトロな赤いオープンカーに座っている絵を描いてください。ロードトリップ風"
+        }
+    ]
+)
+
+print(response)
+```
+
+### curl の例
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/chat/completions \
+  --header "Authorization: Bearer sk-あなたのFishXCode-Token" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "messages": [
+      {
+        "role": "user",
+        "content": "夕暮れどきの和風カフェを描いてください。暖色系で映画のような構図"
+      }
+    ]
+  }'
+```
+
+<Callout type="idea" title="ヒント">
+  「安定して画像を受け取る」ことだけが目的なら、`/v1/images/generations` を優先してください。既存のチャットワークフローに画像生成を組み込む必要がある場合に、`/v1/chat/completions` を検討しましょう。
+</Callout>
+
+## よく使うパラメーター
+
+`gpt-image-2` でよく使われるパラメーターは次のとおりです：
+
+| パラメーター | 意味 | 例 |
+| - | - | - |
+| `model` | モデル ID | `gpt-image-2` |
+| `prompt` | 画像生成のプロンプト | `メカ風のフクロウ` |
+| `size` | 出力サイズ | `1024x1024` |
+| `n` | 生成枚数 | `1` |
+| `background` | 背景モード | `transparent` / `white` |
+| `quality` | 出力品質 | `high` / `medium` |
+
+<Callout type="warn" title="注意">
+  SDK やプロキシ層によって、パラメーターの互換性が異なる場合があります。あるパラメーターを渡してエラーになった場合は、まず最小限で動作するパラメーターの組み合わせ `model + prompt + size` に戻してください。
+</Callout>
+
+## Cherry Studio で GPT-Image-2 を使う
+
+Cherry Studio で直接画像を生成したい場合は、次のように設定します：
+
+### 1. OpenAI 互換のプロバイダーを新規作成する
+
+Cherry Studio でカスタムプロバイダーを追加します：
+
+- API Key：お使いの FishXCode トークン
+- Base URL：`https://api.fishxcode.com/v1`
+
+### 2. モデルを追加する
+
+モデル名には次のように入力します：
+
+```text
+gpt-image-2
+```
+
+Cherry Studio でモデルの種類を設定できる場合は、画像生成、または OpenAI Images 互換のモデルタイプを選択してください。
+
+### 3. 画像を生成する
+
+新しい会話を作成するか画像生成の機能ページを開き、`gpt-image-2` を選択してプロンプトを入力すると、画像が生成されます。
+
+<Callout type="idea" title="ヒント">
+  Cherry Studio で画像の結果が表示されない場合は、まず次の 2 点を確認してください：
+
+  - Base URL が `https://api.fishxcode.com/v1` になっているか
+  - 現在のバージョンの Cherry Studio が OpenAI の画像 API に完全に対応しているか
+</Callout>
+
+## よくある質問
+
+### 成功のレスポンスが返ってきたのに、画像ファイルが見当たらないのはなぜですか？
+
+多くの API が返すのは `b64_json` であり、ファイルを直接保存するわけではないためです。自分で Base64 をデコードし、`.png` ファイルに書き込む必要があります。
+
+### どの API を優先して使うべきですか？
+
+- 画像生成だけなら：`POST /v1/images/generations` を優先
+- 既存のチャットワークフローに画像生成を組み込みたいなら：`POST /v1/chat/completions` を検討
+
+### モデルが存在しない、または権限がないというエラーが出た場合は？
+
+次の順序で確認してください：
+
+1. モデル名が `gpt-image-2` になっていることを確認する
+2. トークンが [FishXCode コンソール](https://fishxcode.com/console/token) で発行されたものであることを確認する
+3. 現在のトークンに `gpt-image-2` へのアクセス権限があることを確認する
+4. Base URL が `https://api.fishxcode.com/v1` になっていることを確認する
+
+### パラメーターを多く渡すとエラーになるのはなぜですか？
+
+クライアント、SDK のバージョン、プロキシ層によって、互換性の実装が完全には一致していないためです。まず最小限のパラメーターで動作を確認してから、`quality`、`background`、`n` などのオプションパラメーターを少しずつ追加してください。

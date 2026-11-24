@@ -1,0 +1,150 @@
+---
+title: 在 QClaw 中使用 FishXCode
+navTitle: QClaw
+---
+
+> 首次使用？請先完成 [帳戶註冊與充值](/zh-TW/account)，並在 [FishXCode 控制台](https://fishxcode.com/console/token) 獲取 API Key。
+
+## 一、確認接入引數
+
+QClaw 接入第三方大模型 API 時，優先使用 OpenAI Compatible 協議。即使呼叫的是 Claude 模型，也填寫 OpenAI 相容介面引數。
+
+| 配置項 | 值 |
+| - | - |
+| Protocol | `OpenAI Compatible` |
+| Base URL | `https://api.fishxcode.com/v1` |
+| API Key | FishXCode 控制台建立的 API Key |
+| OpenAI 模型 | `gpt-5.5` |
+| Claude 模型 | `claude-opus-4-7` |
+
+如果 QClaw 要求填寫完整 Endpoint，請使用：
+
+```text
+https://api.fishxcode.com/v1/chat/completions
+```
+
+## 二、通過設定介面配置
+
+如果你的 QClaw 版本提供圖形介面，可以按下面填寫：
+
+```text
+Provider: OpenAI Compatible
+Base URL: https://api.fishxcode.com/v1
+API Key: sk-你的FishXCode-Token
+Model: claude-opus-4-7
+```
+
+如果要使用 GPT 模型，將 `Model` 改為：
+
+```text
+gpt-5.5
+```
+
+## 三、通過 config.yaml 配置
+
+如果你的 QClaw 版本使用 `~/.qclaw/config.yaml`，可以參考下面模板：
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-你的FishXCode-Token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+切換到 OpenAI 模型時，只需要替換 `model`：
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-你的FishXCode-Token
+  model: gpt-5.5
+  max_tokens: 8192
+```
+
+如果客戶端要求完整介面地址，可以改成：
+
+```yaml
+llm:
+  provider: openai-compatible
+  url: https://api.fishxcode.com/v1/chat/completions
+  api_key: sk-你的FishXCode-Token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+<Callout type="warn" title="重要">
+  不同 QClaw 版本欄位名可能不同，比如 `base_url`、`baseURL`、`apiBase` 或 `url`。如果儲存後不生效，優先檢查欄位名和 QClaw 實際讀取的配置檔案路徑。
+</Callout>
+
+## 四、通過環境變數配置
+
+如果 QClaw 支援環境變數，也可以使用：
+
+```bash tab="Linux/macOS"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_API_KEY="sk-你的FishXCode-Token"
+export QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_API_KEY="sk-你的FishXCode-Token"
+$env:QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+需要使用 GPT 模型時，將 `QCLAW_MODEL` 改為 `gpt-5.5`。
+
+## 五、驗證配置
+
+先用 OpenAI 相容介面驗證 API Key 是否有效：
+
+```bash tab="Claude 模型"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-你的FishXCode-Token" \
+  -d '{
+    "model": "claude-opus-4-7",
+    "messages": [
+      { "role": "user", "content": "用一句話說明你是誰" }
+    ]
+  }'
+```
+
+```bash tab="GPT 模型"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-你的FishXCode-Token" \
+  -d '{
+    "model": "gpt-5.5",
+    "messages": [
+      { "role": "user", "content": "用一句話說明你是誰" }
+    ]
+  }'
+```
+
+如果 curl 不通，QClaw 裡也很難成功。請先檢查 API Key、模型許可權和 Base URL。
+
+1. 儲存設定或 `config.yaml`
+2. 重啟 QClaw
+3. 選擇 `gpt-5.5` 或 `claude-opus-4-7`
+4. 傳送短問題，例如 `用一句話說明你是誰`
+5. 正常返回響應即表示接入成功
+
+## 常見問題
+
+### 404 或介面地址錯誤
+
+如果填寫 Base URL，使用 `https://api.fishxcode.com/v1`。如果填寫完整 URL，使用 `https://api.fishxcode.com/v1/chat/completions`。
+
+### Claude 模型能不能用
+
+可以。前提是 FishXCode 當前支援該模型，並且 QClaw 使用 OpenAI Compatible 協議呼叫。模型名填寫 `claude-opus-4-7`。
+
+### 鑑權失敗
+
+請重新複製 API Key，確認沒有多餘空格，並檢查該 Key 未被刪除或停用。

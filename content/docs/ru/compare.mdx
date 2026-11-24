@@ -1,0 +1,93 @@
+---
+title: Сравнение инструментов
+---
+
+Выберите подходящий AI-инструмент для программирования. Ниже приведено подробное сравнение всех инструментов, которые поддерживает платформа FishXCode.
+
+## Основные сведения
+
+| Инструмент | Разработчик | Тип |
+| - | - | - |
+| **Claude Code** | Anthropic | CLI-инструмент для терминала |
+| **OpenAI Codex** | OpenAI | CLI + расширение VSCode |
+| **RooCode** | Roo Veterinary | Расширение VSCode |
+| **Qwen Code** | Alibaba | CLI-инструмент для терминала |
+| **Droid CLI** | Factory AI | CLI-инструмент для терминала |
+| **OpenCode** | OpenCode AI | CLI-инструмент для терминала (TUI) |
+
+## Поддержка платформ
+
+| Инструмент | macOS | Windows | Linux |
+| - | :-: | :-: | :-: |
+| **Claude Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **OpenAI Codex** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **RooCode** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **Qwen Code** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **Droid CLI** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| **OpenCode** | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+
+## Интеграция с IDE
+
+| Инструмент | Терминал | VSCode | Другие IDE |
+| - | :-: | :-: | :-: |
+| **Claude Code** | :white_check_mark: | - | - |
+| **OpenAI Codex** | :white_check_mark: | :white_check_mark: | - |
+| **RooCode** | - | :white_check_mark: | - |
+| **Qwen Code** | :white_check_mark: | - | - |
+| **Droid CLI** | :white_check_mark: | - | - |
+| **OpenCode** | :white_check_mark: | - | - |
+
+## Способ настройки
+
+| Инструмент | Переменные окружения | Файлы конфигурации | Настройки в GUI |
+| - | :-: | :-: | :-: |
+| **Claude Code** | :white_check_mark: | - | - |
+| **OpenAI Codex** | :white_check_mark: | TOML + JSON | Настройки VSCode |
+| **RooCode** | - | - | :white_check_mark: |
+| **Qwen Code** | :white_check_mark: | - | - |
+| **Droid CLI** | - | JSON | Интерактивно в CLI |
+| **OpenCode** | :white_check_mark: | JSON | Интерактивно в TUI |
+
+## Совместимость с FishXCode
+
+| Инструмент | Статус поддержки | Сложность подключения | Примечание |
+| - | :-: | :-: | - |
+| **Claude Code** | :white_check_mark: Поддерживается | Просто | Достаточно задать переменные окружения |
+| **OpenAI Codex** | :white_check_mark: Поддерживается | Средне | Нужно настроить файлы TOML и JSON |
+| **RooCode** | :white_check_mark: Поддерживается | Просто | Провайдер настраивается в графическом интерфейсе |
+| **Qwen Code** | :white_check_mark: Поддерживается | Просто | Достаточно задать переменные окружения |
+| **Droid CLI** | :white_check_mark: Поддерживается | Средне | Нужно отредактировать JSON-файл конфигурации |
+| **OpenCode** | :white_check_mark: Поддерживается | Средне | Нужно отредактировать JSON-файл конфигурации |
+
+## Ключевые особенности
+
+| Инструмент | Главные преимущества |
+| - | - |
+| **Claude Code** | Сильное понимание и генерация кода, нативная работа в терминале, переключение между несколькими моделями |
+| **OpenAI Codex** | Два режима — CLI и VSCode, поддержка моделей серии GPT, зрелая экосистема |
+| **RooCode** | Полностью графическая работа в VSCode, протокол OpenAI Compatible, терминал не нужен |
+| **Qwen Code** | Опирается на модели Alibaba Tongyi, оптимизирован для кода на китайском языке, лёгкий и простой |
+| **Droid CLI** | Гибкая настройка собственных моделей, поддержка сверхбольших контекстных окон, ориентация на работу в терминале |
+| **OpenCode** | TUI-интерфейс с открытым исходным кодом, поддержка 75+ моделей, встроенный агент с двумя режимами build/plan, интеграция с GitHub Copilot |
+
+## Как выбрать
+
+<Callout type="idea" title="Предпочитаете работать в терминале">
+  Если вы привыкли делать всё в терминале, выбирайте **Claude Code** или **OpenAI Codex**. Оба обеспечивают удобную работу в командной строке: Claude Code проще всего настроить, а Codex дополнительно поддерживает VSCode.
+</Callout>
+
+<Callout type="idea" title="Предпочитаете графический интерфейс VSCode">
+  Если вам удобнее работать в VSCode, выбирайте **RooCode** или **OpenAI Codex**. RooCode полностью графический и просто настраивается, а Codex совмещает режимы терминала и редактора.
+</Callout>
+
+<Callout type="idea" title="Минимум настройки">
+  Если хотите начать как можно быстрее, выбирайте **Claude Code**, **RooCode** или **Qwen Code**. Любой из них можно настроить и начать использовать за несколько минут.
+</Callout>
+
+<Callout type="idea" title="Нужна глубокая настройка">
+  Если вам нужны гибкая настройка моделей и сверхбольшой контекст, выбирайте **Droid CLI**. Он поддерживает пользовательские параметры моделей и контекст до 1,28 млн токенов.
+</Callout>
+
+<Callout type="idea" title="Разработка на китайском языке">
+  Если ваш проект в основном на китайском языке, выбирайте **Qwen Code**. Он лучше понимает и генерирует комментарии к коду и документацию на китайском.
+</Callout>

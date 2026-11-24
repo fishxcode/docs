@@ -1,0 +1,225 @@
+---
+title: Руководство по генерации изображений с GPT-Image-2
+navTitle: Генерация изображений с GPT-Image-2
+---
+
+## Подготовка
+
+Перед началом подготовьте:
+
+1. Аккаунт FishXCode
+2. Рабочий API-токен
+3. Убедитесь, что у текущего токена есть доступ к `gpt-image-2`
+
+Где получить токен:
+
+- Консоль: [https://fishxcode.com/console/token](https://fishxcode.com/console/token)
+
+<Callout type="idea" title="Совет">
+  Если в консоли вам доступны настройки групп моделей или прав доступа, убедитесь, что текущий токен охватывает `gpt-image-2`. Если не уверены, сначала создайте для проверки новый токен с настройками по умолчанию.
+</Callout>
+
+## Визуальный инструмент с открытым исходным кодом
+
+Если не хотите сразу писать код, воспользуйтесь открытым инструментом GPT-Image-2 от FishXCode: в нём можно тестировать запросы и сразу получать изображения.
+
+- Онлайн-версия: [https://fishxcode-gpt-image-2.lovable.app/](https://fishxcode-gpt-image-2.lovable.app/)
+- Репозиторий с исходным кодом: [https://github.com/fishxcode/gpt-image-2](https://github.com/fishxcode/gpt-image-2)
+
+<Callout type="idea" title="Рекомендация">
+  Сначала проверьте в инструменте токен, промпт и параметры изображения, а затем перенесите те же параметры в свой код или рабочий процесс.
+</Callout>
+
+## Способ 1: генерация изображений через Images API
+
+Это самый прямой способ: он соответствует OpenAI-совместимому эндпоинту генерации изображений.
+
+- Адрес запроса: `https://api.fishxcode.com/v1/images/generations`
+- Название модели: `gpt-image-2`
+
+### Пример на Python
+
+```python
+import base64
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-ваш-токен-FishXCode",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+result = client.images.generate(
+    model="gpt-image-2",
+    prompt="Рыжий кот в шлеме астронавта сидит на поверхности Луны, кинематографичный свет, сверхчёткая детализация",
+    size="1024x1024"
+)
+
+image_base64 = result.data[0].b64_json
+
+with open("gpt-image-2-output.png", "wb") as f:
+    f.write(base64.b64decode(image_base64))
+```
+
+### Пример на Node.js
+
+```javascript
+import fs from "node:fs";
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "sk-ваш-токен-FishXCode",
+  baseURL: "https://api.fishxcode.com/v1",
+});
+
+const result = await client.images.generate({
+  model: "gpt-image-2",
+  prompt: "Футуристический город, парящий над морем облаков, неоновый киберпанк, сверхвысокая детализация",
+  size: "1024x1024",
+});
+
+const imageBase64 = result.data[0].b64_json;
+fs.writeFileSync("gpt-image-2-output.png", Buffer.from(imageBase64, "base64"));
+```
+
+### Пример с curl
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/images/generations \
+  --header "Authorization: Bearer sk-ваш-токен-FishXCode" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "Минималистичный продуктовый постер: белый фон, в центре парит прозрачная стеклянная клавиатура, стиль коммерческой фотосъёмки",
+    "size": "1024x1024"
+  }'
+```
+
+<Callout type="warn" title="Важно">
+  Основной результат Images API обычно приходит в поле `b64_json`, поэтому строку Base64 нужно самостоятельно декодировать в файл изображения.
+</Callout>
+
+## Способ 2: генерация изображений через Chat Completions
+
+Если ваш рабочий процесс уже построен на `/v1/chat/completions`, можно вызывать `gpt-image-2` прямо через этот диалоговый эндпоинт.
+
+- Адрес запроса: `https://api.fishxcode.com/v1/chat/completions`
+- Название модели: `gpt-image-2`
+
+### Пример на Python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-ваш-токен-FishXCode",
+    base_url="https://api.fishxcode.com/v1"
+)
+
+response = client.chat.completions.create(
+    model="gpt-image-2",
+    messages=[
+        {
+            "role": "user",
+            "content": "Нарисуй сиба-ину в солнцезащитных очках в винтажном красном кабриолете, стиль дорожного путешествия"
+        }
+    ]
+)
+
+print(response)
+```
+
+### Пример с curl
+
+```bash
+curl --request POST \
+  --url https://api.fishxcode.com/v1/chat/completions \
+  --header "Authorization: Bearer sk-ваш-токен-FishXCode" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "gpt-image-2",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Нарисуй японское кафе на закате, тёплая кинематографичная композиция"
+      }
+    ]
+  }'
+```
+
+<Callout type="idea" title="Совет">
+  Если вам нужно просто «стабильно получать изображения», используйте `/v1/images/generations`. А `/v1/chat/completions` стоит рассматривать, когда генерацию изображений нужно встроить в существующий диалоговый рабочий процесс.
+</Callout>
+
+## Основные параметры
+
+Часто используемые параметры `gpt-image-2`:
+
+| Параметр | Значение | Пример |
+| - | - | - |
+| `model` | ID модели | `gpt-image-2` |
+| `prompt` | Промпт для изображения | `сова в механическом стиле` |
+| `size` | Размер изображения | `1024x1024` |
+| `n` | Количество изображений | `1` |
+| `background` | Режим фона | `transparent` / `white` |
+| `quality` | Качество изображения | `high` / `medium` |
+
+<Callout type="warn" title="Важно">
+  Разные SDK и прокси-слои могут по-разному поддерживать параметры. Если после добавления какого-то параметра появилась ошибка, вернитесь к минимальному рабочему набору: `model + prompt + size`.
+</Callout>
+
+## GPT-Image-2 в Cherry Studio
+
+Если вы привыкли генерировать изображения прямо в Cherry Studio, настройте его так:
+
+### 1. Создайте OpenAI-совместимого провайдера
+
+Добавьте в Cherry Studio пользовательского провайдера:
+
+- API Key: ваш токен FishXCode
+- Base URL: `https://api.fishxcode.com/v1`
+
+### 2. Добавьте модель
+
+Укажите название модели:
+
+```text
+gpt-image-2
+```
+
+Если Cherry Studio позволяет задать тип модели, выберите генерацию изображений или тип, совместимый с OpenAI Images.
+
+### 3. Генерируйте изображения
+
+Создайте новый диалог или откройте раздел генерации изображений, выберите `gpt-image-2` и введите промпт, чтобы получить изображение.
+
+<Callout type="idea" title="Совет">
+  Если в Cherry Studio не отображаются изображения, сначала проверьте две вещи:
+
+  - Указан ли Base URL как `https://api.fishxcode.com/v1`
+  - Полностью ли ваша версия Cherry Studio поддерживает API изображений OpenAI
+</Callout>
+
+## Частые вопросы
+
+### Почему запрос выполнен успешно, а файла изображения нет?
+
+Многие эндпоинты возвращают `b64_json`, а не сохраняют файл на диск. Вам нужно самостоятельно декодировать Base64 и записать результат в файл `.png`.
+
+### Какой эндпоинт выбрать?
+
+- Только генерация изображений: в первую очередь `POST /v1/images/generations`
+- Генерация изображений внутри существующего чат-процесса: тогда `POST /v1/chat/completions`
+
+### Что делать, если модель не найдена или нет доступа?
+
+Проверьте по порядку:
+
+1. Название модели указано как `gpt-image-2`
+2. Токен получен в [консоли FishXCode](https://fishxcode.com/console/token)
+3. У текущего токена есть доступ к `gpt-image-2`
+4. Base URL указан как `https://api.fishxcode.com/v1`
+
+### Почему лишние параметры вызывают ошибку?
+
+Потому что разные клиенты, версии SDK и прокси-слои реализуют совместимость по-разному. Сначала добейтесь работы с минимальным набором параметров, а затем постепенно добавляйте необязательные, например `quality`, `background`, `n`.

@@ -1,0 +1,62 @@
+---
+title: FishXCode Subscription Plans (Gói đăng ký)
+description: Lối vào, phân loại và cách tính phí của các gói đăng ký FishXCode.
+navTitle: Tổng quan gói
+---
+
+Trang này liệt kê lối vào, phân loại và cách tính phí của các gói đăng ký FishXCode. Giá, tồn kho, giới hạn mua, thời hạn hiệu lực và giới hạn theo chu kỳ được áp dụng theo trang giá.
+
+Lối vào thường dùng:
+
+- [Tất cả gói đăng ký](https://fishxcode.com/pricing?currency=CNY&plan_series=all&tab=subscription-plans)
+- [Gói dòng Claude](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans)
+- [Gói dòng Codex](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans&plan_series=codex)
+- [Gói tính phí theo lượt](https://fishxcode.com/pricing?currency=CNY&plan_series=mixed&plan_sort=price_asc&tab=subscription-plans)
+- [Quy tắc tính phí trên nền tảng và giới thiệu nhóm](/vi/billing-groups)
+
+## 1. Phân loại gói
+
+| Dòng | Lối vào | Mô tả |
+| - | - | - |
+| Dòng Claude | [Dòng Claude](/vi/subscription-plans/claude) | Đăng ký tài khoản chính thức qua ClaudeMax và dịch vụ hosting Claude Code |
+| Dòng Codex | [Dòng Codex](/vi/subscription-plans/codex) | Quản lý theo hạn mức và thời hạn hiệu lực, phù hợp cho cá nhân hoặc đội nhóm dùng theo hạn mức |
+| Dòng tính phí theo lượt | [Dòng tính phí theo lượt](/vi/subscription-plans/by-number-of-times) | Cộng dồn theo số lượt yêu cầu thành công, hỗ trợ các mô hình liên quan đến Claude và Codex |
+
+## 2. Tóm tắt quy tắc
+
+- Dòng Claude là gói đăng ký tài khoản chính thức, lối vào mua xem tại [Dòng Claude](/vi/subscription-plans/claude).
+- Dòng Codex là hạn mức theo mức dùng kèm giới hạn thời hạn hiệu lực, không phải bán đơn thuần theo lượt.
+- Dòng tính phí theo lượt là gói theo lượt, giới hạn ngày, giới hạn tháng và tổng số lượt theo cấu hình của gói, dùng được cho các mô hình dòng Claude và Codex tương ứng.
+- Trong dòng tính phí theo lượt, Claude Opus 4.8 và GPT-5.5 được cộng dồn theo `2.5 × số lượt yêu cầu thành công thực tế`.
+- Nếu cần hiểu mối quan hệ giữa giá mô hình, nhóm token, hệ số và phạm vi áp dụng của gói, hãy xem [Quy tắc tính phí trên nền tảng và giới thiệu nhóm](/vi/billing-groups) trước.
+
+## 3. Quy trình mua
+
+1. Mở [trang giá](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans).
+2. Chuyển sang mục "Gói đăng ký".
+3. Lọc theo dòng: Claude, Codex hoặc gói tính phí theo lượt.
+4. Xem chi tiết gói, xác nhận giá, thời hạn hiệu lực, hạn mức, số lượt, mô hình áp dụng, quy tắc đặt lại và giới hạn mua.
+5. Sau khi thanh toán, xem trạng thái tại trang gói hoặc trang đăng ký trong bảng điều khiển.
+6. Nếu gói tạo Key riêng, hãy sao chép Base URL và Key theo hướng dẫn trên trang rồi cấu hình vào công cụ tương ứng.
+
+## 4. Lưu ý
+
+### Giá được áp dụng theo trang giá
+
+Giá gói, tồn kho, giới hạn mua, ưu đãi và trạng thái mở bán có thể thay đổi. Tài liệu chỉ mô tả quy tắc, giá cụ thể được áp dụng theo trang giá trên trang web chính thức.
+
+### Tính theo lượt không có nghĩa là mọi mô hình đều chỉ trừ 1 lượt
+
+Dòng By number of times lấy số lượt yêu cầu thành công làm cơ sở. Claude Opus 4.8 và GPT-5.5 được cộng dồn theo `2.5 × số lượt yêu cầu thành công thực tế`.
+
+### Khác biệt giữa dòng Codex và dòng By number of times
+
+Dòng Codex dựa trên hạn mức và thời hạn hiệu lực; dòng By number of times dựa trên số lượt yêu cầu, giới hạn mỗi ngày, giới hạn mỗi tháng và tổng số lượt.
+
+### Hết hạn, dùng hết hoặc chạm giới hạn
+
+Khi hết thời hạn hiệu lực, hết tổng hạn mức, hết tổng số lượt, chạm giới hạn mỗi ngày hoặc giới hạn mỗi tháng, hệ thống sẽ hạn chế việc tiếp tục sử dụng theo quy tắc của gói. Sau đó bạn có thể chờ chu kỳ đặt lại, mua gói mới hoặc chuyển sang dùng số dư.
+
+### Sự cố khi sử dụng
+
+Trước tiên xác nhận thời hạn hiệu lực của gói, giới hạn trong ngày hoặc trong tháng và phạm vi mô hình áp dụng. Sau đó xem [Giải thích nhật ký lỗi](/vi/error-logs) và [Trạng thái sức khỏe nhóm](/vi/group-health). Khi liên hệ bộ phận hậu mãi, vui lòng cung cấp mã đơn hàng, thời gian yêu cầu và ID yêu cầu.

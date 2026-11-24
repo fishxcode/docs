@@ -1,0 +1,469 @@
+---
+title: OpenClaw で FishXCode を使う
+navTitle: OpenClaw
+---
+
+<Callout type="info" title="プロジェクト概要">
+  OpenClaw は、オープンソースでセルフホスト型の個人向け AI アシスタントプラットフォームです。メッセージアプリを、自分のハードウェア上で動く AI エージェントにつなぎます。データの管理権を手放さずに自律型の AI アシスタントを使いたい開発者やパワーユーザー向けに設計されています。
+
+  - 公式サイト：[https://openclaw.ai](https://openclaw.ai)
+  - ドキュメント：[https://docs.openclaw.ai](https://docs.openclaw.ai)
+  - GitHub：[https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+</Callout>
+
+## 前提条件
+
+- OpenClaw をインストール済みであること（下記のインストールの章を参照）
+- FishXCode の API Key を取得済みであること（[コンソールで取得](https://fishxcode.com/console/token)）
+
+## 主な特長
+
+### マルチチャネル連携
+
+- **幅広いプラットフォームに対応**：Feishu（Lark）、Discord、Slack、Microsoft Teams などに対応
+- **単一のゲートウェイ**：1 つの Gateway プロセスですべてのチャネルを管理
+- **音声に対応**：macOS/iOS/Android での音声によるやり取りに対応
+- **キャンバス画面**：インタラクティブな Canvas 画面を表示可能
+
+### セルフホストとデータセキュリティ
+
+- **完全なセルフホスト**：自分のマシンやサーバー上で動作
+- **オープンソース**：MIT ライセンスで、コードは完全に公開
+- **ローカルにデータを保存**：コンテキストとスキルはローカルに保存され、クラウドにはアップロードされない
+
+### インテリジェントなエージェント機能
+
+- **常駐実行**：バックグラウンドでの常駐実行と永続的なメモリーに対応
+- **定期タスク**：cron による定期タスクに対応
+- **セッションの分離**：エージェント/ワークスペース/送信者ごとにセッションを分離
+- **マルチエージェントのルーティング**：複数エージェントの協調に対応
+- **ツール呼び出し**：ツール呼び出しとコード実行にネイティブ対応
+
+## インストール
+
+<Callout type="info" title="動作環境">
+  - FishXCode の API Key
+  - npm/git でインストールする場合は Node.js 22 以上が必要です。curl のワンライナーでは依存関係が自動で処理されます
+</Callout>
+
+```bash tab="curl（推奨）"
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+```bash tab="npm"
+npm install -g openclaw@latest
+```
+
+```bash tab="curl（git モード）"
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
+```
+
+```bash tab="手動でクローン"
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw && pnpm install && pnpm run build
+pnpm run openclaw onboard
+```
+
+インストールが完了したら、セットアップウィザードを実行します（手動でクローンする方法では、上のコマンドにすでに含まれています）。
+
+```bash
+openclaw onboard
+```
+
+## 設定
+
+### 設定ファイルの場所
+
+OpenClaw の設定ファイルは `~/.openclaw/openclaw.json` にあります。
+
+- **macOS**：`/Users/ユーザー名/.openclaw/openclaw.json`
+- **Linux**：`/home/ユーザー名/.openclaw/openclaw.json`
+- **Windows**：`C:\Users\ユーザー名\.openclaw\openclaw.json`
+
+ファイルがない場合は、先に作成してください。
+
+```bash tab="macOS / Linux"
+mkdir -p ~/.openclaw
+touch ~/.openclaw/openclaw.json
+```
+
+```powershell tab="Windows (PowerShell)"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.openclaw"
+New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
+```
+
+<Callout type="idea" title="ヒント">
+  以前に `openclaw onboard` を実行したことがある場合は、設定ファイルが自動で生成されているので、既存の内容を編集するだけで構いません。
+</Callout>
+
+### 設定ファイルの構造
+
+`openclaw.json` は、大きく 2 つの部分で構成されています。
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      // AI モデルのプロバイダーを設定
+    }
+  },
+  "agents": {
+    "defaults": {
+      // デフォルトのモデルや作業ディレクトリなどを設定
+    }
+  }
+}
+```
+
+- `models.providers` — サービスプロバイダーを定義します。アドレス、Key、モデル一覧を含みます
+- `models.mode` — `"merge"` に設定すると、カスタム設定が組み込みのデフォルト設定とマージされます。**常に指定することを強くおすすめします**
+- `agents.defaults.model.primary` — デフォルトで使うモデルです。形式は `provider名/モデルID` です
+- `api` — API プロトコルの種類です。Anthropic のモデルには `"anthropic-messages"`、OpenAI 互換のモデルには `"openai-responses"` を使います
+
+### 設定方法
+
+#### Anthropic（Claude）モデルを設定する
+
+次の内容を `openclaw.json` に書き込みます。
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-anthropic": {
+        "baseUrl": "https://api.fishxcode.com",
+        "apiKey": "sk-あなたのFishXCode-Token",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-anthropic/claude-opus-4-6"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warn" title="重要">
+  - `sk-あなたのFishXCode-Token` は、[FishXCode コンソール](https://fishxcode.com/console/token) で取得した実際のトークンに置き換えてください
+  - **Anthropic プロトコルの `baseUrl` には `/v1` を付けないでください**。SDK がパスを自動で付加します
+</Callout>
+
+#### OpenAI（GPT）モデルを設定する
+
+FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィールドを `openai-responses` に設定する必要があります。
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-openai": {
+        "baseUrl": "https://api.fishxcode.com/v1",
+        "apiKey": "sk-あなたのFishXCode-Token",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5",
+            "name": "GPT-5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-openai/gpt-5"
+      }
+    }
+  }
+}
+```
+
+<Callout type="idea" title="ヒント">
+  **OpenAI プロトコルでは `/v1` が必要です**。つまり `https://api.fishxcode.com/v1` です。これは、2 つの SDK でパスの連結ロジックが異なるためです。
+</Callout>
+
+#### Anthropic と OpenAI を同時に設定する（推奨）
+
+`models.providers` の下に 2 つの provider を並べて追加すると、両社のモデルを同時に使えます。
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-anthropic": {
+        "baseUrl": "https://api.fishxcode.com",
+        "apiKey": "sk-あなたのFishXCode-Token",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          },
+          {
+            "id": "claude-sonnet-4-5-20250929",
+            "name": "Claude Sonnet 4.5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          }
+        ]
+      },
+      "fishxcode-openai": {
+        "baseUrl": "https://api.fishxcode.com/v1",
+        "apiKey": "sk-あなたのFishXCode-Token",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5",
+            "name": "GPT-5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          },
+          {
+            "id": "gpt-5-codex",
+            "name": "GPT-5 Codex",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-anthropic/claude-opus-4-6",
+        "fallbacks": [
+          "fishxcode-anthropic/claude-sonnet-4-5-20250929",
+          "fishxcode-openai/gpt-5"
+        ]
+      }
+    }
+  }
+}
+```
+
+デフォルトのモデルを切り替えるときは、`model.primary` の値を変更するだけです。
+
+- `"fishxcode-anthropic/claude-opus-4-6"` → Claude Opus 4.6
+- `"fishxcode-anthropic/claude-sonnet-4-5-20250929"` → Claude Sonnet 4.5
+- `"fishxcode-openai/gpt-5"` → GPT-5
+- `"fishxcode-openai/gpt-5-codex"` → GPT-5 Codex
+
+### 主なフィールドの説明
+
+| フィールド | 意味 | Anthropic（Claude） | OpenAI（GPT） |
+| - | - | - | - |
+| `baseUrl` | API のプロキシアドレス | `https://api.fishxcode.com` | `https://api.fishxcode.com/v1` |
+| `apiKey` | ご自身の API Key | `sk-あなたのFishXCode-Token` | `sk-あなたのFishXCode-Token` |
+| `api` | API プロトコルの種類 | `anthropic-messages` | `openai-responses` |
+| `mode` | 設定のマージモード | `merge`（推奨） | `merge`（推奨） |
+| `models[].id` | モデル ID | `claude-opus-4-6` | `gpt-5` |
+| `model.primary` | デフォルトのモデル | `fishxcode-anthropic/claude-opus-4-6` | `fishxcode-openai/gpt-5` |
+| `reasoning` | 推論モードを有効にするか | `false`（モデルによる） | `true`（GPT-5.x が対応） |
+
+## 設定を確認する
+
+次のコマンドを実行して、設定が反映されていることを確認します。
+
+```bash
+openclaw
+```
+
+設定が正しければ、OpenClaw が正常に起動し、FishXCode のプロキシ経由でリクエストを送信します。
+
+次のコマンドでモデル一覧を確認することもできます。
+
+```bash
+openclaw models list
+```
+
+現在のモデルと認証状態を確認します。
+
+```bash
+openclaw models status
+```
+
+総合診断：
+
+```bash
+openclaw doctor
+```
+
+## サービスを起動する
+
+設定が完了したら、OpenClaw を起動します。
+
+```bash
+openclaw start
+```
+
+起動後は、設定したチャネルを通じて AI アシスタントとやり取りできます。
+
+Gateway を再起動します。
+
+```bash
+openclaw gateway restart
+```
+
+## よくある質問
+
+### 403 でブロックされる
+
+**症状**：provider を設定し、curl で API に直接リクエストすると正常に 200 が返るのに、OpenClaw から送信すると 403 Your request was blocked になる。
+
+**原因**：OpenClaw は内部で `@anthropic-ai/sdk` を使っており、リクエスト時に公式 SDK の User-Agent（例：`Anthropic/JS 0.73.0`）が付与されます。一部の CDN や WAF はこの UA をブロックします。
+
+**解決策**：provider の設定に `headers` フィールドを追加して、UA を上書きします。
+
+```json
+{
+  "fishxcode-anthropic": {
+    "baseUrl": "https://api.fishxcode.com",
+    "apiKey": "your-api-key",
+    "api": "anthropic-messages",
+    "headers": {
+      "User-Agent": "Mozilla/5.0"
+    },
+    "models": [...]
+  }
+}
+```
+
+### baseUrl に /v1 を付けない（Anthropic プロトコル）
+
+**症状**：リクエストがすぐに 404 になり、ログを見るとリクエストのパスが `/v1/v1/messages` になっている。
+
+**原因**：Anthropic SDK は baseURL の後ろに `/v1/messages` を自動で付加します。baseUrl にすでに `/v1` が含まれていると、実際のリクエストのパスが二重になります。
+
+**解決策**：Anthropic プロトコルの baseUrl はドメインまでにして、`/v1` を付けないでください。
+
+```json
+{
+  "baseUrl": "https://api.fishxcode.com"
+}
+```
+
+<Callout type="idea" title="ヒント">
+  OpenAI プロトコルでは `/v1` が必要です。つまり `https://api.fishxcode.com/v1` です。これは、2 つの SDK でパスの連結ロジックが異なるためです。
+</Callout>
+
+### api フィールドに指定できる値は 3 つだけ
+
+**症状**：起動時に Config invalid と表示される、またはモデル一覧に設定した provider が表示されない。
+
+**原因**：OpenClaw の `api` フィールドは厳密に検証されており、次の 3 つの値しか受け付けません。
+
+| 値 | 対応する形式 |
+| - | - |
+| `anthropic-messages` | Anthropic Messages API |
+| `openai-completions` | OpenAI Chat Completions |
+| `openai-responses` | OpenAI Responses API |
+
+`openai-chat`、`openai`、`anthropic` などと書くと、いずれもエラーになります。
+
+**解決策**：FishXCode 経由で使う場合、Claude モデルには `anthropic-messages`、GPT モデルには `openai-responses` を指定します。
+
+### openai-completions で空の応答が返る（GPT モデルには使わない）
+
+**症状**：api を `openai-completions` に設定すると、リクエストは成功する（ログは `isError=false`）が、UI には空のメッセージが表示される。
+
+**原因**：OpenClaw は内部で Anthropic 形式でメッセージストリームを処理しており、`openai-completions` が返す OpenAI 形式のレスポンスを正しく変換できない場合があります。
+
+**解決策**：FishXCode 経由で GPT モデルを呼び出す場合は、`openai-completions` ではなく `openai-responses` を使ってください。
+
+### 設定したのに反映されない
+
+**症状**：`openclaw.json` を変更したのに、OpenClaw が古い設定のまま動作する。
+
+**原因**：OpenClaw には、同期が必要な provider の設定が 2 か所あります。
+
+```
+~/.openclaw/openclaw.json              → models.providers
+~/.openclaw/agents/main/agent/models.json → providers
+```
+
+片方だけを変更すると、反映されないことがあります。
+
+**解決策**：変更後、次のコマンドで確認します。
+
+```bash
+openclaw models status
+```
+
+または、OpenClaw Gateway を再起動します。
+
+```bash
+openclaw gateway restart
+```
+
+### JSON の形式エラー
+
+JSON の形式でよくある間違い：
+
+- **余分なカンマ**：最後の要素の後ろにカンマを付けることはできません
+- **カンマの不足**：並んでいる 2 つのキーと値のペアは、カンマで区切る必要があります
+- **引用符の問題**：JSON で使えるのは半角のダブルクォート `"` だけです。全角の引用符やシングルクォートは使えません
+- **括弧の不一致**：すべての `{` に対応する `}`、すべての `[` に対応する `]` が必要です
+
+次のコマンドで形式を検証できます。
+
+```bash
+python3 -m json.tool ~/.openclaw/openclaw.json
+```
+
+### reasoning フィールドとは？
+
+`reasoning` は、モデルの推論/思考モードを有効にするかどうかを制御します。`true` にすると、モデルは内部で推論してから応答を出力しますが、消費するトークンが増えます。
+
+GPT-5.x Codex シリーズは通常 `reasoning` に対応しています。Claude モデルはバージョンによって異なります。わからない場合は `false` に設定してください。
+
+### openai-completions と openai-responses の違いは？
+
+- **openai-responses** — OpenAI Responses API（`/v1/responses`）に対応します。**FishXCode 経由で GPT モデルを使う場合はこちらを使います。**
+- **openai-completions** — OpenAI Chat Completions API（`/v1/chat/completions`）に対応する汎用的な互換形式ですが、FishXCode の GPT モデルでは空の応答になることがあるため、**おすすめしません**。
+
+### トラブルシューティング用コマンド一覧
+
+| コマンド | 用途 |
+| - | - |
+| `openclaw models status` | 現在のモデルと認証状態を確認 |
+| `openclaw models list` | 設定済みのモデル一覧を確認 |
+| `openclaw doctor` | 総合診断 |
+| `openclaw gateway restart` | Gateway を再起動 |
+
+<Callout type="idea" title="トラブルシューティングの基本方針">
+  まず curl で FishXCode の API 自体が正常に動作していることを確認し、次に OpenClaw から送信されるリクエストのどこが違うか（UA、パス、形式）を確認します。
+</Callout>

@@ -1,0 +1,150 @@
+---
+title: QClaw で FishXCode を使う
+navTitle: QClaw
+---
+
+> 初めてご利用の方は、先に [アカウント登録とチャージ](/ja/account) を完了し、[FishXCode コンソール](https://fishxcode.com/console/token) で API Key を取得してください。
+
+## 1. 接続パラメーターを確認する
+
+QClaw でサードパーティの LLM API に接続する場合は、OpenAI Compatible プロトコルを優先して使います。Claude モデルを呼び出す場合でも、OpenAI 互換インターフェースのパラメーターを入力します。
+
+| 設定項目 | 値 |
+| - | - |
+| Protocol | `OpenAI Compatible` |
+| Base URL | `https://api.fishxcode.com/v1` |
+| API Key | FishXCode コンソールで作成した API Key |
+| OpenAI モデル | `gpt-5.5` |
+| Claude モデル | `claude-opus-4-7` |
+
+QClaw で完全な Endpoint の入力を求められた場合は、次を使います。
+
+```text
+https://api.fishxcode.com/v1/chat/completions
+```
+
+## 2. 設定画面で設定する
+
+お使いの QClaw のバージョンにグラフィカルな画面がある場合は、次のように入力します。
+
+```text
+Provider: OpenAI Compatible
+Base URL: https://api.fishxcode.com/v1
+API Key: sk-あなたのFishXCode-Token
+Model: claude-opus-4-7
+```
+
+GPT モデルを使う場合は、`Model` を次のように変更します。
+
+```text
+gpt-5.5
+```
+
+## 3. config.yaml で設定する
+
+お使いの QClaw のバージョンが `~/.qclaw/config.yaml` を使う場合は、次のテンプレートを参考にしてください。
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-あなたのFishXCode-Token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+OpenAI のモデルに切り替えるときは、`model` を置き換えるだけです。
+
+```yaml
+llm:
+  provider: openai-compatible
+  base_url: https://api.fishxcode.com/v1
+  api_key: sk-あなたのFishXCode-Token
+  model: gpt-5.5
+  max_tokens: 8192
+```
+
+クライアントで完全なインターフェースのアドレスが必要な場合は、次のように変更できます。
+
+```yaml
+llm:
+  provider: openai-compatible
+  url: https://api.fishxcode.com/v1/chat/completions
+  api_key: sk-あなたのFishXCode-Token
+  model: claude-opus-4-7
+  max_tokens: 8192
+```
+
+<Callout type="warn" title="重要">
+  QClaw のバージョンによって、フィールド名が `base_url`、`baseURL`、`apiBase`、`url` などと異なる場合があります。保存しても反映されない場合は、まずフィールド名と、QClaw が実際に読み込んでいる設定ファイルのパスを確認してください。
+</Callout>
+
+## 4. 環境変数で設定する
+
+QClaw が環境変数に対応している場合は、次の方法も使えます。
+
+```bash tab="Linux/macOS"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_API_KEY="sk-あなたのFishXCode-Token"
+export QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_API_KEY="sk-あなたのFishXCode-Token"
+$env:QCLAW_MODEL="claude-opus-4-7"
+qclaw
+```
+
+GPT モデルを使う場合は、`QCLAW_MODEL` を `gpt-5.5` に変更します。
+
+## 5. 設定を確認する
+
+まず OpenAI 互換インターフェースで、API Key が有効かどうかを確認します。
+
+```bash tab="Claude モデル"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-あなたのFishXCode-Token" \
+  -d '{
+    "model": "claude-opus-4-7",
+    "messages": [
+      { "role": "user", "content": "あなたが誰なのかを一文で説明してください" }
+    ]
+  }'
+```
+
+```bash tab="GPT モデル"
+curl https://api.fishxcode.com/v1/chat/completions \
+  -H "content-type: application/json" \
+  -H "authorization: Bearer sk-あなたのFishXCode-Token" \
+  -d '{
+    "model": "gpt-5.5",
+    "messages": [
+      { "role": "user", "content": "あなたが誰なのかを一文で説明してください" }
+    ]
+  }'
+```
+
+curl で通らない場合は、QClaw でもまず成功しません。先に API Key、モデルの権限、Base URL を確認してください。
+
+1. 設定または `config.yaml` を保存します
+2. QClaw を再起動します
+3. `gpt-5.5` または `claude-opus-4-7` を選択します
+4. 短い質問を送信します（例：`あなたが誰なのかを一文で説明してください`）
+5. 正常に応答が返れば接続成功です
+
+## よくある質問
+
+### 404 またはインターフェースのアドレスが間違っている
+
+Base URL を入力する場合は `https://api.fishxcode.com/v1` を使います。完全な URL を入力する場合は `https://api.fishxcode.com/v1/chat/completions` を使います。
+
+### Claude モデルは使えますか
+
+使えます。ただし、FishXCode が現在そのモデルに対応しており、QClaw が OpenAI Compatible プロトコルで呼び出すことが前提です。モデル名には `claude-opus-4-7` を入力します。
+
+### 認証に失敗する
+
+API Key をコピーし直して余分なスペースがないか確認し、その Key が削除または無効化されていないかも確認してください。

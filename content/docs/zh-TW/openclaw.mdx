@@ -1,0 +1,469 @@
+---
+title: 在 OpenClaw 中使用 FishXCode
+navTitle: OpenClaw
+---
+
+<Callout type="info" title="專案簡介">
+  OpenClaw 是一個開源、自託管的個人 AI 助手平臺，將訊息應用連線到執行在你自己硬體上的 AI Agent。專為希望在不放棄資料控制權的前提下使用自主 AI 助手的開發者和高階使用者設計。
+
+  - 官方網站：[https://openclaw.ai](https://openclaw.ai)
+  - 文件：[https://docs.openclaw.ai](https://docs.openclaw.ai)
+  - GitHub：[https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+</Callout>
+
+## 前提條件
+
+- 已安裝 OpenClaw（參考下方安裝章節）
+- 已獲取 FishXCode API Key（[控制台獲取](https://fishxcode.com/console/token)）
+
+## 核心特性
+
+### 多渠道整合
+
+- **全平臺覆蓋**：支援飛書（Lark）、Discord、Slack、Microsoft Teams 等
+- **單一閘道器**：通過單個 Gateway 程序管理所有渠道
+- **語音支援**：支援 macOS/iOS/Android 語音互動
+- **畫布介面**：可渲染互動式 Canvas 介面
+
+### 自託管與資料安全
+
+- **完全自託管**：執行在你自己的機器或伺服器上
+- **開源**：MIT 協議，程式碼完全透明
+- **本地資料儲存**：上下文與技能儲存在本地，不上傳雲端
+
+### 智慧 Agent 能力
+
+- **持久執行**：支援後臺持久執行與持久記憶
+- **定時任務**：支援 cron 定時任務
+- **會話隔離**：按 Agent/工作區/傳送者隔離會話
+- **多 Agent 路由**：支援多 Agent 協作
+- **工具呼叫**：原生支援工具呼叫與程式碼執行
+
+## 安裝
+
+<Callout type="info" title="環境要求">
+  - FishXCode API Key
+  - 使用 npm/git 方式需要 Node.js 22+；curl 一鍵安裝會自動處理依賴
+</Callout>
+
+```bash tab="curl（推薦）"
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+```bash tab="npm"
+npm install -g openclaw@latest
+```
+
+```bash tab="curl（git 模式）"
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
+```
+
+```bash tab="手動克隆"
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw && pnpm install && pnpm run build
+pnpm run openclaw onboard
+```
+
+安裝完成後執行引導向導（手動克隆方式已在上方命令中包含）：
+
+```bash
+openclaw onboard
+```
+
+## 配置
+
+### 配置檔案位置
+
+OpenClaw 配置檔案位於 `~/.openclaw/openclaw.json`：
+
+- **macOS**: `/Users/你的使用者名稱/.openclaw/openclaw.json`
+- **Linux**: `/home/你的使用者名稱/.openclaw/openclaw.json`
+- **Windows**: `C:\Users\你的使用者名稱\.openclaw\openclaw.json`
+
+如果檔案不存在，請先建立：
+
+```bash tab="macOS / Linux"
+mkdir -p ~/.openclaw
+touch ~/.openclaw/openclaw.json
+```
+
+```powershell tab="Windows (PowerShell)"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.openclaw"
+New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
+```
+
+<Callout type="idea" title="提示">
+  如果你之前執行過 `openclaw onboard`，配置檔案會自動生成，只需在已有內容上修改即可。
+</Callout>
+
+### 配置檔案結構
+
+`openclaw.json` 的整體結構分為兩大部分：
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      // 配置 AI 模型提供商
+    }
+  },
+  "agents": {
+    "defaults": {
+      // 配置預設模型、工作目錄等
+    }
+  }
+}
+```
+
+- `models.providers` — 定義服務提供商，包括地址、Key、模型列表
+- `models.mode` — 設為 `"merge"` 時，自定義配置會與內建預設配置合併，**強烈建議始終加上**
+- `agents.defaults.model.primary` — 預設使用的模型，格式為 `provider名稱/模型ID`
+- `api` — API 協議型別，Anthropic 模型用 `"anthropic-messages"`，OpenAI 相容模型用 `"openai-responses"`
+
+### 配置方式
+
+#### 配置 Anthropic（Claude）模型
+
+將以下內容寫入 `openclaw.json`：
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-anthropic": {
+        "baseUrl": "https://api.fishxcode.com",
+        "apiKey": "sk-你的FishXCode-Token",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-anthropic/claude-opus-4-6"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warn" title="重要">
+  - 請將 `sk-你的FishXCode-Token` 替換為你在 [FishXCode 控制台](https://fishxcode.com/console/token) 獲取的實際 Token
+  - **Anthropic 協議的 `baseUrl` 不要帶 `/v1`**，SDK 會自動拼接路徑
+</Callout>
+
+#### 配置 OpenAI（GPT）模型
+
+通過 FishXCode 呼叫 OpenAI 模型時，`api` 欄位須設為 `openai-responses`：
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-openai": {
+        "baseUrl": "https://api.fishxcode.com/v1",
+        "apiKey": "sk-你的FishXCode-Token",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5",
+            "name": "GPT-5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-openai/gpt-5"
+      }
+    }
+  }
+}
+```
+
+<Callout type="idea" title="提示">
+  **OpenAI 協議需要帶 `/v1`**，即 `https://api.fishxcode.com/v1`。這是因為兩種 SDK 的路徑拼接邏輯不同。
+</Callout>
+
+#### 同時配置 Anthropic + OpenAI（推薦）
+
+在 `models.providers` 下並列新增兩個 provider，即可同時使用兩家模型：
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "fishxcode-anthropic": {
+        "baseUrl": "https://api.fishxcode.com",
+        "apiKey": "sk-你的FishXCode-Token",
+        "api": "anthropic-messages",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          },
+          {
+            "id": "claude-sonnet-4-5-20250929",
+            "name": "Claude Sonnet 4.5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 8192,
+            "reasoning": false
+          }
+        ]
+      },
+      "fishxcode-openai": {
+        "baseUrl": "https://api.fishxcode.com/v1",
+        "apiKey": "sk-你的FishXCode-Token",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "gpt-5",
+            "name": "GPT-5",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          },
+          {
+            "id": "gpt-5-codex",
+            "name": "GPT-5 Codex",
+            "input": ["text", "image"],
+            "contextWindow": 200000,
+            "maxTokens": 16384,
+            "reasoning": true
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "fishxcode-anthropic/claude-opus-4-6",
+        "fallbacks": [
+          "fishxcode-anthropic/claude-sonnet-4-5-20250929",
+          "fishxcode-openai/gpt-5"
+        ]
+      }
+    }
+  }
+}
+```
+
+切換預設模型時，只需修改 `model.primary` 的值：
+
+- `"fishxcode-anthropic/claude-opus-4-6"` → Claude Opus 4.6
+- `"fishxcode-anthropic/claude-sonnet-4-5-20250929"` → Claude Sonnet 4.5
+- `"fishxcode-openai/gpt-5"` → GPT-5
+- `"fishxcode-openai/gpt-5-codex"` → GPT-5 Codex
+
+### 關鍵欄位說明
+
+| 欄位 | 含義 | Anthropic（Claude） | OpenAI（GPT） |
+| - | - | - | - |
+| `baseUrl` | API 代理地址 | `https://api.fishxcode.com` | `https://api.fishxcode.com/v1` |
+| `apiKey` | 你的 API Key | `sk-你的FishXCode-Token` | `sk-你的FishXCode-Token` |
+| `api` | API 協議型別 | `anthropic-messages` | `openai-responses` |
+| `mode` | 配置合併模式 | `merge`（推薦） | `merge`（推薦） |
+| `models[].id` | 模型 ID | `claude-opus-4-6` | `gpt-5` |
+| `model.primary` | 預設模型 | `fishxcode-anthropic/claude-opus-4-6` | `fishxcode-openai/gpt-5` |
+| `reasoning` | 是否啟用推理模式 | `false`（根據模型而定） | `true`（GPT-5.x 支援） |
+
+## 驗證配置
+
+執行以下命令確認配置生效：
+
+```bash
+openclaw
+```
+
+如果配置正確，OpenClaw 將正常啟動並通過 FishXCode 代理傳送請求。
+
+也可以用以下命令檢查模型列表：
+
+```bash
+openclaw models list
+```
+
+檢視當前模型和認證狀態：
+
+```bash
+openclaw models status
+```
+
+綜合診斷：
+
+```bash
+openclaw doctor
+```
+
+## 啟動服務
+
+配置完成後，啟動 OpenClaw：
+
+```bash
+openclaw start
+```
+
+啟動後即可通過配置的渠道與 AI 助手互動。
+
+重啟 Gateway：
+
+```bash
+openclaw gateway restart
+```
+
+## 常見問題
+
+### 403 被攔截
+
+**症狀**：provider 配好了，curl 直接請求 API 正常返回 200，但 OpenClaw 發出去就是 403 Your request was blocked。
+
+**原因**：OpenClaw 底層使用 `@anthropic-ai/sdk`，發請求時會攜帶官方 SDK 的 User-Agent（如 `Anthropic/JS 0.73.0`），部分 CDN 或 WAF 會攔截這類 UA。
+
+**解決**：在 provider 配置裡新增 `headers` 欄位覆蓋 UA：
+
+```json
+{
+  "fishxcode-anthropic": {
+    "baseUrl": "https://api.fishxcode.com",
+    "apiKey": "your-api-key",
+    "api": "anthropic-messages",
+    "headers": {
+      "User-Agent": "Mozilla/5.0"
+    },
+    "models": [...]
+  }
+}
+```
+
+### baseUrl 不要帶 /v1（Anthropic 協議）
+
+**症狀**：請求直接 404，日誌中看到請求路徑變成了 `/v1/v1/messages`。
+
+**原因**：Anthropic SDK 會在 baseURL 後面自動拼接 `/v1/messages`。如果你的 baseUrl 已經寫了 `/v1`，實際請求會變成雙重路徑。
+
+**解決**：Anthropic 協議的 baseUrl 只寫到域名，不帶 `/v1`：
+
+```json
+{
+  "baseUrl": "https://api.fishxcode.com"
+}
+```
+
+<Callout type="idea" title="提示">
+  OpenAI 協議需要帶 `/v1`，即 `https://api.fishxcode.com/v1`。這是因為兩種 SDK 的路徑拼接邏輯不同。
+</Callout>
+
+### api 欄位只認三個值
+
+**症狀**：啟動報 Config invalid，或者模型列表裡看不到你配的 provider。
+
+**原因**：OpenClaw 的 `api` 欄位做了嚴格校驗，只接受以下三個值：
+
+| 值 | 對應格式 |
+| - | - |
+| `anthropic-messages` | Anthropic Messages API |
+| `openai-completions` | OpenAI Chat Completions |
+| `openai-responses` | OpenAI Responses API |
+
+寫成 `openai-chat`、`openai`、`anthropic` 等都會報錯。
+
+**解決**：通過 FishXCode 使用時，Claude 模型填 `anthropic-messages`，GPT 模型填 `openai-responses`。
+
+### openai-completions 收到空回覆（不要用於 GPT 模型）
+
+**症狀**：api 設為 `openai-completions`，請求成功（日誌 `isError=false`），但 UI 上顯示空訊息。
+
+**原因**：OpenClaw 內部使用 Anthropic 格式處理訊息流，`openai-completions` 返回的 OpenAI 格式響應在某些情況下無法正確對映。
+
+**解決**：通過 FishXCode 呼叫 GPT 模型時，請使用 `openai-responses` 而非 `openai-completions`。
+
+### 配置了但沒生效
+
+**症狀**：修改了 `openclaw.json` 但 OpenClaw 仍使用舊配置。
+
+**原因**：OpenClaw 有兩處 provider 配置需要同步：
+
+```
+~/.openclaw/openclaw.json              → models.providers
+~/.openclaw/agents/main/agent/models.json → providers
+```
+
+只改一個可能會出現不生效的情況。
+
+**解決**：修改後用以下命令確認：
+
+```bash
+openclaw models status
+```
+
+或者重啟 OpenClaw Gateway：
+
+```bash
+openclaw gateway restart
+```
+
+### JSON 格式報錯
+
+JSON 格式常見錯誤：
+
+- **多餘逗號**：最後一個元素後面不能有逗號
+- **缺少逗號**：兩個並列的鍵值對之間必須用逗號分隔
+- **引號問題**：JSON 只接受英文雙引號 `"`，不能用中文引號或單引號
+- **括號不匹配**：每個 `{` 都要有對應的 `}`，每個 `[` 都要有對應的 `]`
+
+可以使用以下命令驗證格式：
+
+```bash
+python3 -m json.tool ~/.openclaw/openclaw.json
+```
+
+### reasoning 欄位是什麼？
+
+`reasoning` 控制是否啟用模型的推理/思考模式。設為 `true` 時，模型會先進行內部推理再輸出回覆，但會消耗更多 token。
+
+GPT-5.x Codex 系列通常支援 `reasoning`，Claude 模型根據版本而定。如果不確定，設為 `false`。
+
+### openai-completions 和 openai-responses 有什麼區別？
+
+- **openai-responses** — 對應 OpenAI Responses API（`/v1/responses`）。**通過 FishXCode 使用 GPT 模型時用這個。**
+- **openai-completions** — 對應 OpenAI Chat Completions API（`/v1/chat/completions`），通用相容格式，但在 FishXCode 的 GPT 模型上可能導致空回覆，**不推薦使用**。
+
+### 排查工具速查
+
+| 命令 | 用途 |
+| - | - |
+| `openclaw models status` | 檢視當前模型和認證狀態 |
+| `openclaw models list` | 檢視已配置的模型列表 |
+| `openclaw doctor` | 綜合診斷 |
+| `openclaw gateway restart` | 重啟 Gateway |
+
+<Callout type="idea" title="排查核心思路">
+  先用 curl 確認 FishXCode API 本身正常，再檢查 OpenClaw 端發出的請求有什麼不同（UA、路徑、格式）。
+</Callout>

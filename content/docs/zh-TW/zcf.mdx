@@ -1,0 +1,189 @@
+---
+title: ZCF 教程
+navTitle: ZCF 快速接入
+---
+
+[ZCF](https://github.com/UfoMiao/zcf) 是 Claude  Code / Codex 的零配置增強工具，`zcf init` 一條命令完成 API 配置、工作流匯入、MCP 服務整合等全部初始化。
+
+> 沒有帳號？先完成 [帳戶註冊](/zh-TW/account) 獲取 API Key。
+
+---
+
+## 常用引數
+
+### API 配置
+
+| 引數 | 說明 |
+| - | - |
+| `-p custom` | 使用自定義提供商（FishXCode 即用此方式） |
+| `-t api_key` | 等價寫法，與 `-p custom` 效果相同 |
+| `-k "sk-xxx"` | API Key |
+| `-u "https://api.fishxcode.com/"` | FishXCode Base URL |
+| `-M "claude-sonnet-4-5-20250929"` | 指定主模型 |
+| `-H "claude-haiku-4-5-20251001"` | 指定快速模型 |
+
+指定模型示例：
+
+```bash
+npx zcf i -s -t api_key -k "sk-xxx" -u "https://api.fishxcode.com/" \
+  -M "claude-sonnet-4-5-20250929" \
+  -H "claude-haiku-4-5-20251001"
+```
+
+### 工作流
+
+| 引數 | 說明 |
+| - | - |
+| `-w all` | 安裝全部工作流 |
+| `-w sixStepsWorkflow,gitWorkflow` | 安裝指定工作流 |
+| `-w skip` | 跳過 |
+
+可選工作流：`commonTools` / `sixStepsWorkflow` / `featPlanUx` / `gitWorkflow` / `bmadWorkflow`
+
+### MCP 服務
+
+| 引數 | 說明 |
+| - | - |
+| `-m all` | 安裝全部 MCP |
+| `-m context7,open-websearch` | 安裝指定服務 |
+| `-m skip` | 跳過 |
+
+可選服務：`context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` / `Playwright` / `exa` / `serena`
+
+### 其他
+
+| 引數 | 說明 |
+| - | - |
+| `-g zh-CN` | 統一設定介面、模板、AI 輸出為中文 |
+| `-s` | 非互動模式，跳過所有提示 |
+| `-r backup` | 配置處理策略（`backup` / `merge` / `docs-only` / `skip`） |
+| `-x false` | 不安裝 CCometixLine 狀態列 |
+
+---
+
+## 工作流命令
+
+安裝完成後，在 Claude  Code 中可以使用以下斜槓命令：
+
+| 命令 | 說明 |
+| - | - |
+| `/zcf:workflow` | 六階段開發工作流（研究→構思→計劃→執行→最佳化→評審） |
+| `/zcf:feat` | 新功能開發，含規劃與 UI/UX 設計 |
+| `/zcf:git-commit` | 自動生成 Git commit 資訊 |
+| `/zcf:git-rollback` | 互動式回滾歷史版本 |
+| `/zcf:git-worktree` | 管理 Git Worktree |
+| `/zcf:bmad-init` | 企業級敏捷開發流程 |
+
+---
+
+## MCP 服務說明
+
+MCP（Model Context Protocol）允許 Claude  Code 訪問外部工具與服務，ZCF 內建以下服務：
+
+| 服務 | 說明 | 是否需要 Key |
+| - | - | - |
+| `context7` | 查詢庫的最新文件與程式碼示例 | 否 |
+| `open-websearch` | DuckDuckGo/Bing/Brave 網頁搜尋 | 否 |
+| `spec-workflow` | 需求→設計→實現的結構化工作流 | 否 |
+| `mcp-deepwiki` | GitHub 倉庫文件查詢 | 否 |
+| `Playwright` | 瀏覽器自動化操作 | 否 |
+| `exa` | Exa AI 語義搜尋 | 是（`EXA_API_KEY`） |
+| `serena` | IDE 助手，語義程式碼檢索 | 否 |
+
+### 各服務說明
+
+**context7** — 查詢任意庫的最新文件和程式碼示例，避免 AI 使用過期 API：
+
+```
+請查詢 React useState hook 的最新文件和示例
+```
+
+**open-websearch** — 支援 DuckDuckGo、Bing、Brave 多引擎搜尋，無需 API Key：
+
+```
+搜尋最新的 TypeScript 5.0 新特性
+```
+
+**spec-workflow** — 從需求到實現的結構化工作流，含需求分析、技術設計、任務拆解：
+
+```bash
+npx -y @pimzino/spec-workflow-mcp@latest --dashboard  # 啟動視覺化儀表板
+```
+
+**mcp-deepwiki** — 查詢 GitHub 倉庫文件：
+
+```
+查詢 vuejs/core 倉庫的 Composition API 文件
+```
+
+**Playwright** — 控制瀏覽器截圖、表單填寫、模擬互動，首次執行需下載瀏覽器。
+
+**exa** — Exa AI 語義網路搜尋，需要配置 API Key：
+
+```bash
+export EXA_API_KEY="your-api-key"  # 從 dashboard.exa.ai 獲取
+```
+
+**serena** — 語義程式碼檢索與智慧編輯建議，類 IDE 能力。
+
+### 配置檔案位置
+
+ZCF 安裝後，MCP 配置寫入 `~/.claude/settings.json`：
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context-labs/context7"]
+    },
+    "open-websearch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-open-websearch"]
+    }
+  }
+}
+```
+
+<Callout type="idea" title="Windows 使用者">
+  ZCF 會自動修正 Windows 路徑格式，如遇 MCP 連線問題執行 `npx zcf` → 選擇 `4. 配置 MCP` 自動修復。
+</Callout>
+
+---
+
+## 更新
+
+```bash
+npx zcf update
+# 或
+npx zcf u -s -g zh-CN
+```
+
+更新只同步工作流模板和提示詞，**不會修改 API 配置**。
+
+---
+
+## 常見問題
+
+### 已有 settings.json 會被覆蓋嗎？
+
+ZCF 在修改前自動備份至 `~/.claude/backup/YYYY-MM-DD_HH-mm-ss/`，並提供四種處理策略：
+
+```bash
+npx zcf i -s -r backup    # 備份並覆蓋（預設）
+npx zcf i -s -r merge     # 智慧合併
+npx zcf i -s -r docs-only # 僅更新工作流文件
+npx zcf i -s -r skip      # 跳過不修改
+```
+
+### 如何切回手動配置？
+
+ZCF 生成的 `settings.json` 是標準格式，可直接編輯。詳見 [Claude  Code 配置](/zh-TW/start)。
+
+### Node.js 版本要求
+
+ZCF 需要 Node.js >= 18：
+
+```bash
+node --version
+```

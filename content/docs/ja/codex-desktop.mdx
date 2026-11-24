@@ -1,0 +1,193 @@
+---
+title: Codex Desktop で FishXCode を使う
+description: Codex Desktop を FishXCode に接続するためのインストール、設定の共用、ログイン、よく使う機能について説明します。
+navTitle: Codex Desktop
+---
+
+> 初めてご利用の方は、先に [アカウント登録とチャージ](/ja/account) を完了し、[FishXCode コンソール](https://fishxcode.com/console/token) で利用可能なトークンを作成してください。
+
+## 対象範囲
+
+この記事では、OpenAI Codex のデスクトップアプリを FishXCode に接続する方法を説明します。コマンドライン版 Codex のインストールと設定は [Codex で FishXCode を使う](/ja/codex) を参照してください。デスクトップアプリでも同じ `~/.codex` の設定を共用し、二重管理を避けることをおすすめします。
+
+<Callout type="idea" title="おすすめの手順">
+  先にローカルの Codex 設定を書いてから、Codex Desktop を開いてログインします。こうすると、デスクトップアプリと CLI で同じ FishXCode の API アドレス、モデル、トークンを使えます。
+</Callout>
+
+## 1. Codex Desktop をインストールする
+
+Windows の場合は、Microsoft Store で `Codex` を検索し、公式アプリを見つけてインストールします。
+
+![Microsoft Store から Codex Desktop をインストール](/img/start/codex-desktop/microsoft-store-codex.png)
+
+インストールが完了しても、すぐにはログインせず、先に次のステップのローカル設定を済ませることをおすすめします。Microsoft Store にアクセスできない場合は、OpenAI の公式配布チャネルか、信頼できるソフトウェア配布元からインストーラーをダウンロードしてください。
+
+## 2. Codex の設定を共用して FishXCode に接続する
+
+Codex Desktop と Codex CLI では、同じユーザー設定を使うことをおすすめします。設定内容は [Codex コマンドライン版のチュートリアル](/ja/codex) と同じです。
+
+### 1. 設定ディレクトリを作成する
+
+```bash tab="macOS/Linux"
+mkdir -p ~/.codex
+```
+
+```powershell tab="Windows PowerShell"
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+```
+
+### 2. `config.toml` を書き込む
+
+`~/.codex/config.toml` に次の内容を書き込みます。
+
+```toml
+model_provider = "fishxcode"
+model = "gpt-5.4"
+review_model = "gpt-5.4"
+model_reasoning_effort = "medium"
+model_reasoning_summary = "detailed"
+disable_response_storage = true
+preferred_auth_method = "apikey"
+model_verbosity = "high"
+
+[model_providers.fishxcode]
+name = "OpenAI using Chat Completions"
+base_url = "https://api.fishxcode.com/v1"
+wire_api = "responses"
+requires_openai_auth = true
+
+[features]
+skills = true
+image_generation = false
+
+```
+
+<Callout type="info">
+  `model` と `review_model` は、ご利用のプランやグループに応じて、ほかの利用可能なモデルに変更できます。迷った場合は、まず `gpt-5.4` を使ってください。
+</Callout>
+
+### 3. `auth.json` を書き込む
+
+`~/.codex/auth.json` に FishXCode のトークンを書き込みます。
+
+```json
+{
+  "OPENAI_API_KEY": "your_api_key_here"
+}
+```
+
+<Callout type="warn" title="注意">
+  `auth.json` にはシークレットキーが含まれます。Git にコミットしたり、他人に送ったりしないでください。
+</Callout>
+
+## 3. Codex Desktop にログインする
+
+Codex Desktop を開いてログイン画面が表示されたら、**別の方法でログイン**を選択します。
+
+![「別の方法でログイン」を選択](/img/start/codex-desktop/codex-login-options.png)
+
+続いて、FishXCode コンソールでコピーしたトークンを貼り付けます。`~/.codex/auth.json` を書き込んだのにログインを求められる場合も、ここで同じトークンをもう一度貼り付けてください。
+
+トークンをコピーするには、FishXCode コンソールのトークンページで対象のトークンを探し、キーの横にあるコピーボタンをクリックします。チュートリアルの画像から不要なキー情報が漏れないよう、スクリーンショットではコピーメニューを表示していません。
+
+ログイン後、プロジェクトディレクトリに移動し、Codex に操作させるフォルダーを選択すれば使い始められます。
+
+## 4. オプション：CC Switch で複数のチャネルを管理する
+
+複数の Codex チャネルを同時に運用している場合は、CC Switch ですばやく切り替えられます。FishXCode だけを使う場合は、通常 `~/.codex/config.toml` 1 つで十分です。
+
+FishXCode コンソールのトークンページで対象のトークンを見つけ、`codex_sub_june` グループの行にある**インポート**をクリックします。
+
+![FishXCode コンソールで Codex グループのインポートをクリック](/img/start/codex-desktop/cc-switch-import-channel.png)
+
+CC Switch のインポートダイアログで `Codex` アプリを選択したら、主な項目は次の値のままにしておくことをおすすめします。
+
+| 項目 | FishXCode の推奨値 |
+| - | - |
+| API エンドポイント | `https://api.fishxcode.com/v1` |
+| API Key | FishXCode のトークン |
+| メインモデル | `gpt-5.4` またはご利用のプランで使えるモデル |
+
+メインモデルを `gpt-5.4` に切り替えたら**テスト**をクリックし、「テスト合格 / モデルの接続テストに成功しました」と表示されてからインポートします。
+
+![CC Switch のインポートダイアログで gpt-5.4 をテスト](/img/start/codex-desktop/cc-switch-select-model.png)
+
+ブラウザーから CC Switch が起動したら、API エンドポイント、モデル、メモの内容を確認し、問題がなければ**インポート**をクリックします。
+
+![FishXCode の Codex 設定のインポートを確認](/img/start/codex-desktop/cc-switch-import-success.png)
+
+設定が完了したら、FishXCode に対応するチャネルに切り替わっていることを確認してから、Codex Desktop を開き直してください。
+
+## 5. よく使う機能
+
+### モデル、推論の強さ、権限
+
+Codex Desktop の入力欄の近くには、通常、モデル、推論の強さ、権限モード、作業ディレクトリが表示されます。
+
+![Codex Desktop の入力欄のオプション](/img/start/codex-desktop/codex-dialog-options.png)
+
+普段の使い方としては、次の設定をおすすめします。
+
+- モデル：FishXCode で利用可能なモデルを選択します（例：`gpt-5.4`）
+- 推論の強さ：通常のタスクでは中程度にし、複雑なタスクのときだけ上げます
+- 権限モード：頻繁にコードを変更する場合はフルアクセスモードを使えます。慣れていないプロジェクトでは、まず手動での確認を残しておきます
+- 作業ディレクトリ：分析や変更の対象となるプロジェクトのディレクトリを選択します
+
+### `/` と `@`
+
+入力欄では、よく使う 2 つのショートカットを利用できます。
+
+| 記号 | 用途 |
+| - | - |
+| `/` | コマンドまたは Skill の一覧を開く |
+| `@` | 現在のプロジェクト内のファイルやディレクトリを参照する |
+
+記号を入力してもメニューが表示されない場合は、`/` や `@` の前にスペースがあること、入力欄のフォーカスが Codex Desktop 内にあることを確認してください。
+
+### 計画モード
+
+複雑なタスクでは、まず Plan Mode を使うことをおすすめします。Codex が先にタスクを分解して確認の質問を行い、確定してから実行します。
+
+![計画モードに入る](/img/start/codex-desktop/codex-plan-mode.png)
+
+Codex から確認の質問があったら、実際の要件に合わせて方向性を選択します。
+
+![確認の質問に答える](/img/start/codex-desktop/codex-clarify-question.png)
+
+計画を確定してから Codex に実行させ、実行中は変更範囲を確認します。
+
+![計画を実行して進捗を確認](/img/start/codex-desktop/codex-execute-plan.png)
+
+## 6. よくある質問
+
+### ログイン後もリクエストが FishXCode を経由しない場合は？
+
+次の順に確認してください。
+
+1. `~/.codex/config.toml` が存在するか
+2. `model_provider` が `fishxcode` になっているか
+3. `base_url` が `https://api.fishxcode.com/v1` になっているか
+4. `~/.codex/auth.json` に FishXCode のトークンが書き込まれているか
+5. 設定を変更した後、Codex Desktop を完全に終了してから開き直したか
+
+### 401 や 403 エラーが出る場合は？
+
+まず、トークンが欠けずにコピーされているか、有効になっているか、残高が足りているか、現在のモデルがご利用のプランやグループで使えるかを確認してください。
+
+### 表示されるモデルが想定と違う場合は？
+
+まず `config.toml` の `model` を確認し、次に Codex Desktop 内のモデルセレクターを確認してください。CC Switch を使っている場合は、現在 FishXCode のチャネルに切り替わっているかも確認してください。
+
+### CC Switch が未設定というメッセージが表示される場合は？
+
+CC Switch を使っていて次のようなメッセージが表示された場合は、現在のチャネルが正しく切り替わっていません。
+
+![CC Switch の設定が完了していないときのメッセージ](/img/start/codex-desktop/cc-switch-not-configured.png)
+
+対処方法：
+
+1. タスクトレイのプロセスも含め、Codex Desktop を完全に終了します
+2. CC Switch を開き、FishXCode のチャネルに切り替わっていることを確認します
+3. Codex Desktop を開き直します
+
+CC Switch を使っていない場合は、「2. Codex の設定を共用して FishXCode に接続する」に戻り、`~/.codex/config.toml` と `~/.codex/auth.json` を直接確認してください。

@@ -1,0 +1,189 @@
+---
+title: ZCF チュートリアル
+navTitle: ZCF クイックセットアップ
+---
+
+[ZCF](https://github.com/UfoMiao/zcf) は Claude  Code / Codex 向けのゼロコンフィグ拡張ツールです。`zcf init` コマンド 1 つで、API の設定、ワークフローのインポート、MCP サービスの統合など、初期化をすべて完了できます。
+
+> アカウントをお持ちでない方は、先に [アカウント登録](/ja/account) を完了して API Key を取得してください。
+
+---
+
+## よく使うパラメーター
+
+### API の設定
+
+| パラメーター | 説明 |
+| - | - |
+| `-p custom` | カスタムプロバイダーを使用（FishXCode はこの方式を使います） |
+| `-t api_key` | 同等の書き方で、`-p custom` と同じ効果です |
+| `-k "sk-xxx"` | API Key |
+| `-u "https://api.fishxcode.com/"` | FishXCode の Base URL |
+| `-M "claude-sonnet-4-5-20250929"` | メインモデルを指定 |
+| `-H "claude-haiku-4-5-20251001"` | 高速モデルを指定 |
+
+モデルを指定する例：
+
+```bash
+npx zcf i -s -t api_key -k "sk-xxx" -u "https://api.fishxcode.com/" \
+  -M "claude-sonnet-4-5-20250929" \
+  -H "claude-haiku-4-5-20251001"
+```
+
+### ワークフロー
+
+| パラメーター | 説明 |
+| - | - |
+| `-w all` | すべてのワークフローをインストール |
+| `-w sixStepsWorkflow,gitWorkflow` | 指定したワークフローをインストール |
+| `-w skip` | スキップ |
+
+選択できるワークフロー：`commonTools` / `sixStepsWorkflow` / `featPlanUx` / `gitWorkflow` / `bmadWorkflow`
+
+### MCP サービス
+
+| パラメーター | 説明 |
+| - | - |
+| `-m all` | すべての MCP をインストール |
+| `-m context7,open-websearch` | 指定したサービスをインストール |
+| `-m skip` | スキップ |
+
+選択できるサービス：`context7` / `open-websearch` / `spec-workflow` / `mcp-deepwiki` / `Playwright` / `exa` / `serena`
+
+### その他
+
+| パラメーター | 説明 |
+| - | - |
+| `-g en` | インターフェース、テンプレート、AI 出力の言語をまとめて英語に設定 |
+| `-s` | 非対話モード。すべてのプロンプトをスキップ |
+| `-r backup` | 設定の処理方法（`backup` / `merge` / `docs-only` / `skip`） |
+| `-x false` | CCometixLine ステータスバーをインストールしない |
+
+---
+
+## ワークフローコマンド
+
+インストール後、Claude  Code で次のスラッシュコマンドを使えます。
+
+| コマンド | 説明 |
+| - | - |
+| `/zcf:workflow` | 6 段階の開発ワークフロー（調査→構想→計画→実行→最適化→レビュー） |
+| `/zcf:feat` | 新機能の開発。計画と UI/UX デザインを含む |
+| `/zcf:git-commit` | Git のコミットメッセージを自動生成 |
+| `/zcf:git-rollback` | 過去のバージョンへ対話形式でロールバック |
+| `/zcf:git-worktree` | Git Worktree を管理 |
+| `/zcf:bmad-init` | エンタープライズ向けのアジャイル開発プロセス |
+
+---
+
+## MCP サービスの説明
+
+MCP（Model Context Protocol）を使うと、Claude  Code から外部のツールやサービスにアクセスできます。ZCF には次のサービスが組み込まれています。
+
+| サービス | 説明 | Key の要否 |
+| - | - | - |
+| `context7` | ライブラリの最新ドキュメントとコード例を検索 | 不要 |
+| `open-websearch` | DuckDuckGo/Bing/Brave での Web 検索 | 不要 |
+| `spec-workflow` | 要件→設計→実装の構造化ワークフロー | 不要 |
+| `mcp-deepwiki` | GitHub リポジトリのドキュメントを検索 | 不要 |
+| `Playwright` | ブラウザー操作の自動化 | 不要 |
+| `exa` | Exa AI のセマンティック検索 | 必要（`EXA_API_KEY`） |
+| `serena` | IDE アシスタント、セマンティックなコード検索 | 不要 |
+
+### 各サービスの説明
+
+**context7** — 任意のライブラリの最新ドキュメントとコード例を検索し、AI が古い API を使うのを防ぎます。
+
+```
+React の useState フックの最新ドキュメントと使用例を調べてください
+```
+
+**open-websearch** — DuckDuckGo、Bing、Brave の複数の検索エンジンに対応しており、API Key は不要です。
+
+```
+TypeScript 5.0 の最新の新機能を検索してください
+```
+
+**spec-workflow** — 要件から実装までの構造化ワークフローで、要件分析、技術設計、タスク分解を含みます。
+
+```bash
+npx -y @pimzino/spec-workflow-mcp@latest --dashboard  # 可視化ダッシュボードを起動
+```
+
+**mcp-deepwiki** — GitHub リポジトリのドキュメントを検索します。
+
+```
+vuejs/core リポジトリの Composition API のドキュメントを調べてください
+```
+
+**Playwright** — ブラウザーを操作して、スクリーンショットの撮影、フォームの入力、操作のシミュレーションを行います。初回実行時はブラウザーのダウンロードが必要です。
+
+**exa** — Exa AI によるセマンティックな Web 検索です。API Key の設定が必要です。
+
+```bash
+export EXA_API_KEY="your-api-key"  # dashboard.exa.ai で取得
+```
+
+**serena** — セマンティックなコード検索とインテリジェントな編集提案を行う、IDE に近い機能です。
+
+### 設定ファイルの場所
+
+ZCF をインストールすると、MCP の設定は `~/.claude/settings.json` に書き込まれます。
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context-labs/context7"]
+    },
+    "open-websearch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-open-websearch"]
+    }
+  }
+}
+```
+
+<Callout type="idea" title="Windows をお使いの方へ">
+  ZCF は Windows のパス形式を自動で修正します。MCP の接続に問題がある場合は、`npx zcf` を実行 → `4. Configure MCP` を選択すると自動で修復されます。
+</Callout>
+
+---
+
+## アップデート
+
+```bash
+npx zcf update
+# または
+npx zcf u -s -g en
+```
+
+アップデートで同期されるのはワークフローのテンプレートとプロンプトだけで、**API の設定は変更されません**。
+
+---
+
+## よくある質問
+
+### 既存の settings.json は上書きされますか？
+
+ZCF は変更前に `~/.claude/backup/YYYY-MM-DD_HH-mm-ss/` へ自動でバックアップし、4 種類の処理方法を用意しています。
+
+```bash
+npx zcf i -s -r backup    # バックアップしてから上書き（デフォルト）
+npx zcf i -s -r merge     # スマートマージ
+npx zcf i -s -r docs-only # ワークフローのドキュメントのみ更新
+npx zcf i -s -r skip      # スキップして変更しない
+```
+
+### 手動の設定に戻すには？
+
+ZCF が生成する `settings.json` は標準的な形式なので、そのまま編集できます。詳しくは [Claude  Code の設定](/ja/start) をご覧ください。
+
+### Node.js のバージョン要件
+
+ZCF には Node.js 18 以上が必要です。
+
+```bash
+node --version
+```

@@ -1,0 +1,60 @@
+---
+title: Qwen Code で FishXCode を使う
+navTitle: Qwen Code
+---
+
+## Qwen Code をインストールする
+
+```bash tab="pnpm"
+pnpm install -g @qwen-code/qwen-code
+```
+
+```bash tab="npm"
+npm install -g @qwen-code/qwen-code
+```
+
+```bash tab="yarn"
+yarn global add @qwen-code/qwen-code
+```
+
+```bash tab="bunx"
+bunx --global @qwen-code/qwen-code
+```
+
+## 環境変数を設定する
+
+```bash tab="Linux/macOS"
+export OPENAI_API_KEY="sk-xxx"
+export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+export OPENAI_MODEL="gpt-5"
+```
+
+```powershell tab="Windows PowerShell"
+$env:OPENAI_API_KEY="sk-xxx"
+$env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+$env:OPENAI_MODEL="gpt-5"
+```
+
+```cmd tab="Windows CMD"
+set OPENAI_API_KEY="sk-xxx"
+set OPENAI_BASE_URL="https://api.fishxcode.com/v1"
+set OPENAI_MODEL="gpt-5"
+```
+
+<Callout type="warn" title="重要">
+  `sk-xxx` は、[FishXCode コンソール](https://fishxcode.com/console/token) で取得した実際のトークンに置き換えてください。
+</Callout>
+
+## すぐに起動する
+
+```bash
+cd my-project
+qwen
+```
+
+## 設定を永続化する
+
+毎回手動で設定しなくて済むよう、環境変数をシェルの設定ファイルに追加します。
+
+- **Linux/macOS**：`~/.bashrc` または `~/.zshrc` に追加します
+- **Windows PowerShell**：`$PROFILE` に追加します

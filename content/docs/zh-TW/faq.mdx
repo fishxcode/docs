@@ -1,0 +1,171 @@
+---
+title: 常見問題
+---
+
+## 通用
+
+### FishXCode 是什麼？
+
+FishXCode 是一個 AI Coding 中轉站，支援 Claude、Codex 模型在多種平臺使用。
+
+### 支援哪些工具？
+
+目前支援以下工具：
+
+- **Claude Code** — Anthropic 官方 CLI
+- **OpenAI Codex** — OpenAI 官方程式設計助手
+- **RooCode** — VS Code AI 程式設計外掛
+- **Qwen Code** — 阿里通義千問程式設計工具
+- **Droid CLI** — 輕量級 AI 程式設計 CLI
+- **OpenCode** — 開源 AI 程式設計終端工具
+
+### 資料隱私如何保障？
+
+FishXCode 僅作為 API 中轉服務，不儲存你的程式碼和對話內容。所有請求直接轉發至對應的模型提供商。
+
+<Callout type="idea" title="建議">
+  敏感專案建議在使用前閱讀各模型提供商的隱私政策。
+</Callout>
+
+## 帳戶與 Token
+
+### 如何註冊？
+
+訪問 [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW)，按提示完成註冊即可。
+
+### 如何獲取 API Token？
+
+註冊後登入控制台，前往 [Token 管理頁](https://fishxcode.com/console/token) 建立新的 Token。
+
+### Token 有效期多長？
+
+Token 在手動刪除或重新生成前持續有效。建議定期輪換以確保安全。
+
+### 用量額度是多少？
+
+FishXCode 為每個使用者提供用量額度，具體數量根據平臺資源動態調整。請關注控制台中的用量資訊。
+
+<Callout type="warn" title="注意">
+  額度用盡後請求會被拒絕，請合理規劃用量。
+</Callout>
+
+## 工具配置
+
+### 環境變數設定後不生效怎麼辦？
+
+檢查以下常見原因：
+
+1. **未重啟終端** — 修改 `.bashrc` / `.zshrc` 後需要執行 `source ~/.bashrc` 或新開終端
+2. **變數名拼寫錯誤** — 注意區分大小寫，如 `ANTHROPIC_BASE_URL` 不能寫成 `Anthropic_Base_Url`
+3. **多餘的引號或空格** — `export KEY="value"` 中 value 前後不要有多餘空格
+
+<Accordions type="single">
+  <Accordion title="快速排查命令">
+    ```bash
+    # 檢查變數是否已設定
+    echo $ANTHROPIC_BASE_URL
+    echo $ANTHROPIC_AUTH_TOKEN
+
+    # 如果為空，說明變數未生效
+    ```
+  </Accordion>
+</Accordions>
+
+### 配置檔案路徑在哪裡？
+
+| 工具 | 配置檔案路徑 |
+| - | - |
+| Claude Code | 環境變數方式配置 |
+| Codex | `~/.codex/config.toml` 和 `~/.codex/auth.json` |
+| RooCode | VS Code 設定 JSON |
+| Qwen Code | 環境變數方式配置 |
+
+### 連線不上 FishXCode 服務怎麼辦？
+
+1. 確認 `BASE_URL` 設定為 `https://api.fishxcode.com/`（注意末尾的 `/`）
+2. 檢查網路是否能訪問 `fishxcode.com`
+3. 如果在公司網路中，確認代理設定是否正確
+
+## 模型選擇
+
+### 如何選擇合適的模型？
+
+根據使用場景選擇：
+
+| 場景 | 推薦模型 | 理由 |
+| - | - | - |
+| 日常程式設計 | `claude-sonnet-4-5-20250929` | 能力與速度均衡 |
+| 快速補全 | `claude-3-5-haiku-20241022` | 響應速度快 |
+| 複雜架構 | `claude-sonnet-4-5-20250514` | 推理能力強 |
+
+### 不同模型之間有什麼差異？
+
+- **Sonnet 系列**：能力全面，適合大多數程式設計任務
+- **Haiku 系列**：輕量快速，適合簡單補全和格式化任務
+- 具體的模型能力差異請參考各提供商的官方文件
+
+### 如何切換模型？
+
+通過環境變數 `ANTHROPIC_MODEL` 指定：
+
+```bash
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+```
+
+## 故障排除
+
+### 提示認證失敗（Auth Error）
+
+<Callout type="warn" title="常見原因">
+  - Token 輸入有誤（多餘空格或不完整）
+  - Token 已被刪除或重新生成
+  - `API_KEY` 和 `AUTH_TOKEN` 未同時設定
+</Callout>
+
+解決方法：前往 [控制台](https://fishxcode.com/console/token) 確認 Token 狀態，重新複製貼上。
+
+### 如何檢視和理解錯誤日誌？
+
+進入 [控制台 → 使用日誌](https://fishxcode.com/console/log)，將日誌型別切換為 **錯誤日誌**，可按時間、模型、Token、分組、請求 ID、錯誤訊息和狀態碼篩選。
+
+<Callout type="idea" title="排查建議">
+  - 優先複製介面響應或日誌中的 `request_id`，在使用日誌中精確搜尋同一次請求
+  - 用“錯誤訊息”搜尋 `content` 中的關鍵詞，例如 `Invalid token`、`Upstream request failed`
+  - 用“狀態碼”快速聚合問題型別，例如 `400`、`401`、`403`、`413`、`429`、`500`、`502`、`503`、`504`
+  - 如果同一分組集中出現相同錯誤，優先按分組判斷是配置問題、用量問題還是上游可用性問題
+</Callout>
+
+完整欄位說明、狀態碼分類和常見錯誤表請檢視 [錯誤日誌說明](/zh-TW/error-logs)。
+
+### 分組健康狀態怎麼看？
+
+分組健康狀態用於判斷問題是個別請求異常，還是某個套餐、模型或上游分組集中異常。優先看 `success_rate`、`error_count` 和 `error_reasons`，再結合單條日誌中的 `request_id` 定位具體請求。
+
+完整狀態頁、欄位說明和排查流程請檢視 [分組健康狀態](/zh-TW/group-health)。
+
+### 請求超時（Timeout）
+
+可能原因：
+
+1. 網路延遲過高
+2. 請求的上下文過長，模型處理時間較久
+3. 當前服務負載較高
+
+建議：減小輸入上下文，或稍後重試。
+
+### 觸發頻率或額度限制（Rate Limit）
+
+收到 `429` 狀態碼通常表示請求過於頻繁，也可能表示上游帳號日額度已用盡，或當前模型憑證正在冷卻。
+
+<Callout type="idea" title="應對方法">
+  - 降低請求頻率，間隔幾秒後重試
+  - 避免在指令碼中無間隔迴圈呼叫 API
+  - 檢查是否有其他程序在同時使用同一 Token
+  - 如果日誌包含 `Max 10/min` 或 `Max 5/min`，按提示把併發和每分鐘請求數降到閾值以下
+  - 如果日誌包含 `daily limit exceeded`，等待每日額度重置，或切換其他可用模型/分組
+  - 如果日誌包含 `cooling down`，不要立即連續重試，等待冷卻結束或臨時切換模型
+</Callout>
+
+### 返回模型不可用（Model Not Available）
+
+檢查指定的模型名稱是否正確，參考 [快速開始](/zh-TW/start) 中的推薦模型列表。部分模型可能尚未在 FishXCode 上線。

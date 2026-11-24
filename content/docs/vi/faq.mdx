@@ -1,0 +1,171 @@
+---
+title: Câu hỏi thường gặp
+---
+
+## Chung
+
+### FishXCode là gì?
+
+FishXCode là một trạm trung chuyển AI Coding, hỗ trợ dùng các mô hình Claude, Codex trên nhiều nền tảng.
+
+### Hỗ trợ những công cụ nào?
+
+Hiện hỗ trợ các công cụ sau:
+
+- **Claude Code** — CLI chính thức của Anthropic
+- **OpenAI Codex** — Trợ lý lập trình chính thức của OpenAI
+- **RooCode** — Tiện ích lập trình AI cho VS Code
+- **Qwen Code** — Công cụ lập trình dựa trên Tongyi Qianwen của Alibaba
+- **Droid CLI** — CLI lập trình AI gọn nhẹ
+- **OpenCode** — Công cụ lập trình AI mã nguồn mở trên terminal
+
+### Quyền riêng tư dữ liệu được bảo đảm như thế nào?
+
+FishXCode chỉ đóng vai trò dịch vụ trung chuyển API, không lưu trữ mã nguồn và nội dung hội thoại của bạn. Mọi yêu cầu đều được chuyển tiếp trực tiếp đến nhà cung cấp mô hình tương ứng.
+
+<Callout type="idea" title="Gợi ý">
+  Với các dự án nhạy cảm, bạn nên đọc chính sách quyền riêng tư của từng nhà cung cấp mô hình trước khi sử dụng.
+</Callout>
+
+## Tài khoản và token
+
+### Làm thế nào để đăng ký?
+
+Truy cập [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW) và làm theo hướng dẫn để hoàn tất đăng ký.
+
+### Làm thế nào để lấy API token?
+
+Sau khi đăng ký, hãy đăng nhập bảng điều khiển và vào [trang quản lý token](https://fishxcode.com/console/token) để tạo token mới.
+
+### Token có hiệu lực trong bao lâu?
+
+Token có hiệu lực liên tục cho đến khi bị xóa thủ công hoặc được tạo lại. Bạn nên thay token định kỳ để đảm bảo an toàn.
+
+### Hạn mức sử dụng là bao nhiêu?
+
+FishXCode cung cấp hạn mức sử dụng cho mỗi người dùng, số lượng cụ thể được điều chỉnh linh hoạt theo tài nguyên của nền tảng. Hãy theo dõi thông tin sử dụng trong bảng điều khiển.
+
+<Callout type="warn" title="Lưu ý">
+  Khi hết hạn mức, yêu cầu sẽ bị từ chối; hãy lên kế hoạch sử dụng hợp lý.
+</Callout>
+
+## Cấu hình công cụ
+
+### Đã thiết lập biến môi trường nhưng không có hiệu lực thì làm sao?
+
+Kiểm tra các nguyên nhân thường gặp sau:
+
+1. **Chưa khởi động lại terminal** — Sau khi sửa `.bashrc` / `.zshrc`, cần chạy `source ~/.bashrc` hoặc mở terminal mới
+2. **Viết sai tên biến** — Lưu ý phân biệt chữ hoa và chữ thường, ví dụ `ANTHROPIC_BASE_URL` không được viết thành `Anthropic_Base_Url`
+3. **Thừa dấu ngoặc kép hoặc khoảng trắng** — Trong `export KEY="value"`, không để khoảng trắng thừa trước và sau value
+
+<Accordions type="single">
+  <Accordion title="Lệnh kiểm tra nhanh">
+    ```bash
+    # Kiểm tra biến đã được thiết lập chưa
+    echo $ANTHROPIC_BASE_URL
+    echo $ANTHROPIC_AUTH_TOKEN
+
+    # Nếu kết quả trống, nghĩa là biến chưa có hiệu lực
+    ```
+  </Accordion>
+</Accordions>
+
+### Tệp cấu hình nằm ở đâu?
+
+| Công cụ | Đường dẫn tệp cấu hình |
+| - | - |
+| Claude Code | Cấu hình bằng biến môi trường |
+| Codex | `~/.codex/config.toml` và `~/.codex/auth.json` |
+| RooCode | JSON cài đặt của VS Code |
+| Qwen Code | Cấu hình bằng biến môi trường |
+
+### Không kết nối được dịch vụ FishXCode thì làm sao?
+
+1. Xác nhận `BASE_URL` được đặt là `https://api.fishxcode.com/` (chú ý dấu `/` ở cuối)
+2. Kiểm tra mạng có truy cập được `fishxcode.com` không
+3. Nếu đang dùng mạng công ty, hãy xác nhận cấu hình proxy đã đúng chưa
+
+## Chọn mô hình
+
+### Làm thế nào để chọn mô hình phù hợp?
+
+Chọn theo tình huống sử dụng:
+
+| Tình huống | Mô hình đề xuất | Lý do |
+| - | - | - |
+| Lập trình hằng ngày | `claude-sonnet-4-5-20250929` | Cân bằng giữa năng lực và tốc độ |
+| Hoàn thành mã nhanh | `claude-3-5-haiku-20241022` | Tốc độ phản hồi nhanh |
+| Kiến trúc phức tạp | `claude-sonnet-4-5-20250514` | Năng lực suy luận mạnh |
+
+### Các mô hình khác nhau ở điểm nào?
+
+- **Dòng Sonnet**: Năng lực toàn diện, phù hợp với hầu hết tác vụ lập trình
+- **Dòng Haiku**: Gọn nhẹ và nhanh, phù hợp với tác vụ hoàn thành mã đơn giản và định dạng mã
+- Về khác biệt năng lực cụ thể giữa các mô hình, hãy tham khảo tài liệu chính thức của từng nhà cung cấp
+
+### Làm thế nào để chuyển đổi mô hình?
+
+Chỉ định qua biến môi trường `ANTHROPIC_MODEL`:
+
+```bash
+export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+```
+
+## Khắc phục sự cố
+
+### Báo lỗi xác thực thất bại (Auth Error)
+
+<Callout type="warn" title="Nguyên nhân thường gặp">
+  - Nhập token bị sai (thừa khoảng trắng hoặc không đầy đủ)
+  - Token đã bị xóa hoặc được tạo lại
+  - Chưa thiết lập đồng thời cả `API_KEY` và `AUTH_TOKEN`
+</Callout>
+
+Cách khắc phục: vào [bảng điều khiển](https://fishxcode.com/console/token) để xác nhận trạng thái token, rồi sao chép và dán lại.
+
+### Làm thế nào để xem và hiểu nhật ký lỗi?
+
+Vào [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/console/log), chuyển loại nhật ký sang **Nhật ký lỗi**, sau đó bạn có thể lọc theo thời gian, mô hình, token, nhóm, ID yêu cầu, thông báo lỗi và mã trạng thái.
+
+<Callout type="idea" title="Gợi ý khắc phục">
+  - Ưu tiên sao chép `request_id` trong phản hồi API hoặc nhật ký, rồi tìm chính xác yêu cầu đó trong nhật ký sử dụng
+  - Dùng bộ lọc “Thông báo lỗi” để tìm từ khóa trong `content`, ví dụ `Invalid token`, `Upstream request failed`
+  - Dùng bộ lọc “Mã trạng thái” để gom nhanh loại vấn đề, ví dụ `400`, `401`, `403`, `413`, `429`, `500`, `502`, `503`, `504`
+  - Nếu cùng một lỗi xuất hiện tập trung trong một nhóm, hãy ưu tiên đánh giá theo nhóm xem đó là vấn đề cấu hình, vấn đề mức sử dụng hay vấn đề về khả năng sẵn sàng của nhà cung cấp upstream
+</Callout>
+
+Để xem đầy đủ giải thích các trường, phân loại mã trạng thái và bảng lỗi thường gặp, hãy xem [Giải thích nhật ký lỗi](/vi/error-logs).
+
+### Xem trạng thái sức khỏe nhóm như thế nào?
+
+Trạng thái sức khỏe nhóm dùng để đánh giá vấn đề là bất thường của riêng một vài yêu cầu, hay là bất thường tập trung ở một gói, mô hình hoặc nhóm của nhà cung cấp upstream. Hãy ưu tiên xem `success_rate`, `error_count` và `error_reasons`, sau đó kết hợp `request_id` trong từng bản ghi nhật ký để xác định yêu cầu cụ thể.
+
+Để xem trang trạng thái đầy đủ, giải thích các trường và quy trình khắc phục sự cố, hãy xem [Trạng thái sức khỏe nhóm](/vi/group-health).
+
+### Yêu cầu hết thời gian chờ (Timeout)
+
+Nguyên nhân có thể là:
+
+1. Độ trễ mạng quá cao
+2. Ngữ cảnh của yêu cầu quá dài, mô hình cần nhiều thời gian xử lý
+3. Dịch vụ hiện đang chịu tải cao
+
+Gợi ý: giảm ngữ cảnh đầu vào hoặc thử lại sau.
+
+### Chạm giới hạn tần suất hoặc hạn mức (Rate Limit)
+
+Nhận mã trạng thái `429` thường có nghĩa là yêu cầu được gửi quá dày, cũng có thể là tài khoản của nhà cung cấp upstream đã dùng hết hạn mức ngày, hoặc thông tin xác thực của mô hình hiện tại đang trong thời gian nghỉ.
+
+<Callout type="idea" title="Cách xử lý">
+  - Giảm tần suất yêu cầu, đợi vài giây rồi thử lại
+  - Tránh gọi API liên tục trong vòng lặp không có khoảng nghỉ trong script
+  - Kiểm tra xem có tiến trình nào khác đang dùng cùng một token không
+  - Nếu nhật ký có `Max 10/min` hoặc `Max 5/min`, hãy giảm số yêu cầu đồng thời và số yêu cầu mỗi phút xuống dưới ngưỡng theo thông báo
+  - Nếu nhật ký có `daily limit exceeded`, hãy chờ hạn mức ngày được đặt lại, hoặc chuyển sang mô hình/nhóm khả dụng khác
+  - Nếu nhật ký có `cooling down`, đừng thử lại liên tục ngay lập tức, hãy chờ hết thời gian nghỉ hoặc tạm chuyển mô hình
+</Callout>
+
+### Trả về lỗi mô hình không khả dụng (Model Not Available)
+
+Kiểm tra tên mô hình đã chỉ định có đúng không và tham khảo danh sách mô hình đề xuất trong [Bắt đầu nhanh](/vi/start). Một số mô hình có thể chưa được cung cấp trên FishXCode.

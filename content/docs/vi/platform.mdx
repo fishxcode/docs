@@ -1,0 +1,103 @@
+---
+title: Điều hướng nền tảng và giới thiệu hệ thống
+description: Tổng quan kiến trúc nền tảng FishXCode, tính năng bảng điều khiển, đường dẫn các trang và bảng đối chiếu tài liệu.
+navTitle: Điều hướng nền tảng
+---
+
+> Trang này giới thiệu cấu trúc tổng thể của nền tảng FishXCode, giúp bạn nhanh chóng tìm đúng tính năng cần dùng.
+> Cần đăng ký tài khoản? Xem [Đăng ký và quản lý tài khoản](/vi/account).
+
+## 1. Tổng quan nền tảng
+
+FishXCode là nền tảng truy cập AI dành cho nhà phát triển và đội nhóm. Bạn có thể hiểu nó là một cổng truy cập thống nhất: phía trước là trang web chính thức, trang giá và tài liệu; phía sau là bảng điều khiển, token, nạp tiền, hóa đơn và lịch sử sử dụng.
+
+Nền tảng cung cấp dịch vụ trung chuyển cho các mô hình AI phổ biến; kênh và mô hình cụ thể căn cứ theo thông tin thực tế trên trang web chính thức, vui lòng xem tại [trang giá](https://fishxcode.com/pricing). Từ khi đăng ký đến tạo token, chọn gói, kết nối công cụ và xem mức tiêu hao, toàn bộ quy trình đều được thực hiện trong cùng một hệ thống.
+
+---
+
+## 2. Tổng quan các mô-đun của trang
+
+Toàn bộ hệ thống gồm 4 mô-đun chính:
+
+| Đường dẫn | Trang | Mô-đun | Mô tả |
+| - | - | - | - |
+| `/` | Trang chủ | Trang web chính thức | Giới thiệu năng lực của nền tảng, hiển thị thông báo, hướng dẫn đăng ký hoặc xem tài liệu |
+| `/pricing` | Trang giá | Trang web chính thức | Xem giá mô hình, các gói và hệ số tiêu thụ của từng nhóm |
+| `/login` | Trang đăng nhập | Trung tâm xác thực | Đăng nhập bằng tên người dùng/email, hỗ trợ đăng nhập bên thứ ba qua GitHub, LinuxDO |
+| `/register` | Trang đăng ký | Trung tâm xác thực | Lối vào đăng ký dành cho người dùng mới |
+| `/console` | Dashboard | Bảng điều khiển | Trang tổng quan: số dư, thống kê tiêu hao, số yêu cầu và thông báo hệ thống |
+| `/console/package` | Quản lý gói | Bảng điều khiển | Xem và mua gói đăng ký, xem các mô hình được bao gồm |
+| `/console/token` | Quản lý token | Bảng điều khiển | Tạo, sao chép, xóa API Key, quản lý nhóm và thời hạn hiệu lực |
+| `/console/log` | Nhật ký sử dụng | Bảng điều khiển | Xem thời gian, mô hình, mức tiêu hao và bản ghi chi tiết của từng lần gọi |
+| `/console/topup` | Nạp tiền | Bảng điều khiển | Nạp tiền vào số dư, dùng mã đổi thưởng, xem lịch sử nạp tiền |
+| `/console/invoice` | Quản lý hóa đơn | Bảng điều khiển | Gửi yêu cầu xuất hóa đơn, theo dõi tiến độ hóa đơn |
+| `/console/invite` | Giới thiệu nhận thưởng | Bảng điều khiển | Liên kết mời, quy tắc thưởng, thu nhập và bảng xếp hạng |
+| `/console/personal` | Cài đặt cá nhân | Bảng điều khiển | Thông tin tài khoản, nhóm mặc định, phần thưởng điểm danh |
+| `/status` | Trạng thái dịch vụ | Trang công khai | Kiểm tra dịch vụ của từng nhóm có hoạt động bình thường không |
+| `/contact` | Liên hệ | Trang công khai | Kênh liên hệ chính thức và hỗ trợ hậu mãi |
+| `/docs` | Trung tâm tài liệu | Trang công khai | Hướng dẫn kết nối, hướng dẫn công cụ và FAQ |
+
+---
+
+## 3. Tra cứu nhanh tính năng bảng điều khiển
+
+Sau khi đăng nhập, mọi thao tác đều tập trung trong bảng điều khiển; bạn có thể tìm nhanh theo tình huống sử dụng:
+
+### Kích hoạt và bắt đầu sử dụng
+
+1. Đăng ký tài khoản → Đăng nhập bảng điều khiển
+2. **Quản lý token**: Tạo API Key (chọn nhóm phù hợp)
+3. Cấu hình Base URL và API Key vào công cụ của bạn
+
+### Mua gói và nạp tiền
+
+- **Quản lý gói**: Xem các gói hiện có, đăng ký phương án phù hợp
+- **Trang nạp tiền**: Hỗ trợ Alipay, WeChat Pay và mã đổi thưởng
+- **Xem số dư**: Hiển thị theo thời gian thực trên trang chủ Dashboard
+
+### Quản lý sử dụng
+
+- **Nhật ký sử dụng**: Xem bản ghi của từng lần gọi, gồm mô hình, mức tiêu hao, IP và các chi tiết khác
+- **Quản lý token**: Xem trạng thái token, phạm vi nhóm, xóa các token không còn sử dụng
+- **Cài đặt cá nhân**: Đổi nhóm mặc định, xem phần thưởng điểm danh và thống kê cơ bản
+
+### Hậu mãi và hỗ trợ
+
+- **Quản lý hóa đơn**: Doanh nghiệp hoặc người dùng có nhu cầu thanh toán chi phí gửi yêu cầu xuất hóa đơn
+- **Giới thiệu nhận thưởng**: Mời người dùng mới qua liên kết mời và xem thu nhập từ phần thưởng
+- **Trạng thái dịch vụ**: Kiểm tra các nhóm có hoạt động bình thường không khi xử lý lỗi gọi API
+- **Liên hệ**: Giải quyết vấn đề khi sử dụng, trao đổi về mua hàng và hỗ trợ hậu mãi
+
+---
+
+## 4. Đối chiếu trung tâm tài liệu
+
+`/docs` chính là trung tâm tài liệu của FishXCode, nội dung bên trong tương ứng một-một với trang tài liệu hiện tại:
+
+| Trang tài liệu | Đường dẫn | Nội dung |
+| - | - | - |
+| Trang chủ | `/` | Trang chủ tài liệu và tổng quan sản phẩm |
+| Bắt đầu nhanh | `/start` | Hướng dẫn kết nối Claude Code |
+| Đăng ký tài khoản | `/account` | Đăng ký, đăng nhập, token, nạp tiền và quản lý tài khoản |
+| Kết nối nhanh ZCF | `/zcf` | Quy trình làm việc ZCF và cấu hình MCP |
+| OpenAI Codex | `/codex` | Hướng dẫn kết nối Codex |
+| Cursor | `/cursor` | Hướng dẫn kết nối Cursor |
+| RooCode | `/roocode` | Hướng dẫn kết nối RooCode |
+| Qwen Code | `/qwencode` | Hướng dẫn kết nối Qwen Code |
+| Droid CLI | `/droid` | Hướng dẫn kết nối Droid CLI |
+| OpenCode | `/opencode` | Hướng dẫn kết nối OpenCode |
+| OpenClaw | `/openclaw` | Hướng dẫn kết nối OpenClaw |
+| WorkBuddy | `/workbuddy` | Hướng dẫn kết nối WorkBuddy |
+| CodeBuddy | `/codebuddy` | Hướng dẫn kết nối CodeBuddy |
+| QClaw | `/qclaw` | Hướng dẫn kết nối QClaw |
+| So sánh công cụ | `/compare` | So sánh nhiều công cụ |
+| Mô hình được hỗ trợ | `/models` | Danh sách mô hình và phạm vi năng lực |
+| Câu hỏi thường gặp | `/faq` | Câu hỏi thường gặp và hướng dẫn khắc phục sự cố |
+| Nhật ký cập nhật | `/changelog` | Lịch sử cập nhật phiên bản |
+| Thỏa thuận người dùng | `/terms` | Thỏa thuận của nền tảng |
+| Chính sách hoàn tiền | `/refund` | Quy định về hoàn tiền nạp, quy đổi gói và bồi thường hậu mãi |
+| Chính sách quyền riêng tư | `/privacy` | Thông tin về quyền riêng tư |
+
+<Callout type="idea" title="Tóm gọn trong một câu">
+  Người dùng tìm hiểu nền tảng qua trang web chính thức, sau đó đăng ký và kích hoạt dịch vụ trong bảng điều khiển, rồi sử dụng thực tế ở các trang token, gói, nạp tiền và nhật ký; tài liệu và trang trạng thái đảm nhận việc hướng dẫn và bảo đảm dịch vụ.
+</Callout>
