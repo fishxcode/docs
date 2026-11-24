@@ -1,163 +1,145 @@
 ---
-title: Règles de facturation et aperçu des groupes
-description: Unités de facturation FishXCode, multiplicateurs, groupes de tokens, usage à la demande et lien avec les offres.
-navTitle: Facturation et groupes
+title: Règles de facturation et groupes
+description: Les deux modes de facturation de FishXCode, les 10 groupes disponibles et leurs multiplicateurs, des conseils pour choisir un groupe et les points d'attention.
+navTitle: Règles de facturation et groupes
 ---
 
-Cette page explique le lien entre facturation FishXCode, groupes de tokens et offres d'abonnement. Vérifiez d'abord la page de prix et le périmètre de l'offre, choisissez ensuite le bon groupe pour la clé, puis contrôlez l'usage réel dans les journaux et l'état de santé des groupes.
+FishXCode est une plateforme tout-en-un d'accès aux modèles d'IA et de services de comptes, qui couvre Claude, Codex, Kiro, Grok, les modèles chinois et les modèles multimodaux. Cette page explique comment fonctionne la facturation, quels groupes sont disponibles, comment en choisir un et comment vérifier votre consommation après usage.
 
-<Callout type="idea" title="Périmètre actuel">
-  La page de tarification actuelle contient **49 modèles et 14 groupes sélectionnables**. Les modèles, prix, groupes et disponibilités peuvent changer; la [page de tarification](https://fishxcode.com/pricing?currency=CNY) et la console font foi.
+<Callout type="idea" title="Les informations en temps réel du site font foi">
+  Les multiplicateurs des groupes, la disponibilité des modèles et l'état des ressources évoluent au gré des ajustements des ressources amont. Les informations en temps réel de la [page Tarifs](https://fishxcode.com/pricing) et de la console font foi.
 </Callout>
 
-## Correspondance des captures
+## 1. Deux modes de facturation
 
-| Capture | Ce qu'elle explique |
-| - | - |
-| Liste des offres | Champs de carte qui influencent la facturation |
-| Droits d'une offre au nombre de requêtes | Limite quotidienne, total, reset, modèles pris en charge |
-| Fenêtre d'achat | Points à vérifier avant paiement |
-| Création de token | Comment un groupe est lié à une clé API |
-| Token basé sur une offre | Comment répartir un quota d'offre dans une équipe |
-| Liste des tokens | Groupe, multiplicateur, modèles et expiration |
-| État de santé des groupes | Coût, cache et périmètre d'incident après usage |
-
-## 1. Trois entrées de facturation
-
-| Entrée | À lire | Usage |
+| Mode | Mode de déduction | Usage conseillé |
 | - | - | - |
-| Usage à la demande | Prix modèle, input/output/cache, groupe du token | Appels sur solde, tests, modèles mixtes |
-| Offres | Validité, quota total, limites jour/mois, groupe applicable | Budget d'équipe et usage Codex / Claude durable |
-| Groupes de tokens | Modèles accessibles, pool, multiplicateur | Création de clé, séparation projet, attribution des coûts |
+| Solde à l'usage | Prix du modèle multiplié par le multiplicateur du groupe du token, déduit du solde du compte | Appels quotidiens, usage de plusieurs modèles, tests ponctuels |
+| Forfait mensuel du pool Codex Pro | Appels avec un token créé dans le groupe `codex-sub-june`, déduits du crédit du forfait selon la consommation réelle de tokens | Programmation Codex intensive et développement d'agents |
 
-À lire avec [Offres d'abonnement](/fr/subscription-plans) : cette page explique prix, multiplicateurs et groupes; la page des offres explique quota acheté, validité, nombre de requêtes et limites.
+Les prix, le crédit et le mode d'emploi du forfait mensuel sont présentés dans [Abonnements](/fr/subscription-plans).
 
-## 2. Page de prix : commencer par les cartes d'offres
+## 2. Groupes disponibles
 
-![Exemple de liste d'offres](/img/plans/subscription-plans.png)
+Le groupe détermine quels modèles une clé API peut appeler, quel pool de ressources elle utilise et à quel multiplicateur elle est facturée. Voici les 10 groupes actuellement disponibles :
 
-| Champ | Signification | Lecture |
+### Série Codex
+
+| Groupe | Multiplicateur | Description |
 | - | - | - |
-| Prix actuel | Prix d'achat et validité | `¥320.00 / 1 mois` |
-| Coût unitaire | Prix divisé par nombre total | Comparer les offres similaires |
-| Limite de l'offre | Quota ou nombre total | `15000 requêtes` indique la limite totale |
-| Limite quotidienne | Usage maximum par jour | `500/jour` bloque généralement jusqu'au reset |
-| Reset | Moment de remise à zéro | Par exemple 08:00 chaque jour |
-| Périmètre | Groupe, modèles, fournisseurs | Exemple : `sub_plan_claude_mini_plus` |
-| Conversion | Modèles qui comptent plus | Claude Opus 4.8 / GPT-5.5 peuvent compter `2.5 × 1 requête` |
+| `codex-plus` | 0.2x | Pool de comptes Codex Plus officiels à plein tarif ; multiplicateur bas, stable et fiable, adapté aux appels quotidiens |
+| `codex-pro` | 0.4x | Ressources Codex Pro officielles à plein tarif ; performances stables, adaptées aux équipes et aux entreprises |
+| `codex-team` | 0.15x | Pool partagé de comptes Codex Team officiels ; ressources partagées à multiplicateur bas |
+| `codex-officially` | 2x | Ressources de clés API OpenAI officielles ; connexion officielle directe, stable et fiable |
 
-<Callout type="idea" title="Exemple">
-  Avec `500/jour, 15000/mois` et une règle `2.5 × 1 requête`, les modèles normaux comptent souvent 1 requête. Claude Opus 4.8 ou GPT-5.5 comptent 2.5; environ 200 appels réussis peuvent donc atteindre une limite quotidienne de 500.
+### Série Claude
+
+| Groupe | Multiplicateur | Description |
+| - | - | - |
+| `claude` | 1.5x | Pool de comptes Claude Max 20 officiels à plein tarif ; performances complètes, connexion directe stable |
+| `claudemax` | 2.6x | Pool de plusieurs milliers de comptes Claude Max 20 ; accès rapide, gestion en lecture seule, traçabilité manuelle |
+
+### Autres modèles
+
+| Groupe | Multiplicateur | Description |
+| - | - | - |
+| `kiro-svip` | 0.2x | Pool de comptes Kiro officiels à plein tarif ; accès stable, multiplicateur bas |
+| `china` | 0.8x | Sélection des principaux modèles chinois, connexion directe aux API officielles |
+| `grok` | 0.5x | Groupe dédié aux modèles xAI Grok, pour découvrir les capacités de Grok à multiplicateur bas |
+| `fishxlab` | 2x | Modèles multimodaux audio, vidéo, image et autres, pour la génération et la création |
+
+Consultez le site pour les autres modèles et le détail de leur prise en charge.
+
+<Callout type="info" title="Groupe réservé au forfait mensuel">
+  `codex-sub-june` est le groupe dédié au forfait mensuel du pool Codex Pro. Son multiplicateur est fixé à 1x, il ne déduit que le crédit du forfait mensuel et ne fait pas partie des groupes à l'usage ci-dessus.
 </Callout>
 
-## 3. Droits d'offre : limites, reset et modèles
+## 3. Calcul du multiplicateur
 
-![Exemple de droits d'offre](/img/plans/by-number-of-times.png)
-
-Vérifiez la limite quotidienne, la limite totale, le reset, la période d'achat, les fournisseurs, les modèles disponibles et le groupe d'upgrade appliqué après achat.
-
-## 4. Achat : vérifier avant paiement
-
-![Exemple d'achat d'offre](/img/plans/buyplan.png)
-
-Vérifiez prix, validité, quota ou nombre de requêtes, type d'offre, moyen de paiement et conditions d'achat. Les règles de remboursement, livraison et support suivent la page affichée.
-
-## 5. Usage à la demande
-
-L'usage à la demande consomme directement le solde du compte sans acheter d'offre fixe. Il convient aux tests, usages peu fréquents, essais multi-modèles ou avant de choisir une offre.
-
-1. Vérifiez sur la [page de tarification](https://fishxcode.com/pricing?currency=CNY) quels groupes supportent le modèle.
-2. Créez un token normal dans **Console -> Gestion des tokens**.
-3. Configurez la clé dans votre outil ou code.
-4. Chaque requête réussie déduit le solde selon prix modèle, tokens input/output, cache et multiplicateur.
-5. Vérifiez dans **Console -> Journaux d'utilisation**.
+Le multiplicateur est un coefficient appliqué au prix de base du modèle. Plus il est bas, moins la même requête sur le même modèle coûte cher :
 
 ```text
-Consommation estimée ~= consommation modèle × multiplicateur du groupe + écarts output/cache
+Coût réel ≈ coût de base du modèle × multiplicateur du groupe
 ```
 
-| Type | Comportement | Usage |
+| Coût de base du modèle | Groupe | Déduction estimée |
 | - | - | - |
-| Solde à la demande | Déduction à l'usage; arrêt si solde insuffisant | Tests et modèles mixtes |
-| Offres Codex | Validité et quota | Équipes Codex / GPT |
-| Offres au nombre de requêtes | Requêtes réussies et limites jour/mois | Budget fixe en requêtes |
-| Offres ClaudeMax | Droits de compte et parcours Claude Code | Usage Claude Code officiel |
+| 10 crédits | `codex-team` (0.15x) | 1.5 crédit |
+| 10 crédits | `codex-plus` (0.2x) | 2 crédits |
+| 10 crédits | `claude` (1.5x) | 15 crédits |
+| 10 crédits | `claudemax` (2.6x) | 26 crédits |
 
-## 6. Groupes de tokens
+Le coût de base du modèle n'est pas une valeur fixe : il varie selon la longueur de l'entrée, la longueur de la sortie, les hits de cache et le prix propre du modèle. La partie servie par le cache est généralement moins chère.
 
-Un groupe définit **les modèles disponibles, le multiplicateur et le pool amont** de la clé API.
+<Callout type="warn" title="Ne vous fiez pas au seul multiplicateur">
+  Le multiplicateur ne fait pas le prix à lui seul. Les prix de base, les multiplicateurs de sortie et les multiplicateurs de cache varient fortement d'un modèle à l'autre ; les modèles d'image et de vidéo peuvent aussi être à prix fixe. Pour estimer un coût, référez-vous aux prix actuels de la page Tarifs ou de la liste des modèles de la console.
+</Callout>
 
-![Choix du groupe lors de la création du token](/img/start/api-06-token-create.png)
+## 4. Choisir le bon groupe à la création du token
 
-Si le groupe est incorrect, vous pouvez voir `model not found`, `model not available`, une erreur de permission, une facturation inattendue ou une confusion entre solde et offre.
+Lorsque vous créez un token dans **Console → Gestion des tokens**, le groupe de tokens définit les modèles accessibles à cette clé, son multiplicateur de facturation et son pool de ressources amont : choisissez-le avec soin.
 
-## 7. Tokens d'offre pour équipe
+![Choix du groupe lors de la création d'un token](/img/start/api-06-token-create.png)
 
-![Création de token basé sur une offre](/img/plans/create.png)
+Points à vérifier lors de la création du token :
 
-| Champ | Signification |
-| - | - |
-| Créer depuis une offre | Lie le token à une offre; expiration, groupe et modèles suivent l'offre |
-| Nom | Utilisez membre, projet ou service |
-| Groupe | Suit généralement l'offre ou le groupe utilisateur |
-| Expiration | Ne devrait pas dépasser la validité de l'offre |
-| Quota du token | Limite la part de quota consommable par cette clé |
+- **Groupe de tokens** : détermine quels modèles cette clé peut appeler et à quel multiplicateur elle est facturée. Pour le forfait mensuel Codex, vous devez choisir `codex-sub-june`.
+- **Quota** : limite le crédit maximal que cette clé peut consommer. Un quota illimité ne signifie pas que l'usage est gratuit : la clé reste limitée par le solde du compte ou le crédit du forfait mensuel.
+- **Liste de restriction des modèles** : déconseillée sauf nécessité, c'est-à-dire si vous voulez explicitement n'autoriser que quelques modèles.
+- **Liste d'IP autorisées** : adaptée aux serveurs dont l'IP de sortie est fixe. À utiliser avec prudence en développement local personnel, pour éviter que les appels échouent quand votre IP change.
 
-Créer un token par membre ou service facilite le suivi et la limitation.
+Symptômes fréquents d'un mauvais choix de groupe :
 
-![Exemple de token d'offre](/img/plans/tokens.png)
+- Le modèle apparaît dans la liste des modèles, mais les appels avec la clé actuelle renvoient `model not found`, `model not available` ou une erreur de permission.
+- Le modèle peut être appelé, mais le multiplicateur de facturation ou la stabilité ne correspond pas au niveau attendu.
+- Les tokens du forfait mensuel et les tokens ordinaires sont mélangés, si bien que le crédit est imputé au mauvais compte ou que les statistiques deviennent confuses.
 
-## 8. Les 14 groupes actuels
+## 5. Conseils pour choisir un groupe
 
-| Groupe | Description | Usage conseillé |
+| Scénario | Recommandation | Remarque |
 | - | - | - |
-| `OpenRouter` | Agrégation officielle OpenRouter; supporte Claude, Codex et autres familles. | Accès unifié |
-| `cc-max` | Canal API officiel Claude Code; priorité stabilité. | Claude Code production |
-| `cc_export` | Groupe externe Claude Code sans restriction client. | Outils tiers |
-| `cc_max` | Pool Claude MAX auto-géré. | Claude Code ou plugins officiels |
-| `claudemax_x20` | Groupe d'abonnement officiel ClaudeMax x20. | Équipe ou usage intensif |
-| `claudemax_x5` | Groupe d'abonnement officiel ClaudeMax x5. | Usage individuel ou léger |
-| `codex_plus` | Pool externe Codex Plus. | Code fréquent |
-| `codex_pro` | Pool externe Codex Pro. | Codex / GPT plus stable |
-| `codex_sub` | Pool standard d'abonnement Codex. | Abonnement Codex standard |
-| `codex_sub_june` | Nouveau pool Codex pour GPT-5.x / Codex. | Nouveaux modèles Codex |
-| `deepseek` | Canal officiel DeepSeek. | DeepSeek |
-| `default` | Groupe général à la demande. | Tests et usage normal |
-| `gemini` | Groupe Gemini multimodal et long contexte. | Gemini |
-| `grok` | Groupe xAI Grok. | Grok |
+| Programmation Codex au quotidien | `codex-plus` (0.2x) | Adapté au développement de tous les jours |
+| Codex à multiplicateur bas | `codex-team` (0.15x) | Pour les utilisateurs qui acceptent un pool de ressources partagé |
+| Codex intensif / développement d'agents | Forfait mensuel du pool Codex Pro | Choisissez le forfait de $200 ou de $2,000 de crédit selon votre usage réel |
+| Programmation Claude et tâches longues | `claude` (1.5x) | En usage intensif, envisagez `claudemax` (2.6x) |
+| Kiro | `kiro-svip` (0.2x) | Pool de comptes Kiro officiels à plein tarif |
+| Modèles chinois | `china` (0.8x) | Connexion directe aux API officielles |
+| Modèles Grok | `grok` (0.5x) | Groupe dédié à xAI Grok |
+| Génération d'images, de vidéos et d'audio | `fishxlab` (2x) | Les modèles et la facturation exacts sont indiqués sur le site |
+| Séparation par membre ou par projet | Créer un token distinct pour chaque membre ou projet | Facilite le contrôle du quota, la répartition des coûts et l'analyse des journaux |
 
-## 9. Exemples de multiplicateurs
+## 6. Vérifier la consommation réelle après usage
 
-| Consommation modèle | Multiplicateur | Déduction estimée |
-| - | - | - |
-| 10 crédits | `1x` | 10 crédits |
-| 10 crédits | `0.5x` | 5 crédits |
-| 10 crédits | `0.1x` | 1 crédit |
-| 10 crédits | `2.5x` | 25 crédits |
-
-## 10. Vérifier l'usage réel
+Après vos appels, vérifiez la consommation réelle à partir des enregistrements de **Console → Journaux d'utilisation**. En équipe, utilisez aussi l'[État de santé des groupes](/fr/group-health) pour déterminer si le problème vient d'une seule clé, d'un seul membre ou de tout un groupe.
 
 ![Exemple d'état de santé des groupes](/img/plans/statistics.png)
 
-Utilisez les journaux et l'état de santé des groupes pour savoir quel groupe consomme le plus, si un seul membre est anormal, si le cache fonctionne et si le problème vient d'un pool.
-
-## 11. Choix rapide
-
-| Scénario | Commencer par |
+| Question | Champs à consulter |
 | - | - |
-| Hésitation | `default` |
-| Claude Code stable | `cc-max`, `cc_max`, ClaudeMax |
-| Client Claude tiers | `cc_export` |
-| Codex / GPT code | `codex_plus`, `codex_pro`, `codex_sub_june` |
-| Multi-familles | `OpenRouter` |
-| Gemini | `gemini` |
-| Grok | `grok` |
-| DeepSeek | `deepseek` |
+| Quel groupe consomme le plus | Groupe, Coût, Requêtes |
+| Un seul membre est-il concerné | Lignes de détail utilisateur / token |
+| Le cache est-il efficace | Taux de cache, Tokens en cache, Part requêtes cache |
+| Le pool de ressources est-il en cause | Taux de succès du groupe, Erreurs, Cause d'échec |
+| Un long contexte ou une sortie volumineuse fait-il grimper la facture | Coût par requête réussie, Temps moyen, Tokens en cache |
 
-## 12. Dépannage
+## 7. Points d'attention
 
-1. Confirmez que le groupe du token inclut le modèle.
-2. Vérifiez solde, validité, limites et quota total.
-3. Filtrez les journaux par heure, modèle, token, groupe ou request ID.
-4. Comparez [État de santé des groupes](/fr/group-health).
-5. Pour le support, fournissez commande, token, groupe, modèle, heure et request ID.
+1. Chaque groupe correspond à un pool de ressources différent : choisissez selon votre cas d'usage.
+2. Pour le forfait mensuel Codex, vous devez créer les tokens dans le groupe `codex-sub-june` ; les autres groupes ne peuvent pas utiliser le crédit du forfait.
+3. Le forfait mensuel n'est pas illimité : une fois le crédit épuisé ou le forfait expiré, vous ne pouvez plus l'utiliser.
+4. Pour les longues conversations Claude, tirez parti du cache de contexte. Les hits de cache réels dépendent de la configuration du client, du modèle et de l'intervalle entre les requêtes.
+5. Les multiplicateurs des groupes, la disponibilité des modèles et l'état des ressources dépendent des informations en temps réel du site.
+
+## 8. Diagnostiquer une anomalie de consommation ou de droits
+
+En cas de consommation anormale ou de modèle indisponible, procédez dans cet ordre :
+
+1. Vérifiez que le groupe associé à la clé actuelle inclut le modèle cible.
+2. Vérifiez le solde du compte, ou que le forfait mensuel est encore valide et dispose d'un crédit restant suffisant.
+3. Ouvrez **Console → Journaux d'utilisation** et filtrez par heure, modèle, token, groupe et ID de requête.
+4. Comparez avec l'[État de santé des groupes](/fr/group-health) pour savoir si le problème concerne un seul token ou le pool de ressources du groupe.
+5. Si vous ne parvenez toujours pas à trancher, contactez le support en fournissant le numéro de commande, le nom du token, le groupe, le nom du modèle, l'heure de la requête et l'ID de requête.
+
+## 9. Achats entreprise et partenariats
+
+Pour les appels en volume, l'intégration d'équipes, l'achat de modèles et les besoins sur mesure, contactez-nous via le [site dédié aux entreprises](https://enterprise.fishxcode.com/).

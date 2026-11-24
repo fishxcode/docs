@@ -3,8 +3,9 @@
  *
  * 1. 定价接口转发：模型目录组件请求同源 `/api/pricing`，这里原样转发到主站同一路径
  *    （主站接口不带 CORS 头，浏览器跨域取不到）。dev 下由 src/proxy.ts 转发。
- * 2. 旧文档站（VitePress）的地址兼容：订阅地址 /feed.xml、/feed.atom 永久转到 /rss.xml。
- *    只在生产环境生效。
+ * 2. 旧地址兼容（只在生产环境生效）：旧文档站（VitePress）的订阅地址 /feed.xml、/feed.atom
+ *    永久转到 /rss.xml；已下架的套餐页（subscription-plans 下的 claude、codex、
+ *    by-number-of-times）永久转到同语言的套餐总览页。
  * 3. Markdown 内容协商——页面的 HTML 与 Markdown 副本是两份独立静态文件，
  *    「同一 URL 按 Accept 返回不同表示」：
  *    - 客户端更偏好 Markdown（Accept 协商）→ 改取 `/llms.mdx/<页面路径>/content.md`
@@ -24,14 +25,30 @@ const PRICING_UPSTREAM = 'https://fishxcode.com/api/pricing';
 /** 回传给浏览器的上游响应头：只放行与内容相关的几项，Set-Cookie、cf-* 等一律不带 */
 const PRICING_RESPONSE_HEADERS = ['content-type', 'cache-control', 'etag', 'last-modified'];
 
+/** 非默认语言的 URL 前缀 */
+const LOCALES = new Set(['en', 'fr', 'es', 'pt', 'ru', 'ja', 'vi', 'zh-TW']);
+
 /** 旧站订阅地址 → 新地址（永久） */
 const LEGACY_REDIRECTS = new Map([
   ['/feed.xml', '/rss.xml'],
   ['/feed.atom', '/rss.xml'],
 ]);
+/** 套餐总览页（各语言同一路径，前面加语言段） */
+const PLANS_PATH = '/subscription-plans';
+/**
+ * 已下架的套餐页：/<语言?>/subscription-plans/<下架页>，可带 .html 后缀与结尾斜杠。
+ * 只认 subscription-plans 下的子页——同名的 /codex 是 Codex CLI 教程，不能跳走。
+ */
+const RETIRED_PLAN_RE = new RegExp(
+  `^(/(?:${[...LOCALES].join('|')}))?${PLANS_PATH}/(?:claude|codex|by-number-of-times)(?:\\.html)?/*$`,
+);
+/**
+ * 旧地址跳转的浏览器缓存时长（秒）。不带缓存头的 301 会被浏览器无限期缓存，
+ * 下架的页面万一重新上线，老访客最多一天后就能看到新页面。
+ */
+const LEGACY_REDIRECT_MAX_AGE = 86400;
 
 const CONTENT_ROUTE = '/llms.mdx';
-const LOCALES = new Set(['en', 'fr', 'es', 'pt', 'ru', 'ja', 'vi', 'zh-TW']);
 /**
  * 首页副本的保留 slug。首页是 React 组件而不是 .mdx 文档，副本由
  * src/lib/discovery.ts 生成，挂在 /llms.mdx/<lang?>/index/content.md。
@@ -233,10 +250,27 @@ async function proxyPricing(request, url) {
   return new Response(upstream.body, { status: upstream.status, headers });
 }
 
-/** 旧文档站地址的跳转（永久，保留查询串）；不属于旧地址时返回 null */
+/** 旧地址 → 新路径；已下架的套餐页转到同语言的套餐总览页。不属于旧地址时返回 null */
+function legacyTarget(pathname) {
+  const redirect = LEGACY_REDIRECTS.get(pathname);
+  if (redirect) return redirect;
+
+  const retiredPlan = RETIRED_PLAN_RE.exec(pathname);
+  return retiredPlan ? `${retiredPlan[1] ?? ''}${PLANS_PATH}` : null;
+}
+
+/** 旧地址的永久跳转（保留查询串）；不属于旧地址时返回 null */
 function legacyRedirect(url) {
-  const target = LEGACY_REDIRECTS.get(url.pathname);
-  return target ? Response.redirect(new URL(`${target}${url.search}`, url).toString(), 301) : null;
+  const target = legacyTarget(url.pathname);
+  if (!target) return null;
+
+  return new Response(null, {
+    status: 301,
+    headers: {
+      Location: new URL(`${target}${url.search}`, url).toString(),
+      'Cache-Control': `public, max-age=${LEGACY_REDIRECT_MAX_AGE}`,
+    },
+  });
 }
 
 async function handle(request, env) {

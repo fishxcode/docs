@@ -1,62 +1,47 @@
 ---
-title: FishXCode Subscription Plans（訂閱套餐）
-description: FishXCode 訂閱套餐入口、分類和扣費口徑。
-navTitle: 套餐總覽
+title: Codex Pro 號池月包
+description: Codex Pro 號池月包的三檔額度與價格、購買後的使用方法和計費規則。
+navTitle: Codex Pro 月包
 ---
 
-這裡列出 FishXCode 訂閱套餐的入口、分類和扣費口徑。價格、庫存、限購、有效期和週期上限以定價頁為準。
+Codex Pro 號池月包基於 Codex Pro 官方號池，按固定額度按月購買，適合高頻 Codex 程式設計與 Agent 開發。目前在售的套餐只有這一個系列，提供三檔：
 
-常用入口：
+| 套餐 | 售價 | 套餐額度 | 實際成本倍率 | 有效期 | 額度重置 | 適合 |
+| - | - | - | - | - | - | - |
+| 2000 美元額度月包 | $260 | $2,000 | 0.13x | 1 個自然月 | 不重置 | 高頻開發與企業團隊 |
+| 200 美元額度月包 | $30 | $200 | 0.15x | 1 個自然月 | 不重置 | 中等額度，日常開發優選 |
+| 20 美元額度月包 | $3.60 | $20 | 0.18x | 1 個自然月 | 不重置 | 入門體驗，靈活使用 |
 
-- [全部訂閱套餐](https://fishxcode.com/pricing?currency=CNY&plan_series=all&tab=subscription-plans)
-- [Claude 系列套餐](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans)
-- [Codex 系列套餐](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans&plan_series=codex)
-- [按次系列套餐](https://fishxcode.com/pricing?currency=CNY&plan_series=mixed&plan_sort=price_asc&tab=subscription-plans)
-- [站點計費規則與分組簡介](/zh-TW/billing-groups)
+價格與可售狀態以 [定價頁](https://fishxcode.com/pricing) 為準。
 
-## 一、套餐分類
+## 購買後如何使用
 
-| 系列 | 入口 | 說明 |
-| - | - | - |
-| Claude 系列 | [Claude 系列](/zh-TW/subscription-plans/claude) | ClaudeMax 官方號訂閱與 Claude Code 託管服務 |
-| Codex 系列 | [Codex 系列](/zh-TW/subscription-plans/codex) | 按額度和有效期管理，適合個人或團隊按額度使用 |
-| 按次系列 | [按次系列](/zh-TW/subscription-plans/by-number-of-times) | 按成功請求次數累計，支援 Claude、Codex 相關模型 |
+1. 購買對應額度的 Codex 月包套餐。
+2. 在控制台選擇 `codex-sub-june` 分組。
+3. 使用該分組新建 API 令牌。
+4. 將令牌配置到支援的客戶端即可使用，例如 [Codex](/zh-TW/codex)、[Codex Desktop](/zh-TW/codex-desktop)。
 
-## 二、規則摘要
+## 計費規則
 
-- Claude 系列是官方號訂閱，購買入口見 [Claude 系列](/zh-TW/subscription-plans/claude)。
-- Codex 系列是按量額度 + 有效期限制，不是單純按次售賣。
-- 按次系列是按次套餐，日上限、月上限和總次數以套餐配置為準，可用於對應的 Claude 和 Codex 系列模型。
-- Claude Opus 4.8 和 GPT-5.5 在按次數系列中按 `2.5 × 實際成功請求次數` 累計。
-- 如果需要理解模型價格、令牌分組、倍率和套餐適用範圍之間的關係，請先看 [站點計費規則與分組簡介](/zh-TW/billing-groups)。
+- `codex-sub-june` 分組固定為 **1x 倍率**。
+- 實際成本倍率 = 套餐售價 ÷ 套餐額度。
+- 請求按實際 Token 消耗扣減套餐額度。
+- 套餐有效期為 1 個自然月。
+- 套餐額度不重置，未使用額度不會自動續期。
 
-## 三、購買流程
+<Callout type="idea" title="例子">
+  $260 購買 $2,000 額度，實際成本倍率為 **0.13x**，但分組顯示的倍率仍然是 1x。
+</Callout>
 
-1. 開啟 [定價頁](https://fishxcode.com/pricing?currency=CNY&tab=subscription-plans)。
-2. 切換到“訂閱套餐”。
-3. 按系列篩選 Claude、Codex 或 按次套餐。
-4. 檢視套餐詳情，確認價格、有效期、額度、次數、適用模型、重置規則和購買限制。
-5. 支付後，在控制台的套餐或訂閱頁面檢視狀態。
-6. 如套餐生成獨立 Key，按頁面提示覆制 Base URL 和 Key，並配置到對應工具中。
+## 注意事項
 
-## 四、說明
+<Callout type="warn" title="只有 codex-sub-june 分組能用月包額度">
+  Codex 月包必須使用 `codex-sub-june` 分組建立令牌，其他分組不適用該套餐額度。
+</Callout>
 
-### 價格以定價頁為準
+- 月包不是無限額度，額度耗盡或套餐到期後將無法繼續使用。
+- 不想買月包時，也可以用餘額按量呼叫 Codex 系列分組，見 [計費規則與分組](/zh-TW/billing-groups)。
 
-套餐價格、庫存、限購、優惠和可售狀態會調整。文件只寫規則，具體價格以官網定價頁為準。
+## 企業採購
 
-### 按次不等於所有模型都按 1 次扣
-
-By number of times 系列以成功請求次數為基礎。Claude Opus 4.8 和 GPT-5.5 按 `2.5 × 實際成功請求次數` 累計。
-
-### Codex 系列和 By number of times 系列的區別
-
-Codex 系列看額度和有效期；By number of times 系列看請求次數、每日上限、每月上限和總次數。
-
-### 到期、用完或達到上限
-
-達到有效期、總額度、總次數、每日上限或每月上限後，系統按套餐規則限制繼續使用。後續可等待週期重置、購買新套餐，或改用餘額。
-
-### 使用異常
-
-先確認套餐有效期、當日或當月上限、模型適用範圍。再檢視 [錯誤日誌說明](/zh-TW/error-logs) 和 [分組健康狀態](/zh-TW/group-health)。聯絡售後時請提供訂單號、請求時間和請求 ID。
+企業批次呼叫、團隊接入及定製化需求，可通過 [企業專屬站點](https://enterprise.fishxcode.com/) 諮詢。

@@ -29,63 +29,63 @@ const COPY: Record<
   zh: {
     title: `${siteConfig.productName} 文档`,
     intro:
-      `${siteConfig.productName} 是 AI Coding 中转站，支持 Claude、Codex 模型在多种平台使用。本索引列出全部文档页的 Markdown 副本。`,
+      `${siteConfig.productName} 是一站式 AI 模型接入与账号服务平台，覆盖 Claude、Codex、Kiro、Grok、国产模型与多模态模型。本索引列出全部文档页的 Markdown 副本。`,
     fullIntro: '下方是全部文档页的完整 Markdown 正文。',
     indexLabel: '索引',
   },
   en: {
     title: `${siteConfig.productName} Documentation`,
     intro:
-      `${siteConfig.productName} is an AI Coding relay for using Claude and Codex models across multiple platforms. This index lists a Markdown copy of every docs page.`,
+      `${siteConfig.productName} is a one-stop platform for AI model access and accounts, covering Claude, Codex, Kiro, Grok, Chinese and multimodal models. This index lists a Markdown copy of every docs page.`,
     fullIntro: 'The full Markdown body of every docs page follows.',
     indexLabel: 'Index',
   },
   fr: {
     title: `${siteConfig.productName} Documentation`,
     intro:
-      `${siteConfig.productName} est un relais AI Coding pour utiliser les modèles Claude et Codex sur plusieurs plateformes. Cet index répertorie une copie Markdown de chaque page.`,
+      `${siteConfig.productName} est une plateforme unifiée d'accès aux modèles d'IA et de gestion de comptes : Claude, Codex, Kiro, Grok, modèles chinois et multimodaux. Cet index répertorie une copie Markdown de chaque page.`,
     fullIntro: 'Le corps Markdown complet de chaque page de documentation suit.',
     indexLabel: 'Index',
   },
   es: {
     title: `Documentación de ${siteConfig.productName}`,
     intro:
-      `${siteConfig.productName} es una estación AI Coding para usar modelos Claude y Codex en múltiples plataformas. Este índice enumera una copia en Markdown de cada página de la documentación.`,
+      `${siteConfig.productName} es una plataforma integral de acceso a modelos de IA y gestión de cuentas: Claude, Codex, Kiro, Grok, modelos chinos y multimodales. Este índice enumera una copia en Markdown de cada página de la documentación.`,
     fullIntro: 'A continuación, el cuerpo completo en Markdown de cada página de la documentación.',
     indexLabel: 'Índice',
   },
   pt: {
     title: `Documentação do ${siteConfig.productName}`,
     intro:
-      `${siteConfig.productName} é uma estação AI Coding para usar modelos Claude e Codex em múltiplas plataformas. Este índice lista uma cópia em Markdown de cada página da documentação.`,
+      `${siteConfig.productName} é uma plataforma completa de acesso a modelos de IA e gestão de contas: Claude, Codex, Kiro, Grok, modelos chineses e multimodais. Este índice lista uma cópia em Markdown de cada página da documentação.`,
     fullIntro: 'A seguir, o conteúdo completo em Markdown de cada página da documentação.',
     indexLabel: 'Índice',
   },
   ru: {
     title: `Документация ${siteConfig.productName}`,
     intro:
-      `${siteConfig.productName} — шлюз для AI Coding: модели Claude и Codex на разных платформах. В этом индексе перечислены Markdown-копии всех страниц.`,
+      `${siteConfig.productName} — единая платформа доступа к моделям ИИ и аккаунтам: Claude, Codex, Kiro, Grok, китайские и мультимодальные модели. В этом индексе перечислены Markdown-копии всех страниц.`,
     fullIntro: 'Ниже — полный Markdown-текст каждой страницы документации.',
     indexLabel: 'Индекс',
   },
   ja: {
     title: `${siteConfig.productName} ドキュメント`,
     intro:
-      `${siteConfig.productName} は AI Coding 中継サービスです。Claude・Codex のモデルをさまざまなプラットフォームで利用できます。このインデックスは全ドキュメントページの Markdown コピーを列挙します。`,
+      `${siteConfig.productName} は AI モデル接続とアカウントサービスのワンストッププラットフォームです。Claude・Codex・Kiro・Grok・中国系モデル・マルチモーダルモデルに対応しています。このインデックスは全ドキュメントページの Markdown コピーを列挙します。`,
     fullIntro: '以下に各ドキュメントページの完全な Markdown 本文を示します。',
     indexLabel: 'インデックス',
   },
   vi: {
     title: `Tài liệu ${siteConfig.productName}`,
     intro:
-      `${siteConfig.productName} là trạm trung chuyển AI Coding, giúp dùng các mô hình Claude và Codex trên nhiều nền tảng. Chỉ mục này liệt kê bản sao Markdown của mọi trang tài liệu.`,
+      `${siteConfig.productName} là nền tảng truy cập mô hình AI và tài khoản một điểm, hỗ trợ Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và đa phương thức. Chỉ mục này liệt kê bản sao Markdown của mọi trang tài liệu.`,
     fullIntro: 'Nội dung Markdown đầy đủ của mỗi trang tài liệu nằm bên dưới.',
     indexLabel: 'Chỉ mục',
   },
   'zh-TW': {
     title: `${siteConfig.productName} 文件`,
     intro:
-      `${siteConfig.productName} 是 AI Coding 中轉站，支援 Claude、Codex 模型在多種平台使用。本索引列出全部文件頁的 Markdown 副本。`,
+      `${siteConfig.productName} 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型。本索引列出全部文件頁的 Markdown 副本。`,
     fullIntro: '下方是全部文件頁的完整 Markdown 正文。',
     indexLabel: '索引',
   },

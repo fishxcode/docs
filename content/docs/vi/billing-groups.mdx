@@ -1,271 +1,145 @@
 ---
-title: Quy tắc tính phí trên nền tảng và giới thiệu nhóm
-description: Cách tính phí trên nền tảng FishXCode, hệ số, nhóm token, cách đọc trang giá và mối liên hệ với gói.
+title: Quy tắc tính phí và nhóm
+description: Hai cách tính phí của FishXCode, 10 nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng.
 navTitle: Quy tắc tính phí và nhóm
 ---
 
-Trang này giải thích mối quan hệ giữa cách tính phí, nhóm token và trang gói của FishXCode. Bạn có thể coi đây là danh sách kiểm tra trước khi mua gói và tạo Key: trước tiên xem trang giá để xác nhận mô hình và gói, sau đó xem nhóm để biết Key có thể gọi những gì, cuối cùng dùng nhật ký sử dụng và trạng thái sức khỏe nhóm để đối chiếu mức tiêu hao thực tế.
+FishXCode là nền tảng một cửa cung cấp dịch vụ kết nối mô hình AI và tài khoản, bao gồm Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và mô hình đa phương thức. Trang này giải thích cách tính phí, các nhóm hiện có, cách chọn nhóm và cách đối chiếu mức tiêu hao sau khi sử dụng.
 
-<Callout type="idea" title="Phạm vi hiện tại">
-  Theo trang giá hiện tại, có **49 mô hình và 14 nhóm có thể chọn**. Mô hình, giá, nhóm và trạng thái mở bán sẽ thay đổi theo tài nguyên của nhà cung cấp upstream; thông tin cuối cùng căn cứ theo [trang giá](https://fishxcode.com/pricing?currency=CNY) và nội dung hiển thị trong bảng điều khiển.
+<Callout type="idea" title="Căn cứ theo thông tin thời gian thực trên trang">
+  Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên sẽ thay đổi theo tài nguyên của nhà cung cấp upstream; thông tin cuối cùng căn cứ theo [trang giá](https://fishxcode.com/pricing) và thông tin thời gian thực trong bảng điều khiển.
 </Callout>
 
-## Ảnh chụp màn hình và mô-đun tương ứng
+## 1. Hai cách tính phí
 
-| Ảnh chụp màn hình | Câu hỏi tương ứng |
-| - | - |
-| Danh sách gói đăng ký | Những trường nào trên thẻ gói ảnh hưởng đến việc tính phí |
-| Quyền lợi gói tính phí theo lượt | Cách đọc giới hạn ngày, tổng số lượt, thời gian đặt lại và mô hình áp dụng |
-| Mua gói đăng ký | Cần đối chiếu những thông tin nào về giao nhận và thời hạn hiệu lực trước khi thanh toán |
-| Tạo token | Nhóm được gắn với API Key như thế nào |
-| Tạo token dựa trên gói | Đội nhóm chia hạn mức của gói và Key con như thế nào |
-| Danh sách token | Cách xác nhận nhóm, hệ số, mô hình và thời gian hết hạn của Key |
-| Trạng thái sức khỏe nhóm | Sau khi sử dụng, cách đối chiếu mức tiêu hao, bộ nhớ đệm và phạm vi bất thường |
-
-## 1. Trước tiên, phân biệt ba hình thức tính phí
-
-Chi phí trên FishXCode không theo một quy tắc duy nhất. Khi sử dụng thực tế, trước tiên hãy xác định bạn đang dùng hình thức nào:
-
-| Hình thức | Cần xem gì | Phù hợp với tình huống nào |
+| Cách tính phí | Cách trừ phí | Phù hợp với |
 | - | - | - |
-| Trả theo mức dùng | Giá cơ bản của mô hình, hệ số đầu vào/đầu ra/bộ nhớ đệm, nhóm token | Gọi API bằng số dư, thử nghiệm tạm thời, dùng kết hợp nhiều mô hình |
-| Gói đăng ký | Thời hạn hiệu lực, tổng hạn mức, giới hạn mỗi ngày, giới hạn mỗi tháng, nhóm áp dụng | Đội nhóm có ngân sách cố định, dùng lâu dài dòng Codex / Claude |
-| Nhóm token | Key này có thể gọi những mô hình nào, đi qua pool tài nguyên nào, trừ phí theo hệ số nào | Tạo Key, tách dự án, phân bổ chi phí cho đội nhóm |
+| Trả theo mức dùng từ số dư | Lấy giá mô hình nhân với hệ số của nhóm chứa token, rồi trừ vào số dư tài khoản | Gọi hằng ngày, dùng kết hợp nhiều mô hình, thử nghiệm tạm thời |
+| Gói tháng pool tài khoản Codex Pro | Gọi bằng token được tạo với nhóm `codex-sub-june`, hạn mức gói tháng được trừ theo lượng token tiêu hao thực tế | Lập trình Codex và phát triển Agent tần suất cao |
 
-Có thể đọc các quy tắc gói liên quan cùng với [Tổng quan gói đăng ký](/vi/subscription-plans): trang này giải thích “mô hình, hệ số và nhóm ảnh hưởng đến việc trừ phí như thế nào”, còn trang gói giải thích “sau khi mua, hạn mức, thời hạn hiệu lực, số lượt và giới hạn có hiệu lực như thế nào”.
+Giá, hạn mức và cách sử dụng gói tháng được trình bày tại [Gói đăng ký](/vi/subscription-plans).
 
-## 2. Mô-đun trang giá: xem thẻ gói trước
+## 2. Các nhóm đang mở bán
 
-Thẻ gói trên trang giá giúp bạn nhanh chóng đánh giá: gói này cung cấp bao nhiêu hạn mức hoặc số lượt, hiệu lực trong bao lâu, mỗi ngày dùng được bao nhiêu và có quy tắc quy đổi đặc biệt hay không.
+Nhóm quyết định một API Key có thể gọi những mô hình nào, đi qua pool tài nguyên nào và bị trừ phí theo hệ số nào. Hiện có 10 nhóm đang mở bán:
 
-![Ví dụ danh sách gói đăng ký](/img/plans/subscription-plans.png)
+### Dòng Codex
 
-Khi đọc thẻ gói, hãy chú ý các trường sau:
-
-| Trường | Ý nghĩa | Cách đánh giá |
+| Nhóm | Hệ số | Mô tả |
 | - | - | - |
-| Giá hiện tại | Giá mua lần này và thời hạn hiệu lực | Ví dụ `¥320.00 / 1 tháng` nghĩa là giá cho một tháng |
-| Chi phí mỗi lượt | Chi phí tham khảo, bằng giá gói chia cho tổng số lượt | Dùng để so sánh hiệu quả chi phí giữa các gói tính phí theo lượt cùng loại |
-| Giới hạn gói | Tổng hạn mức hoặc tổng số lượt của gói hiện tại | Ví dụ `15000 lượt` nghĩa là gói này cho phép tối đa 15000 lượt yêu cầu cơ bản cộng dồn |
-| Giới hạn mỗi ngày | Hạn mức hoặc số lượt tối đa dùng được trong một ngày | Ví dụ `500 lượt/ngày`; khi đạt mức này trong ngày, thường phải chờ đến lúc đặt lại |
-| Thời gian đặt lại | Thời điểm giới hạn theo chu kỳ được khôi phục | Ví dụ `Đặt lại lúc 08:00:00 mỗi ngày` |
-| Phạm vi áp dụng | Nhóm, mô hình và nhà cung cấp được gắn với gói | Ví dụ `sub_plan_claude_mini_plus · 9 mô hình · 2 nhà cung cấp` |
-| Ghi chú tính phí theo lượt | Mô hình đặc biệt có được quy đổi số lượt theo hệ số hay không | Ví dụ Claude Opus 4.8, GPT-5.5 được tính là `2.5 * 1 lượt` |
+| `codex-plus` | 0.2x | Pool tài khoản chính thức dòng Codex Plus mua theo giá gốc; hệ số thấp, ổn định, phù hợp để gọi hằng ngày |
+| `codex-pro` | 0.4x | Tài nguyên chính thức dòng Codex Pro mua theo giá gốc; hiệu năng ổn định, phù hợp với đội nhóm và doanh nghiệp |
+| `codex-team` | 0.15x | Pool tài khoản dùng chung chính thức dòng Codex Team; tài nguyên dùng chung với hệ số thấp |
+| `codex-officially` | 2x | Tài nguyên API Key chính thức của OpenAI; kết nối trực tiếp chính thức, ổn định và đáng tin cậy |
 
-<Callout type="idea" title="Ví dụ: gói tính phí theo lượt bị trừ như thế nào">
-  Một gói ghi `500 lượt/ngày, tổng 15000 lượt/tháng` và có ghi chú `Claude Opus 4.8, GPT-5.5 tính là 2.5 * 1 lượt`.
+### Dòng Claude
 
-  Mỗi yêu cầu thành công với mô hình thông thường thường được tính 1 lượt; mỗi yêu cầu thành công với Claude Opus 4.8 hoặc GPT-5.5 sẽ được tính 2,5 lượt vào mức sử dụng của gói. Nói cách khác, nếu trong ngày bạn liên tục dùng các mô hình có hệ số cao này, chỉ khoảng 200 yêu cầu thành công là đã có thể chạm giới hạn ngày `500 lượt/ngày`.
+| Nhóm | Hệ số | Mô tả |
+| - | - | - |
+| `claude` | 1.5x | Pool tài khoản chính thức Claude Max 20 mua theo giá gốc; hiệu năng đầy đủ, kết nối trực tiếp ổn định |
+| `claudemax` | 2.6x | Pool hàng nghìn tài khoản Claude Max 20; kết nối tốc độ cao, quản lý chỉ đọc, hỗ trợ truy vết thủ công |
+
+### Mô hình khác
+
+| Nhóm | Hệ số | Mô tả |
+| - | - | - |
+| `kiro-svip` | 0.2x | Pool tài khoản chính thức Kiro mua theo giá gốc; kết nối ổn định, hệ số thấp |
+| `china` | 0.8x | Tổng hợp các mô hình phổ biến của Trung Quốc, kết nối trực tiếp API chính thức |
+| `grok` | 0.5x | Nhóm dành riêng cho mô hình xAI Grok, trải nghiệm khả năng của Grok với hệ số thấp |
+| `fishxlab` | 2x | Các mô hình đa phương thức như âm thanh, video, hình ảnh, bao quát các tình huống tạo nội dung và sáng tạo |
+
+Bạn có thể xem các mô hình khác và mức độ hỗ trợ cụ thể trên trang.
+
+<Callout type="info" title="Nhóm dành riêng cho gói tháng">
+  `codex-sub-june` là nhóm dành riêng cho gói tháng pool tài khoản Codex Pro, có hệ số cố định 1x, chỉ trừ hạn mức gói tháng và không thuộc các nhóm trả theo mức dùng ở trên.
 </Callout>
 
-## 3. Mô-đun quyền lợi gói: nắm rõ giới hạn, thời gian đặt lại và mô hình áp dụng
+## 3. Cách tính hệ số
 
-Khi mở trang quyền lợi hoặc trang chi tiết của gói, bạn sẽ thấy các trường quyền lợi chi tiết hơn. Mô-đun này dùng để xác nhận “sau khi mua thì thực sự dùng được những gì”.
-
-![Ví dụ quyền lợi gói tính phí theo lượt](/img/plans/by-number-of-times.png)
-
-Trong ảnh này có thể thấy:
-
-- **Giới hạn mỗi ngày**: Số lượt tối đa dùng được trong một ngày.
-- **Giới hạn gói**: Tổng số lượt trong toàn bộ thời hạn hiệu lực.
-- **Khi nào đặt lại**: Thời điểm khôi phục giới hạn ngày.
-- **Thời gian mở bán**: Một số gói chỉ mở bán trong khoảng thời gian nhất định.
-- **Nhà cung cấp**: Các nhà cung cấp upstream mà gói bao gồm.
-- **Mô hình khả dụng**: Danh sách mô hình mà nhóm của gói có thể gọi sau khi mua.
-- **Nhóm nâng cấp**: Nhóm được tự động chuyển vào hoặc gắn với tài khoản sau khi mua, ví dụ `sub_plan_claude_mini_max`.
-
-<Callout type="warn" title="Cần xem trang gói và nhóm cùng lúc">
-  Trang gói cho bạn biết “hạn mức và giới hạn”, còn nhóm cho bạn biết “mô hình và kênh”. Nếu gói hiển thị có hỗ trợ một nhóm nâng cấp nào đó nhưng Key thực tế của bạn chưa được gắn với gói hoặc nhóm đó, yêu cầu vẫn có thể bị trừ vào số dư hoặc báo lỗi quyền truy cập.
-</Callout>
-
-## 4. Mô-đun mua gói: đối chiếu thời hạn hiệu lực và cách kích hoạt trước khi thanh toán
-
-Sau khi nhấn mua, hộp thoại mua gói sẽ hiện ra. Mô-đun này dùng để xác nhận lần cuối: mua gói nào, giá bao nhiêu, thời hạn hiệu lực bao lâu và có tự động kích hoạt hay không.
-
-![Ví dụ mua gói đăng ký](/img/plans/buyplan.png)
-
-Trước khi mua, hãy đối chiếu kỹ:
-
-| Trường | Vì sao quan trọng |
-| - | - |
-| Giá hiện tại | Xác định số tiền thanh toán lần này, tránh chọn nhầm gói |
-| Thời hạn hiệu lực | Quyền lợi của gói sẽ mất hiệu lực khi hết hạn |
-| Hạn mức token / số lượt | Quyết định tổng lượng có thể tiêu hao của gói này |
-| Loại gói | Tự động kích hoạt, cấp thủ công hay hình thức giao nhận khác sẽ ảnh hưởng đến thời điểm có hiệu lực |
-| Phương thức thanh toán | Xác nhận thanh toán qua Alipay, WeChat Pay hoặc kênh thanh toán khác |
-| Lưu ý khi mua | Quy tắc hoàn tiền, kích hoạt, giới hạn số lượng mua và hậu mãi căn cứ theo nội dung hiển thị trên trang |
-
-Nếu bạn chỉ muốn thử nghiệm mô hình tạm thời thì không nhất thiết phải mua gói trước; bạn có thể dùng số dư để gọi theo mức dùng.
-
-## 5. Trả theo mức dùng: gọi mô hình trực tiếp bằng số dư
-
-Trả theo mức dùng nghĩa là không mua gói cố định trước mà dùng trực tiếp số dư tài khoản để gọi mô hình. Cách này phù hợp khi bạn muốn chạy thử công cụ trước, gọi với tần suất thấp, dùng kết hợp nhiều mô hình hoặc chưa chắc nên mua loại gói nào.
-
-Quy trình cơ bản khi trả theo mức dùng:
-
-1. Trên [trang giá](https://fishxcode.com/pricing?currency=CNY), xác nhận mô hình mục tiêu được hỗ trợ trong những nhóm nào.
-2. Trong **Bảng điều khiển → Quản lý token**, tạo token thông thường và chọn nhóm token phù hợp.
-3. Cấu hình Key vào Claude Code, Codex, Cursor, RooCode hoặc chương trình của riêng bạn.
-4. Sau mỗi yêu cầu thành công, hệ thống trừ số dư dựa trên giá mô hình, token đầu vào/đầu ra, lượng trúng bộ nhớ đệm và hệ số nhóm.
-5. Đối chiếu mức tiêu hao thực tế trong **Bảng điều khiển → Nhật ký sử dụng**.
-
-Có thể hiểu cách trừ phí theo mức dùng như sau:
+Hệ số là số nhân được áp lên giá cơ bản của mô hình. Hệ số càng thấp thì cùng một yêu cầu với cùng một mô hình sẽ bị trừ càng ít:
 
 ```text
-Mức tiêu hao thực tế ≈ Mức tiêu hao cơ bản của mô hình × Hệ số nhóm + Các khoản chênh lệch như đầu ra/bộ nhớ đệm
+Mức tiêu hao thực tế ≈ Mức tiêu hao cơ bản của mô hình × Hệ số nhóm
 ```
 
-“Mức tiêu hao cơ bản của mô hình” ở đây không phải giá trị cố định mà thay đổi theo độ dài đầu vào, độ dài đầu ra, lượng trúng bộ nhớ đệm và giá của chính mô hình. Các mô hình có giá cố định như hình ảnh, video không phù hợp để ước tính theo cách tính token văn bản thông thường.
-
-Khác biệt giữa trả theo mức dùng bằng số dư và gói:
-
-| Loại | Đặc điểm | Tình huống phù hợp |
+| Mức tiêu hao cơ bản của mô hình | Nhóm | Mức trừ ước tính |
 | - | - | - |
-| Số dư trả theo mức dùng | Dùng bao nhiêu trừ bấy nhiêu, ngừng gọi khi số dư không đủ | Thử nghiệm tạm thời, dùng kết hợp nhiều mô hình, sử dụng tần suất thấp |
-| Gói Codex | Thường được quản lý theo thời hạn hiệu lực và hạn mức | Tác vụ lập trình với Codex / GPT, đội nhóm có ngân sách cố định |
-| Gói tính phí theo lượt | Cộng dồn theo số lượt yêu cầu thành công, có thể có giới hạn ngày | Muốn kiểm soát ngân sách theo số lượt yêu cầu |
-| Gói ClaudeMax | Thiên về quyền lợi tài khoản và cách sử dụng Claude Code | Tình huống đăng ký tài khoản chính thức cho Claude Code |
+| 10 đơn vị hạn mức | `codex-team` (0.15x) | 1.5 đơn vị hạn mức |
+| 10 đơn vị hạn mức | `codex-plus` (0.2x) | 2 đơn vị hạn mức |
+| 10 đơn vị hạn mức | `claude` (1.5x) | 15 đơn vị hạn mức |
+| 10 đơn vị hạn mức | `claudemax` (2.6x) | 26 đơn vị hạn mức |
 
-<Callout type="idea" title="Ví dụ: khi nào nên trả theo mức dùng">
-  Nếu bạn chỉ muốn kiểm tra một công cụ có kết nối được với FishXCode hay không, hãy tạo token thông thường với nhóm `default` hoặc nhóm được đề xuất cho mô hình mục tiêu, rồi gửi vài yêu cầu là đủ. Sau khi xác nhận mô hình, nhóm và cấu hình client đều đúng, hãy dựa vào mức sử dụng để quyết định có mua gói Codex, gói tính phí theo lượt hay gói ClaudeMax hay không.
+Mức tiêu hao cơ bản của mô hình ở đây không cố định, mà thay đổi theo độ dài đầu vào, độ dài đầu ra, lượng trúng bộ nhớ đệm và giá của chính mô hình. Phần trúng bộ nhớ đệm thường rẻ hơn.
+
+<Callout type="warn" title="Đừng chỉ nhìn vào hệ số">
+  Hệ số không phải là yếu tố duy nhất quyết định giá. Giá cơ bản, hệ số đầu ra và hệ số bộ nhớ đệm của các mô hình chênh lệch rất lớn; mô hình hình ảnh và video còn có thể tính theo giá cố định. Khi ước tính chi phí, hãy căn cứ theo giá hiện tại trên trang giá hoặc trong danh sách mô hình của bảng điều khiển.
 </Callout>
 
-<Callout type="warn" title="Trả theo mức dùng cũng bị giới hạn bởi nhóm">
-  Tài khoản có số dư không có nghĩa là mọi Key đều gọi được mọi mô hình. Mô hình có dùng được hay không vẫn phụ thuộc vào nhóm token. Nếu gặp lỗi `model not found`, `model not available` hoặc lỗi quyền truy cập, trước tiên hãy kiểm tra nhóm của Key có bao gồm mô hình mục tiêu hay không.
-</Callout>
+## 4. Chọn đúng nhóm khi tạo token
 
-## 6. Mô-đun token: nhóm quyết định phạm vi mô hình của Key
-
-Có thể hiểu nhóm token là **phạm vi mô hình khả dụng của API Key này + quy tắc hệ số trừ phí + pool tài nguyên của nhà cung cấp upstream**. Khi tạo Key, nhất định phải chọn đúng nhóm.
+Khi tạo token tại **Bảng điều khiển → Quản lý token**, nhóm của token chính là phạm vi mô hình khả dụng, hệ số trừ phí và pool tài nguyên upstream của Key đó, vì vậy nhất định phải chọn đúng.
 
 ![Chọn nhóm khi tạo token](/img/start/api-06-token-create.png)
 
-Khi tạo token thông thường, hãy chú ý:
+Khi tạo token, hãy chú ý các mục sau:
 
-- **Nhóm token**: Quyết định Key này có thể gọi những mô hình nào.
-- **Thiết lập hạn mức**: Giới hạn mức tiêu hao tối đa của Key hiện tại; hạn mức không giới hạn không có nghĩa là không bị trừ phí, Key vẫn bị giới hạn bởi số dư tài khoản hoặc gói.
-- **Danh sách giới hạn mô hình**: Không nên giới hạn nếu không cần thiết, trừ khi bạn chỉ muốn cho phép một vài mô hình cụ thể.
+- **Nhóm token**: Quyết định Key này có thể gọi những mô hình nào và bị trừ phí theo hệ số nào. Khi dùng gói tháng Codex, bắt buộc phải chọn `codex-sub-june`.
+- **Thiết lập hạn mức**: Giới hạn mức tiêu hao tối đa của Key này; hạn mức không giới hạn không có nghĩa là không bị trừ phí, Key vẫn bị giới hạn bởi số dư tài khoản hoặc hạn mức gói tháng.
+- **Danh sách giới hạn mô hình**: Không nên giới hạn nếu không cần thiết, trừ khi bạn chắc chắn chỉ muốn cho phép một vài mô hình.
 - **Danh sách trắng IP**: Phù hợp với máy chủ có IP đầu ra cố định; khi phát triển cục bộ cho cá nhân nên cân nhắc kỹ, tránh trường hợp không gọi được khi IP thay đổi.
 
 Khi chọn sai nhóm, các biểu hiện thường gặp gồm:
 
 - Thấy mô hình trong danh sách mô hình nhưng khi gọi bằng Key hiện tại lại báo `model not found`, `model not available` hoặc lỗi quyền truy cập.
-- Gọi được mô hình nhưng hệ số trừ phí, hiệu quả bộ nhớ đệm hoặc độ ổn định không đúng mức mong đợi.
-- Dùng lẫn Key của gói và Key số dư thông thường, khiến hạn mức bị trừ nhầm tài khoản hoặc số liệu thống kê không rõ ràng.
+- Gọi được mô hình nhưng hệ số trừ phí hoặc độ ổn định không đúng mức mong đợi.
+- Dùng lẫn token gói tháng với token thông thường, khiến hạn mức bị trừ nhầm nguồn hoặc số liệu thống kê không rõ ràng.
 
-## 7. Mô-đun token của gói: tạo Key cho đội nhóm dựa trên gói
+## 5. Gợi ý chọn nhóm
 
-Sau khi mua gói, hệ thống có thể tự động tạo token truy cập của gói; bạn cũng có thể tạo token mới cho đội nhóm dựa trên gói. Cách này phù hợp khi nhiều người dùng chung hạn mức của gói nhưng vẫn cần phân biệt mức tiêu hao theo thành viên hoặc dự án.
-
-![Ví dụ tạo token dựa trên gói](/img/plans/create.png)
-
-Khi tạo token dựa trên gói, hãy chú ý các mục sau:
-
-| Trường | Mô tả |
-| - | - |
-| Tạo dựa trên gói | Chọn gói cần gắn; sau khi gắn, thời gian hết hạn, nhóm và giới hạn mô hình sẽ theo gói |
-| Tên | Nên đặt theo thành viên, dự án hoặc dịch vụ để tiện lọc nhật ký |
-| Nhóm token | Mặc định theo gói hoặc nhóm của người dùng; không nên tùy ý chuyển sang nhóm không phù hợp |
-| Thời gian hết hạn | Thông thường không nên vượt quá thời hạn hiệu lực của gói |
-| Hạn mức token của gói | Dùng để giới hạn lượng hạn mức gói tối đa mà Key con này được phép tiêu hao |
-
-<Callout type="idea" title="Ví dụ: đội nhóm chia Key như thế nào">
-  Khi một gói Codex được 5 thành viên dùng chung, không nên để mọi người dùng chung một Key. Bạn có thể tạo token riêng cho từng thành viên, ví dụ `codex-zhangsan`, `codex-lisi`. Sau đó, trong nhật ký sử dụng hoặc trạng thái sức khỏe nhóm, bạn sẽ thấy ngay ai tiêu hao nhiều, ai gặp nhiều lỗi và dự án nào cần giới hạn hạn mức.
-</Callout>
-
-Danh sách token hiển thị nhóm, hệ số, mô hình khả dụng và thời gian hết hạn:
-
-![Ví dụ token của gói trong trang quản lý token](/img/plans/tokens.png)
-
-## 8. Giới thiệu 14 nhóm hiện có
-
-Bảng dưới đây được tổng hợp theo phạm vi `usable_group` mà bạn thấy trên trang giá. Hiện có tổng cộng **49 mô hình và 14 nhóm có thể chọn**; mô hình có thể gọi, hệ số và trạng thái mở bán cụ thể căn cứ theo [trang giá](https://fishxcode.com/pricing?currency=CNY).
-
-| Nhóm | Mô tả nhóm | Tình huống đề xuất |
+| Tình huống sử dụng | Đề xuất | Mô tả |
 | - | - | - |
-| `OpenRouter` | [Tổng hợp chính thức · OpenRouter] Kênh tổng hợp chính thức của OpenRouter; hỗ trợ nhiều dòng mô hình như Claude, Codex, phù hợp để gọi qua một lối vào thống nhất. | Lối vào thống nhất cho nhiều dòng mô hình |
-| `cc-max` | [Claude Code · API chính thức] Kênh API chính thức cho Claude Code; ưu tiên độ ổn định, phù hợp dùng lâu dài cho môi trường production. | Claude Code chạy production ổn định |
-| `cc_export` | [Claude Code · Kết nối ngoài] Nhóm chuyên dùng để kết nối Claude Code từ bên ngoài; không giới hạn client, phù hợp để kết nối công cụ riêng hoặc client bên thứ ba. | Client bên thứ ba, công cụ riêng |
-| `cc_max` | [Claude MAX · Pool tự xây dựng] Nhóm pool tài khoản Claude MAX tự xây dựng; nên dùng trong Claude Code hoặc plugin chính thức. | Claude Code hoặc plugin chính thức |
-| `claudemax_x20` | [ClaudeMax · Gói đăng ký chính thức x20] Nhóm tài khoản đăng ký chính thức ClaudeMax x20; xem chi tiết tại claudemax.fishxcode.com. | Đội nhóm, dùng ClaudeMax cường độ cao |
-| `claudemax_x5` | [ClaudeMax · Gói đăng ký chính thức x5] Nhóm tài khoản đăng ký chính thức ClaudeMax x5; xem chi tiết tại claudemax.fishxcode.com. | Cá nhân hoặc dùng ClaudeMax ở mức nhẹ |
-| `codex_plus` | [Codex Plus · Kết nối ngoài] Nhóm pool tài khoản dòng Codex Plus; hỗ trợ dùng qua kết nối ngoài, phù hợp với các tác vụ viết mã và gọi công cụ tần suất cao. | Tác vụ viết mã tần suất cao |
-| `codex_pro` | [Codex Pro · Kết nối ngoài] Nhóm pool tài khoản dòng Codex Pro; hỗ trợ dùng qua kết nối ngoài, phù hợp với các tác vụ viết mã và gọi công cụ tần suất cao. | Tác vụ lập trình Codex / GPT ổn định hơn |
-| `codex_sub` | [Gói đăng ký Codex · Pool tiêu chuẩn] Nhóm thuộc dòng gói đăng ký Codex; phù hợp với pool tài khoản Codex Plus / Pro / Team, hỗ trợ các tình huống có tỷ lệ trúng bộ nhớ đệm cao. | Pool tiêu chuẩn của gói đăng ký Codex |
-| `codex_sub_june` | [Gói đăng ký Codex · Pool phiên bản mới] Nhóm thuộc dòng gói đăng ký Codex phiên bản mới; phù hợp với các mô hình dòng GPT-5.x / Codex, hỗ trợ các tình huống có tỷ lệ trúng bộ nhớ đệm cao. | Mô hình GPT-5.x / Codex phiên bản mới |
-| `deepseek` | [API chính thức · DeepSeek] Kênh chính thức của DeepSeek; phù hợp để gọi ổn định các mô hình dòng DeepSeek. | Dòng DeepSeek |
-| `default` | [Đa dụng · Mô hình toàn nền tảng] Nhóm trả theo mức dùng mặc định, có thể gọi các mô hình đang mở trên nền tảng; phù hợp cho thử nghiệm hằng ngày và yêu cầu thông thường. | Thử nghiệm hằng ngày, yêu cầu thông thường |
-| `gemini` | [Chính thức/Độ ổn định cao · Gemini] Nhóm mô hình dòng Gemini; phù hợp với tác vụ đa phương thức, ngữ cảnh dài và gọi tần suất cao hằng ngày. | Gemini, đa phương thức, ngữ cảnh dài |
-| `grok` | [Kênh riêng · Grok] Nhóm mô hình dòng Grok; phù hợp với các tác vụ hội thoại, suy luận và thị giác của xAI Grok. | Grok: hội thoại, suy luận, thị giác |
+| Lập trình Codex hằng ngày | `codex-plus` (0.2x) | Phù hợp cho phát triển mã hằng ngày |
+| Codex hệ số thấp | `codex-team` (0.15x) | Phù hợp với người dùng chấp nhận pool tài nguyên dùng chung |
+| Codex / phát triển Agent tần suất cao | Gói tháng pool tài khoản Codex Pro | Chọn gói tháng hạn mức 200 hoặc 2000 USD tùy theo mức sử dụng thực tế |
+| Lập trình và tác vụ dài với Claude | `claude` (1.5x) | Nếu dùng tần suất cao, có thể cân nhắc `claudemax` (2.6x) |
+| Kiro | `kiro-svip` (0.2x) | Pool tài khoản chính thức Kiro mua theo giá gốc |
+| Mô hình Trung Quốc | `china` (0.8x) | Kết nối trực tiếp API chính thức |
+| Mô hình Grok | `grok` (0.5x) | Nhóm dành riêng cho xAI Grok |
+| Tạo hình ảnh, video, âm thanh | `fishxlab` (2x) | Mô hình cụ thể và cách tính phí căn cứ theo thông tin trên trang |
+| Phân tách theo đội nhóm hoặc dự án | Tạo token riêng cho từng thành viên hoặc dự án | Tiện kiểm soát hạn mức, phân bổ chi phí và tra soát nhật ký |
 
-<Callout type="info" title="Nhóm được điều chỉnh linh hoạt">
-  Nền tảng có thể thêm mới, gỡ bỏ hoặc điều chỉnh nhóm. Tài liệu này dùng để giải thích logic chọn nhóm, không thay thế giá và quyền truy cập hiển thị theo thời gian thực trong bảng điều khiển.
-</Callout>
+## 6. Đối chiếu mức tiêu hao thực tế sau khi sử dụng
 
-## 9. Ví dụ về hệ số và trừ phí
-
-Hệ số chỉ là một con số được nhân thêm vào giá cơ bản của mô hình. Hệ số càng thấp thì thường cùng một mô hình, cùng một yêu cầu sẽ bị trừ phí càng ít.
-
-| Mức tiêu hao cơ bản của mô hình | Hệ số nhóm hoặc mô hình | Mức trừ ước tính |
-| - | - | - |
-| 10 đơn vị hạn mức | `1x` | 10 đơn vị hạn mức |
-| 10 đơn vị hạn mức | `0.5x` | 5 đơn vị hạn mức |
-| 10 đơn vị hạn mức | `0.1x` | 1 đơn vị hạn mức |
-| 10 đơn vị hạn mức | `2.5x` | 25 đơn vị hạn mức |
-
-Ví dụ sát với thực tế gọi API hơn:
-
-| Tình huống | Cách ước tính |
-| - | - |
-| Một mô hình có mức tiêu hao cơ bản 8 đơn vị hạn mức, tính theo mức `1x` | Trừ khoảng 8 đơn vị hạn mức |
-| Cùng yêu cầu đó tính theo mức `0.5x` | Trừ khoảng 4 đơn vị hạn mức |
-| Cùng yêu cầu đó tính theo hệ số mô hình `2.5x` | Trừ khoảng 20 đơn vị hạn mức |
-| Yêu cầu ngữ cảnh dài có trúng bộ nhớ đệm | Phần trúng bộ nhớ đệm thường rẻ hơn, kết quả cuối cùng căn cứ theo bản ghi nhật ký |
-
-<Callout type="warn" title="Đừng chỉ nhìn vào hệ số">
-  Hệ số không phải là mức giá duy nhất. Giá cơ bản, hệ số đầu ra và hệ số bộ nhớ đệm của các mô hình chênh lệch rất lớn; mô hình hình ảnh, video còn có thể có giá cố định. Khi ước tính chi phí, hãy căn cứ theo giá hiện tại trên trang giá hoặc trong danh sách mô hình của bảng điều khiển.
-</Callout>
-
-## 10. Đối chiếu mức tiêu hao thực tế sau khi sử dụng
-
-Sau khi gọi, đừng chỉ dựa vào ước tính để đánh giá chi phí; hãy vào **Bảng điều khiển → Nhật ký sử dụng** để xem mức tiêu hao thực tế. Với đội nhóm hoặc khi dùng gói, hãy kết hợp thêm **Trạng thái sức khỏe nhóm** để xác định vấn đề nằm ở một Key, một người dùng hay toàn bộ nhóm.
+Sau khi gọi, hãy đối chiếu mức tiêu hao thực tế theo bản ghi trong **Bảng điều khiển → Nhật ký sử dụng**. Với đội nhóm, hãy kết hợp thêm [Trạng thái sức khỏe nhóm](/vi/group-health) để xác định vấn đề nằm ở một Key, một thành viên hay toàn bộ nhóm.
 
 ![Ví dụ trạng thái sức khỏe nhóm](/img/plans/statistics.png)
-
-Trạng thái sức khỏe nhóm giúp trả lời các câu hỏi sau:
 
 | Câu hỏi | Xem trường nào |
 | - | - |
 | Nhóm nào tiêu hao nhiều nhất | Nhóm, tiêu hao, số yêu cầu |
-| Có phải chỉ một thành viên gặp bất thường | Dòng chi tiết người dùng / token |
+| Có phải chỉ một thành viên bất thường không | Dòng chi tiết người dùng / token |
 | Bộ nhớ đệm có phát huy tác dụng không | Tỷ lệ trúng bộ nhớ đệm, token bộ nhớ đệm, tỷ lệ yêu cầu dùng bộ nhớ đệm |
-| Có phải là vấn đề của pool tài nguyên | Tỷ lệ thành công của nhóm, số lỗi, nguyên nhân thất bại |
-| Có phải chi phí cao do ngữ cảnh dài hoặc đầu ra lớn | Mức tiêu hao mỗi lần thành công, thời gian xử lý trung bình, token bộ nhớ đệm |
+| Có phải vấn đề của pool tài nguyên không | Tỷ lệ thành công của nhóm, số lỗi, nguyên nhân thất bại |
+| Chi phí cao có phải do ngữ cảnh dài hoặc đầu ra lớn không | Mức tiêu hao mỗi lần thành công, thời gian xử lý trung bình, token bộ nhớ đệm |
 
-<Callout type="idea" title="Ví dụ: đội nhóm rà soát lại">
-  Nếu tỷ lệ thành công tổng thể của nhóm `codex_sub` bình thường nhưng mức tiêu hao mỗi lần thành công trên token của một thành viên cao hơn hẳn các thành viên khác, hãy ưu tiên kiểm tra xem thành viên đó có đang chạy tác vụ ngữ cảnh dài, đầu ra lớn hoặc tác vụ lặp lại hay không. Nếu tỷ lệ thành công của cả nhóm giảm, hãy xem xét đến pool tài nguyên của nhóm, trạng thái của nhà cung cấp upstream hoặc quyền truy cập của gói.
-</Callout>
+## 7. Lưu ý khi sử dụng
 
-## 11. Gợi ý chọn nhanh
+1. Các nhóm khác nhau tương ứng với các pool tài nguyên khác nhau, hãy chọn theo tình huống sử dụng.
+2. Gói tháng Codex bắt buộc phải tạo token bằng nhóm `codex-sub-june`; các nhóm khác không dùng được hạn mức của gói này.
+3. Gói tháng không phải hạn mức không giới hạn; khi hết hạn mức hoặc gói hết hạn, bạn sẽ không thể tiếp tục sử dụng.
+4. Với hội thoại dài trên Claude, nên tận dụng hợp lý bộ nhớ đệm ngữ cảnh; lượng trúng bộ nhớ đệm thực tế phụ thuộc vào cấu hình client, mô hình và khoảng cách giữa các yêu cầu.
+5. Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên căn cứ theo thông tin thời gian thực trên trang.
 
-| Tình huống sử dụng | Nên xem trước | Lý do |
-| - | - | - |
-| Chưa chắc nên dùng gì | `default` hoặc nhóm được đề xuất trong bảng điều khiển | Xác minh cấu hình công cụ đã đúng trước |
-| Dùng Claude Code ổn định | `cc-max`, `cc_max`, dòng ClaudeMax | Sát hơn với cách sử dụng Claude Code |
-| Kết nối Claude từ client riêng | `cc_export` | Không giới hạn client, phù hợp với công cụ bên thứ ba |
-| Lập trình với Codex / GPT | `codex_plus`, `codex_pro`, `codex_sub_june` | Hướng đến các tác vụ viết mã và gọi công cụ |
-| Lối vào thống nhất cho nhiều dòng mô hình | `OpenRouter` | Phù hợp để gọi nhiều dòng mô hình như Claude, Codex qua một lối vào thống nhất |
-| Gemini CLI hoặc đa phương thức | `gemini` | Bao gồm các mô hình dòng Gemini |
-| Mô hình Grok | `grok` | Bao gồm các tác vụ hội thoại, suy luận và thị giác của Grok |
-| Mô hình DeepSeek | `deepseek` | Bao gồm kênh chính thức của DeepSeek |
-| Tách theo đội nhóm hoặc dự án | Tạo token riêng cho từng thành viên hoặc dự án | Thuận tiện kiểm soát hạn mức, phân bổ chi phí và tra cứu nhật ký |
+## 8. Khắc phục bất thường về tiêu hao hoặc quyền
 
-## 12. Khắc phục bất thường về tiêu hao hoặc quyền truy cập
+Khi gặp tiêu hao bất thường hoặc mô hình không khả dụng, bạn nên kiểm tra theo thứ tự sau:
 
-Khi gặp bất thường về tiêu hao hoặc mô hình không dùng được, nên kiểm tra theo thứ tự sau:
+1. Xác nhận nhóm mà Key hiện tại được gắn có bao gồm mô hình cần dùng hay không.
+2. Xác nhận số dư tài khoản, hoặc thời hạn hiệu lực và hạn mức còn lại của gói tháng có đủ hay không.
+3. Xem **Bảng điều khiển → Nhật ký sử dụng**, lọc theo thời gian, mô hình, token, nhóm và ID yêu cầu.
+4. Đối chiếu với [Trạng thái sức khỏe nhóm](/vi/group-health) để xác định vấn đề nằm ở một token hay ở pool tài nguyên của nhóm.
+5. Nếu vẫn chưa xác định được, hãy liên hệ bộ phận hỗ trợ và cung cấp mã đơn hàng, tên token, nhóm, tên mô hình, thời gian yêu cầu và ID yêu cầu.
 
-1. Xác nhận nhóm token mà Key hiện tại được gắn có bao gồm mô hình mục tiêu hay không.
-2. Xác nhận số dư, thời hạn hiệu lực của gói, giới hạn ngày, giới hạn tháng hoặc tổng hạn mức có đủ hay không.
-3. Xem **Bảng điều khiển → Nhật ký sử dụng**, lọc theo thời gian, mô hình, token, nhóm, ID yêu cầu.
-4. Đối chiếu [Trạng thái sức khỏe nhóm](/vi/group-health) để xác định là vấn đề của một token hay của pool tài nguyên của nhóm.
-5. Nếu vẫn chưa xác định được, khi liên hệ hỗ trợ hãy cung cấp mã đơn hàng, tên token, nhóm, tên mô hình, thời gian yêu cầu và ID yêu cầu.
+## 9. Mua sắm và hợp tác doanh nghiệp
+
+Với nhu cầu gọi số lượng lớn cho doanh nghiệp, kết nối đội nhóm, mua mô hình và tùy chỉnh, bạn có thể liên hệ tư vấn qua [trang dành riêng cho doanh nghiệp](https://enterprise.fishxcode.com/).
