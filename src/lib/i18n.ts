@@ -20,7 +20,8 @@
  *      （如 pt → pt-BR）还要加进同文件的 CONTENT_LANGUAGE_TAGS；
  *    - `public/_headers` 里按语言的 Content-Language 规则照抄一份；
  *    - `vercel.json` 里每一处 `en|fr|…` 形式的语言列表都要补上。标签与前缀不同的语言
- *      像 pt 一样单列 Content-Language 规则，并且不进通用规则的列表；
+ *      像 pt 一样单列 Content-Language 规则，并且不进通用 Content-Language 规则的列表
+ *      （Link 规则只看 URL 前缀，照常加进列表）；
  * 5. 正文放进 `content/docs/{lang}/`，尚未翻译的页面自动回退显示中文。
  *
  * 其余（sitemap、RSS、llms.txt、hreflang、搜索索引、浏览器语言探测）自动跟随。

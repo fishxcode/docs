@@ -36,7 +36,8 @@ export function joinRoute(route: string, segments: readonly string[]): string {
  * 首页 Markdown 副本的保留 slug。首页是 React 组件而不是 .mdx 文档，它的副本
  * 挂在 /llms.mdx/{本值}/content.md（其余语言 /llms.mdx/{lang}/{本值}/content.md）。
  * contentDir 根目录下不要放同名文档页——它本来也会和首页路由 / 冲突。
- * public/_worker.js 没有打包步骤、无法 import 本文件，那里有一份同名常量。
+ * public/_worker.js 与 vercel.json 不经打包、无法 import 本文件：worker 里有一份同名常量，
+ * vercel.json 的 Link 规则里写死了这个值。
  */
 export const homeSlug = 'index';
 

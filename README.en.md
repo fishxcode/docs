@@ -129,8 +129,7 @@ content negotiation and only supports the `.md` suffix; see [Deployment](#deploy
 
 ## Deployment
 
-The same code is published to two platforms, and the custom domain `docs.fishxcode.com` (along with
-`doc.fishxcode.com`) points to Vercel:
+The same code is published to two platforms, and the custom domain `docs.fishxcode.com` points to Vercel:
 
 | Platform | Publishing | Edge configuration |
 | --- | --- | --- |
@@ -140,14 +139,19 @@ The same code is published to two platforms, and the custom domain `docs.fishxco
 The two configurations are not interchangeable, so change both when you touch the API proxy, redirects or
 response headers. Vercel does not run `_worker.js` and does not read `_headers` or `_routes.json` (on Vercel
 they are plain static files). `vercel.json` covers the pricing API proxy, legacy redirects, the `.md` suffix
-and response headers. `Accept: text/markdown` negotiation and the fallback to the Chinese copy for
-untranslated pages are not possible on Vercel: Vercel checks static files before applying rewrites, so the
-URL of an existing page cannot be rewritten based on request headers. The `Link` header on Markdown copies
-is not set on Vercel yet.
+and response headers, including `Content-Language` and `Link` on Markdown copies. `Accept: text/markdown`
+negotiation and the fallback to the Chinese copy for untranslated pages are not possible on Vercel: Vercel
+checks static files before applying rewrites, so the URL of an existing page cannot be rewritten based on
+request headers.
+
+The old domain `doc.fishxcode.com` also resolves to Vercel, and `vercel.json` permanently redirects (308)
+every request on it to the same path on the custom domain, except `/.well-known/`, which is left for HTTP
+certificate validation. Cloudflare Pages does not serve this domain, so `_worker.js` has no matching rule.
 
 The site URL is `siteConfig.url` in `src/lib/site.ts`; canonical URLs, the sitemap, RSS, llms.txt and share
 images are all built from it. To move the whole site to another domain, change it there or set
-`NEXT_PUBLIC_SITE_URL` (the full URL, without a trailing slash) at build time.
+`NEXT_PUBLIC_SITE_URL` (the full URL, without a trailing slash) at build time, and update the target of the
+old-domain redirect in `vercel.json`.
 
 ### Vercel
 

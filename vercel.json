@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
+    {
+      "source": "/:path((?!\\.well-known(?:/|$)).*)",
+      "has": [{ "type": "host", "value": { "eq": "doc.fishxcode.com" } }],
+      "destination": "https://docs.fishxcode.com/:path",
+      "statusCode": 308
+    },
     { "source": "/feed.xml", "destination": "/rss.xml", "statusCode": 301 },
     { "source": "/feed.atom", "destination": "/rss.xml", "statusCode": 301 },
     {
@@ -77,6 +83,42 @@
     {
       "source": "/pt/:path+.md",
       "headers": [{ "key": "Content-Language", "value": "pt-BR" }]
+    },
+    {
+      "source": "/llms.mdx/index/content.md",
+      "headers": [{ "key": "Link", "value": "</>; rel=\"canonical\", </llms.txt>; rel=\"describedby\"" }]
+    },
+    {
+      "source": "/llms.mdx/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/index/content.md",
+      "headers": [{ "key": "Link", "value": "</:locale>; rel=\"canonical\", </:locale/llms.txt>; rel=\"describedby\"" }]
+    },
+    {
+      "source": "/llms.mdx/:path((?!(?:en|fr|es|pt|ru|ja|vi|zh-TW)/|index/content\\.md$).+)/content.md",
+      "headers": [{ "key": "Link", "value": "</:path>; rel=\"canonical\", </llms.txt>; rel=\"describedby\"" }]
+    },
+    {
+      "source": "/llms.mdx/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/:path((?!index/content\\.md$).+)/content.md",
+      "headers": [
+        { "key": "Link", "value": "</:locale/:path>; rel=\"canonical\", </:locale/llms.txt>; rel=\"describedby\"" }
+      ]
+    },
+    {
+      "source": "/index.md",
+      "headers": [{ "key": "Link", "value": "</>; rel=\"canonical\", </llms.txt>; rel=\"describedby\"" }]
+    },
+    {
+      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/index.md",
+      "headers": [{ "key": "Link", "value": "</:locale>; rel=\"canonical\", </:locale/llms.txt>; rel=\"describedby\"" }]
+    },
+    {
+      "source": "/:path((?!(?:en|fr|es|pt|ru|ja|vi|zh-TW|llms\\.mdx)/|index\\.md$).+).md",
+      "headers": [{ "key": "Link", "value": "</:path>; rel=\"canonical\", </llms.txt>; rel=\"describedby\"" }]
+    },
+    {
+      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/:path((?!index\\.md$).+).md",
+      "headers": [
+        { "key": "Link", "value": "</:locale/:path>; rel=\"canonical\", </:locale/llms.txt>; rel=\"describedby\"" }
+      ]
     }
   ]
 }
