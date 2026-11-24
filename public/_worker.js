@@ -3,8 +3,8 @@
  *
  * 1. 定价接口转发：模型目录组件请求同源 `/api/pricing`，这里原样转发到主站同一路径
  *    （主站接口不带 CORS 头，浏览器跨域取不到）。dev 下由 src/proxy.ts 转发。
- * 2. 旧文档站（VitePress）的地址兼容：订阅地址 /feed.xml、/feed.atom 永久转到 /rss.xml；
- *    本站暂未提供的西班牙语、葡萄牙语页面临时转到同一路径的英文页。只在生产环境生效。
+ * 2. 旧文档站（VitePress）的地址兼容：订阅地址 /feed.xml、/feed.atom 永久转到 /rss.xml。
+ *    只在生产环境生效。
  * 3. Markdown 内容协商——页面的 HTML 与 Markdown 副本是两份独立静态文件，
  *    「同一 URL 按 Accept 返回不同表示」：
  *    - 客户端更偏好 Markdown（Accept 协商）→ 改取 `/llms.mdx/<页面路径>/content.md`
@@ -25,21 +25,13 @@ const PRICING_UPSTREAM = 'https://fishxcode.com/api/pricing';
 const PRICING_RESPONSE_HEADERS = ['content-type', 'cache-control', 'etag', 'last-modified'];
 
 /** 旧站订阅地址 → 新地址（永久） */
-const LEGACY_PERMANENT_REDIRECTS = new Map([
+const LEGACY_REDIRECTS = new Map([
   ['/feed.xml', '/rss.xml'],
   ['/feed.atom', '/rss.xml'],
 ]);
-/**
- * 旧站有、本站暂未提供的语言 → 临时改看的语言（302）。将来补上这些语言时删掉对应条目，
- * 用 302 而不是 301，是为了不让浏览器永久缓存这次跳转。
- */
-const LEGACY_LOCALE_FALLBACKS = new Map([
-  ['es', 'en'],
-  ['pt', 'en'],
-]);
 
 const CONTENT_ROUTE = '/llms.mdx';
-const LOCALES = new Set(['en', 'fr', 'ru', 'ja', 'vi', 'zh-TW']);
+const LOCALES = new Set(['en', 'fr', 'es', 'pt', 'ru', 'ja', 'vi', 'zh-TW']);
 /**
  * 首页副本的保留 slug。首页是 React 组件而不是 .mdx 文档，副本由
  * src/lib/discovery.ts 生成，挂在 /llms.mdx/<lang?>/index/content.md。
@@ -47,8 +39,13 @@ const LOCALES = new Set(['en', 'fr', 'ru', 'ja', 'vi', 'zh-TW']);
 const HOME_SLUG = 'index';
 /** 匹配副本路径开头的语言段：/llms.mdx/<lang>/... */
 const LOCALE_PREFIX_RE = new RegExp(`^${CONTENT_ROUTE}/(?:${[...LOCALES].join('|')})/`);
-/** 默认语言（URL 无前缀）的 BCP 47 标签；其余语言的标签与其前缀相同 */
+/** 默认语言（URL 无前缀）的 BCP 47 标签 */
 const DEFAULT_CONTENT_LANGUAGE = 'zh-CN';
+/**
+ * BCP 47 标签与 URL 前缀不同的语言（与 src/lib/i18n.ts 的 HTML_LANG 一致）；
+ * 不在这里的语言，标签就是前缀本身。
+ */
+const CONTENT_LANGUAGE_TAGS = new Map([['pt', 'pt-BR']]);
 /** 与 fumadocs-core/negotiation 的默认 Markdown 媒体类型一致 */
 const MARKDOWN_MEDIA_TYPES = new Set(['text/plain', 'text/markdown', 'text/x-markdown']);
 
@@ -135,7 +132,7 @@ function describeMarkdown(markdownPathname) {
   const isHome = slugs.length === 1 && slugs[0] === HOME_SLUG;
 
   return {
-    contentLanguage: locale ?? DEFAULT_CONTENT_LANGUAGE,
+    contentLanguage: locale ? (CONTENT_LANGUAGE_TAGS.get(locale) ?? locale) : DEFAULT_CONTENT_LANGUAGE,
     htmlPath: isHome ? (locale ? `/${locale}` : '/') : `/${segments.join('/')}`,
     llmsPath: locale ? `/${locale}/llms.txt` : '/llms.txt',
   };
@@ -236,17 +233,10 @@ async function proxyPricing(request, url) {
   return new Response(upstream.body, { status: upstream.status, headers });
 }
 
-/** 旧文档站地址的跳转目标；不属于旧地址时返回 null */
+/** 旧文档站地址的跳转（永久，保留查询串）；不属于旧地址时返回 null */
 function legacyRedirect(url) {
-  const permanent = LEGACY_PERMANENT_REDIRECTS.get(url.pathname);
-  if (permanent) return Response.redirect(new URL(`${permanent}${url.search}`, url).toString(), 301);
-
-  const [, first, ...rest] = url.pathname.split('/');
-  const fallback = LEGACY_LOCALE_FALLBACKS.get(first);
-  if (fallback) {
-    return Response.redirect(new URL(`/${[fallback, ...rest].join('/')}${url.search}`, url).toString(), 302);
-  }
-  return null;
+  const target = LEGACY_REDIRECTS.get(url.pathname);
+  return target ? Response.redirect(new URL(`${target}${url.search}`, url).toString(), 301) : null;
 }
 
 async function handle(request, env) {

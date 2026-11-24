@@ -46,14 +46,18 @@ const HOWTO_SLUGS = new Set(['quickstart']);
  * 宽松匹配的误判由调用方的"至少两条"门槛兜住——单个陈述句被当成问题
  * 不会产出 FAQPage。
  */
+/*
+ * 西语 / 葡语的疑问词带重音字母，JS 正则的 \b 不把 é、ó 当作单词字符，所以用
+ * 「词 + 空白」收尾；西语问句以「¿」开头，单独认它。
+ */
 const QUESTION_PREFIX =
-  /^(如何|怎么|怎样|为什么|为何|什么是|什么|是否|能否|可以|要不要|该不该|哪里|哪些|\bhow\b|\bwhat\b|\bwhy\b|\bwhich\b|\bwhen\b|\bcan\b|\bshould\b|\bdo\b|\bdoes\b|\bis\b|comment\b|pourquoi\b|qu[e']|как\b|почему\b|стоит ли|можно ли|làm sao|tại sao|có nên)/i;
+  /^(如何|怎么|怎样|为什么|为何|什么是|什么|是否|能否|可以|要不要|该不该|哪里|哪些|怎麼|怎樣|為什麼|為何|什麼是|什麼|該不該|哪裡|\bhow\b|\bwhat\b|\bwhy\b|\bwhich\b|\bwhen\b|\bcan\b|\bshould\b|\bdo\s+(?:i|you|we|they)\b|\bdoes\b|\bis\b|comment\b|pourquoi\b|qu[eé]\s|qu'|quel(?:le)?s?\s|как\b|почему\b|стоит ли|можно ли|làm sao|tại sao|có nên|¿|c[oó]mo\s|por qu[eé]\s|cu[aá]l(?:es)?\s|cu[aá]ndo\s|cu[aá]nto\s|d[oó]nde\s|qui[eé]n\s|qual\s|quais\s|quando\s|quanto\s|quem\s|onde\s)/i;
 
 /** 疑问结构必须落在句尾：出现在句中的"在哪里"是叙述，不是提问。 */
 const QUESTION_INLINE =
   /(是什么|有什么区别|什么区别|怎么办|怎么做|怎么处理|怎么用|怎么选|怎么验证|怎么判断|怎么配置|多久|多少|在谁|从哪里开始|从哪里|在哪里|从哪|在哪|是否|哪些|哪个|为什么|如何|吗|呢)\s*[？?]?\s*$/;
 
-const STEP_HEADING = /^(?:步骤|Step|Étape|Шаг|Bước)\s*(\d+)\s*[：:.、\-—]?\s*(.+)$/i;
+const STEP_HEADING = /^(?:步骤|步驟|Step|Étape|Paso|Passo|Шаг|Bước|ステップ)\s*(\d+)\s*[：:.、\-—]?\s*(.+)$/i;
 
 function absolute(path: string): string {
   return new URL(path, siteConfig.url).toString();

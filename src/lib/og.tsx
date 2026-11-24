@@ -20,16 +20,18 @@ const COLORS = {
 } as const;
 
 /**
- * 各语言的内容字体。中文与日文各自需要一份 CJK 子集，越语需要带声调符号的
- * 拉丁扩展；其余（en/fr/ru）用 Noto Sans 即可覆盖。回退链末尾统一挂
+ * 各语言的内容字体。简体、繁体与日文各自需要一份 CJK 子集（字形按地区习惯），越语需要带声调符号的
+ * 拉丁扩展；其余（en/fr/es/pt/ru）用 Noto Sans 即可覆盖。回退链末尾统一挂
  * Noto Sans，保证拉丁字母与数字不会落回只含 Geist 的默认字体。
  */
 const FONT_FAMILY: Record<Locale, string> = {
   zh: 'Noto Sans SC',
-  'zh-TW': 'Noto Sans SC',
+  'zh-TW': 'Noto Sans TC',
   ja: 'Noto Sans JP',
   en: 'Noto Sans',
   fr: 'Noto Sans',
+  es: 'Noto Sans',
+  pt: 'Noto Sans',
   ru: 'Noto Sans',
   vi: 'Noto Sans',
 };

@@ -35,7 +35,7 @@ function markdownResponse(body: string, lang: Locale, canonicalPath: string): Re
  *
  * 文档页只为真实翻译的页面生成（generateStaticParams 与 GET 双重判定）；
  * 回退页内容与 zh 完全一致，复用 zh 副本，不产生重复 URL。
- * 首页七种语言都是真实内容，逐语言各生成一份。
+ * 首页在每种语言下都是真实内容，逐语言各生成一份。
  */
 export async function GET(_req: Request, { params }: RouteContext<'/llms.mdx/[[...slug]]'>) {
   const { slug } = await params;

@@ -97,6 +97,8 @@ const UPDATED_LABEL: Record<Locale, string> = {
   ja: '最終更新：',
   en: 'Last updated:\u00a0',
   fr: 'Dernière mise à jour\u00a0:\u00a0',
+  es: 'Última actualización:\u00a0',
+  pt: 'Última atualização:\u00a0',
   ru: 'Обновлено:\u00a0',
   vi: 'Cập nhật lần cuối:\u00a0',
 };

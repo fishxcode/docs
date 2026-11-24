@@ -22,7 +22,7 @@ type HomeCopy = {
 /**
  * 各语言首页文案（纯数据，零组件依赖），内容沿用旧文档站首页。
  * localized-home-page.tsx、首页 Markdown 副本、分享图、页脚与结构化数据共用，
- * 新增语言在此补充一项即可。zh / en / fr 是旧站原文，其余语言为译文。
+ * 新增语言在此补充一项即可。zh / en / fr / es / pt 是旧站原文，其余语言为译文。
  */
 export const HOME_COPY: Record<Locale, HomeCopy> = {
   zh: {
@@ -84,6 +84,46 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
     ],
     updated: 'Mis à jour en continu · Dernière mise à jour le ',
+  },
+  es: {
+    title: `${siteConfig.productName} - Estación AI Coding`,
+    headline: 'Estación AI Coding',
+    tagline: 'Usa modelos Claude y Codex en múltiples plataformas',
+    description: 'Estación AI Coding para usar modelos Claude y Codex en múltiples plataformas.',
+    register: 'Registrarse',
+    docs: 'Documentación',
+    features: [
+      { title: 'Inicio rápido', details: 'Regístrate y comienza tu flujo de trabajo AI Coding en minutos.' },
+      {
+        title: 'Soporte multi-modelo',
+        details: 'Soporta Claude, Codex y otros modelos de IA. Cambia según necesites.',
+      },
+      {
+        title: 'Compatible multi-herramienta',
+        details: 'Funciona con Claude Code, OpenAI Codex, RooCode, Qwen Code, Droid y OpenCode.',
+      },
+    ],
+    updated: 'Actualizada continuamente · Última actualización: ',
+  },
+  pt: {
+    title: `${siteConfig.productName} - Estação AI Coding`,
+    headline: 'Estação AI Coding',
+    tagline: 'Use modelos Claude e Codex em múltiplas plataformas',
+    description: 'Estação AI Coding para usar modelos Claude e Codex em múltiplas plataformas.',
+    register: 'Cadastrar',
+    docs: 'Documentação',
+    features: [
+      { title: 'Início rápido', details: 'Cadastre-se e comece seu fluxo de trabalho AI Coding em minutos.' },
+      {
+        title: 'Suporte multi-modelo',
+        details: 'Suporta Claude, Codex e outros modelos de IA. Alterne conforme necessário.',
+      },
+      {
+        title: 'Compatível com múltiplas ferramentas',
+        details: 'Funciona com Claude Code, OpenAI Codex, RooCode, Qwen Code, Droid e OpenCode.',
+      },
+    ],
+    updated: 'Atualizada continuamente · Última atualização: ',
   },
   ru: {
     title: `${siteConfig.productName} - шлюз для AI Coding`,

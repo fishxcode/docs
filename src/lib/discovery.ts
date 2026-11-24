@@ -47,6 +47,20 @@ const COPY: Record<
     fullIntro: 'Le corps Markdown complet de chaque page de documentation suit.',
     indexLabel: 'Index',
   },
+  es: {
+    title: `Documentación de ${siteConfig.productName}`,
+    intro:
+      `${siteConfig.productName} es una estación AI Coding para usar modelos Claude y Codex en múltiples plataformas. Este índice enumera una copia en Markdown de cada página de la documentación.`,
+    fullIntro: 'A continuación, el cuerpo completo en Markdown de cada página de la documentación.',
+    indexLabel: 'Índice',
+  },
+  pt: {
+    title: `Documentação do ${siteConfig.productName}`,
+    intro:
+      `${siteConfig.productName} é uma estação AI Coding para usar modelos Claude e Codex em múltiplas plataformas. Este índice lista uma cópia em Markdown de cada página da documentação.`,
+    fullIntro: 'A seguir, o conteúdo completo em Markdown de cada página da documentação.',
+    indexLabel: 'Índice',
+  },
   ru: {
     title: `Документация ${siteConfig.productName}`,
     intro:

@@ -4,7 +4,7 @@ type SiteCopy = {
   /** 页脚两列、首页 Markdown 副本两个小节的标题 */
   docs: string;
   resources: string;
-  /** 导航栏的站外入口（地址见 siteConfig.links），zh / en / fr 沿用旧文档站的叫法 */
+  /** 导航栏的站外入口（地址见 siteConfig.links），zh / en / fr / es / pt 沿用旧文档站的叫法 */
   console: string;
   status: string;
   quota: string;
@@ -14,7 +14,7 @@ type SiteCopy = {
  * 站点外壳的各语言文案：页脚、首页 Markdown 副本与导航栏共用，
  * 同一个概念在全站只保留一种译法。
  * 新增语言补一项，Record<Locale> 会在编译期拦住遗漏。
- * zh / en / fr 以外的条目是按语义直译的草稿，上线前建议由母语者过一遍。
+ * ru / ja / vi / zh-TW 的条目是按语义直译的草稿，上线前建议由母语者过一遍。
  */
 export const SITE_COPY: Record<Locale, SiteCopy> = {
   zh: { docs: '文档', resources: '机器可读资源', console: '控制台', status: '服务状态', quota: '额度查询' },
@@ -31,6 +31,20 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'Console',
     status: 'État du service',
     quota: 'Vérifier le solde',
+  },
+  es: {
+    docs: 'Documentación',
+    resources: 'Recursos legibles por máquina',
+    console: 'Consola',
+    status: 'Estado del servicio',
+    quota: 'Consultar saldo',
+  },
+  pt: {
+    docs: 'Documentação',
+    resources: 'Recursos legíveis por máquina',
+    console: 'Console',
+    status: 'Status do serviço',
+    quota: 'Verificar saldo',
   },
   ru: {
     docs: 'Документация',
