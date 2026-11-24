@@ -6,24 +6,7 @@ import { cn } from '@/lib/cn';
 import { DEFAULT_LOCALE, isLocale, type Locale } from '@/lib/i18n';
 import { pricingRoute } from '@/lib/shared';
 import { siteConfig } from '@/lib/site';
-
-/** 主站定价接口的返回，只声明本组件用到的字段 */
-interface PricingModel {
-  model_name: string;
-  description?: string;
-  /** 逗号分隔的标签串 */
-  tags?: string;
-  vendor_id: number;
-  /** 0：按 token 倍率计费；1：按次计费，单价见 model_price（美元） */
-  quota_type?: number;
-  model_ratio: number;
-  model_price?: number;
-  completion_ratio: number;
-  cache_ratio?: number;
-  create_cache_ratio?: number;
-  enable_groups?: string[];
-  supported_endpoint_types?: string[];
-}
+import { bestGroupRatio, formatRatio, formatUsd, modelPrice, priceLabel, type PricingModel, type PricingTier } from '@/lib/pricing';
 
 interface PricingVendor {
   id: number;
@@ -90,6 +73,16 @@ interface CatalogCopy {
   cacheWriteRatio: string;
   perCall: string;
   perCallUnit: string;
+  dynamic: string;
+  dynamicHint: string;
+  input: string;
+  output: string;
+  cacheRead: string;
+  cacheWrite: string;
+  cacheWrite1h: string;
+  bestGroup: string;
+  tiers: string;
+  rawExpression: string;
   none: string;
 }
 
@@ -124,6 +117,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: '缓存创建倍率',
     perCall: '按次计费',
     perCallUnit: '次',
+    dynamic: '动态计费',
+    dynamicHint: '按输入价起算 · USD / 1M tokens，实际价格随分组、上下文或时段变化',
+    input: '输入',
+    output: '输出',
+    cacheRead: '缓存读取',
+    cacheWrite: '缓存写入',
+    cacheWrite1h: '缓存写入 (1h)',
+    bestGroup: '最低可用分组',
+    tiers: '计费档位',
+    rawExpression: '计费表达式',
     none: '无',
   },
   en: {
@@ -156,6 +159,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'Cache write ratio',
     perCall: 'Per-request pricing',
     perCallUnit: 'request',
+    dynamic: 'Dynamic pricing',
+    dynamicHint: 'From input price · USD / 1M tokens; final price varies by group, context or time',
+    input: 'Input',
+    output: 'Output',
+    cacheRead: 'Cache read',
+    cacheWrite: 'Cache write',
+    cacheWrite1h: 'Cache write (1h)',
+    bestGroup: 'Lowest available group',
+    tiers: 'Pricing tiers',
+    rawExpression: 'Billing expression',
     none: 'None',
   },
   fr: {
@@ -188,6 +201,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'Ratio cache (écriture)',
     perCall: 'Facturation à la requête',
     perCallUnit: 'requête',
+    dynamic: 'Tarification dynamique',
+    dynamicHint: 'À partir du prix d’entrée · USD / 1M tokens ; le prix varie selon le groupe, le contexte ou l’heure',
+    input: 'Entrée',
+    output: 'Sortie',
+    cacheRead: 'Lecture cache',
+    cacheWrite: 'Écriture cache',
+    cacheWrite1h: 'Écriture cache (1 h)',
+    bestGroup: 'Groupe le moins cher',
+    tiers: 'Paliers tarifaires',
+    rawExpression: 'Expression de facturation',
     none: 'Aucun',
   },
   es: {
@@ -220,6 +243,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'Ratio de caché (escritura)',
     perCall: 'Cobro por solicitud',
     perCallUnit: 'solicitud',
+    dynamic: 'Precio dinámico',
+    dynamicHint: 'Desde el precio de entrada · USD / 1M tokens; el precio varía por grupo, contexto u hora',
+    input: 'Entrada',
+    output: 'Salida',
+    cacheRead: 'Lectura de caché',
+    cacheWrite: 'Escritura de caché',
+    cacheWrite1h: 'Escritura de caché (1 h)',
+    bestGroup: 'Grupo más económico',
+    tiers: 'Niveles de precio',
+    rawExpression: 'Expresión de facturación',
     none: 'Ninguno',
   },
   pt: {
@@ -252,6 +285,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'Proporção de cache (gravação)',
     perCall: 'Cobrança por requisição',
     perCallUnit: 'requisição',
+    dynamic: 'Preço dinâmico',
+    dynamicHint: 'A partir do preço de entrada · USD / 1M tokens; o preço varia por grupo, contexto ou horário',
+    input: 'Entrada',
+    output: 'Saída',
+    cacheRead: 'Leitura de cache',
+    cacheWrite: 'Gravação em cache',
+    cacheWrite1h: 'Gravação em cache (1 h)',
+    bestGroup: 'Grupo mais barato',
+    tiers: 'Faixas de preço',
+    rawExpression: 'Expressão de cobrança',
     none: 'Nenhum',
   },
   ru: {
@@ -284,6 +327,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'Коэффициент записи кеша',
     perCall: 'Оплата за запрос',
     perCallUnit: 'запрос',
+    dynamic: 'Динамическая цена',
+    dynamicHint: 'От цены ввода · USD / 1M токенов; итоговая цена зависит от группы, контекста или времени',
+    input: 'Ввод',
+    output: 'Вывод',
+    cacheRead: 'Чтение кэша',
+    cacheWrite: 'Запись кэша',
+    cacheWrite1h: 'Запись кэша (1 ч)',
+    bestGroup: 'Самая выгодная группа',
+    tiers: 'Тарифные уровни',
+    rawExpression: 'Выражение тарификации',
     none: 'Нет',
   },
   ja: {
@@ -316,6 +369,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'キャッシュ作成倍率',
     perCall: 'リクエスト課金',
     perCallUnit: '回',
+    dynamic: '動的料金',
+    dynamicHint: '入力単価から · USD / 1M tokens。実際の料金はグループ、コンテキスト、時間帯で変動します',
+    input: '入力',
+    output: '出力',
+    cacheRead: 'キャッシュ読取',
+    cacheWrite: 'キャッシュ書込',
+    cacheWrite1h: 'キャッシュ書込 (1h)',
+    bestGroup: '最安の利用グループ',
+    tiers: '料金区分',
+    rawExpression: '課金式',
     none: 'なし',
   },
   vi: {
@@ -348,6 +411,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: 'Hệ số ghi cache',
     perCall: 'Tính phí theo lượt',
     perCallUnit: 'lượt',
+    dynamic: 'Giá động',
+    dynamicHint: 'Từ giá đầu vào · USD / 1M tokens; giá thực tế thay đổi theo nhóm, ngữ cảnh hoặc khung giờ',
+    input: 'Đầu vào',
+    output: 'Đầu ra',
+    cacheRead: 'Đọc cache',
+    cacheWrite: 'Ghi cache',
+    cacheWrite1h: 'Ghi cache (1h)',
+    bestGroup: 'Nhóm rẻ nhất',
+    tiers: 'Các mức giá',
+    rawExpression: 'Biểu thức tính giá',
     none: 'Không có',
   },
   'zh-TW': {
@@ -379,6 +452,16 @@ const COPY: Record<Locale, CatalogCopy> = {
     cacheWriteRatio: '快取建立倍率',
     perCall: '按次計費',
     perCallUnit: '次',
+    dynamic: '動態計費',
+    dynamicHint: '以輸入價起算 · USD / 1M tokens，實際價格隨分組、上下文或時段變化',
+    input: '輸入',
+    output: '輸出',
+    cacheRead: '快取讀取',
+    cacheWrite: '快取寫入',
+    cacheWrite1h: '快取寫入 (1h)',
+    bestGroup: '最低可用分組',
+    tiers: '計費檔位',
+    rawExpression: '計費表達式',
     none: '無',
   },
 };
@@ -394,21 +477,8 @@ function parseTags(tags?: string): string[] {
     .filter(Boolean);
 }
 
-/** 接口里的倍率是浮点数，去掉浮点误差后加上 x 后缀：37.5x */
-function formatRatio(value: number): string {
-  return `${Number.parseFloat(value.toPrecision(6))}x`;
-}
-
-/** 按次计费（quota_type 为 1）的模型倍率恒为 0，真正的价格在 model_price */
-function isPerCall(model: PricingModel): boolean {
-  return model.quota_type === 1;
-}
-
-function priceLabel(model: PricingModel, copy: CatalogCopy): string {
-  return isPerCall(model)
-    ? `$${Number.parseFloat((model.model_price ?? 0).toPrecision(6))} / ${copy.perCallUnit}`
-    : formatRatio(model.model_ratio);
-}
+/** 静态导出下价格的「当前时段」在组件渲染时计算；不随每分钟刷新，避免整页重绘 */
+const PRICING_NOW = new Date();
 
 /** 统计每个取值出现在多少个模型上，按次数降序、同次数按名称排序 */
 function countOptions(values: string[][]): FilterOption[] {
@@ -561,17 +631,21 @@ export function ModelCatalog() {
   }, [catalog, query, vendor, tag, group, endpoint]);
 
   const sections = useMemo(() => {
-    if (!options) return [];
+    if (!options || !catalog) return [];
     return options.vendors
       .map((option) => ({
         id: option.value,
         title: option.label,
         models: filtered
           .filter((model) => String(model.vendor_id) === option.value)
-          .sort((a, b) => b.model_ratio - a.model_ratio || a.model_name.localeCompare(b.model_name)),
+          .sort(
+            (a, b) =>
+              modelPrice(b, catalog.groupRatio, PRICING_NOW).input - modelPrice(a, catalog.groupRatio, PRICING_NOW).input ||
+              a.model_name.localeCompare(b.model_name),
+          ),
       }))
       .filter((section) => section.models.length > 0);
-  }, [filtered, options]);
+  }, [filtered, options, catalog]);
 
   const resetFilters = () => {
     setQuery('');
@@ -665,7 +739,7 @@ export function ModelCatalog() {
                   <div className="flex items-start justify-between gap-3">
                     <code className="break-all font-mono text-sm font-semibold">{model.model_name}</code>
                     <span className="shrink-0 rounded-md bg-fd-primary/10 px-2 py-0.5 text-xs font-medium text-fd-primary">
-                      {priceLabel(model, copy)}
+                      {priceLabel(model, catalog.groupRatio, copy, PRICING_NOW)}
                     </span>
                   </div>
                   <p className="mt-2 line-clamp-3 text-sm text-fd-muted-foreground">
@@ -867,24 +941,11 @@ function ModelDialog({
           </DialogSection>
 
           <DialogSection title={copy.pricing}>
-            <dl className="grid grid-cols-2 gap-3 text-sm">
-              {isPerCall(model) ? (
-                <Stat label={copy.perCall} value={priceLabel(model, copy)} />
-              ) : (
-                <>
-                  <Stat label={copy.modelRatio} value={formatRatio(model.model_ratio)} />
-                  <Stat label={copy.completionRatio} value={formatRatio(model.completion_ratio)} />
-                  {model.cache_ratio ? <Stat label={copy.cacheRatio} value={formatRatio(model.cache_ratio)} /> : null}
-                  {model.create_cache_ratio ? (
-                    <Stat label={copy.cacheWriteRatio} value={formatRatio(model.create_cache_ratio)} />
-                  ) : null}
-                </>
-              )}
-            </dl>
+            <PricingDetails model={model} groupRatio={groupRatio} copy={copy} />
           </DialogSection>
 
           <DialogSection title={copy.groups}>
-            {/* 分组后附该分组的倍率（接口的 group_ratio），与模型倍率相乘即实际计费倍率 */}
+            {/* 分组倍率与基准输入价相乘即该分组的实际价格；卡片取其中最低者 */}
             <Chips
               items={groups.map((name) => (name in groupRatio ? `${name} ×${groupRatio[name]}` : name))}
               fallback={copy.none}
@@ -893,6 +954,83 @@ function ModelDialog({
         </div>
       ) : null}
     </dialog>
+  );
+}
+
+/** 详情里展示 USD 实际单价；动态模型另列全部档位与原始表达式 */
+function PricingDetails({
+  model,
+  groupRatio,
+  copy,
+}: {
+  model: PricingModel;
+  groupRatio: Record<string, number>;
+  copy: CatalogCopy;
+}) {
+  const price = modelPrice(model, groupRatio, PRICING_NOW);
+  const usd = (value?: number) => (typeof value === 'number' && Number.isFinite(value) ? formatUsd(value) : copy.none);
+  const tierRow = (tier: PricingTier) =>
+    [
+      tier.label,
+      `${copy.input} ${usd(tier.input !== undefined ? tier.input * bestGroupRatio(model, groupRatio) : undefined)}`,
+      `${copy.output} ${usd(tier.output !== undefined ? tier.output * bestGroupRatio(model, groupRatio) : undefined)}`,
+      tier.cacheRead !== undefined ? `${copy.cacheRead} ${usd(tier.cacheRead * bestGroupRatio(model, groupRatio))}` : '',
+      tier.cacheWrite !== undefined ? `${copy.cacheWrite} ${usd(tier.cacheWrite * bestGroupRatio(model, groupRatio))}` : '',
+      tier.cacheWrite1h !== undefined
+        ? `${copy.cacheWrite1h} ${usd(tier.cacheWrite1h * bestGroupRatio(model, groupRatio))}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join(' · ');
+
+  return (
+    <div className="space-y-3 text-sm">
+      <p className="text-xs text-fd-muted-foreground">
+        {price.kind === 'call' ? copy.perCall : price.kind === 'dynamic' ? copy.dynamic : copy.dynamicHint}
+      </p>
+      <dl className="grid grid-cols-2 gap-3">
+        {price.kind === 'call' ? (
+          <Stat label={copy.perCall} value={`${usd(price.input)} / ${copy.perCallUnit}`} />
+        ) : (
+          <>
+            <Stat label={copy.input} value={`${usd(price.input)} / 1M`} />
+            <Stat label={copy.output} value={`${usd(price.output)} / 1M`} />
+            {price.cacheRead !== undefined ? <Stat label={copy.cacheRead} value={`${usd(price.cacheRead)} / 1M`} /> : null}
+            {price.cacheWrite !== undefined ? <Stat label={copy.cacheWrite} value={`${usd(price.cacheWrite)} / 1M`} /> : null}
+            {price.cacheWrite1h !== undefined ? (
+              <Stat label={copy.cacheWrite1h} value={`${usd(price.cacheWrite1h)} / 1M`} />
+            ) : null}
+          </>
+        )}
+        {price.kind === 'token' ? (
+          <>
+            <Stat label={copy.modelRatio} value={formatRatio(model.model_ratio)} />
+            <Stat label={copy.completionRatio} value={formatRatio(model.completion_ratio)} />
+            <Stat label={copy.cacheRatio} value={formatRatio(model.cache_ratio)} />
+            <Stat label={copy.cacheWriteRatio} value={formatRatio(model.create_cache_ratio)} />
+          </>
+        ) : null}
+        <Stat label={copy.bestGroup} value={formatRatio(bestGroupRatio(model, groupRatio))} />
+      </dl>
+      {price.kind === 'dynamic' && (price.tiers?.length ?? 0) > 0 ? (
+        <div className="space-y-1.5">
+          <p className="text-xs font-medium text-fd-muted-foreground">{copy.tiers}</p>
+          <ul className="space-y-1.5">
+            {price.tiers?.map((tier, index) => (
+              <li key={`${tier.label}-${index}`} className="rounded-lg bg-fd-muted px-3 py-2 text-xs">
+                {tierRow(tier)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {model.billing_expr ? (
+        <div className="space-y-1.5">
+          <p className="text-xs font-medium text-fd-muted-foreground">{copy.rawExpression}</p>
+          <code className="block break-all rounded-lg bg-fd-muted px-3 py-2 text-xs">{model.billing_expr}</code>
+        </div>
+      ) : null}
+    </div>
   );
 }
 
