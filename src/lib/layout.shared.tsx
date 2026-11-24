@@ -8,7 +8,7 @@ import { localePath, type Locale } from './i18n';
 
 /**
  * 首页与文档区共用的布局选项：品牌、站外入口与 GitHub 链接。
- * 站外入口与旧文档站的导航一致（控制台、服务状态、额度查询、立即注册），文字跟随页面语言。
+ * 站外入口依次是控制台、服务状态、额度查询、企业服务与「立即注册」按钮，文字跟随页面语言。
  */
 export function baseOptions(lang: Locale): BaseLayoutProps {
   const copy = SITE_COPY[lang];
@@ -28,6 +28,7 @@ export function baseOptions(lang: Locale): BaseLayoutProps {
       { text: copy.console, url: siteConfig.links.console, external: true },
       { text: copy.status, url: siteConfig.links.status, external: true },
       { text: copy.quota, url: siteConfig.links.quota, external: true },
+      { text: copy.enterprise, url: siteConfig.links.enterprise, external: true },
       { type: 'button', text: HOME_COPY[lang].register, url: siteConfig.links.register, external: true },
     ],
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,

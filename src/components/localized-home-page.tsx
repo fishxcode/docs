@@ -110,7 +110,8 @@ export function createLocalizedHomePage(lang: Locale) {
                   </div>
                 </div>
 
-                <ul className="mt-16 grid gap-4 md:grid-cols-3">
+                {/* 四张卖点卡片排成两列：外语说明较长，四列会把卡片挤得过窄 */}
+                <ul className="mt-16 grid gap-4 sm:grid-cols-2">
                   {copy.features.map((feature) => (
                     <li key={feature.title} className="rounded-xl border border-fd-border bg-fd-card p-5">
                       <h2 className="font-semibold text-fd-card-foreground">{feature.title}</h2>

@@ -4,10 +4,12 @@ type SiteCopy = {
   /** 页脚两列、首页 Markdown 副本两个小节的标题 */
   docs: string;
   resources: string;
-  /** 导航栏的站外入口（地址见 siteConfig.links），zh / en / fr / es / pt 沿用旧文档站的叫法 */
+  /** 导航栏的站外入口（地址见 siteConfig.links）；前三项的 zh / en / fr / es / pt 沿用旧文档站的叫法 */
   console: string;
   status: string;
   quota: string;
+  /** 企业专属站点。导航栏空间有限，各语言都用最短的说法 */
+  enterprise: string;
 };
 
 /**
@@ -17,13 +19,21 @@ type SiteCopy = {
  * ru / ja / vi / zh-TW 的条目是按语义直译的草稿，上线前建议由母语者过一遍。
  */
 export const SITE_COPY: Record<Locale, SiteCopy> = {
-  zh: { docs: '文档', resources: '机器可读资源', console: '控制台', status: '服务状态', quota: '额度查询' },
+  zh: {
+    docs: '文档',
+    resources: '机器可读资源',
+    console: '控制台',
+    status: '服务状态',
+    quota: '额度查询',
+    enterprise: '企业服务',
+  },
   en: {
     docs: 'Documentation',
     resources: 'Machine-readable resources',
     console: 'Console',
     status: 'Service Status',
     quota: 'Credit Balance',
+    enterprise: 'Enterprise',
   },
   fr: {
     docs: 'Documentation',
@@ -31,6 +41,7 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'Console',
     status: 'État du service',
     quota: 'Vérifier le solde',
+    enterprise: 'Entreprises',
   },
   es: {
     docs: 'Documentación',
@@ -38,6 +49,7 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'Consola',
     status: 'Estado del servicio',
     quota: 'Consultar saldo',
+    enterprise: 'Empresas',
   },
   pt: {
     docs: 'Documentação',
@@ -45,6 +57,7 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'Console',
     status: 'Status do serviço',
     quota: 'Verificar saldo',
+    enterprise: 'Empresas',
   },
   ru: {
     docs: 'Документация',
@@ -52,6 +65,7 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'Консоль',
     status: 'Статус сервиса',
     quota: 'Проверка баланса',
+    enterprise: 'Для бизнеса',
   },
   ja: {
     docs: 'ドキュメント',
@@ -59,6 +73,7 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'コンソール',
     status: 'サービス状況',
     quota: '残高照会',
+    enterprise: '法人向け',
   },
   vi: {
     docs: 'Tài liệu',
@@ -66,6 +81,14 @@ export const SITE_COPY: Record<Locale, SiteCopy> = {
     console: 'Bảng điều khiển',
     status: 'Trạng thái dịch vụ',
     quota: 'Tra cứu số dư',
+    enterprise: 'Doanh nghiệp',
   },
-  'zh-TW': { docs: '文件', resources: '機器可讀資源', console: '控制台', status: '服務狀態', quota: '額度查詢' },
+  'zh-TW': {
+    docs: '文件',
+    resources: '機器可讀資源',
+    console: '控制台',
+    status: '服務狀態',
+    quota: '額度查詢',
+    enterprise: '企業服務',
+  },
 };
