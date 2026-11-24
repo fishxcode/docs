@@ -109,6 +109,13 @@ const LOCALE_DETECTION_SCRIPT = `(function(){try{if(document.documentElement.cla
 /** 静态导出下根布局无法按路由设置 <html lang>，首帧前按路径前缀同步 */
 const HTML_LANG_SCRIPT = `(function(){try{var m=${HTML_LANG_JSON},s=location.pathname.split('/').filter(Boolean)[0];if(s&&m[s])document.documentElement.lang=m[s]}catch(e){}})();`;
 
+/**
+ * WebMCP：页面加载后立即注册站内工具，供浏览器内 AI 代理发现。
+ * 该 API 仍处于草案阶段，仅在 document.modelContext（或旧版
+ * navigator.modelContext）存在时注册；AbortSignal 在 pagehide 时注销工具。
+ */
+const WEBMCP_SCRIPT = `(function(){var c=document.modelContext||navigator.modelContext;if(!c||typeof c.registerTool!=='function')return;var a=new AbortController();function go(u){var t=new URL(u,location.href);if(t.origin===location.origin)location.assign(t.pathname+t.search+t.hash);else window.open(t.toString(),'_blank','noopener')}var tools=[{name:'fishxcode.search_docs',description:'Search the FishXCode documentation for setup guides, model information, pricing, and troubleshooting.',inputSchema:{type:'object',properties:{query:{type:'string',description:'Search keywords or a question.'}},required:['query']},execute:function(p){var q=String((p&&p.query)||'');go('/search?query='+encodeURIComponent(q));return Promise.resolve({opened:'/search',query:q})}},{name:'fishxcode.open_models',description:'Open the FishXCode supported models and pricing catalog.',inputSchema:{type:'object',properties:{},additionalProperties:false},execute:function(){go('/models');return Promise.resolve({opened:'/models'})}},{name:'fishxcode.open_status',description:'Open the FishXCode service status page, including provider and model health.',inputSchema:{type:'object',properties:{},additionalProperties:false},execute:function(){go('/status');return Promise.resolve({opened:'/status'})}}];tools.forEach(function(t){try{var r=c.registerTool(t,{signal:a.signal});if(r&&typeof r.catch==='function')r.catch(function(){})}catch(e){}});window.addEventListener('pagehide',function(){a.abort()},{once:true})})();`;
+
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang={siteConfig.lang} className={inter.variable} suppressHydrationWarning>
@@ -118,6 +125,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         <script dangerouslySetInnerHTML={{ __html: IFRAME_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: LOCALE_DETECTION_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: HTML_LANG_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: WEBMCP_SCRIPT }} />
         <RootProvider search={{ SearchDialog: SearchDialogWithLocale }} components={{ Link: FrameworkLink }}>
           {/* 根布局固定以默认语言挂上下文；{lang} 路由组内再嵌套一层
               AppI18nProvider 覆盖为页面语言（I18nProvider 是纯 context） */}
