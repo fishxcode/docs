@@ -72,6 +72,12 @@ for syntax and the [page conventions](https://fumadocs.dev/docs/next/page-conven
   `<Accordions type="single"><Accordion title="…">` for collapsible blocks. Write per-platform commands as
   adjacent code blocks with `tab="label"` (e.g. ```` ```bash tab="macOS" ````) and they are grouped into tabs.
 - `<ModelCatalog />` is the live model catalog, backed by the main site's pricing API.
+- The home page copy and business data (monthly pack prices, group multipliers, guide list, integration
+  examples) live in `src/lib/home-copy.ts`, and its sections in `src/components/home/`. When a pack price or a
+  group multiplier changes, update `subscription-plans/index.mdx`, `billing-groups.mdx` and `home-copy.ts`
+  together.
+- The live chat on the home page is Tencent TRTC's SDK; its identifier and the contact details are in
+  `support` in `src/lib/site.ts`.
 
 ## Languages
 

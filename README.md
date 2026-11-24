@@ -68,6 +68,10 @@ pnpm dev
   `<Accordions type="single"><Accordion title="…">`，多平台命令写成相邻的代码块并加
   `tab="标签"`（如 ```` ```bash tab="macOS" ````），会自动合成一组分页。
 - `<ModelCatalog />` 是实时模型目录，数据来自主站的定价接口。
+- 首页的文案与业务数据（月包价格、分组倍率、教程清单、接入示例）都在 `src/lib/home-copy.ts`，
+  区块组件在 `src/components/home/`。改月包价格或分组倍率时，`subscription-plans/index.mdx`、
+  `billing-groups.mdx` 与 `home-copy.ts` 要一起改。
+- 首页右下角的在线客服是腾讯 TRTC 的 SDK，接入标识与联系方式在 `src/lib/site.ts` 的 `support`。
 
 ## 多语言
 

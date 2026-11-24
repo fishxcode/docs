@@ -1,5 +1,18 @@
 import { getLLMText, getPageMarkdownUrl, getPageSummary, source } from './source';
-import { HOME_COPY, HOME_START_PATH } from './home-copy';
+import {
+  fmt,
+  HOME_CLIENTS,
+  HOME_CODE_SAMPLES,
+  HOME_COPY,
+  HOME_ENDPOINTS,
+  HOME_GROUPS,
+  HOME_PAGE_COPY,
+  HOME_MODELS_PATH,
+  HOME_PLANS,
+  HOME_PROVIDERS,
+  HOME_START_PATH,
+  type GroupCategory,
+} from './home-copy';
 import { SITE_COPY } from './site-copy';
 import { docsContentRoute, homeSlug, joinRoute } from './shared';
 import {
@@ -201,29 +214,94 @@ export function getHomeMarkdownUrl(lang: Locale) {
   return { segments, url: joinRoute(docsContentRoute, segments) };
 }
 
+/** Markdown 代码块的围栏 */
+const CODE_FENCE = '```';
+
 /**
  * 首页的 Markdown 副本：供 Accept: text/markdown 协商使用（/ 与 /{lang}，
  * 映射规则见 public/_worker.js 与 src/proxy.ts）。
  *
  * 首页是 React 组件而不是 .mdx 文档，进不了 docs loader，所以副本在这里按
- * 首页的可见文案拼装：标题、描述、两个按钮、特性卡片，再附该语言的文档页清单
- * 与机器可读资源。文案同源于 home-copy.ts，页面改了副本自动跟随。
+ * 首页的可见内容逐区块拼装：定位与两个按钮、为什么选择、模型供应商、月包与分组倍率、
+ * 接入工具、三步上手（含接入地址与代码示例）、客服联系方式，再附该语言的文档页清单与
+ * 机器可读资源。内容同源于 home-copy.ts，页面改了副本自动跟随。
  */
 export function createHomeMarkdown(lang: Locale): string {
   const copy = HOME_COPY[lang];
+  const page = HOME_PAGE_COPY[lang];
   const at = (path: string) => absoluteUrl(localePath(lang, path));
   const link = (label: string, path: string) => `- [${label}](${at(path)})`;
+  const groupsOf = (category: GroupCategory) =>
+    HOME_GROUPS.filter((group) => group.category === category)
+      .map((group) => `\`${group.name}\` ${group.ratio}`)
+      .join(', ');
 
   return [
     `# ${copy.title}`,
     '',
     `> ${copy.description}`,
     '',
-    // 与首页的两个按钮一一对应
+    page.hero.description,
+    '',
+    // 与首页首屏的两个按钮一一对应
     `- [${copy.register}](${siteConfig.links.register})`,
     link(copy.docs, HOME_START_PATH),
     '',
+    `## ${page.why.title}`,
+    '',
     ...copy.features.map((feature) => `- **${feature.title}** — ${feature.details}`),
+    '',
+    `## ${page.providers.title}`,
+    '',
+    HOME_PROVIDERS.join(' · '),
+    '',
+    `[${page.providers.note}](${at(HOME_MODELS_PATH)})`,
+    '',
+    `## ${page.pricing.title}`,
+    '',
+    page.pricing.description,
+    '',
+    `### ${page.pricing.plansTitle}`,
+    '',
+    ...HOME_PLANS.map(
+      (plan) =>
+        `- ${plan.price} · ${fmt(page.pricing.planQuota, { quota: plan.quota })} · ${fmt(page.pricing.planRatio, { ratio: plan.ratio })}`,
+    ),
+    `- ${page.pricing.planTerms}`,
+    `- ${page.pricing.planGroup}`,
+    link(page.pricing.plansCta, '/subscription-plans'),
+    '',
+    `### ${page.pricing.groupsTitle}`,
+    '',
+    ...(['codex', 'claude', 'other'] as const).map(
+      (category) => `- ${page.pricing.categories[category]}: ${groupsOf(category)}`,
+    ),
+    `- ${page.pricing.groupsNote}`,
+    link(page.pricing.groupsCta, '/billing-groups'),
+    '',
+    `## ${page.clients.title}`,
+    '',
+    fmt(page.clients.description, { count: HOME_CLIENTS.length }),
+    '',
+    ...HOME_CLIENTS.map((client) => link(client.name, client.path)),
+    '',
+    `## ${page.steps.title}`,
+    '',
+    ...page.steps.items.map((step, index) => `${index + 1}. **${step.title}** — ${step.description}`),
+    '',
+    `- Anthropic: \`${HOME_ENDPOINTS.anthropic}\``,
+    `- OpenAI: \`${HOME_ENDPOINTS.openai}\``,
+    '',
+    `### ${page.hero.codeLabel}`,
+    '',
+    ...HOME_CODE_SAMPLES.flatMap((sample) => [`#### ${sample.label}`, '', CODE_FENCE + sample.lang, sample.code, CODE_FENCE, '']),
+    `## ${page.cta.supportTitle}`,
+    '',
+    page.cta.supportBody,
+    '',
+    `- ${page.cta.email}: ${siteConfig.support.email}`,
+    `- ${page.cta.wechat}: ${siteConfig.support.wechat}`,
+    `- [${page.cta.enterprise}](${siteConfig.links.enterprise})`,
     '',
     `## ${SITE_COPY[lang].docs}`,
     '',

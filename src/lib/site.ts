@@ -28,6 +28,15 @@ export const siteConfig = {
     enterprise: 'https://enterprise.fishxcode.com/',
     register: 'https://fishxcode.com/register?aff=9CTW',
   },
+  /**
+   * 客服：在线客服 SDK（腾讯 TRTC，与主站首页同一个接入标识，全站悬浮显示，见 support-widget.tsx）
+   * 与首页底部展示的邮箱、微信号。换客服账号只改这里。
+   */
+  support: {
+    sdkUrl: 'https://trtc.io/knocket-sdk/sdk.js?identifier=3c9b743df6d783a11f&v=1792294898331',
+    email: 'service@fishxcode.com',
+    wechat: 'fishxcode',
+  },
   /** 官方社交账号（来自旧文档站的 socialLinks），结构化数据的 sameAs 用 */
   socials: ['https://x.com/fishxcode', 'https://github.com/fishxcode'],
   keywords: [
