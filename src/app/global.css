@@ -47,6 +47,60 @@ html > body[data-scroll-locked] {
 }
 
 /*
+ * 平台主站（fishxcode.com / www.fishxcode.com）用全屏 iframe 嵌入文档站，
+ * 自身再悬浮一条 64px 高（h-16）的 fixed 顶栏，盖住文档顶部——
+ * logo、搜索框、前几条菜单会点不到。
+ *
+ * 检测：<body> 首个内联脚本同步判定 window.self !== window.top，
+ * 命中即给 <html> 加 in-iframe 类（首帧生效，无闪动，见 layout.tsx）。
+ *
+ * 处理：body 整体下移 64px，同时把 #nd-docs-layout 的 --fd-docs-row-1
+ * 追加同样偏移。row-2/row-3 由 row-1 逐级累加，侧边栏、TOC、移动端
+ * 子导航的 sticky top 随之平移；min-height 扣掉偏移，短页面不会多出
+ * 一段无意义的滚动余量。首页 #nd-nav 是 sticky top-0，另行让出偏移。
+ */
+:root {
+  --iframe-top-offset: 0px;
+}
+
+html.in-iframe {
+  --iframe-top-offset: 64px;
+  overscroll-behavior: none;
+}
+
+html.in-iframe body {
+  padding-top: var(--iframe-top-offset);
+  min-height: calc(100dvh - var(--iframe-top-offset));
+}
+
+html.in-iframe #nd-docs-layout {
+  /* 行变量定义在容器内联样式上，须 !important 才能覆盖 */
+  --fd-docs-row-1: calc(var(--fd-banner-height, 0px) + var(--iframe-top-offset)) !important;
+  min-height: calc(100dvh - var(--iframe-top-offset));
+}
+
+html.in-iframe #nd-nav {
+  top: var(--iframe-top-offset);
+}
+
+/* 移动端抽屉 fixed inset-y-0 顶到视口顶，同样让出顶部 64px */
+html.in-iframe .fixed.inset-y-0 {
+  top: var(--iframe-top-offset);
+}
+
+/* 主站顶栏透明；iframe 内容滚进顶部 64px 时，用同色实底遮住透出的文字。
+   层级与 #nd-nav 相同，低于搜索、抽屉等弹层，且不拦截交互。 */
+html.in-iframe body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  height: var(--iframe-top-offset);
+  background: var(--color-fd-background);
+  pointer-events: none;
+}
+
+/*
  * 在线客服只在首页显示：首页挂载时给 <html> 加 data-support-visible（见 support-widget.tsx）。
  * SDK 把悬浮卡片挂在 body 下的 #contact-widget-auto 且没有销毁接口，从首页切到文档页后
  * 靠这条规则隐藏，回到首页再显示，SDK 不重复加载；SDK 晚于离开首页才挂载出来时同样生效。

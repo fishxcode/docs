@@ -22,9 +22,33 @@
   ],
   "rewrites": [
     { "source": "/api/pricing", "destination": "https://fishxcode.com/api/pricing" },
+    { "source": "/api/status-data/status", "destination": "https://status.fishxcode.com/api/v1/status" },
+    { "source": "/api/status-data/perf-summary", "destination": "https://fishxcode.com/api/perf-metrics/summary?hours=24" },
+    { "source": "/api/status-data/perf-model", "destination": "https://fishxcode.com/api/perf-metrics?hours=24" },
+    { "source": "/api/status-data/pricing", "destination": "https://fishxcode.com/api/pricing" },
     { "source": "/:path+.md", "destination": "/llms.mdx/:path+/content.md" }
   ],
   "headers": [
+    {
+      "source": "/api/pricing",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, HEAD, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Accept" },
+        { "key": "Cache-Control", "value": "public, max-age=60, stale-while-revalidate=60" },
+        { "key": "Vary", "value": "Origin" }
+      ]
+    },
+    {
+      "source": "/api/status-data/:path*",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, HEAD, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Accept" },
+        { "key": "Cache-Control", "value": "public, max-age=60, stale-while-revalidate=60" },
+        { "key": "Vary", "value": "Origin" }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

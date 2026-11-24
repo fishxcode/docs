@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import Link from 'next/link';
+import Link from '@/components/app-link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
 /**
@@ -107,7 +107,7 @@ const buttonVariant: Record<ButtonVariant, string> = {
 /** 站外链接的 rel：带推广码的注册链接额外声明 sponsored */
 const externalRel = (sponsored?: boolean) => (sponsored ? 'noreferrer noopener sponsored' : 'noreferrer noopener');
 
-/** 按钮样式的链接。站内走 next/link；站外（注册、企业站）在新标签页打开 */
+/** 按钮样式的链接。站内走统一 Link（不透明源下退回原生 a）；站外在新标签页打开 */
 export function ButtonLink({
   href,
   variant,

@@ -15,7 +15,7 @@
     "/img/*",
     "/sw.js",
     "/favicon.ico",
-    "/icon.svg",
+    "/icon.png",
     "/apple-icon.png"
   ]
 }
