@@ -1,12 +1,11 @@
 import Image from 'next/image';
 import Link from '@/components/app-link';
-import { Check, MessageCircle } from 'lucide-react';
+import { Check, Cpu, Heart, Layers, MessageCircle, Sparkles, Zap } from 'lucide-react';
 import {
   fmt,
   HOME_CLIENTS,
   HOME_ENDPOINTS,
   HOME_GROUPS,
-  HOME_LOWEST_PLAN_RATIO,
   HOME_MODELS_PATH,
   HOME_PLANS,
   HOME_PROVIDERS,
@@ -15,10 +14,10 @@ import {
   type HomeCopy,
   type HomePageCopy,
 } from '@/lib/home-copy';
+import type { HomeRedesignCopy } from '@/lib/home-redesign-copy';
 import { localePath, type Locale } from '@/lib/i18n';
 import { siteConfig } from '@/lib/site';
 import { CodeWindow, type CodeTab } from './code-window';
-import { HeroClientIcons, HeroFlowLines } from './hero-ambient';
 import {
   ButtonLink,
   cardFocus,
@@ -75,12 +74,18 @@ function withInlineCode(text: string, term: string) {
 }
 
 /** 首屏：左侧主张与行动，右侧客户端图标与可切换、可复制的接入代码 */
-export function HeroSection({ lang, shared, copy, codeTabs }: SectionProps & { codeTabs: CodeTab[] }) {
+export function HeroSection({
+  lang,
+  shared,
+  copy,
+  redesign,
+  codeTabs,
+}: SectionProps & { redesign: HomeRedesignCopy; codeTabs: CodeTab[] }) {
+  const icons = [Sparkles, Cpu, Zap, Layers, Heart];
   return (
     <section className="home-hero border-b border-fd-border">
-      <HeroFlowLines />
       <div
-        className={`${container} home-hero-content grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-10`}
+        className={`${container} grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-10`}
       >
         <div className="home-enter lg:col-span-6">
           <Link
@@ -88,13 +93,13 @@ export function HeroSection({ lang, shared, copy, codeTabs }: SectionProps & { c
             className={`inline-flex items-center gap-2 rounded-md border border-fd-border bg-paper px-2.5 py-1 text-xs font-medium text-fd-muted-foreground transition-colors hover:border-brand/40 hover:text-brand ${focusRing}`}
           >
             <span aria-hidden="true" className="size-1.5 bg-brand" />
-            {fmt(copy.hero.badge, { ratio: HOME_LOWEST_PLAN_RATIO })}
+            {redesign.badge}
           </Link>
 
           <h1 className="mt-6 text-4xl leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl lg:text-[3.75rem]">
-            {copy.hero.title[0]}
+            {redesign.heroTitle[0]}
             <br />
-            <span className="text-brand">{copy.hero.title[1]}</span>
+            <span className="text-brand">{redesign.heroTitle[1]}</span>
           </h1>
 
           <p className="mt-6 max-w-xl text-pretty text-fd-muted-foreground md:text-lg">{copy.hero.description}</p>
@@ -136,7 +141,16 @@ export function HeroSection({ lang, shared, copy, codeTabs }: SectionProps & { c
         </div>
 
         <div className="home-enter home-enter-delayed min-w-0 lg:col-span-6">
-          <HeroClientIcons lang={lang} />
+          <div aria-hidden="true" className="mb-5 flex items-center gap-3">
+            {icons.map((Icon, index) => (
+              <span
+                key={index}
+                className={`grid size-9 place-items-center rounded-full ${['bg-[#FBE9E7]', 'bg-fd-muted', 'bg-[#E8F1FB]', 'bg-fd-secondary', 'bg-[#FBEAF0]'][index]}`}
+              >
+                <Icon className="size-4 text-fd-muted-foreground" />
+              </span>
+            ))}
+          </div>
           <CodeWindow
             tabs={codeTabs}
             label={copy.hero.codeLabel}
@@ -144,6 +158,73 @@ export function HeroSection({ lang, shared, copy, codeTabs }: SectionProps & { c
             copiedLabel={copy.hero.copied}
             failedLabel={copy.hero.copyFailed}
           />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** 深色数据带：把首屏与后续内容切开，数字比装饰更重要 */
+export function StatsSection({ redesign }: { redesign: HomeRedesignCopy }) {
+  return (
+    <section className="bg-ink text-white">
+      <div className={`${container} grid grid-cols-2 divide-x divide-y divide-white/15 md:grid-cols-4 md:divide-y-0`}>
+        {redesign.stats.map((stat) => (
+          <div key={stat.label} className="px-6 py-8">
+            <p className="text-xs text-white/60">{stat.label}</p>
+            <p className="mt-3 text-3xl font-semibold tracking-tight">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** 可靠性：左侧说明，右侧是真实状态网格的静态预览 */
+export function ReliabilitySection({ lang, redesign }: { lang: Locale; redesign: HomeRedesignCopy }) {
+  const { reliability, status } = redesign;
+  return (
+    <section className="py-20 md:py-28">
+      <div className={`${container} grid gap-12 lg:grid-cols-12 lg:gap-16`}>
+        <div className="lg:col-span-5">
+          <Eyebrow>{reliability.eyebrow}</Eyebrow>
+          <h2 className={narrowHeadingClass}>
+            <Phrases text={reliability.title} />
+          </h2>
+          <p className="mt-5 text-pretty text-fd-muted-foreground md:text-lg">{reliability.description}</p>
+          <div className="mt-8">
+            <TextLink href={localePath(lang, '/status')}>{reliability.linkLabel}</TextLink>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-fd-border bg-paper p-6 lg:col-span-7">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="font-semibold">{status.title}</h3>
+            <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-fd-muted-foreground">
+              {status.legend.map((item, index) => (
+                <li key={item} className="inline-flex items-center gap-1.5">
+                  <span
+                    aria-hidden="true"
+                    className={`size-2 rounded-full ${['bg-brand', 'bg-[#BA7517]', 'bg-[#A32D2D]'][index]}`}
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div
+            className="mt-6 grid gap-1.5"
+            style={{ gridTemplateColumns: 'repeat(18, minmax(0, 1fr))' }}
+            aria-hidden="true"
+          >
+            {Array.from({ length: 54 }, (_, index) => (
+              <span
+                key={index}
+                className={`h-2 rounded-sm ${index % 13 === 0 ? 'bg-[#A32D2D]' : index % 7 === 0 ? 'bg-[#BA7517]' : 'bg-brand/70'}`}
+              />
+            ))}
+          </div>
+          <p className="mt-5 text-xs text-fd-muted-foreground">{status.note}</p>
         </div>
       </div>
     </section>

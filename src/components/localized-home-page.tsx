@@ -12,6 +12,8 @@ import {
   HeroSection,
   PricingSection,
   ProvidersStrip,
+  ReliabilitySection,
+  StatsSection,
   StepsSection,
   WhySection,
 } from '@/components/home/sections';
@@ -20,6 +22,7 @@ import { getRepoDates } from '@/lib/content-dates';
 import { getHomeMarkdownUrl } from '@/lib/discovery';
 import { machineResourceTypes } from '@/lib/machine-resources';
 import { HOME_COPY, HOME_COPY_SOURCE, HOME_PAGE_COPY, getHomeImage } from '@/lib/home-copy';
+import { HOME_REDESIGN_COPY } from '@/lib/home-redesign-copy';
 import { siteConfig } from '@/lib/site';
 
 /**
@@ -75,6 +78,7 @@ export function createLocalizedHomePage(lang: Locale) {
     async Page() {
       const shared = HOME_COPY[lang];
       const copy = HOME_PAGE_COPY[lang];
+      const redesign = HOME_REDESIGN_COPY[lang];
       const codeTabs = await getHeroCodeTabs();
       // 首页可见内容全部来自 home-copy.ts，它就是「决定首页内容的文件」；
       // sitemap 的首页 lastmod 也取它（HOME_COPY_SOURCE），两处同源
@@ -91,7 +95,9 @@ export function createLocalizedHomePage(lang: Locale) {
           {/* HomeLayout 的根节点就是 flex-1 的 <main>，区块直接放进去；页脚因此贴在短页面的底部 */}
           <HomeLayout {...baseOptions(lang)}>
             <div className="home-motion flex flex-1 flex-col">
-              <HeroSection {...sectionProps} codeTabs={codeTabs} />
+              <HeroSection {...sectionProps} redesign={redesign} codeTabs={codeTabs} />
+              <StatsSection redesign={redesign} />
+              <ReliabilitySection lang={lang} redesign={redesign} />
               <ProvidersStrip {...sectionProps} />
               <WhySection {...sectionProps} />
               <PricingSection {...sectionProps} />

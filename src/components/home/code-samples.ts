@@ -7,15 +7,20 @@ let cached: Promise<CodeTab[]> | undefined;
 
 /**
  * 首屏代码窗口的 Tab：在服务端（静态导出时即构建期）用 Shiki 高亮，浏览器不加载高亮器。
- * 窗口在两种主题下都是深色，主题固定为 github-dark。
+ * cURL 排在首位，默认示例更完整；窗口是灰色，主题用 github-light 保证代码可读。
  */
 export function getHeroCodeTabs(): Promise<CodeTab[]> {
   cached ??= Promise.all(
-    HOME_CODE_SAMPLES.map(async (sample) => ({
-      label: sample.label,
-      code: sample.code,
-      node: await highlight(sample.code, { lang: sample.lang, theme: 'github-dark' }),
-    })),
+    [...HOME_CODE_SAMPLES]
+      .sort((a, b) => {
+        const order = ['cURL', 'Claude Code', 'Codex'];
+        return order.indexOf(a.label) - order.indexOf(b.label);
+      })
+      .map(async (sample) => ({
+        label: sample.label,
+        code: sample.code,
+        node: await highlight(sample.code, { lang: sample.lang, theme: 'github-light' }),
+      })),
   ).catch((error: unknown) => {
     // 失败不缓存，下一次渲染重新高亮
     cached = undefined;
