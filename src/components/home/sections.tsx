@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from '@/components/app-link';
-import { Check, MessageCircle } from 'lucide-react';
+import { Boxes, Brain, Check, MessageCircle, type LucideIcon } from 'lucide-react';
 import {
   fmt,
   HOME_CLIENTS,
@@ -18,6 +18,7 @@ import type { HomeRedesignCopy } from '@/lib/home-redesign-copy';
 import { localePath, type Locale } from '@/lib/i18n';
 import { siteConfig } from '@/lib/site';
 import { CodeWindow, type CodeTab } from './code-window';
+import { HeroClientIcons, HeroFlowLines } from './hero-ambient';
 import {
   ButtonLink,
   cardFocus,
@@ -55,6 +56,20 @@ const HERO_POINT_LINKS: ReadonlyArray<{ href: string; external: boolean; absolut
 /** 「为什么选择」四张卡片的英文等宽标签（版式元素，各语言共用），与 shared.features 按下标对应 */
 const WHY_LABELS = ['Official', 'Groups', 'Pay as you go', 'Enterprise'];
 
+/** 供应商图标：优先用仓库里的品牌图片，缺图的用 Lucide 图标，不再用首字母占位 */
+const PROVIDER_IMAGES: Readonly<Record<string, string>> = {
+  OpenAI: '/img/clients/openai.jpg',
+  'Anthropic Claude': '/img/clients/claude.jpg',
+  'Google Gemini': '/img/clients/gemini.png',
+  'xAI Grok': '/img/clients/grok.png',
+  Qwen: '/img/clients/qwen.png',
+};
+
+const PROVIDER_ICONS: Readonly<Record<string, LucideIcon>> = {
+  DeepSeek: Brain,
+  GLM: Boxes,
+};
+
 /** 「三步上手」各步链接的教程，与 copy.steps.items 按下标对应 */
 const STEP_PATHS = ['/account', BILLING_PATH, HOME_START_PATH] as const;
 
@@ -83,8 +98,9 @@ export function HeroSection({
 }: SectionProps & { redesign: HomeRedesignCopy; codeTabs: CodeTab[] }) {
   return (
     <section className="home-hero border-b border-fd-border">
+      <HeroFlowLines />
       <div
-        className={`${container} grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-10`}
+        className={`${container} home-hero-content grid items-center gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-10`}
       >
         <div className="home-enter lg:col-span-6">
           <Link
@@ -140,6 +156,7 @@ export function HeroSection({
         </div>
 
         <div className="home-enter home-enter-delayed min-w-0 lg:col-span-6">
+          <HeroClientIcons lang={lang} />
           <CodeWindow
             tabs={codeTabs}
             label={copy.hero.codeLabel}
@@ -232,19 +249,29 @@ export function ProvidersStrip({ lang, copy }: SectionProps) {
           <p className="mt-1 text-sm text-fd-muted-foreground">{copy.providers.note}</p>
         </div>
         <ul className="flex flex-wrap gap-2.5">
-          {HOME_PROVIDERS.map((name) => (
-            <li key={name}>
-              <Link
-                href={href}
-                className={`inline-flex items-center gap-2 rounded-md border border-fd-border bg-paper px-3.5 py-2 text-sm text-fd-muted-foreground transition-colors hover:border-brand/50 hover:text-brand ${focusRing}`}
-              >
-                <span aria-hidden="true" className="font-mono text-base leading-none font-semibold text-fd-foreground">
-                  {name[0]}
-                </span>
-                {name}
-              </Link>
-            </li>
-          ))}
+          {HOME_PROVIDERS.map((name) => {
+            const image = PROVIDER_IMAGES[name];
+            const Icon = PROVIDER_ICONS[name];
+            return (
+              <li key={name}>
+                <Link
+                  href={href}
+                  className={`inline-flex items-center gap-2 rounded-md border border-fd-border bg-paper px-3.5 py-2 text-sm text-fd-muted-foreground transition-colors hover:border-brand/50 hover:text-brand ${focusRing}`}
+                >
+                  {image ? (
+                    <Image src={image} alt="" width={20} height={20} className="size-5 rounded object-contain" />
+                  ) : Icon ? (
+                    <Icon aria-hidden="true" className="size-5 shrink-0 text-fd-foreground" />
+                  ) : (
+                    <span aria-hidden="true" className="font-mono text-base leading-none font-semibold text-fd-foreground">
+                      {name[0]}
+                    </span>
+                  )}
+                  {name}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>

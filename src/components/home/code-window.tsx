@@ -116,9 +116,9 @@ export function CodeWindow({
   return (
     <figure
       aria-label={label}
-      className="overflow-hidden rounded-xl border border-black/10 bg-[#A9AFB6] text-left"
+      className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 text-left shadow-2xl shadow-zinc-950/20"
     >
-      <div className="flex items-center border-b border-black/10 pr-2">
+      <div className="flex items-center border-b border-zinc-800 pr-2">
         <div role="tablist" aria-label={label} className="flex min-w-0 overflow-x-auto">
           {tabs.map((tab, index) => {
             const selected = index === active;
@@ -138,8 +138,8 @@ export function CodeWindow({
                 onKeyDown={(event) => onTabKeyDown(event, index)}
                 className={`relative shrink-0 px-4 py-3 font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none focus-visible:ring-inset ${
                   selected
-                    ? 'text-white after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-white'
-                    : 'text-white/60 hover:text-white'
+                    ? 'text-zinc-100 after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-brand'
+                    : 'text-zinc-500 hover:text-zinc-300'
                 }`}
               >
                 {tab.label}
@@ -152,7 +152,7 @@ export function CodeWindow({
           onClick={copy}
           aria-label={status || copyLabel}
           title={status || copyLabel}
-          className="ml-auto inline-flex size-8 shrink-0 items-center justify-center rounded-md text-white/70 transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:outline-none"
+          className="ml-auto inline-flex size-8 shrink-0 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-white/5 hover:text-zinc-200 focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none"
         >
           {copyState === 'copied' ? (
             <Check aria-hidden="true" className="size-4 text-emerald-400" />
@@ -168,8 +168,8 @@ export function CodeWindow({
         role="tabpanel"
         id={`${id}-panel`}
         aria-labelledby={`${id}-tab-${active}`}
-        // 不设高最小高度，避免短示例下方留出一大块空白
-        className="overflow-x-auto p-5 font-mono text-[12.5px] leading-[1.7] md:text-[13px] [&_pre]:bg-transparent! [&_pre]:outline-none"
+        // 固定最小高度，切换 Tab 时窗口不跳动；Shiki 自带的底色让位给窗口底色
+        className="min-h-[17rem] overflow-x-auto p-5 font-mono text-[12.5px] leading-[1.7] md:text-[13px] [&_pre]:bg-transparent! [&_pre]:outline-none"
       >
         {tabs[active].node}
       </div>
