@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from '@/components/app-link';
 import type { HomeRedesignCopy } from '@/lib/home-redesign-copy';
 import { localePath, type Locale } from '@/lib/i18n';
 import { statusFamilyLabel } from '@/lib/status-copy';
@@ -186,27 +187,37 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
 
             {families.length > 0 ? (
               <div className="mt-6 space-y-3">
-                {families.map(({ family, models: list }) => (
-                  <div key={family} className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-3">
-                    <span className="truncate text-xs text-fd-muted-foreground">
-                      {statusFamilyLabel(lang, family)}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {list.map((model) => {
-                        const index = STATE_ORDER.indexOf(model.state as ModelState);
-                        const label = index >= 0 ? status.legend[index] : '';
-                        return (
-                          <span
-                            key={model.model}
-                            title={`${model.model} · ${label} · ${formatLatency(model.latency, lang)}`}
-                            onMouseEnter={() => setActive(model)}
-                            className={`size-2.5 rounded-sm transition-opacity ${STATE_COLOR[model.state as ModelState] ?? STATE_COLOR.unknown} ${active?.model === model.model ? 'ring-1 ring-fd-foreground' : ''}`}
-                          />
-                        );
-                      })}
+                {families.map(({ family, models: list }) => {
+                  const href = localePath(lang, `/status/${family}`);
+                  return (
+                    <div key={family} className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-3">
+                      <Link
+                        href={href}
+                        className="truncate rounded-sm text-xs text-fd-muted-foreground hover:text-brand focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
+                      >
+                        {statusFamilyLabel(lang, family)}
+                      </Link>
+                      <div className="flex flex-wrap gap-1.5">
+                        {list.map((model) => {
+                          const index = STATE_ORDER.indexOf(model.state as ModelState);
+                          const label = index >= 0 ? status.legend[index] : '';
+                          const title = `${model.model} · ${label} · ${formatLatency(model.latency, lang)}`;
+                          return (
+                            <Link
+                              key={model.model}
+                              href={href}
+                              title={title}
+                              aria-label={title}
+                              onMouseEnter={() => setActive(model)}
+                              onFocus={() => setActive(model)}
+                              className={`block size-2.5 rounded-sm transition-opacity focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none ${STATE_COLOR[model.state as ModelState] ?? STATE_COLOR.unknown} ${active?.model === model.model ? 'ring-1 ring-fd-foreground' : ''}`}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="mt-6 h-24 animate-pulse rounded-lg bg-fd-muted/50" />
