@@ -19,15 +19,6 @@ const IDLE_FALLBACK_MS = 1500;
 /** SDK 的加载过程，整个页面会话只有一份；加载失败时清空，下次进入首页重试 */
 let sdkLoading: Promise<void> | undefined;
 
-/** 被嵌在 iframe 里时由外层页面负责客服，内层不再加载（跨域访问 top 抛错同样视为嵌入） */
-function isEmbedded(): boolean {
-  try {
-    return window.self !== window.top;
-  } catch {
-    return true;
-  }
-}
-
 /** 等页面 load 之后、浏览器空闲时执行任务，返回取消函数 */
 function runAfterLoadWhenIdle(task: () => void): () => void {
   let cancelScheduled = () => {};
@@ -90,16 +81,14 @@ function loadSupportSdk(): Promise<void> {
 }
 
 /**
- * 首页的在线客服（不渲染任何内容），行为与主站首页一致：悬浮卡片可拖动、位置会被记住，
- * 页面被嵌在 iframe 里时不加载。
+ * 首页的在线客服（不渲染任何内容），行为与主站首页一致：悬浮卡片可拖动、位置会被记住。
+ * 主站 iframe 目前不加载客服，因此文档首页无论是否嵌入都自行加载。
  *
  * SDK 解压后约 3MB：等页面加载完、浏览器空闲时才注入，不和首屏抢带宽与主线程；
  * 只有访问过首页才会加载，离开首页时卡片隐藏、拖动增强撤掉。
  */
 export function SupportWidget() {
   useEffect(() => {
-    if (isEmbedded()) return;
-
     const root = document.documentElement;
     root.setAttribute(VISIBLE_ATTRIBUTE, '');
     let active = true;
