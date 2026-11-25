@@ -16,7 +16,7 @@ export type HomeRedesignCopy = {
 export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   zh: {
     heroTitle: ['企业级 LLM API', '网关，开箱即用'],
-    badge: '统一网关 · 85+ 模型 · 9 家厂商',
+    badge: '统一网关 · 官方直连 · 实时状态',
     stats: [
       { label: '在售模型', value: '85+' },
       { label: '上游厂商', value: '9' },
@@ -37,7 +37,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   en: {
     heroTitle: ['Enterprise-grade LLM API', 'gateway, ready out of the box'],
-    badge: 'Unified gateway · 85+ models · 9 providers',
+    badge: 'Unified gateway · Direct upstreams · Live status',
     stats: [
       { label: 'Models available', value: '85+' },
       { label: 'Upstream providers', value: '9' },
@@ -59,7 +59,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   fr: {
     heroTitle: ['API LLM de niveau entreprise,', 'clé en main'],
-    badge: 'Passerelle unifiée · 85+ modèles · 9 fournisseurs',
+    badge: 'Passerelle unifiée · Flux directs · État en direct',
     stats: [
       { label: 'Modèles disponibles', value: '85+' },
       { label: 'Fournisseurs en amont', value: '9' },
@@ -81,7 +81,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   es: {
     heroTitle: ['API LLM de nivel empresarial,', 'lista para usar'],
-    badge: 'Puerta de enlace unificada · 85+ modelos · 9 proveedores',
+    badge: 'Puerta de enlace unificada · Conexión directa · Estado en vivo',
     stats: [
       { label: 'Modelos disponibles', value: '85+' },
       { label: 'Proveedores de origen', value: '9' },
@@ -103,7 +103,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   pt: {
     heroTitle: ['API LLM de nível empresarial,', 'pronta para usar'],
-    badge: 'Gateway unificado · 85+ modelos · 9 provedores',
+    badge: 'Gateway unificado · Conexão direta · Status ao vivo',
     stats: [
       { label: 'Modelos disponíveis', value: '85+' },
       { label: 'Provedores de origem', value: '9' },
@@ -125,7 +125,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   ru: {
     heroTitle: ['Корпоративный LLM API-шлюз', 'готов к работе сразу'],
-    badge: 'Единый шлюз · 85+ моделей · 9 провайдеров',
+    badge: 'Единый шлюз · Прямые каналы · Живой статус',
     stats: [
       { label: 'Доступные модели', value: '85+' },
       { label: 'Провайдеры', value: '9' },
@@ -147,7 +147,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   ja: {
     heroTitle: ['エンタープライズ向け LLM API', 'ゲートウェイ、すぐに使えます'],
-    badge: '統一ゲートウェイ · 85+ モデル · 9 社のプロバイダー',
+    badge: '統一ゲートウェイ · 公式直結 · リアルタイム状態',
     stats: [
       { label: '提供モデル数', value: '85+' },
       { label: 'アップストリーム事業者', value: '9' },
@@ -169,7 +169,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   vi: {
     heroTitle: ['API LLM cấp doanh nghiệp,', 'sẵn sàng dùng ngay'],
-    badge: 'Gateway thống nhất · 85+ mô hình · 9 nhà cung cấp',
+    badge: 'Gateway thống nhất · Kết nối trực tiếp · Trạng thái trực tiếp',
     stats: [
       { label: 'Mô hình đang cung cấp', value: '85+' },
       { label: 'Nhà cung cấp phía trên', value: '9' },
@@ -191,7 +191,7 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
   },
   'zh-TW': {
     heroTitle: ['企業級 LLM API', '閘道，開箱即用'],
-    badge: '統一閘道 · 85+ 模型 · 9 家廠商',
+    badge: '統一閘道 · 官方直連 · 即時狀態',
     stats: [
       { label: '在售模型', value: '85+' },
       { label: '上游廠商', value: '9' },

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from '@/components/app-link';
-import { Check, Cpu, Heart, Layers, MessageCircle, Sparkles, Zap } from 'lucide-react';
+import { Check, MessageCircle } from 'lucide-react';
 import {
   fmt,
   HOME_CLIENTS,
@@ -81,7 +81,6 @@ export function HeroSection({
   redesign,
   codeTabs,
 }: SectionProps & { redesign: HomeRedesignCopy; codeTabs: CodeTab[] }) {
-  const icons = [Sparkles, Cpu, Zap, Layers, Heart];
   return (
     <section className="home-hero border-b border-fd-border">
       <div
@@ -141,16 +140,6 @@ export function HeroSection({
         </div>
 
         <div className="home-enter home-enter-delayed min-w-0 lg:col-span-6">
-          <div aria-hidden="true" className="mb-5 flex items-center gap-3">
-            {icons.map((Icon, index) => (
-              <span
-                key={index}
-                className={`grid size-9 place-items-center rounded-full ${['bg-[#FBE9E7]', 'bg-fd-muted', 'bg-[#E8F1FB]', 'bg-fd-secondary', 'bg-[#FBEAF0]'][index]}`}
-              >
-                <Icon className="size-4 text-fd-muted-foreground" />
-              </span>
-            ))}
-          </div>
           <CodeWindow
             tabs={codeTabs}
             label={copy.hero.codeLabel}

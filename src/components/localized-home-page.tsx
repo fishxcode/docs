@@ -12,11 +12,10 @@ import {
   HeroSection,
   PricingSection,
   ProvidersStrip,
-  ReliabilitySection,
-  StatsSection,
   StepsSection,
   WhySection,
 } from '@/components/home/sections';
+import { LiveMetricsSections } from '@/components/home/live-data';
 import { docAlternates, localePath, OG_LOCALE, type Locale } from '@/lib/i18n';
 import { getRepoDates } from '@/lib/content-dates';
 import { getHomeMarkdownUrl } from '@/lib/discovery';
@@ -96,8 +95,7 @@ export function createLocalizedHomePage(lang: Locale) {
           <HomeLayout {...baseOptions(lang)}>
             <div className="home-motion flex flex-1 flex-col">
               <HeroSection {...sectionProps} redesign={redesign} codeTabs={codeTabs} />
-              <StatsSection redesign={redesign} />
-              <ReliabilitySection lang={lang} redesign={redesign} />
+              <LiveMetricsSections lang={lang} redesign={redesign} />
               <ProvidersStrip {...sectionProps} />
               <WhySection {...sectionProps} />
               <PricingSection {...sectionProps} />
