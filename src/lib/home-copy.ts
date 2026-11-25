@@ -120,7 +120,9 @@ requires_openai_auth = true`,
   -H "Content-Type: application/json" \\
   -d '{
     "model": "gpt-5.4",
-    "messages": [{ "role": "user", "content": "Hello, FishXCode!" }]
+    "messages": [
+      { "role": "user", "content": "Hello" }
+    ]
   }'`,
   },
 ];
