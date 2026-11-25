@@ -1,0 +1,9 @@
+{
+  "title": "More services",
+  "icon": "ExternalLink",
+  "defaultOpen": false,
+  "pages": [
+    "external:[CreditCard][Credit Balance](https://api-key-tool.fishxcode.com)",
+    "external:[Building][Enterprise](https://enterprise.fishxcode.com/)"
+  ]
+}

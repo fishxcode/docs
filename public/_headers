@@ -1,4 +1,10 @@
 # Cloudflare Pages 响应头配置
+
+# 首页的 agent 发现入口（RFC 8288 / RFC 9727）：让自动化客户端从响应头找到
+# 机器可读说明、服务描述与站点描述。路径使用本站实际存在的资源。
+/
+  Link: </llms.txt>; rel="service-doc", </ai.txt>; rel="service-desc", </status>; rel="describedby", </sitemap.xml>; rel="describedby", </.well-known/api-catalog>; rel="api-catalog", </.well-known/ai-catalog.json>; rel="describedby"
+
 #
 # 关键：/static.json/{locale} 是站内搜索的索引（单语言约 4.8MB 的 Orama 快照），
 # 客户端用 fetch().json() 解析，必须返回 application/json。Cloudflare 通常按

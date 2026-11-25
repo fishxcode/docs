@@ -1,0 +1,9 @@
+{
+  "title": "その他のサービス",
+  "icon": "ExternalLink",
+  "defaultOpen": false,
+  "pages": [
+    "external:[CreditCard][残高照会](https://api-key-tool.fishxcode.com)",
+    "external:[Building][法人向け](https://enterprise.fishxcode.com/)"
+  ]
+}

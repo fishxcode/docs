@@ -1,0 +1,19 @@
+{
+  "title": "Integraciones de herramientas",
+  "icon": "Bot",
+  "defaultOpen": false,
+  "pages": [
+    "[Bot][OpenAI Codex](/codex)",
+    "[AppWindow][Codex Desktop](/codex-desktop)",
+    "[MousePointer2][Cursor](/cursor)",
+    "[Bot][RooCode](/roocode)",
+    "[Bot][Qwen Code](/qwencode)",
+    "[Bot][Droid CLI](/droid)",
+    "[Code][OpenCode](/opencode)",
+    "[Sparkles][Hermes](/hermes)",
+    "[Bot][OpenClaw](/openclaw)",
+    "[BriefcaseBusiness][WorkBuddy](/workbuddy)",
+    "[UsersRound][CodeBuddy](/codebuddy)",
+    "[Bot][QClaw](/qclaw)"
+  ]
+}

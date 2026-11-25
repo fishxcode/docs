@@ -1,27 +1,14 @@
-import { siteConfig } from '@/lib/site';
+import { HTML_LANG } from '@/lib/i18n';
+import { AI_TXT } from '@/lib/machine-copy';
 
 export const dynamic = 'force-static';
 
-/**
- * /ai.txt：面向 AI 爬虫与 AI 应用的简短说明，与 robots.txt 的
- * Content-Signal 口径一致（ai-train=yes, search=yes, ai-input=yes）。
- */
+/** 根路径为默认语言（zh）；各语言版本见 src/app/{lang}/ai.txt/route.ts */
 export function GET() {
-  const body = [
-    `${siteConfig.productName} Docs (${siteConfig.url}): notes for AI crawlers and AI applications.`,
-    '',
-    'AI crawlers may crawl, index, and cite the documentation on this site.',
-    'The documentation may be used for AI training; please attribute the source and link to the original page.',
-    `See the documentation index: ${new URL('/llms.txt', siteConfig.url).toString()}`,
-    '',
-    'Content-Signal: ai-train=yes, search=yes, ai-input=yes',
-    '',
-  ].join('\n');
-
-  return new Response(body, {
+  return new Response(AI_TXT.zh, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=0, must-revalidate',
+      'Content-Language': HTML_LANG.zh,
     },
   });
 }

@@ -1,0 +1,11 @@
+{
+  "title": "Bắt đầu",
+  "icon": "Rocket",
+  "defaultOpen": true,
+  "pages": [
+    "[UserRound][Đăng ký tài khoản](/account)",
+    "[Terminal][Claude Code](/start)",
+    "[Monitor][Claude Desktop](/claude-desktop)",
+    "[Zap][Kết nối nhanh qua ZCF](/zcf)"
+  ]
+}

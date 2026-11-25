@@ -30,6 +30,10 @@
   ],
   "headers": [
     {
+      "source": "/",
+      "headers": [{ "key": "Link", "value": "</llms.txt>; rel=\"service-doc\", </ai.txt>; rel=\"service-desc\", </status>; rel=\"describedby\", </sitemap.xml>; rel=\"describedby\", </.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ai-catalog.json>; rel=\"describedby\"" }]
+    },
+    {
       "source": "/api/pricing",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },

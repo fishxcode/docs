@@ -1,0 +1,12 @@
+{
+  "title": "ヘルプとポリシー",
+  "icon": "CircleQuestionMark",
+  "defaultOpen": false,
+  "pages": [
+    "[CircleQuestionMark][よくある質問](/faq)",
+    "[Clock][更新履歴](/changelog)",
+    "[FileText][利用規約](/terms)",
+    "[Receipt][返金ポリシー](/refund)",
+    "[ShieldCheck][プライバシーポリシー](/privacy)"
+  ]
+}

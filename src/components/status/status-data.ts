@@ -17,6 +17,7 @@ import {
   type StatusSnapshot,
 } from '@/lib/status';
 import type { PricingModel } from '@/lib/pricing';
+import { useStatusText } from './use-status-text';
 
 const STATUS_POLL_MS = 5 * 60 * 1000;
 const MAX_BACKOFF_MS = 5 * 60 * 1000;
@@ -47,12 +48,12 @@ interface PublicStatusPayload extends StatusSnapshot {
 }
 
 /** 状态站代理可能直接转发原始响应，也可能返回压缩后的快照，这里统一收敛 */
-function normalizeStatus(payload: unknown): StatusSnapshot {
+function normalizeStatus(payload: unknown, invalidText: string): StatusSnapshot {
   if (payload && typeof payload === 'object' && 'models' in payload && 'stale' in payload) {
     return payload as PublicStatusPayload;
   }
   const snapshot = toSnapshot(payload, Date.now());
-  if (!snapshot) throw new Error('状态数据格式异常');
+  if (!snapshot) throw new Error(invalidText);
   return snapshot;
 }
 
@@ -66,10 +67,10 @@ async function readJson(url: string, signal: AbortSignal): Promise<unknown> {
   return response.json() as Promise<unknown>;
 }
 
-function normalizePricing(payload: unknown): PricingCatalog {
-  if (!payload || typeof payload !== 'object') throw new Error('定价数据格式异常');
+function normalizePricing(payload: unknown, t: (source: string) => string): PricingCatalog {
+  if (!payload || typeof payload !== 'object') throw new Error(t('定价数据格式异常'));
   const response = payload as PricingResponse;
-  if (response.success === false) throw new Error('定价接口返回失败');
+  if (response.success === false) throw new Error(t('定价接口返回失败'));
   const rawModels = Array.isArray(response.data)
     ? response.data
     : Object.values(response.data ?? {});
@@ -77,7 +78,7 @@ function normalizePricing(payload: unknown): PricingCatalog {
     (model): model is PricingModel =>
       !!model && typeof model.model_name === 'string' && model.model_name.length > 0,
   );
-  if (models.length === 0) throw new Error('定价模型清单为空');
+  if (models.length === 0) throw new Error(t('定价模型清单为空'));
 
   return {
     models,
@@ -99,6 +100,7 @@ export interface StatusDataState {
  * 切回前台立即刷新。状态站本身每小时检测一次，更密集的轮询没有收益。
  */
 export function useStatusSnapshot(): StatusDataState {
+  const { s } = useStatusText();
   const [snapshot, setSnapshot] = useState<StatusSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -119,7 +121,7 @@ export function useStatusSnapshot(): StatusDataState {
     const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
-      const data = normalizeStatus(await readJson(STATUS_DATA_ROUTES.overview, controller.signal));
+      const data = normalizeStatus(await readJson(STATUS_DATA_ROUTES.overview, controller.signal), s('状态数据格式异常'));
       if (cancelledRef.current || controller.signal.aborted) return;
       setSnapshot(data);
       setError(null);
@@ -127,12 +129,12 @@ export function useStatusSnapshot(): StatusDataState {
     } catch (cause) {
       if (cancelledRef.current || controller.signal.aborted) return;
       failuresRef.current += 1;
-      setError(cause instanceof Error ? cause.message : '获取状态数据失败');
+      setError(cause instanceof Error ? cause.message : s('获取状态数据失败'));
     } finally {
       window.clearTimeout(timeout);
       if (!cancelledRef.current) setLoading(false);
     }
-  }, []);
+  }, [s]);
 
   const runCycle = useCallback(async function cycle(): Promise<void> {
     if (cancelledRef.current) return;
@@ -182,6 +184,7 @@ export interface PricingDataState {
 }
 
 export function usePricingCatalog(): PricingDataState {
+  const { s } = useStatusText();
   const [state, setState] = useState<PricingDataState>({
     catalog: null,
     error: null,
@@ -195,13 +198,13 @@ export function usePricingCatalog(): PricingDataState {
 
     readJson(STATUS_DATA_ROUTES.pricing, controller.signal)
       .then((payload) => {
-        if (!cancelled) setState({ catalog: normalizePricing(payload), error: null, loading: false });
+        if (!cancelled) setState({ catalog: normalizePricing(payload, s), error: null, loading: false });
       })
       .catch((cause: unknown) => {
         if (cancelled) return;
         setState({
           catalog: null,
-          error: cause instanceof Error ? cause.message : '获取定价数据失败',
+          error: cause instanceof Error ? cause.message : s('获取定价数据失败'),
           loading: false,
         });
       })
@@ -212,7 +215,7 @@ export function usePricingCatalog(): PricingDataState {
       window.clearTimeout(timeout);
       controller.abort();
     };
-  }, []);
+  }, [s]);
 
   return state;
 }
@@ -226,6 +229,7 @@ export interface PerfDataState {
 
 /** 性能 tab 才拉数：单模型与全站 24 小时汇总并行，URL 参数固定白名单 */
 export function usePerfData(name: string, enabled: boolean): PerfDataState {
+  const { s } = useStatusText();
   const [state, setState] = useState<PerfDataState>({
     detail: null,
     summary: null,
@@ -250,7 +254,7 @@ export function usePerfData(name: string, enabled: boolean): PerfDataState {
         setState({
           detail: detail.data ?? null,
           summary: summary.data ?? null,
-          error: detail.success === false || summary.success === false ? '性能接口返回失败' : null,
+          error: detail.success === false || summary.success === false ? s('性能接口返回失败') : null,
           loading: false,
         });
       })
@@ -259,7 +263,7 @@ export function usePerfData(name: string, enabled: boolean): PerfDataState {
         setState({
           detail: null,
           summary: null,
-          error: cause instanceof Error ? cause.message : '获取性能数据失败',
+          error: cause instanceof Error ? cause.message : s('获取性能数据失败'),
           loading: false,
         });
       })
@@ -270,7 +274,7 @@ export function usePerfData(name: string, enabled: boolean): PerfDataState {
       window.clearTimeout(timeout);
       controller.abort();
     };
-  }, [enabled, name]);
+  }, [enabled, name, s]);
 
   return state;
 }

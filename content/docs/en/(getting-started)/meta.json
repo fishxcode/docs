@@ -1,0 +1,11 @@
+{
+  "title": "Get started",
+  "icon": "Rocket",
+  "defaultOpen": true,
+  "pages": [
+    "[UserRound][Account Setup](/account)",
+    "[Terminal][Claude Code](/start)",
+    "[Monitor][Claude Desktop](/claude-desktop)",
+    "[Zap][ZCF Quick Setup](/zcf)"
+  ]
+}

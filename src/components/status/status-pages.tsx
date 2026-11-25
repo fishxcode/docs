@@ -12,7 +12,6 @@ import { Activity, ArrowLeft, ArrowUpRight, Copy, ExternalLink } from 'lucide-re
 import AppLink from '@/components/app-link';
 import { HOME_ENDPOINTS } from '@/lib/home-copy';
 import {
-  FAMILY_LABELS,
   FAMILY_ORDER,
   STATUS_SITE_URL,
   familyOf,
@@ -20,6 +19,8 @@ import {
   type Family,
   type StatusModel,
 } from '@/lib/status';
+import { statusFamilyLabel } from '@/lib/status-copy';
+import { localePath } from '@/lib/i18n';
 import { bestGroupRatio, formatRatio, formatUsd, modelPrice, parseBillingTiers } from '@/lib/pricing';
 import {
   findPricingModel,
@@ -40,10 +41,9 @@ import {
   StaleNotice,
   StatePill,
   StatusExplainer,
-  formatNumber,
   formatPercent,
-  formatTime,
 } from './ui';
+import { useStatusText } from './use-status-text';
 
 export { DataSourceNote };
 
@@ -61,13 +61,14 @@ function countStates(models: StatusModel[]): Record<(typeof STATE_ORDER)[number]
 }
 
 function BackLink() {
+  const { s, lang } = useStatusText();
   return (
     <AppLink
-      href="/status"
+      href={localePath(lang, '/status')}
       className="inline-flex items-center gap-1.5 rounded-sm text-sm text-fd-muted-foreground transition-colors hover:text-fd-foreground focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
     >
       <ArrowLeft aria-hidden="true" className="size-4" />
-      模型状态监控
+      {s('模型状态监控')}
     </AppLink>
   );
 }
@@ -95,8 +96,9 @@ function StatusHeader({
 
 /** 模型列表行：三张页面共用，避免各自维护一套筛选与心跳条 */
 function ModelRows({ models }: { models: StatusModel[] }) {
+  const { s, lang, formatNumber } = useStatusText();
   if (models.length === 0) {
-    return <p className="py-10 text-center text-sm text-fd-muted-foreground">没有匹配的模型</p>;
+    return <p className="py-10 text-center text-sm text-fd-muted-foreground">{s('没有匹配的模型')}</p>;
   }
   return (
     <div className="divide-y divide-fd-border overflow-hidden rounded-xl border border-fd-border">
@@ -104,15 +106,18 @@ function ModelRows({ models }: { models: StatusModel[] }) {
         <div key={model.model} className="grid gap-3 bg-fd-card px-4 py-3 md:grid-cols-[minmax(0,1.4fr)_auto_1fr] md:items-center">
           <div className="min-w-0">
             <AppLink
-              href={`/status/model/${encodeURIComponent(model.model)}`}
+              href={localePath(lang, `/status/model/${encodeURIComponent(model.model)}`)}
               className="inline-flex max-w-full items-center gap-1 truncate rounded-sm font-mono text-sm font-medium hover:text-brand focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
             >
               <span className="truncate">{model.model}</span>
               <ArrowUpRight aria-hidden="true" className="size-3.5 shrink-0 text-fd-muted-foreground" />
             </AppLink>
             <p className="mt-1 text-xs text-fd-muted-foreground">
-              可用率 {formatPercent(model.successRate)} · 延迟 {formatNumber(model.latency, 'ms')} · PING{' '}
-              {formatNumber(model.ping, 'ms')}
+              {s('可用率 {rate} · 延迟 {latency} · PING {ping}', {
+                rate: formatPercent(model.successRate),
+                latency: formatNumber(model.latency, 'ms'),
+                ping: formatNumber(model.ping, 'ms'),
+              })}
             </p>
           </div>
           <StatePill state={modelToneForList(model)} />
@@ -136,11 +141,12 @@ function StateFilter({
   value: 'all' | 'ok' | 'warn' | 'bad';
   onChange: (value: 'all' | 'ok' | 'warn' | 'bad') => void;
 }) {
+  const { s } = useStatusText();
   const options = [
-    { key: 'all' as const, label: '全部' },
-    { key: 'ok' as const, label: '正常' },
-    { key: 'warn' as const, label: '延迟' },
-    { key: 'bad' as const, label: '故障' },
+    { key: 'all' as const, label: s('全部') },
+    { key: 'ok' as const, label: s('正常') },
+    { key: 'warn' as const, label: s('延迟') },
+    { key: 'bad' as const, label: s('故障') },
   ];
   return (
     <div className="flex flex-wrap gap-1 rounded-lg border border-fd-border bg-fd-card p-1">
@@ -172,6 +178,7 @@ function filterModels(models: StatusModel[], query: string, state: 'all' | 'ok' 
 
 /** 状态总览：巡检计数、按厂商分组、模型搜索与明细 */
 export function StatusOverviewClient() {
+  const { s, lang } = useStatusText();
   const { snapshot, error, loading, refresh } = useStatusSnapshot();
   const [query, setQuery] = useState('');
   const [state, setState] = useState<'all' | 'ok' | 'warn' | 'bad'>('all');
@@ -191,9 +198,9 @@ export function StatusOverviewClient() {
   return (
     <div className="space-y-8">
       <StatusHeader
-        eyebrow="Model Health"
-        title="模型状态监控"
-        description="周期性巡检展示在测模型的可用性、响应延迟与端点可达性。状态站当前巡检数据可能陈旧，页面会明确标出最后检测时间。"
+        eyebrow={s('Model Health')}
+        title={s('模型状态监控')}
+        description={s('周期性巡检展示在测模型的可用性、响应延迟与端点可达性。状态站当前巡检数据可能陈旧，页面会明确标出最后检测时间。')}
       />
 
       {loading && !snapshot ? <LoadingState /> : null}
@@ -207,24 +214,28 @@ export function StatusOverviewClient() {
             stale={snapshot.stale}
           />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard label="在测模型" value={models.length} hint="状态站当前列出的探测目标" />
-            <MetricCard label="正常" value={counts.ok} />
-            <MetricCard label="延迟" value={counts.warn} hint="成功但响应超过 12 秒" />
-            <MetricCard label="故障" value={counts.bad} />
+            <MetricCard label={s('在测模型')} value={models.length} hint={s('状态站当前列出的探测目标')} />
+            <MetricCard label={s('正常')} value={counts.ok} />
+            <MetricCard label={s('延迟')} value={counts.warn} hint={s('成功但响应超过 12 秒')} />
+            <MetricCard label={s('故障')} value={counts.bad} />
           </div>
 
-          <Panel title="按厂商查看" extra={<HeartbeatLegend />}>
+          <Panel title={s('按厂商查看')} extra={<HeartbeatLegend />}>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {families.map(({ family, models: list, counts: familyCounts }) => (
                 <AppLink
                   key={family}
-                  href={`/status/${family}`}
+                  href={localePath(lang, `/status/${family}`)}
                   className="rounded-xl border border-fd-border bg-fd-background p-4 transition-colors hover:border-brand/50 focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
                 >
-                  <p className="font-medium">{FAMILY_LABELS[family]}</p>
+                  <p className="font-medium">{statusFamilyLabel(lang, family)}</p>
                   <p className="mt-2 text-xs text-fd-muted-foreground">
-                    {list.length} 个模型 · 正常 {familyCounts.ok} / 延迟 {familyCounts.warn} / 故障{' '}
-                    {familyCounts.bad}
+                    {s('{count} 个模型 · 正常 {ok} / 延迟 {warn} / 故障 {bad}', {
+                      count: list.length,
+                      ok: familyCounts.ok,
+                      warn: familyCounts.warn,
+                      bad: familyCounts.bad,
+                    })}
                   </p>
                   <div className="mt-3">
                     <HeartbeatBar points={list.flatMap((model) => model.history.slice(-6))} slots={24} />
@@ -235,10 +246,10 @@ export function StatusOverviewClient() {
           </Panel>
 
           <Panel
-            title="模型明细"
+            title={s('模型明细')}
             extra={
               <span className="text-xs text-fd-muted-foreground">
-                显示 {filtered.length} / {models.length}
+                {s('显示 {shown} / {total}', { shown: filtered.length, total: models.length })}
               </span>
             }
           >
@@ -247,8 +258,8 @@ export function StatusOverviewClient() {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="搜索模型名称"
-                aria-label="搜索模型名称"
+                placeholder={s('搜索模型名称')}
+                aria-label={s('搜索模型名称')}
                 className="min-w-[220px] flex-1 rounded-lg border border-fd-border bg-fd-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-fd-ring"
               />
               <StateFilter value={state} onChange={setState} />
@@ -266,6 +277,7 @@ export function StatusOverviewClient() {
 
 /** 厂商系列页：Vercel 静态导出只生成 FAMILY_ORDER 中的固定 slug */
 export function FamilyStatusClient({ fam }: { fam: Family }) {
+  const { s, lang } = useStatusText();
   const { snapshot, error, loading, refresh } = useStatusSnapshot();
   const [query, setQuery] = useState('');
   const [state, setState] = useState<'all' | 'ok' | 'warn' | 'bad'>('all');
@@ -285,9 +297,14 @@ export function FamilyStatusClient({ fam }: { fam: Family }) {
     <div className="space-y-8">
       <BackLink />
       <StatusHeader
-        eyebrow="Model Family"
-        title={`${FAMILY_LABELS[family]} 模型状态`}
-        description={`共 ${models.length} 个在测模型：正常 ${counts.ok}、延迟 ${counts.warn}、故障 ${counts.bad}。点击模型查看状态、定价、性能与接入方式。`}
+        eyebrow={s('Model Family')}
+        title={s('{label} 模型状态', { label: statusFamilyLabel(lang, family) })}
+        description={s('共 {total} 个在测模型：正常 {ok}、延迟 {warn}、故障 {bad}。点击模型查看状态、定价、性能与接入方式。', {
+          total: models.length,
+          ok: counts.ok,
+          warn: counts.warn,
+          bad: counts.bad,
+        })}
       />
 
       {loading && !snapshot ? <LoadingState /> : null}
@@ -299,14 +316,14 @@ export function FamilyStatusClient({ fam }: { fam: Family }) {
             generatedAt={snapshot.generatedAt}
             stale={snapshot.stale}
           />
-          <Panel title="模型明细">
+          <Panel title={s('模型明细')}>
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="搜索本系列模型"
-                aria-label="搜索本系列模型"
+                placeholder={s('搜索本系列模型')}
+                aria-label={s('搜索本系列模型')}
                 className="min-w-[220px] flex-1 rounded-lg border border-fd-border bg-fd-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-fd-ring"
               />
               <StateFilter value={state} onChange={setState} />
@@ -323,12 +340,6 @@ export function FamilyStatusClient({ fam }: { fam: Family }) {
 }
 
 type ModelTab = 'overview' | 'perf' | 'api';
-
-const TABS: ReadonlyArray<{ key: ModelTab; label: string }> = [
-  { key: 'overview', label: '概览' },
-  { key: 'perf', label: '性能' },
-  { key: 'api', label: 'API' },
-];
 
 /** 静态导出下不用 useSearchParams，按浏览器 URL 直接读取/改写 tab 查询串 */
 function useModelTab(): [ModelTab, (tab: ModelTab) => void] {
@@ -354,7 +365,8 @@ function useModelTab(): [ModelTab, (tab: ModelTab) => void] {
   return [tab, select];
 }
 
-function CopyButton({ text, label = '复制' }: { text: string; label?: string }) {
+function CopyButton({ text, label }: { text: string; label?: string }) {
+  const { s } = useStatusText();
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -368,7 +380,7 @@ function CopyButton({ text, label = '复制' }: { text: string; label?: string }
       className="inline-flex items-center gap-1.5 rounded-md border border-fd-border px-2.5 py-1 text-xs text-fd-muted-foreground transition-colors hover:text-fd-foreground focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
     >
       <Copy aria-hidden="true" className="size-3.5" />
-      {copied ? '已复制' : label}
+      {copied ? s('已复制') : (label ?? s('复制'))}
     </button>
   );
 }
@@ -384,6 +396,7 @@ function OverviewPanel({
   catalog: PricingCatalog | null;
   loadError: string | null;
 }) {
+  const { s, formatNumber, formatTime } = useStatusText();
   const pricing = findPricingModel(catalog, name);
   const now = PRICING_NOW;
   const price = pricing ? modelPrice(pricing, catalog?.groupRatio ?? {}, now) : null;
@@ -394,19 +407,19 @@ function OverviewPanel({
   return (
     <div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="当前巡检" value={model ? <StatePill state={model.state} /> : '—'} />
-        <MetricCard label="可用率" value={formatPercent(model?.successRate)} />
-        <MetricCard label="响应延迟" value={formatNumber(model?.latency, 'ms')} />
-        <MetricCard label="端点 PING" value={formatNumber(model?.ping, 'ms')} />
+        <MetricCard label={s('当前巡检')} value={model ? <StatePill state={model.state} /> : '—'} />
+        <MetricCard label={s('可用率')} value={formatPercent(model?.successRate)} />
+        <MetricCard label={s('响应延迟')} value={formatNumber(model?.latency, 'ms')} />
+        <MetricCard label={s('端点 PING')} value={formatNumber(model?.ping, 'ms')} />
       </div>
-      <Panel title="巡检心跳" extra={<HeartbeatLegend />}>
-        {model ? <HeartbeatBar points={model.history} slots={48} /> : <LoadingState label="该模型暂无巡检记录" />}
+      <Panel title={s('巡检心跳')} extra={<HeartbeatLegend />}>
+        {model ? <HeartbeatBar points={model.history} slots={48} /> : <LoadingState label={s('该模型暂无巡检记录')} />}
         <p className="mt-3 text-xs text-fd-muted-foreground">
-          最后检测：{formatTime(model?.checkedAt)}。状态站巡检可能已停止，此处不代表当前秒级状态。
+          {s('最后检测：{time}。状态站巡检可能已停止，此处不代表当前秒级状态。', { time: formatTime(model?.checkedAt) })}
         </p>
       </Panel>
       <Panel
-        title="定价"
+        title={s('定价')}
         extra={
           <a
             href={`${STATUS_SITE_URL}`}
@@ -414,7 +427,7 @@ function OverviewPanel({
             rel="noreferrer noopener"
             className="inline-flex items-center gap-1 text-xs text-brand hover:underline"
           >
-            原状态站 <ExternalLink aria-hidden="true" className="size-3" />
+            {s('原状态站')} <ExternalLink aria-hidden="true" className="size-3" />
           </a>
         }
       >
@@ -423,64 +436,63 @@ function OverviewPanel({
             <div className="flex flex-wrap items-baseline gap-2">
               <span className="text-2xl font-semibold tabular-nums">{formatUsd(price.input)}</span>
               <span className="text-fd-muted-foreground">
-                {price.kind === 'call' ? '/ 次' : '/ 1M tokens（输入价起算）'}
+                {price.kind === 'call' ? s('/ 次') : s('/ 1M tokens（输入价起算）')}
               </span>
             </div>
             {price.kind === 'call' ? null : (
               <dl className="grid gap-2 sm:grid-cols-2">
                 <div>
-                  <dt className="text-fd-muted-foreground">输出</dt>
+                  <dt className="text-fd-muted-foreground">{s('输出')}</dt>
                   <dd className="font-medium tabular-nums">{formatUsd(price.output ?? NaN)}</dd>
                 </div>
                 <div>
-                  <dt className="text-fd-muted-foreground">缓存读取</dt>
+                  <dt className="text-fd-muted-foreground">{s('缓存读取')}</dt>
                   <dd className="font-medium tabular-nums">{formatUsd(price.cacheRead ?? NaN)}</dd>
                 </div>
                 <div>
-                  <dt className="text-fd-muted-foreground">缓存写入</dt>
+                  <dt className="text-fd-muted-foreground">{s('缓存写入')}</dt>
                   <dd className="font-medium tabular-nums">{formatUsd(price.cacheWrite ?? NaN)}</dd>
                 </div>
                 <div>
-                  <dt className="text-fd-muted-foreground">缓存写入 (1h)</dt>
+                  <dt className="text-fd-muted-foreground">{s('缓存写入 (1h)')}</dt>
                   <dd className="font-medium tabular-nums">{formatUsd(price.cacheWrite1h ?? NaN)}</dd>
                 </div>
               </dl>
             )}
             <p className="text-xs text-fd-muted-foreground">
-              USD 计价；未选分组时按最低可用分组 {formatRatio(groupRatio)} 计算。价格随分组与上下文变化，
-              以主站模型广场为准。
+              {s('USD 计价；未选分组时按最低可用分组 {ratio} 计算。价格随分组与上下文变化，以主站模型广场为准。', { ratio: formatRatio(groupRatio) })}
             </p>
             {pricing.description ? <p className="text-sm text-fd-muted-foreground">{pricing.description}</p> : null}
             {enabledGroups.length > 0 ? (
               <p className="text-xs text-fd-muted-foreground">
-                可用分组：{enabledGroups.map((group) => <code key={group} className="mr-1 rounded bg-fd-muted px-1 py-0.5">{group}</code>)}
+                {s('可用分组：')}{enabledGroups.map((group) => <code key={group} className="mr-1 rounded bg-fd-muted px-1 py-0.5">{group}</code>)}
               </p>
             ) : null}
             {tiers.length > 0 ? (
               <div className="rounded-lg border border-fd-border p-3">
-                <p className="font-medium">计费档位（USD / 1M tokens）</p>
+                <p className="font-medium">{s('计费档位（USD / 1M tokens）')}</p>
                 <ul className="mt-2 space-y-1 text-xs text-fd-muted-foreground">
                   {tiers.map((tier, index) => (
                     <li key={`${tier.label}-${index}`}>
-                      {tier.label}：输入 {formatUsd((tier.input ?? 0) * groupRatio)}，输出{' '}
+                      {tier.label} · {s('输入')} {formatUsd((tier.input ?? 0) * groupRatio)} · {s('输出')}{' '}
                       {formatUsd((tier.output ?? 0) * groupRatio)}
                     </li>
                   ))}
                 </ul>
                 {pricing.billing_expr ? (
                   <p className="mt-2 break-all font-mono text-[11px] text-fd-muted-foreground">
-                    表达式：{pricing.billing_expr}
+                    {s('表达式：')}{pricing.billing_expr}
                   </p>
                 ) : null}
               </div>
             ) : null}
             {pricing.billing_mode === 'ratio' ? (
-              <p className="text-xs text-fd-muted-foreground">模型倍率：{formatRatio(pricing.model_ratio)}</p>
+              <p className="text-xs text-fd-muted-foreground">{s('模型倍率：')}{formatRatio(pricing.model_ratio)}</p>
             ) : null}
           </div>
         ) : (
           <p className="text-sm text-fd-muted-foreground">
-            {loadError ? `定价数据暂不可用：${loadError}` : '该模型暂无定价信息，可能已下架或不在当前定价表中。'}
+            {loadError ? s('定价数据暂不可用：{error}', { error: loadError }) : s('该模型暂无定价信息，可能已下架或不在当前定价表中。')}
           </p>
         )}
       </Panel>
@@ -498,11 +510,12 @@ function Sparkline({
   label: string;
   formatValue: (value: number) => string;
 }) {
+  const { s } = useStatusText();
   const valid = points.filter((point) => Number.isFinite(point.value));
   if (valid.length < 2) {
     return (
       <div className="rounded-lg border border-dashed border-fd-border p-4 text-xs text-fd-muted-foreground">
-        {label}：该窗口真实调用样本较少，暂无可绘制趋势。
+        {s('{label}：该窗口真实调用样本较少，暂无可绘制趋势。', { label })}
       </div>
     );
   }
@@ -527,11 +540,12 @@ function Sparkline({
 }
 
 function PerfPanel({ name, enabled }: { name: string; enabled: boolean }) {
+  const { s, formatNumber, formatTime } = useStatusText();
   const { detail, summary, error, loading } = usePerfData(name, enabled);
   if (!enabled) return null;
-  if (loading && !detail) return <LoadingState label="正在获取 24 小时性能数据…" />;
+  if (loading && !detail) return <LoadingState label={s('正在获取 24 小时性能数据…')} />;
   if (error) return <ErrorState message={error} />;
-  if (!detail) return <p className="text-sm text-fd-muted-foreground">该模型在最近 24 小时内没有真实调用记录。</p>;
+  if (!detail?.summary) return <p className="text-sm text-fd-muted-foreground">{s('该模型在最近 24 小时内没有真实调用记录。')}</p>;
 
   const latencySeries = detail.series.map((point) => ({ ts: point.ts, value: point.avg_latency_ms }));
   const tpsSeries = detail.series.map((point) => ({ ts: point.ts, value: point.avg_tps }));
@@ -543,31 +557,37 @@ function PerfPanel({ name, enabled }: { name: string; enabled: boolean }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="24h 平均延迟" value={formatNumber(detail.summary.avg_latency_ms, 'ms')} />
-        <MetricCard label="24h 成功率" value={formatPercent(detail.summary.success_rate)} />
-        <MetricCard label="24h 平均 TPS" value={formatNumber(detail.summary.avg_tps)} />
-        <MetricCard label="首 Token 延迟" value={ttft} hint="接口未采集时显示 —" />
+        <MetricCard label={s('24h 平均延迟')} value={formatNumber(detail.summary.avg_latency_ms, 'ms')} />
+        <MetricCard label={s('24h 成功率')} value={formatPercent(detail.summary.success_rate)} />
+        <MetricCard label={s('24h 平均 TPS')} value={formatNumber(detail.summary.avg_tps)} />
+        <MetricCard label={s('首 Token 延迟')} value={ttft} hint={s('接口未采集时显示 —')} />
       </div>
       <p className="text-xs text-fd-muted-foreground">
-        统计窗口：{formatTime(detail.window_start)} — {formatTime(detail.window_end)}。数据来自主站真实调用。
+        {s('统计窗口：{start} — {end}。数据来自主站真实调用。', {
+          start: formatTime(detail.window_start),
+          end: formatTime(detail.window_end),
+        })}
       </p>
       <div className="grid gap-5 lg:grid-cols-2">
-        <Panel title="延迟趋势">
-          <Sparkline points={latencySeries} label="响应延迟" formatValue={(value) => formatNumber(value, 'ms')} />
+        <Panel title={s('延迟趋势')}>
+          <Sparkline points={latencySeries} label={s('响应延迟')} formatValue={(value) => formatNumber(value, 'ms')} />
         </Panel>
-        <Panel title="TPS 趋势">
-          <Sparkline points={tpsSeries} label="生成速度" formatValue={(value) => formatNumber(value)} />
+        <Panel title={s('TPS 趋势')}>
+          <Sparkline points={tpsSeries} label={s('生成速度')} formatValue={(value) => formatNumber(value)} />
         </Panel>
       </div>
       {detail.groups.length > 0 ? (
-        <Panel title="按分组">
+        <Panel title={s('按分组')}>
           <div className="space-y-2 text-sm">
             {detail.groups.map((group, index) => (
               <div key={`${group.group}-${index}`} className="flex flex-wrap justify-between gap-2 rounded-lg border border-fd-border p-3">
                 <code className="font-mono text-xs">{group.group}</code>
                 <span className="text-xs text-fd-muted-foreground">
-                  延迟 {formatNumber(group.avg_latency_ms, 'ms')} · 成功率 {formatPercent(group.success_rate)} · TPS{' '}
-                  {formatNumber(group.avg_tps)}
+                  {s('延迟 {latency} · 成功率 {rate} · TPS {tps}', {
+                    latency: formatNumber(group.avg_latency_ms, 'ms'),
+                    rate: formatPercent(group.success_rate),
+                    tps: formatNumber(group.avg_tps),
+                  })}
                 </span>
               </div>
             ))}
@@ -576,8 +596,11 @@ function PerfPanel({ name, enabled }: { name: string; enabled: boolean }) {
       ) : null}
       {sameModel ? (
         <p className="text-xs text-fd-muted-foreground">
-          全站汇总中的本模型记录：延迟 {formatNumber(sameModel.avg_latency_ms, 'ms')} · 成功率{' '}
-          {formatPercent(sameModel.success_rate)} · TPS {formatNumber(sameModel.avg_tps)}
+          {s('全站汇总中的本模型记录：延迟 {latency} · 成功率 {rate} · TPS {tps}', {
+            latency: formatNumber(sameModel.avg_latency_ms, 'ms'),
+            rate: formatPercent(sameModel.success_rate),
+            tps: formatNumber(sameModel.avg_tps),
+          })}
         </p>
       ) : null}
     </div>
@@ -596,6 +619,7 @@ function buildEndpointUrl(type: string, endpoint: EndpointDefinition | undefined
 }
 
 function ApiPanel({ name, catalog }: { name: string; catalog: PricingCatalog | null }) {
+  const { s } = useStatusText();
   const pricing = findPricingModel(catalog, name);
   const types = pricing?.supported_endpoint_types ?? [];
   const entries = types
@@ -605,7 +629,7 @@ function ApiPanel({ name, catalog }: { name: string; catalog: PricingCatalog | n
   const curl = entries[0]
     ? (() => {
         const url = buildEndpointUrl(entries[0].type, entries[0].endpoint);
-        if (!url) return '# 暂无可用端点';
+        if (!url) return s('# 暂无可用端点');
         const isAnthropic = entries[0].type.startsWith('anthropic');
         const headers = isAnthropic
           ? `-H "x-api-key: $FISHXCODE_API_KEY"\n  -H "anthropic-version: 2023-06-01"`
@@ -615,13 +639,13 @@ function ApiPanel({ name, catalog }: { name: string; catalog: PricingCatalog | n
           : `{\\n  "model": "${name}",\\n  "messages": [{ "role": "user", "content": "Hello" }]\\n}`;
         return `curl ${url} \\\n  ${headers} \\\n  -H "Content-Type: application/json" \\\n  -d '${body}'`;
       })()
-    : '# 暂无可用端点';
+    : s('# 暂无可用端点');
 
   return (
     <div className="space-y-5">
-      <Panel title="可用端点">
+      <Panel title={s('可用端点')}>
         {entries.length === 0 ? (
-          <p className="text-sm text-fd-muted-foreground">该模型暂无公开的端点定义，请查看模型广场或联系客服。</p>
+          <p className="text-sm text-fd-muted-foreground">{s('该模型暂无公开的端点定义，请查看模型广场或联系客服。')}</p>
         ) : (
           <div className="space-y-2">
             {entries.map(({ type, endpoint }) => {
@@ -638,13 +662,12 @@ function ApiPanel({ name, catalog }: { name: string; catalog: PricingCatalog | n
           </div>
         )}
       </Panel>
-      <Panel title="请求示例" extra={<CopyButton text={curl} />}>
+      <Panel title={s('请求示例')} extra={<CopyButton text={curl} />}>
         <pre className="overflow-x-auto rounded-lg bg-fd-muted p-4 text-xs leading-relaxed">
           <code>{curl}</code>
         </pre>
         <p className="mt-3 text-xs text-fd-muted-foreground">
-          密钥从环境变量 <code className="rounded bg-fd-muted px-1 py-0.5">FISHXCODE_API_KEY</code> 读取，
-          请勿把密钥写进代码或提交到仓库。
+          {s('密钥从环境变量 {key} 读取，请勿把密钥写进代码或提交到仓库。', { key: 'FISHXCODE_API_KEY' })}
         </p>
       </Panel>
     </div>
@@ -653,6 +676,7 @@ function ApiPanel({ name, catalog }: { name: string; catalog: PricingCatalog | n
 
 /** 单模型详情：概览 / 性能 / API 三个 tab，默认概览不写查询串 */
 export function ModelDetailClient({ name }: { name: string }) {
+  const { s, lang } = useStatusText();
   const [tab, selectTab] = useModelTab();
   const { snapshot } = useStatusSnapshot();
   const { catalog, error: pricingError } = usePricingCatalog();
@@ -664,22 +688,26 @@ export function ModelDetailClient({ name }: { name: string }) {
     <div className="space-y-6">
       <BackLink />
       <StatusHeader
-        eyebrow="Model Detail"
+        eyebrow={s('Model Detail')}
         title={name}
         description={
           pricing?.description ??
-          '查看该模型的巡检状态、可用分组、真实调用性能与 API 接入方式。巡检与性能数据的时间窗口不同。'
+          s('查看该模型的巡检状态、可用分组、真实调用性能与 API 接入方式。巡检与性能数据的时间窗口不同。')
         }
       />
       <p className="text-xs text-fd-muted-foreground">
-        所属系列：
-        <AppLink href={`/status/${family}`} className="text-brand underline-offset-4 hover:underline">
-          {FAMILY_LABELS[family]}
+        {s('所属系列：')}
+        <AppLink href={localePath(lang, `/status/${family}`)} className="text-brand underline-offset-4 hover:underline">
+          {statusFamilyLabel(lang, family)}
         </AppLink>
       </p>
 
-      <div role="tablist" aria-label="模型详情分区" className="flex flex-wrap gap-1 rounded-xl border border-fd-border bg-fd-card p-1">
-        {TABS.map((item) => {
+      <div role="tablist" aria-label={s('模型详情分区')} className="flex flex-wrap gap-1 rounded-xl border border-fd-border bg-fd-card p-1">
+        {([
+          { key: 'overview' as const, label: s('概览') },
+          { key: 'perf' as const, label: s('性能') },
+          { key: 'api' as const, label: 'API' },
+        ]).map((item) => {
           const selected = item.key === tab;
           return (
             <button

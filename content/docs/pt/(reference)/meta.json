@@ -1,0 +1,15 @@
+{
+  "title": "Plataforma e cobrança",
+  "icon": "Book",
+  "defaultOpen": true,
+  "pages": [
+    "[Compass][Guia da plataforma](/platform)",
+    "[GitCompare][Comparação de ferramentas](/compare)",
+    "[Cpu][Modelos suportados](/models)",
+    "[Activity][Status dos modelos](/pt/status)",
+    "[Calculator][Regras de cobrança e grupos](/billing-groups)",
+    "[HeartPulse][Status de saude dos grupos](/group-health)",
+    "[TriangleExclamationPoint][Logs de erro](/error-logs)",
+    "[Image][Guia GPT-Image-2](/gpt-image-2)"
+  ]
+}

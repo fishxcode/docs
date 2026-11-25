@@ -5,34 +5,17 @@
  *
  * 所有数据都在客户端从同源代理读取；这里只做格式化与展示，不改动接口返回的数值。
  * 「延迟」沿用状态站的口径：单次成功但响应超过 12 秒。
+ * 文案与数字格式都跟随当前语言，见 use-status-text.ts。
  */
 
 import type { ReactNode } from 'react';
 import { Activity, CircleAlert, CircleCheck, Clock, Loader2, RefreshCw } from 'lucide-react';
 import { STATUS_SITE_URL, type HistoryPoint, type StatusModel } from '@/lib/status';
-
-export function formatNumber(value: number | null | undefined, suffix = ''): string {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
-  return `${new Intl.NumberFormat('zh-CN', { maximumFractionDigits: value >= 100 ? 0 : 1 }).format(value)}${suffix}`;
-}
+import { useStatusText } from './use-status-text';
 
 export function formatPercent(value: number | null | undefined): string {
   if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
   return `${Number(value.toFixed(2))}%`;
-}
-
-export function formatTime(value: string | number | null | undefined): string {
-  if (value === null || value === undefined || value === '') return '—';
-  // 性能接口的 ts/window 是 Unix 秒；状态站的 checkedAt 是 ISO 字符串
-  const date = new Date(typeof value === 'number' ? value * 1000 : value);
-  if (Number.isNaN(date.getTime())) return '—';
-  return new Intl.DateTimeFormat('zh-CN', {
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(date);
 }
 
 export function modelTone(model: StatusModel): 'ok' | 'warn' | 'bad' | 'unknown' {
@@ -45,7 +28,7 @@ export function pointTone(point: HistoryPoint): 'ok' | 'warn' | 'bad' | 'unknown
   return 'ok';
 }
 
-const TONE_LABEL: Record<'ok' | 'warn' | 'bad' | 'unknown', string> = {
+const TONE_SOURCE: Record<'ok' | 'warn' | 'bad' | 'unknown', string> = {
   ok: '正常',
   warn: '延迟',
   bad: '故障',
@@ -60,6 +43,7 @@ const TONE_CLASS: Record<'ok' | 'warn' | 'bad' | 'unknown', string> = {
 };
 
 export function StatePill({ state }: { state: 'ok' | 'warn' | 'bad' | 'unknown' }) {
+  const { s } = useStatusText();
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -73,13 +57,14 @@ export function StatePill({ state }: { state: 'ok' | 'warn' | 'bad' | 'unknown' 
       }`}
     >
       <span aria-hidden="true" className={`size-1.5 rounded-full ${TONE_CLASS[state]}`} />
-      {TONE_LABEL[state]}
+      {s(TONE_SOURCE[state])}
     </span>
   );
 }
 
 /** Uptime Kuma 风格心跳条：每个格子是一次巡检，左侧补灰格表示无数据 */
 export function HeartbeatBar({ points, slots = 48 }: { points: HistoryPoint[]; slots?: number }) {
+  const { s, formatTime, formatNumber } = useStatusText();
   const sampled =
     points.length <= slots
       ? points
@@ -88,13 +73,13 @@ export function HeartbeatBar({ points, slots = 48 }: { points: HistoryPoint[]; s
     const tone = pointTone(point);
     return {
       cls: TONE_CLASS[tone],
-      title: `${formatTime(point.ts)} · ${TONE_LABEL[tone]} · ${formatNumber(point.latency, 'ms')}`,
+      title: `${formatTime(point.ts)} · ${s(TONE_SOURCE[tone])} · ${formatNumber(point.latency, 'ms')}`,
     };
   });
-  while (cells.length < slots) cells.unshift({ cls: TONE_CLASS.unknown, title: '暂无数据' });
+  while (cells.length < slots) cells.unshift({ cls: TONE_CLASS.unknown, title: s('暂无数据') });
 
   return (
-    <div className="flex items-end gap-[3px]" role="img" aria-label="各次检测结果">
+    <div className="flex items-end gap-[3px]" role="img" aria-label={s('各次检测结果')}>
       {cells.map((cell, index) => (
         <span
           // 心跳格没有稳定 ID，按下标渲染即可；title 承载悬浮说明
@@ -108,12 +93,13 @@ export function HeartbeatBar({ points, slots = 48 }: { points: HistoryPoint[]; s
 }
 
 export function HeartbeatLegend() {
+  const { s } = useStatusText();
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fd-muted-foreground">
       {(['ok', 'warn', 'bad', 'unknown'] as const).map((state) => (
         <span key={state} className="flex items-center gap-1.5">
           <span aria-hidden="true" className={`size-2.5 rounded-[2px] ${TONE_CLASS[state]}`} />
-          {state === 'unknown' ? '无数据' : TONE_LABEL[state]}
+          {state === 'unknown' ? s('无数据') : s(TONE_SOURCE[state])}
         </span>
       ))}
     </div>
@@ -150,20 +136,22 @@ export function Panel({ title, children, extra }: { title: string; children: Rea
   );
 }
 
-export function LoadingState({ label = '正在获取数据…' }: { label?: string }) {
+export function LoadingState({ label }: { label?: string }) {
+  const { s } = useStatusText();
   return (
     <div className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-fd-border py-12 text-sm text-fd-muted-foreground">
       <Loader2 aria-hidden="true" className="size-4 animate-spin" />
-      {label}
+      {label ?? s('正在获取数据…')}
     </div>
   );
 }
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
+  const { s } = useStatusText();
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 rounded-xl border border-rose-500/25 bg-rose-500/5 p-6 text-sm text-rose-600 dark:text-rose-400">
       <CircleAlert aria-hidden="true" className="size-4" />
-      <span>获取失败：{message}</span>
+      <span>{s('获取失败：{message}', { message })}</span>
       {onRetry ? (
         <button
           type="button"
@@ -171,7 +159,7 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
           className="inline-flex items-center gap-1.5 rounded-md border border-current px-2.5 py-1 text-xs font-medium transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fd-ring"
         >
           <RefreshCw aria-hidden="true" className="size-3.5" />
-          重试
+          {s('重试')}
         </button>
       ) : null}
     </div>
@@ -181,19 +169,21 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 export function SearchInput({
   value,
   onChange,
-  placeholder = '搜索模型名称',
+  placeholder,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
 }) {
+  const { s } = useStatusText();
+  const label = placeholder ?? s('搜索模型名称');
   return (
     <input
       type="search"
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      placeholder={placeholder}
-      aria-label={placeholder}
+      placeholder={label}
+      aria-label={label}
       className="w-full rounded-lg border border-fd-border bg-fd-background px-3 py-2 text-sm outline-none placeholder:text-fd-muted-foreground focus-visible:ring-2 focus-visible:ring-fd-ring"
     />
   );
@@ -209,11 +199,12 @@ export function StaleNotice({
   generatedAt: string;
   stale: boolean;
 }) {
+  const { s, formatTime } = useStatusText();
   if (!stale) {
     return (
       <p className="flex items-center gap-2 rounded-xl border border-fd-border bg-fd-card px-4 py-3 text-xs text-fd-muted-foreground">
         <Clock aria-hidden="true" className="size-4" />
-        最后检测：{formatTime(lastCheckedAt)}
+        {s('最后检测：{time}', { time: formatTime(lastCheckedAt) })}
       </p>
     );
   }
@@ -221,46 +212,45 @@ export function StaleNotice({
     <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-700 dark:text-amber-300">
       <p className="flex items-center gap-2 font-medium">
         <CircleAlert aria-hidden="true" className="size-4" />
-        巡检数据陈旧，并非当前实时状态
+        {s('巡检数据陈旧，并非当前实时状态')}
       </p>
       <p className="mt-2 text-xs">
-        最后检测：{formatTime(lastCheckedAt)}；数据生成：{formatTime(generatedAt)}。
-        状态站巡检暂停或数据未更新时仍会显示旧结果，请以原站为准。
+        {s('最后检测：{time}', { time: formatTime(lastCheckedAt) })}
+        {s('数据生成：{time}', { time: formatTime(generatedAt) })}。
+        {s('状态站巡检暂停或数据未更新时仍会显示旧结果，请以原站为准。')}
       </p>
     </div>
   );
 }
 
 export function StatusExplainer({ className }: { className?: string } = {}) {
+  const { s } = useStatusText();
   return (
     <section className={className ? className : "rounded-2xl border border-fd-border bg-fd-card p-5 md:p-6"}>
-      <h2 className="text-base font-semibold">看懂这些指标</h2>
+      <h2 className="text-base font-semibold">{s('看懂这些指标')}</h2>
       <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
         <div>
-          <dt className="font-medium">正常 / 延迟 / 故障</dt>
+          <dt className="font-medium">{s('正常 / 延迟 / 故障')}</dt>
           <dd className="mt-1 text-fd-muted-foreground">
-            单次巡检成功且响应在 12 秒内记为正常；成功但超过 12 秒记为延迟；请求失败记为故障。
-            图像、视频类模型本身耗时较长，更容易落入「延迟」。
+            {s('单次巡检成功且响应在 12 秒内记为正常；成功但超过 12 秒记为延迟；请求失败记为故障。图像、视频类模型本身耗时较长，更容易落入「延迟」。')}
           </dd>
         </div>
         <div>
-          <dt className="font-medium">可用率与延迟</dt>
+          <dt className="font-medium">{s('可用率与延迟')}</dt>
           <dd className="mt-1 text-fd-muted-foreground">
-            可用率是巡检窗口内成功的比例；响应延迟包含模型推理，端点 PING 只测网络往返，
-            可用来区分网络问题与上游变慢。
+            {s('可用率是巡检窗口内成功的比例；响应延迟包含模型推理，端点 PING 只测网络往返，可用来区分网络问题与上游变慢。')}
           </dd>
         </div>
         <div>
-          <dt className="font-medium">两套数据来源</dt>
+          <dt className="font-medium">{s('两套数据来源')}</dt>
           <dd className="mt-1 text-fd-muted-foreground">
-            可用性来自状态站周期性巡检，性能来自主站真实调用。两者采集时间不同，
-            页面分别标注，不混成秒级实时状态。
+            {s('可用性来自状态站周期性巡检，性能来自主站真实调用。两者采集时间不同，页面分别标注，不混成秒级实时状态。')}
           </dd>
         </div>
         <div>
-          <dt className="font-medium">为什么模型数会变</dt>
+          <dt className="font-medium">{s('为什么模型数会变')}</dt>
           <dd className="mt-1 text-fd-muted-foreground">
-            面板只列出当前在测的模型；上游下架或巡检停测后，模型会暂时消失。
+            {s('面板只列出当前在测的模型；上游下架或巡检停测后，模型会暂时消失。')}
           </dd>
         </div>
       </dl>
@@ -269,9 +259,10 @@ export function StatusExplainer({ className }: { className?: string } = {}) {
 }
 
 export function DataSourceNote() {
+  const { s } = useStatusText();
   return (
     <p className="text-center text-xs text-fd-muted-foreground">
-      巡检数据来源{' '}
+      {s('巡检数据来源')}{' '}
       <a
         href={STATUS_SITE_URL}
         target="_blank"
@@ -280,7 +271,7 @@ export function DataSourceNote() {
       >
         status.fishxcode.com
       </a>
-      。数据可能陈旧，若长时间没有新检测点，请直接访问原站确认。
+      {s('。数据可能陈旧，若长时间没有新检测点，请直接访问原站确认。')}
     </p>
   );
 }

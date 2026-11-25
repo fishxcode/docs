@@ -1,0 +1,8 @@
+{
+  "title": "订阅套餐",
+  "icon": "CreditCard",
+  "defaultOpen": true,
+  "pages": [
+    "[PackageOpen][Codex Pro 月包](/subscription-plans)"
+  ]
+}

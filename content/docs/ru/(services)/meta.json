@@ -1,0 +1,9 @@
+{
+  "title": "Другие сервисы",
+  "icon": "ExternalLink",
+  "defaultOpen": false,
+  "pages": [
+    "external:[CreditCard][Проверка баланса](https://api-key-tool.fishxcode.com)",
+    "external:[Building][Для бизнеса](https://enterprise.fishxcode.com/)"
+  ]
+}

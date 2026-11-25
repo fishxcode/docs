@@ -1,0 +1,12 @@
+{
+  "title": "Помощь и политика",
+  "icon": "CircleQuestionMark",
+  "defaultOpen": false,
+  "pages": [
+    "[CircleQuestionMark][Частые вопросы](/faq)",
+    "[Clock][Журнал изменений](/changelog)",
+    "[FileText][Пользовательское соглашение](/terms)",
+    "[Receipt][Политика возврата](/refund)",
+    "[ShieldCheck][Политика конфиденциальности](/privacy)"
+  ]
+}

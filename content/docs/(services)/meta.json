@@ -1,0 +1,9 @@
+{
+  "title": "更多服务",
+  "icon": "ExternalLink",
+  "defaultOpen": false,
+  "pages": [
+    "external:[CreditCard][额度查询](https://api-key-tool.fishxcode.com)",
+    "external:[Building][企业服务](https://enterprise.fishxcode.com/)"
+  ]
+}

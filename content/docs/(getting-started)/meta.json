@@ -1,0 +1,11 @@
+{
+  "title": "快速开始",
+  "icon": "Rocket",
+  "defaultOpen": true,
+  "pages": [
+    "[UserRound][账户注册](/account)",
+    "[Terminal][Claude Code](/start)",
+    "[Monitor][Claude Desktop](/claude-desktop)",
+    "[Zap][ZCF 快速接入](/zcf)"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Начало работы",
+  "icon": "Rocket",
+  "defaultOpen": true,
+  "pages": [
+    "[UserRound][Регистрация](/account)",
+    "[Terminal][Claude Code](/start)",
+    "[Monitor][Claude Desktop](/claude-desktop)",
+    "[Zap][Быстрая настройка через ZCF](/zcf)"
+  ]
+}
