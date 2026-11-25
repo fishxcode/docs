@@ -26,12 +26,31 @@
     { "source": "/api/status-data/perf-summary", "destination": "https://fishxcode.com/api/perf-metrics/summary?hours=24" },
     { "source": "/api/status-data/perf-model", "destination": "https://fishxcode.com/api/perf-metrics?hours=24" },
     { "source": "/api/status-data/pricing", "destination": "https://fishxcode.com/api/pricing" },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "destination": "/llms.mdx/index/content.md"
+    },
     { "source": "/:path+.md", "destination": "/llms.mdx/:path+/content.md" }
   ],
   "headers": [
     {
       "source": "/",
-      "headers": [{ "key": "Link", "value": "</llms.txt>; rel=\"service-doc\", </ai.txt>; rel=\"service-desc\", </status>; rel=\"describedby\", </sitemap.xml>; rel=\"describedby\", </.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ai-catalog.json>; rel=\"describedby\"" }]
+      "headers": [
+        { "key": "Link", "value": "</llms.txt>; rel=\"service-doc\", </ai.txt>; rel=\"service-desc\", </status>; rel=\"describedby\", </sitemap.xml>; rel=\"describedby\", </.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ai-catalog.json>; rel=\"describedby\"" },
+        { "key": "Vary", "value": "Accept" }
+      ]
+    },
+    {
+      "source": "/.well-known/:path((?!llms\\.txt$).*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json; charset=utf-8" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/.well-known/llms.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
     },
     {
       "source": "/api/pricing",
