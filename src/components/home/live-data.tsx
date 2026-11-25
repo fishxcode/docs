@@ -188,11 +188,11 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
             {families.length > 0 ? (
               <div className="mt-6 space-y-3">
                 {families.map(({ family, models: list }) => {
-                  const href = localePath(lang, `/status/${family}`);
+                  const familyHref = localePath(lang, `/status/${family}`);
                   return (
                     <div key={family} className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-3">
                       <Link
-                        href={href}
+                        href={familyHref}
                         className="truncate rounded-sm text-xs text-fd-muted-foreground hover:text-brand focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
                       >
                         {statusFamilyLabel(lang, family)}
@@ -202,10 +202,11 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
                           const index = STATE_ORDER.indexOf(model.state as ModelState);
                           const label = index >= 0 ? status.legend[index] : '';
                           const title = `${model.model} · ${label} · ${formatLatency(model.latency, lang)}`;
+                          const modelHref = localePath(lang, `/status/model/${encodeURIComponent(model.model)}`);
                           return (
                             <Link
                               key={model.model}
-                              href={href}
+                              href={modelHref}
                               title={title}
                               aria-label={title}
                               onMouseEnter={() => setActive(model)}
