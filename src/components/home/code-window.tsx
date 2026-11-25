@@ -168,8 +168,8 @@ export function CodeWindow({
         role="tabpanel"
         id={`${id}-panel`}
         aria-labelledby={`${id}-tab-${active}`}
-        // 固定最小高度，切换 Tab 时窗口不跳动；Shiki 自带的底色让位给窗口底色
-        className="min-h-[17rem] overflow-x-auto p-5 font-mono text-[12.5px] leading-[1.7] md:text-[13px] [&_pre]:bg-transparent! [&_pre]:outline-none"
+        // 不设高最小高度，避免短示例下方留出一大块空白
+        className="overflow-x-auto p-5 font-mono text-[12.5px] leading-[1.7] md:text-[13px] [&_pre]:bg-transparent! [&_pre]:outline-none"
       >
         {tabs[active].node}
       </div>
