@@ -1,0 +1,15 @@
+{
+  "title": "Nền tảng và thanh toán",
+  "icon": "Book",
+  "defaultOpen": true,
+  "pages": [
+    "[Compass][Điều hướng nền tảng](/platform)",
+    "[GitCompare][So sánh công cụ](/compare)",
+    "[Cpu][Mô hình được hỗ trợ](/models)",
+    "[Activity][Trạng thái mô hình](/vi/status)",
+    "[Calculator][Quy tắc tính phí và nhóm](/billing-groups)",
+    "[HeartPulse][Trạng thái sức khỏe nhóm](/group-health)",
+    "[TriangleExclamationPoint][Giải thích nhật ký lỗi](/error-logs)",
+    "[Image][Tạo ảnh với GPT-Image-2](/gpt-image-2)"
+  ]
+}

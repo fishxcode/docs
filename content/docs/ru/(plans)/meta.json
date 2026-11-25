@@ -1,0 +1,8 @@
+{
+  "title": "Тарифы",
+  "icon": "CreditCard",
+  "defaultOpen": true,
+  "pages": [
+    "[PackageOpen][Месячный план Codex Pro](/subscription-plans)"
+  ]
+}

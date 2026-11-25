@@ -100,6 +100,16 @@ html.in-iframe body::before {
   pointer-events: none;
 }
 
+/* 平台 iframe 内主站已有顶栏；文档站自己的品牌、菜单、主题与语言控件重复，
+   这里全部隐藏，只保留搜索入口（data-search / data-search-full）。 */
+html.in-iframe #nd-nav .docs-brand,
+html.in-iframe #nd-subnav .docs-brand,
+html.in-iframe #nd-nav ul,
+html.in-iframe #nd-nav [role='separator'],
+html.in-iframe #nd-nav button:not([data-search]):not([data-search-full]) {
+  display: none !important;
+}
+
 /*
  * 在线客服只在首页显示：首页挂载时给 <html> 加 data-support-visible（见 support-widget.tsx）。
  * SDK 把悬浮卡片挂在 body 下的 #contact-widget-auto 且没有销毁接口，从首页切到文档页后
@@ -303,5 +313,40 @@ html:not([data-support-visible]) #contact-widget-auto {
 
   .home-motion .home-action:active {
     transform: scale(0.98);
+  }
+}
+
+/*
+ * 搜索弹窗：移动端贴顶但避开浏览器安全区；iframe 内还要让开主站 64px 顶栏。
+ * Fumadocs 默认 top-4 在 iframe 中会与文档站自己的顶栏重叠。
+ */
+#fd-search-dialog-content {
+  top: max(0.5rem, env(safe-area-inset-top));
+  max-height: calc(100dvh - 1rem - env(safe-area-inset-top));
+  overflow-y: auto;
+}
+
+html.in-iframe #fd-search-dialog-content {
+  top: calc(var(--iframe-top-offset) + 0.5rem);
+  max-height: calc(100dvh - var(--iframe-top-offset) - 1rem);
+}
+
+@media (max-width: 639px) {
+  #fd-search-dialog-content {
+    width: calc(100% - 0.5rem);
+    max-height: calc(100dvh - 1rem - env(safe-area-inset-top));
+  }
+
+  #fd-search-dialog-content > div:first-child {
+    padding: 0.75rem;
+  }
+
+  #fd-search-dialog-content [data-fd-search-dialog-input] {
+    font-size: 1rem;
+  }
+
+  html.in-iframe #fd-search-dialog-content {
+    top: calc(var(--iframe-top-offset) + 0.25rem);
+    max-height: calc(100dvh - var(--iframe-top-offset) - 0.5rem);
   }
 }

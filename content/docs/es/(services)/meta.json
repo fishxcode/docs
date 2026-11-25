@@ -1,0 +1,9 @@
+{
+  "title": "Más servicios",
+  "icon": "ExternalLink",
+  "defaultOpen": false,
+  "pages": [
+    "external:[CreditCard][Consultar saldo](https://api-key-tool.fishxcode.com)",
+    "external:[Building][Empresas](https://enterprise.fishxcode.com/)"
+  ]
+}

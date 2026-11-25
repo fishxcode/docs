@@ -67,7 +67,9 @@ export function ClientGuide({ name, icon, protocol, baseUrl }: ClientGuideProps)
           </table>
         </div>
         <p className="mt-3 text-xs text-fd-muted-foreground">
-          {note} <code>{noteUrl}</code>；{protocol === 'anthropic' ? '若客户端要求完整地址，再按' : '不要重复追加'} <code>{noteHint}</code>{protocol === 'anthropic' ? ' 等路径补全。' : '。'}
+          {note} <code>{noteUrl}</code>
+          {protocol === 'anthropic' ? copy.hintFullPrefix : copy.hintShortPrefix} <code>{noteHint}</code>
+          {protocol === 'anthropic' ? copy.hintFullSuffix : copy.hintShortSuffix}
         </p>
       </section>
 

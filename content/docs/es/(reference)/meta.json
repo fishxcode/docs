@@ -1,0 +1,15 @@
+{
+  "title": "Plataforma y facturación",
+  "icon": "Book",
+  "defaultOpen": true,
+  "pages": [
+    "[Compass][Guía de plataforma](/platform)",
+    "[GitCompare][Comparación de herramientas](/compare)",
+    "[Cpu][Modelos soportados](/models)",
+    "[Activity][Estado de modelos](/es/status)",
+    "[Calculator][Reglas de facturación y grupos](/billing-groups)",
+    "[HeartPulse][Estado de salud de grupos](/group-health)",
+    "[TriangleExclamationPoint][Registros de error](/error-logs)",
+    "[Image][Guía GPT-Image-2](/gpt-image-2)"
+  ]
+}

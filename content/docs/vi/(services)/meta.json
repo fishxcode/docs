@@ -1,0 +1,9 @@
+{
+  "title": "Dịch vụ khác",
+  "icon": "ExternalLink",
+  "defaultOpen": false,
+  "pages": [
+    "external:[CreditCard][Tra cứu số dư](https://api-key-tool.fishxcode.com)",
+    "external:[Building][Doanh nghiệp](https://enterprise.fishxcode.com/)"
+  ]
+}

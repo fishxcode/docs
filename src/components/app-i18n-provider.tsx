@@ -39,7 +39,7 @@ export function AppI18nProvider({ lang, children }: { lang: Locale; children: Re
     const { path } = stripLocalePrefix(pathname ?? '/');
     const rest = path.replace(/^\//, '');
     // 首页与未本地化的区块：切语言落到对应语言首页
-    if (rest === '' || rest.startsWith('status')) {
+    if (rest === '') {
       go(next === DEFAULT_LOCALE ? '/' : `/${next}`);
       return;
     }

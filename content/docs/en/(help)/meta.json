@@ -1,0 +1,12 @@
+{
+  "title": "Help & policies",
+  "icon": "CircleQuestionMark",
+  "defaultOpen": false,
+  "pages": [
+    "[CircleQuestionMark][FAQ](/faq)",
+    "[Clock][Changelog](/changelog)",
+    "[FileText][Terms](/terms)",
+    "[Receipt][Refund Policy](/refund)",
+    "[ShieldCheck][Privacy](/privacy)"
+  ]
+}

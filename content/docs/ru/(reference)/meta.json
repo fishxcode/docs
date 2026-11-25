@@ -1,0 +1,15 @@
+{
+  "title": "Платформа и оплата",
+  "icon": "Book",
+  "defaultOpen": true,
+  "pages": [
+    "[Compass][Навигация по платформе](/platform)",
+    "[GitCompare][Сравнение инструментов](/compare)",
+    "[Cpu][Поддерживаемые модели](/models)",
+    "[Activity][Статус моделей](/ru/status)",
+    "[Calculator][Правила тарификации и группы](/billing-groups)",
+    "[HeartPulse][Состояние групп](/group-health)",
+    "[TriangleExclamationPoint][Журнал ошибок](/error-logs)",
+    "[Image][Генерация изображений с GPT-Image-2](/gpt-image-2)"
+  ]
+}

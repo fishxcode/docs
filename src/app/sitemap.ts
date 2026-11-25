@@ -71,22 +71,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   /**
-   * 状态页只提供默认语言版本，不参与 hreflang 语言簇：
-   * 总览、11 个厂商系列页与离线清单里的全部模型页都直接生成静态路由。
+   * 状态页三套路由（总览 / 厂商 / 单模型）在所有语言下都是真实页面，
+   * 按语言展开并声明完整 hreflang 语言簇。
    */
-  const statusEntries: MetadataRoute.Sitemap = [
-    { url: new URL('/status', siteConfig.url).toString(), changeFrequency: 'hourly' as const, priority: 0.7 },
+  const statusEntries: MetadataRoute.Sitemap = LOCALES.flatMap((lang) => [
+    {
+      url: new URL(localePath(lang, '/status'), siteConfig.url).toString(),
+      changeFrequency: 'hourly' as const,
+      priority: 0.7,
+      alternates: { languages: absoluteAlternates(['status']) },
+    },
     ...FAMILY_ORDER.map((fam) => ({
-      url: new URL(`/status/${fam}`, siteConfig.url).toString(),
+      url: new URL(localePath(lang, `/status/${fam}`), siteConfig.url).toString(),
       changeFrequency: 'hourly' as const,
       priority: 0.6,
+      alternates: { languages: absoluteAlternates(['status', fam]) },
     })),
     ...statusModels.map((name) => ({
-      url: new URL(`/status/model/${encodeURIComponent(name)}`, siteConfig.url).toString(),
+      url: new URL(localePath(lang, `/status/model/${encodeURIComponent(name)}`), siteConfig.url).toString(),
       changeFrequency: 'hourly' as const,
       priority: 0.6,
+      alternates: { languages: absoluteAlternates(['status', 'model', encodeURIComponent(name)]) },
     })),
-  ];
+  ]);
 
   const entries: MetadataRoute.Sitemap = [...homeEntries, ...docPages, ...statusEntries];
 

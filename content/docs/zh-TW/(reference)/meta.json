@@ -1,0 +1,15 @@
+{
+  "title": "平臺與計費",
+  "icon": "Book",
+  "defaultOpen": true,
+  "pages": [
+    "[Compass][平臺導航](/platform)",
+    "[GitCompare][工具對比](/compare)",
+    "[Cpu][支援的模型](/models)",
+    "[Activity][模型狀態監控](/zh-TW/status)",
+    "[Calculator][計費規則與分組](/billing-groups)",
+    "[HeartPulse][分組健康狀態](/group-health)",
+    "[TriangleExclamationPoint][錯誤日誌說明](/error-logs)",
+    "[Image][GPT-Image-2 繪圖](/gpt-image-2)"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "説明與政策",
+  "icon": "CircleQuestionMark",
+  "defaultOpen": false,
+  "pages": [
+    "[CircleQuestionMark][常見問題](/faq)",
+    "[Clock][更新日誌](/changelog)",
+    "[FileText][使用者協議](/terms)",
+    "[Receipt][退款政策](/refund)",
+    "[ShieldCheck][隱私政策](/privacy)"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Trợ giúp và chính sách",
+  "icon": "CircleQuestionMark",
+  "defaultOpen": false,
+  "pages": [
+    "[CircleQuestionMark][Câu hỏi thường gặp](/faq)",
+    "[Clock][Nhật ký cập nhật](/changelog)",
+    "[FileText][Thỏa thuận người dùng](/terms)",
+    "[Receipt][Chính sách hoàn tiền](/refund)",
+    "[ShieldCheck][Chính sách quyền riêng tư](/privacy)"
+  ]
+}

@@ -22,9 +22,15 @@ function docLinks(lang: Locale): FooterLink[] {
   return source
     .getPageTree(lang)
     .children.flatMap((node) => {
-      const entry = node.type === 'page' ? node : node.type === 'folder' ? node.index : undefined;
-      // 目录名是 ReactNode（图标与文字混排），只有纯字符串才能当链接文字
-      return entry && typeof node.name === 'string' ? [{ label: node.name, href: entry.url }] : [];
+      // 分组目录只有链接节点、没有 index 页，取第一个可点页面作为页脚入口
+      const candidate =
+        node.type === 'folder'
+          ? (node.index ?? node.children.find((child) => child.type === 'page'))
+          : undefined;
+      const entry = node.type === 'page' ? node : candidate;
+      return entry?.type === 'page' && typeof node.name === 'string'
+        ? [{ label: node.name, href: entry.url }]
+        : [];
     })
     .slice(0, MAX_DOC_LINKS);
 }

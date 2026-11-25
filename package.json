@@ -14,6 +14,7 @@
     "preview": "wrangler pages dev out",
     "types:check": "next typegen && tsc --noEmit",
     "lint": "oxlint",
+    "nav:generate": "node scripts/generate-navigation.mjs",
     "deploy:cf": "pnpm build && wrangler pages deploy out --project-name fishxcode-docs --branch main",
     "indexnow": "node scripts/indexnow.mjs"
   },

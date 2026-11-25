@@ -1,0 +1,11 @@
+{
+  "title": "Início",
+  "icon": "Rocket",
+  "defaultOpen": true,
+  "pages": [
+    "[UserRound][Configuração de conta](/account)",
+    "[Terminal][Claude Code](/start)",
+    "[Monitor][Claude Desktop](/claude-desktop)",
+    "[Zap][ZCF Configuração](/zcf)"
+  ]
+}
