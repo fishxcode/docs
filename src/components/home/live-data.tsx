@@ -73,10 +73,13 @@ function formatLatency(ms: number | null, lang: Locale): string {
 export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign: HomeRedesignCopy }) {
   const [data, setData] = useState<LiveData>(EMPTY);
   const [active, setActive] = useState<StatusModel | null>(null);
+  const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
+    setLoadState('loading');
 
     Promise.all([
       readJson<PricingResponse>(STATUS_DATA_ROUTES.pricing, signal),
@@ -105,16 +108,18 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
           models: liveModels,
         });
         setActive(liveModels[0] ?? null);
+        setLoadState('ready');
       })
       .catch(() => {
         if (!signal.aborted) {
           setData(EMPTY);
           setActive(null);
+          setLoadState('error');
         }
       });
 
     return () => controller.abort();
-  }, []);
+  }, [reloadKey]);
 
   const counts = useMemo(() => countStates(data.models), [data.models]);
   const families = useMemo(
@@ -136,9 +141,14 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
 
   const activeIndex = active ? STATE_ORDER.indexOf(active.state as ModelState) : -1;
   const activeLabel = activeIndex >= 0 ? status.legend[activeIndex] : '';
-  const activeDetail = active
-    ? `${active.model} · ${activeLabel} · 24h ${active.successRate === null ? '—' : `${active.successRate.toFixed(0)}%`} · ${formatLatency(active.latency, lang)}`
-    : status.note;
+  const activeDetail =
+    loadState === 'loading'
+      ? status.loading
+      : loadState === 'error'
+        ? status.error
+        : active
+          ? `${active.model} · ${activeLabel} · 24h ${active.successRate === null ? '—' : `${active.successRate.toFixed(0)}%`} · ${formatLatency(active.latency, lang)}`
+          : status.note;
 
   return (
     <>
@@ -147,7 +157,11 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
           {stats.map((stat, index) => (
             <div key={stat.label} className="px-6 py-8">
               <p className="text-xs text-white/60">{stat.label}</p>
-              <p className="mt-3 text-3xl font-semibold tracking-tight">{values[index]}</p>
+              {loadState === 'loading' ? (
+                <span aria-hidden="true" className="mt-4 block h-8 w-16 animate-pulse rounded bg-white/20" />
+              ) : (
+                <p className="mt-3 text-3xl font-semibold tracking-tight">{values[index]}</p>
+              )}
             </div>
           ))}
         </div>
@@ -178,14 +192,38 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
                         aria-hidden="true"
                         className={`size-2 rounded-full ${STATE_COLOR[key]}`}
                       />
-                      {item} {new Intl.NumberFormat(lang).format(counts[key])}
+                      {item} {loadState === 'ready' ? new Intl.NumberFormat(lang).format(counts[key]) : '—'}
                     </li>
                   );
                 })}
               </ul>
             </div>
 
-            {families.length > 0 ? (
+            {loadState === 'loading' ? (
+              <div className="mt-6 space-y-3" aria-hidden="true">
+                {Array.from({ length: 5 }, (_, row) => (
+                  <div key={row} className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-3">
+                    <span className="h-3 w-16 animate-pulse rounded bg-fd-muted" />
+                    <div className="flex gap-1.5">
+                      {Array.from({ length: 14 }, (_, cell) => (
+                        <span key={cell} className="size-2.5 animate-pulse rounded-sm bg-fd-muted" />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : loadState === 'error' ? (
+              <div className="mt-6 rounded-lg border border-fd-border bg-fd-muted/40 p-5 text-center">
+                <p className="text-xs text-fd-muted-foreground">{status.error}</p>
+                <button
+                  type="button"
+                  onClick={() => setReloadKey((key) => key + 1)}
+                  className="mt-3 rounded-md border border-fd-border px-3 py-1.5 text-xs hover:border-brand/50 hover:text-brand focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none"
+                >
+                  {status.retry}
+                </button>
+              </div>
+            ) : families.length > 0 ? (
               <div className="mt-6 space-y-3">
                 {families.map(({ family, models: list }) => {
                   const familyHref = localePath(lang, `/status/${family}`);
@@ -221,7 +259,7 @@ export function LiveMetricsSections({ lang, redesign }: { lang: Locale; redesign
                 })}
               </div>
             ) : (
-              <div className="mt-6 h-24 animate-pulse rounded-lg bg-fd-muted/50" />
+              <div className="mt-6 h-24 rounded-lg border border-fd-border bg-fd-muted/40" />
             )}
 
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-fd-border pt-4">

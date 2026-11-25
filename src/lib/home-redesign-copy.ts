@@ -10,7 +10,14 @@ export type HomeRedesignCopy = {
     { label: string; value: string },
   ];
   reliability: { eyebrow: string; title: string; description: string; linkLabel: string };
-  status: { title: string; legend: readonly [string, string, string]; note: string };
+  status: {
+    title: string;
+    legend: readonly [string, string, string];
+    note: string;
+    loading: string;
+    error: string;
+    retry: string;
+  };
 };
 
 export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
@@ -33,6 +40,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: '实时模型状态',
       legend: ['正常', '缓慢', '故障'],
       note: '每个方块 = 一个在测模型，悬停查看详情',
+      loading: '正在读取状态数据…',
+      error: '状态数据暂时不可用',
+      retry: '重试',
     },
   },
   en: {
@@ -55,6 +65,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'Live model status',
       legend: ['Operational', 'Degraded', 'Outage'],
       note: 'Each square represents a monitored model — hover for details',
+      loading: 'Loading status data…',
+      error: 'Status data is temporarily unavailable',
+      retry: 'Retry',
     },
   },
   fr: {
@@ -77,6 +90,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'État des modèles en direct',
       legend: ['Normal', 'Lent', 'Indisponible'],
       note: 'Chaque carré correspond à un modèle surveillé ; survolez-le pour plus de détails',
+      loading: 'Chargement des données de statut…',
+      error: 'Données de statut temporairement indisponibles',
+      retry: 'Réessayer',
     },
   },
   es: {
@@ -99,6 +115,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'Estado de los modelos en tiempo real',
       legend: ['Normal', 'Lento', 'Caído'],
       note: 'Cada cuadrado representa un modelo monitorizado; pase el cursor para ver los detalles',
+      loading: 'Cargando datos de estado…',
+      error: 'Datos de estado no disponibles temporalmente',
+      retry: 'Reintentar',
     },
   },
   pt: {
@@ -121,6 +140,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'Status dos modelos em tempo real',
       legend: ['Normal', 'Lento', 'Indisponível'],
       note: 'Cada quadrado representa um modelo monitorado; passe o mouse para ver os detalhes',
+      loading: 'Carregando dados de status…',
+      error: 'Dados de status temporariamente indisponíveis',
+      retry: 'Tentar novamente',
     },
   },
   ru: {
@@ -143,6 +165,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'Статус моделей в реальном времени',
       legend: ['Норма', 'Медленно', 'Сбой'],
       note: 'Каждый квадрат — модель, за которой ведётся мониторинг; наведите курсор для подробностей',
+      loading: 'Загрузка данных о состоянии…',
+      error: 'Данные о состоянии временно недоступны',
+      retry: 'Повторить',
     },
   },
   ja: {
@@ -165,6 +190,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'リアルタイムのモデルステータス',
       legend: ['正常', '遅延', '障害'],
       note: '各四角は監視中のモデルです。ホバーすると詳細を確認できます',
+      loading: 'ステータスデータを読み込み中…',
+      error: 'ステータスデータを一時的に取得できません',
+      retry: '再試行',
     },
   },
   vi: {
@@ -187,6 +215,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: 'Trạng thái mô hình thời gian thực',
       legend: ['Bình thường', 'Chậm', 'Lỗi'],
       note: 'Mỗi ô vuông là một mô hình đang được theo dõi; di chuột để xem chi tiết',
+      loading: 'Đang tải dữ liệu trạng thái…',
+      error: 'Dữ liệu trạng thái tạm thời không khả dụng',
+      retry: 'Thử lại',
     },
   },
   'zh-TW': {
@@ -208,6 +239,9 @@ export const HOME_REDESIGN_COPY: Record<Locale, HomeRedesignCopy> = {
       title: '即時模型狀態',
       legend: ['正常', '緩慢', '故障'],
       note: '每個方塊 = 一個在測模型，將游標移入查看詳情',
+      loading: '正在讀取狀態資料…',
+      error: '狀態資料暫時無法使用',
+      retry: '重試',
     },
   },
 };
