@@ -104,7 +104,7 @@ claude`,
     lang: 'toml',
     code: `# ~/.codex/config.toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
+model = "gpt-6.2-sol"
 
 [model_providers.fishxcode]
 name = "FishXCode"
@@ -119,7 +119,7 @@ requires_openai_auth = true`,
   -H "Authorization: Bearer $FISHXCODE_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "model": "gpt-5.4",
+    "model": "gpt-6.2-sol",
     "messages": [
       { "role": "user", "content": "Hello" }
     ]

@@ -42,8 +42,8 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
 
 ```toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
-review_model = "gpt-5.4"
+model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 disable_response_storage = true
@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  `model` 和 `review_model` 可按你的套餐和分組改成其它可用模型。若不確定，先使用 `gpt-5.4`。
+  `model` 和 `review_model` 可按你的套餐和分組改成其它可用模型。若不確定，先使用 `gpt-6.2-sol`。
 </Callout>
 
 ### 3. 寫入 `auth.json`
@@ -106,11 +106,11 @@ CC Switch 匯入彈窗中選擇 `Codex` 應用後，核心欄位建議保持：
 | - | - |
 | API 端點 | `https://api.fishxcode.com/v1` |
 | API 金鑰 | FishXCode Token |
-| 主模型 | `gpt-5.4` 或你的套餐可用模型 |
+| 主模型 | `gpt-6.2-sol` 或你的套餐可用模型 |
 
-主模型切換到 `gpt-5.4` 後點擊 **測試**，看到“測試通過 / 模型連通性測試成功”後再匯入：
+主模型切換到 `gpt-6.2-sol` 後點擊 **測試**，看到“測試通過 / 模型連通性測試成功”後再匯入：
 
-![在 CC Switch 匯入彈窗中測試 gpt-5.4](/img/start/codex-desktop/cc-switch-select-model.png)
+![在 CC Switch 匯入彈窗中測試 gpt-6.2-sol](/img/start/codex-desktop/cc-switch-select-model.png)
 
 瀏覽器喚起 CC Switch 後，核對 API 端點、模型和備註資訊，確認無誤再點選 **匯入**：
 
@@ -128,7 +128,7 @@ Codex Desktop 的輸入框附近通常會顯示模型、推理強度、許可權
 
 建議日常使用：
 
-- 模型：選擇 FishXCode 可用模型，例如 `gpt-5.4`
+- 模型：選擇 FishXCode 可用模型，例如 `gpt-6.2-sol`
 - 推理強度：普通任務用中等，高複雜度任務再調高
 - 許可權模式：需要頻繁改程式碼時可使用完全訪問模式；不熟悉專案時先保持手動確認
 - 工作目錄：選擇當前要分析或修改的專案目錄

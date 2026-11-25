@@ -42,8 +42,8 @@ Créez `~/.codex/config.toml` avec :
 
 ```toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
-review_model = "gpt-5.4"
+model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 disable_response_storage = true
@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  Vous pouvez remplacer `model` et `review_model` par un autre modèle disponible dans votre offre ou votre groupe. En cas de doute, commencez par `gpt-5.4`.
+  Vous pouvez remplacer `model` et `review_model` par un autre modèle disponible dans votre offre ou votre groupe. En cas de doute, commencez par `gpt-6.2-sol`.
 </Callout>
 
 ### 3. Écrire `auth.json`
@@ -106,11 +106,11 @@ Dans la fenêtre d'import CC Switch, conservez ces valeurs principales :
 | - | - |
 | Endpoint API | `https://api.fishxcode.com/v1` |
 | Clé API | Token FishXCode |
-| Modèle principal | `gpt-5.4` ou un autre modèle disponible dans votre offre |
+| Modèle principal | `gpt-6.2-sol` ou un autre modèle disponible dans votre offre |
 
-Passez le modèle principal à `gpt-5.4`, cliquez sur **Tester**, puis importez seulement après le message de réussite du test de connectivité :
+Passez le modèle principal à `gpt-6.2-sol`, cliquez sur **Tester**, puis importez seulement après le message de réussite du test de connectivité :
 
-![Tester gpt-5.4 dans la fenêtre d'import CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
+![Tester gpt-6.2-sol dans la fenêtre d'import CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
 
 Lorsque le navigateur ouvre CC Switch, vérifiez l'endpoint API, le modèle et la note, puis cliquez sur **Importer** :
 
@@ -128,7 +128,7 @@ Codex Desktop affiche généralement le modèle, l'effort de raisonnement, le mo
 
 Réglages recommandés :
 
-- Modèle : choisissez un modèle FishXCode, par exemple `gpt-5.4`
+- Modèle : choisissez un modèle FishXCode, par exemple `gpt-6.2-sol`
 - Effort de raisonnement : utilisez un niveau moyen au quotidien, plus élevé seulement pour les tâches complexes
 - Permissions : utilisez l'accès complet pour les modifications fréquentes ; gardez l'approbation manuelle sur un projet inconnu
 - Dossier de travail : choisissez le projet que Codex doit analyser ou modifier

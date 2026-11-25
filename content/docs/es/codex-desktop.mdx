@@ -42,8 +42,8 @@ Crea `~/.codex/config.toml` con:
 
 ```toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
-review_model = "gpt-5.4"
+model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 disable_response_storage = true
@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  Puedes cambiar `model` y `review_model` por otro modelo disponible en tu plan o grupo. Si tienes dudas, empieza con `gpt-5.4`.
+  Puedes cambiar `model` y `review_model` por otro modelo disponible en tu plan o grupo. Si tienes dudas, empieza con `gpt-6.2-sol`.
 </Callout>
 
 ### 3. Escribir `auth.json`
@@ -106,11 +106,11 @@ En el cuadro de importación de CC Switch, mantén estos valores principales:
 | - | - |
 | Endpoint API | `https://api.fishxcode.com/v1` |
 | API Key | Token de FishXCode |
-| Modelo principal | `gpt-5.4` u otro modelo disponible en tu plan |
+| Modelo principal | `gpt-6.2-sol` u otro modelo disponible en tu plan |
 
-Cambia el modelo principal a `gpt-5.4`, haz clic en **Probar** e importa solo después de ver que la prueba de conectividad del modelo fue correcta:
+Cambia el modelo principal a `gpt-6.2-sol`, haz clic en **Probar** e importa solo después de ver que la prueba de conectividad del modelo fue correcta:
 
-![Probar gpt-5.4 en el cuadro de importación de CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
+![Probar gpt-6.2-sol en el cuadro de importación de CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
 
 Cuando el navegador abra CC Switch, revisa el endpoint API, el modelo y la nota, y luego haz clic en **Importar**:
 
@@ -128,7 +128,7 @@ Codex Desktop suele mostrar el modelo, el esfuerzo de razonamiento, el modo de p
 
 Valores recomendados:
 
-- Modelo: elige un modelo de FishXCode, por ejemplo `gpt-5.4`
+- Modelo: elige un modelo de FishXCode, por ejemplo `gpt-6.2-sol`
 - Esfuerzo de razonamiento: usa nivel medio para trabajo diario y uno más alto solo en tareas complejas
 - Permisos: usa acceso completo para ediciones frecuentes; usa aprobación manual al explorar un proyecto desconocido
 - Carpeta de trabajo: elige el proyecto que Codex debe analizar o modificar

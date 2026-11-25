@@ -131,19 +131,19 @@ Tapez `/model` dans l'interface de conversation de Claude Code pour changer de m
 
 | Option | Modèle réel | Notes |
 | - | - | - |
-| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | Sélection automatique selon la tâche. Recommandé pour un usage quotidien |
-| **Opus** | `claude-opus-4-5-20251101` | Raisonnement le plus puissant, coût plus élevé |
-| **Haiku** | `claude-haiku-4-5-20251001` | Léger et rapide |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Sélection automatique selon la tâche. Recommandé pour un usage quotidien |
+| **Opus** | `claude-opus-5-5` | Raisonnement le plus puissant, coût plus élevé |
+| **Haiku** | `claude-haiku-5-5` | Léger et rapide |
 
 Vous pouvez également fixer un modèle via une variable d'environnement :
 
 ```bash tab="macOS/Linux"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 

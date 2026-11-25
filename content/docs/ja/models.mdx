@@ -13,12 +13,12 @@ FishXCode プラットフォームは複数のプロバイダーの AI モデル
 環境変数でメインモデルを設定します：
 
 ```bash tab="Linux/macOS"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL = "claude-fable-5-2"
 claude
 ```
 
@@ -27,7 +27,7 @@ claude
 `~/.codex/config.toml` を編集し、`model` フィールドを変更します：
 
 ```toml
-model = "gpt-5"
+model = "gpt-6.2-sol"
 ```
 
 ### RooCode / Qwen Code
@@ -37,13 +37,13 @@ model = "gpt-5"
 ## おすすめモデル
 
 <Callout type="idea" title="最高のコーディング能力">
-  **claude-sonnet-4-5-20250929** — 総合的なコーディング能力が最も高く、複雑なプロジェクトやアーキテクチャレベルのタスクに適しています。
+  **claude-opus-5-5** — 総合的なコーディング能力が最も高く、複雑なプロジェクトやアーキテクチャレベルのタスクに適しています。
 </Callout>
 
 <Callout type="idea" title="最速の応答速度">
-  **claude-3-5-haiku-20241022** — 応答速度が最も速く、高頻度の呼び出しやリアルタイム補完に適しています。
+  **claude-haiku-5-5** — 応答速度が最も速く、高頻度の呼び出しやリアルタイム補完に適しています。
 </Callout>
 
 <Callout type="idea" title="最高のコストパフォーマンス">
-  **claude-haiku-4-5-20251001** — 速度と品質のバランスがよく、日常的な開発タスクの大半に適しています。
+  **claude-fable-5-2** — 速度と品質のバランスがよく、日常的な開発タスクの大半に適しています。
 </Callout>

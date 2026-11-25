@@ -132,19 +132,19 @@ Trong giao diện hội thoại của Claude  Code, nhập `/model` để chuy�
 
 | Tùy chọn | Mô hình thực tế | Mô tả |
 | - | - | - |
-| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | Tự động chọn theo tác vụ, khuyên dùng hằng ngày |
-| **Opus** | `claude-opus-4-5-20251101` | Khả năng suy luận mạnh nhất, tiêu hao cao hơn |
-| **Haiku** | `claude-haiku-4-5-20251001` | Nhẹ và nhanh |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Tự động chọn theo tác vụ, khuyên dùng hằng ngày |
+| **Opus** | `claude-opus-5-5` | Khả năng suy luận mạnh nhất, tiêu hao cao hơn |
+| **Haiku** | `claude-haiku-5-5` | Nhẹ và nhanh |
 
 Bạn cũng có thể cố định mô hình qua biến môi trường:
 
 ```bash tab="macOS/Linux"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 

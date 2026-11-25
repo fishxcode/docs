@@ -13,12 +13,12 @@ Nền tảng FishXCode hỗ trợ các mô hình AI từ nhiều nhà cung cấp
 Thiết lập mô hình chính qua biến môi trường:
 
 ```bash tab="Linux/macOS"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL = "claude-fable-5-2"
 claude
 ```
 
@@ -27,7 +27,7 @@ claude
 Chỉnh sửa `~/.codex/config.toml`, sửa trường `model`:
 
 ```toml
-model = "gpt-5"
+model = "gpt-6.2-sol"
 ```
 
 ### RooCode / Qwen Code
@@ -37,13 +37,13 @@ Sửa trực tiếp trường **Model** trong cấu hình nhà cung cấp. Có t
 ## Gợi ý chọn mô hình
 
 <Callout type="idea" title="Năng lực viết mã tốt nhất">
-  **claude-sonnet-4-5-20250929** — Năng lực viết mã tổng thể mạnh nhất, phù hợp với dự án phức tạp và các tác vụ ở cấp kiến trúc.
+  **claude-opus-5-5** — Năng lực viết mã tổng thể mạnh nhất, phù hợp với dự án phức tạp và các tác vụ ở cấp kiến trúc.
 </Callout>
 
 <Callout type="idea" title="Tốc độ phản hồi tốt nhất">
-  **claude-3-5-haiku-20241022** — Tốc độ phản hồi nhanh nhất, phù hợp với tình huống gọi tần suất cao và hoàn thành mã theo thời gian thực.
+  **claude-haiku-5-5** — Tốc độ phản hồi nhanh nhất, phù hợp với tình huống gọi tần suất cao và hoàn thành mã theo thời gian thực.
 </Callout>
 
 <Callout type="idea" title="Hiệu quả chi phí tốt nhất">
-  **claude-haiku-4-5-20251001** — Cân bằng tốt giữa tốc độ và chất lượng, phù hợp với hầu hết tác vụ phát triển hằng ngày.
+  **claude-fable-5-2** — Cân bằng tốt giữa tốc độ và chất lượng, phù hợp với hầu hết tác vụ phát triển hằng ngày.
 </Callout>

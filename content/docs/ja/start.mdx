@@ -132,19 +132,19 @@ Claude  Code の対話画面で `/model` と入力すると、モデルを切り
 
 | オプション | 実際のモデル | 説明 |
 | - | - | - |
-| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | タスクに応じて自動で選択。日常の利用におすすめ |
-| **Opus** | `claude-opus-4-5-20251101` | 推論能力が最も高いが、消費も多め |
-| **Haiku** | `claude-haiku-4-5-20251001` | 軽量で高速 |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | タスクに応じて自動で選択。日常の利用におすすめ |
+| **Opus** | `claude-opus-5-5` | 推論能力が最も高いが、消費も多め |
+| **Haiku** | `claude-haiku-5-5` | 軽量で高速 |
 
 環境変数でモデルを固定することもできます。
 
 ```bash tab="macOS/Linux"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 

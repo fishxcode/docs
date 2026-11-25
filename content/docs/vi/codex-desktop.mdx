@@ -42,8 +42,8 @@ Ghi nội dung sau vào `~/.codex/config.toml`:
 
 ```toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
-review_model = "gpt-5.4"
+model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 disable_response_storage = true
@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  Bạn có thể đổi `model` và `review_model` sang mô hình khả dụng khác tùy theo gói và nhóm của mình. Nếu chưa chắc, hãy dùng `gpt-5.4` trước.
+  Bạn có thể đổi `model` và `review_model` sang mô hình khả dụng khác tùy theo gói và nhóm của mình. Nếu chưa chắc, hãy dùng `gpt-6.2-sol` trước.
 </Callout>
 
 ### 3. Ghi `auth.json`
@@ -106,11 +106,11 @@ Trong hộp thoại nhập của CC Switch, sau khi chọn ứng dụng `Codex`,
 | - | - |
 | Endpoint API | `https://api.fishxcode.com/v1` |
 | API Key | Token FishXCode |
-| Mô hình chính | `gpt-5.4` hoặc mô hình khả dụng trong gói của bạn |
+| Mô hình chính | `gpt-6.2-sol` hoặc mô hình khả dụng trong gói của bạn |
 
-Chuyển mô hình chính sang `gpt-5.4` rồi nhấn **Kiểm tra**, khi thấy "Kiểm tra thành công / Kiểm tra kết nối mô hình thành công" thì mới nhập:
+Chuyển mô hình chính sang `gpt-6.2-sol` rồi nhấn **Kiểm tra**, khi thấy "Kiểm tra thành công / Kiểm tra kết nối mô hình thành công" thì mới nhập:
 
-![Kiểm tra gpt-5.4 trong hộp thoại nhập của CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
+![Kiểm tra gpt-6.2-sol trong hộp thoại nhập của CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
 
 Khi trình duyệt mở CC Switch, hãy đối chiếu endpoint API, mô hình và ghi chú, xác nhận chính xác rồi nhấn **Nhập**:
 
@@ -128,7 +128,7 @@ Gần ô nhập của Codex Desktop thường hiển thị mô hình, mức đ�
 
 Gợi ý cho việc dùng hằng ngày:
 
-- Mô hình: chọn mô hình khả dụng của FishXCode, ví dụ `gpt-5.4`
+- Mô hình: chọn mô hình khả dụng của FishXCode, ví dụ `gpt-6.2-sol`
 - Mức độ suy luận: tác vụ thông thường dùng mức trung bình, chỉ tăng lên khi gặp tác vụ phức tạp
 - Chế độ quyền: khi cần sửa mã thường xuyên có thể dùng chế độ toàn quyền truy cập; khi chưa quen dự án, hãy giữ chế độ xác nhận thủ công
 - Thư mục làm việc: chọn thư mục dự án mà bạn đang cần phân tích hoặc chỉnh sửa

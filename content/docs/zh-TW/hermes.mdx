@@ -105,7 +105,7 @@ hermes model
 - Provider：`Custom endpoint (self-hosted / VLLM / etc.)`
 - API base URL：`https://api.fishxcode.com/v1`
 - API key：你的 FishXCode Token
-- Model name：`gpt-5.4`
+- Model name：`gpt-6.2-sol`
 - Context length：建議至少填寫 `65536`
 
 配置完成後，Hermes 會把模型、提供商和地址寫入 `~/.hermes/config.yaml`。
@@ -134,7 +134,7 @@ OPENAI_API_KEY=sk-你的FishXCode-Token
 
 ```yaml
 model:
-  default: gpt-5.4
+  default: gpt-6.2-sol
   provider: custom
   base_url: https://api.fishxcode.com/v1
 ```
@@ -151,7 +151,7 @@ model:
 
 ```yaml
 model:
-  default: claude-sonnet-4-5-20250929
+  default: claude-fable-5-2
   provider: custom
   base_url: https://api.fishxcode.com/v1
 ```
@@ -210,7 +210,7 @@ Hermes 官方已經移除了這兩個舊環境變數的讀取邏輯。現在模�
 
 1. 確認 `base_url` 寫的是 `https://api.fishxcode.com/v1`
 2. 確認 Token 來自 [FishXCode 控制台](https://fishxcode.com/console/token)
-3. 確認 `model.default` 填的是有效模型 ID，例如 `gpt-5.4`
+3. 確認 `model.default` 填的是有效模型 ID，例如 `gpt-6.2-sol`
 4. 確認模型上下文不低於 `65536`
 5. 執行 `hermes config check` 與 `hermes doctor` 檢視具體報錯
 

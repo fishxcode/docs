@@ -14,8 +14,8 @@ When QClaw connects to a third-party LLM API, use the OpenAI Compatible protocol
 | Protocol | `OpenAI Compatible` |
 | Base URL | `https://api.fishxcode.com/v1` |
 | API Key | API Key created in the FishXCode console |
-| OpenAI Model | `gpt-5.5` |
-| Claude Model | `claude-opus-4-7` |
+| OpenAI Model | `gpt-6.2-sol` |
+| Claude Model | `claude-opus-5-5` |
 
 If QClaw requires a full Endpoint, use:
 
@@ -31,13 +31,13 @@ If your QClaw version provides a graphical interface, fill it in as follows:
 Provider: OpenAI Compatible
 Base URL: https://api.fishxcode.com/v1
 API Key: sk-你的FishXCode-Token
-Model: claude-opus-4-7
+Model: claude-opus-5-5
 ```
 
 To use a GPT model, change `Model` to:
 
 ```text
-gpt-5.5
+gpt-6.2-sol
 ```
 
 ## 3. Configure Through config.yaml
@@ -49,7 +49,7 @@ llm:
   provider: openai-compatible
   base_url: https://api.fishxcode.com/v1
   api_key: sk-你的FishXCode-Token
-  model: claude-opus-4-7
+  model: claude-opus-5-5
   max_tokens: 8192
 ```
 
@@ -60,7 +60,7 @@ llm:
   provider: openai-compatible
   base_url: https://api.fishxcode.com/v1
   api_key: sk-你的FishXCode-Token
-  model: gpt-5.5
+  model: gpt-6.2-sol
   max_tokens: 8192
 ```
 
@@ -71,7 +71,7 @@ llm:
   provider: openai-compatible
   url: https://api.fishxcode.com/v1/chat/completions
   api_key: sk-你的FishXCode-Token
-  model: claude-opus-4-7
+  model: claude-opus-5-5
   max_tokens: 8192
 ```
 
@@ -86,18 +86,18 @@ If QClaw supports environment variables, you can also use:
 ```bash tab="Linux/macOS"
 export OPENAI_BASE_URL="https://api.fishxcode.com/v1"
 export OPENAI_API_KEY="sk-你的FishXCode-Token"
-export QCLAW_MODEL="claude-opus-4-7"
+export QCLAW_MODEL="claude-opus-5-5"
 qclaw
 ```
 
 ```powershell tab="Windows PowerShell"
 $env:OPENAI_BASE_URL="https://api.fishxcode.com/v1"
 $env:OPENAI_API_KEY="sk-你的FishXCode-Token"
-$env:QCLAW_MODEL="claude-opus-4-7"
+$env:QCLAW_MODEL="claude-opus-5-5"
 qclaw
 ```
 
-When you need to use a GPT model, change `QCLAW_MODEL` to `gpt-5.5`.
+When you need to use a GPT model, change `QCLAW_MODEL` to `gpt-6.2-sol`.
 
 ## 5. Verify the Configuration
 
@@ -108,7 +108,7 @@ curl https://api.fishxcode.com/v1/chat/completions \
   -H "content-type: application/json" \
   -H "authorization: Bearer sk-你的FishXCode-Token" \
   -d '{
-    "model": "claude-opus-4-7",
+    "model": "claude-opus-5-5",
     "messages": [
       { "role": "user", "content": "用一句话说明你是谁" }
     ]
@@ -120,7 +120,7 @@ curl https://api.fishxcode.com/v1/chat/completions \
   -H "content-type: application/json" \
   -H "authorization: Bearer sk-你的FishXCode-Token" \
   -d '{
-    "model": "gpt-5.5",
+    "model": "gpt-6.2-sol",
     "messages": [
       { "role": "user", "content": "用一句话说明你是谁" }
     ]
@@ -131,7 +131,7 @@ If curl does not work, QClaw is unlikely to work either. Check the API Key, mode
 
 1. Save the settings or `config.yaml`
 2. Restart QClaw
-3. Select `gpt-5.5` or `claude-opus-4-7`
+3. Select `gpt-6.2-sol` or `claude-opus-5-5`
 4. Send a short question, such as `用一句话说明你是谁`
 5. A normal response means the integration is working
 
@@ -143,7 +143,7 @@ If filling in a Base URL, use `https://api.fishxcode.com/v1`. If filling in a fu
 
 ### Can Claude models be used?
 
-Yes. The prerequisites are that FishXCode currently supports the model and QClaw calls it through the OpenAI Compatible protocol. Use `claude-opus-4-7` as the model name.
+Yes. The prerequisites are that FishXCode currently supports the model and QClaw calls it through the OpenAI Compatible protocol. Use `claude-opus-5-5` as the model name.
 
 ### Authentication fails
 

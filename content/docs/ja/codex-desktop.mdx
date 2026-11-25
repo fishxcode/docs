@@ -42,8 +42,8 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
 
 ```toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
-review_model = "gpt-5.4"
+model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 disable_response_storage = true
@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  `model` と `review_model` は、ご利用のプランやグループに応じて、ほかの利用可能なモデルに変更できます。迷った場合は、まず `gpt-5.4` を使ってください。
+  `model` と `review_model` は、ご利用のプランやグループに応じて、ほかの利用可能なモデルに変更できます。迷った場合は、まず `gpt-6.2-sol` を使ってください。
 </Callout>
 
 ### 3. `auth.json` を書き込む
@@ -106,11 +106,11 @@ CC Switch のインポートダイアログで `Codex` アプリを選択した�
 | - | - |
 | API エンドポイント | `https://api.fishxcode.com/v1` |
 | API Key | FishXCode のトークン |
-| メインモデル | `gpt-5.4` またはご利用のプランで使えるモデル |
+| メインモデル | `gpt-6.2-sol` またはご利用のプランで使えるモデル |
 
-メインモデルを `gpt-5.4` に切り替えたら**テスト**をクリックし、「テスト合格 / モデルの接続テストに成功しました」と表示されてからインポートします。
+メインモデルを `gpt-6.2-sol` に切り替えたら**テスト**をクリックし、「テスト合格 / モデルの接続テストに成功しました」と表示されてからインポートします。
 
-![CC Switch のインポートダイアログで gpt-5.4 をテスト](/img/start/codex-desktop/cc-switch-select-model.png)
+![CC Switch のインポートダイアログで gpt-6.2-sol をテスト](/img/start/codex-desktop/cc-switch-select-model.png)
 
 ブラウザーから CC Switch が起動したら、API エンドポイント、モデル、メモの内容を確認し、問題がなければ**インポート**をクリックします。
 
@@ -128,7 +128,7 @@ Codex Desktop の入力欄の近くには、通常、モデル、推論の強さ
 
 普段の使い方としては、次の設定をおすすめします。
 
-- モデル：FishXCode で利用可能なモデルを選択します（例：`gpt-5.4`）
+- モデル：FishXCode で利用可能なモデルを選択します（例：`gpt-6.2-sol`）
 - 推論の強さ：通常のタスクでは中程度にし、複雑なタスクのときだけ上げます
 - 権限モード：頻繁にコードを変更する場合はフルアクセスモードを使えます。慣れていないプロジェクトでは、まず手動での確認を残しておきます
 - 作業ディレクトリ：分析や変更の対象となるプロジェクトのディレクトリを選択します
