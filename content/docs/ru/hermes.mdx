@@ -105,7 +105,7 @@ hermes model
 - Provider: `Custom endpoint (self-hosted / VLLM / etc.)`
 - API base URL: `https://api.fishxcode.com/v1`
 - API key: ваш токен FishXCode
-- Model name: `gpt-5.4`
+- Model name: `gpt-6.2-sol`
 - Context length: рекомендуем не меньше `65536`
 
 После настройки Hermes запишет модель, провайдера и адрес в `~/.hermes/config.yaml`.
@@ -134,7 +134,7 @@ OPENAI_API_KEY=sk-ваш-токен-FishXCode
 
 ```yaml
 model:
-  default: gpt-5.4
+  default: gpt-6.2-sol
   provider: custom
   base_url: https://api.fishxcode.com/v1
 ```
@@ -151,7 +151,7 @@ model:
 
 ```yaml
 model:
-  default: claude-sonnet-4-5-20250929
+  default: claude-fable-5-2
   provider: custom
   base_url: https://api.fishxcode.com/v1
 ```
@@ -210,7 +210,7 @@ Hermes официально перестал читать эти две уста
 
 1. В `base_url` указано `https://api.fishxcode.com/v1`
 2. Токен получен в [консоли FishXCode](https://fishxcode.com/console/token)
-3. В `model.default` указан действительный ID модели, например `gpt-5.4`
+3. В `model.default` указан действительный ID модели, например `gpt-6.2-sol`
 4. Контекст модели не меньше `65536`
 5. Запустите `hermes config check` и `hermes doctor`, чтобы увидеть конкретную ошибку
 

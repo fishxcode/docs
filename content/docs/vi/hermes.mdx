@@ -105,7 +105,7 @@ hermes model
 - Provider: `Custom endpoint (self-hosted / VLLM / etc.)`
 - API base URL: `https://api.fishxcode.com/v1`
 - API key: token FishXCode của bạn
-- Model name: `gpt-5.4`
+- Model name: `gpt-6.2-sol`
 - Context length: nên điền tối thiểu `65536`
 
 Sau khi cấu hình xong, Hermes sẽ ghi mô hình, nhà cung cấp và địa chỉ vào `~/.hermes/config.yaml`.
@@ -134,7 +134,7 @@ Tiếp theo, ghi nội dung sau vào `~/.hermes/config.yaml`:
 
 ```yaml
 model:
-  default: gpt-5.4
+  default: gpt-6.2-sol
   provider: custom
   base_url: https://api.fishxcode.com/v1
 ```
@@ -151,7 +151,7 @@ Ví dụ:
 
 ```yaml
 model:
-  default: claude-sonnet-4-5-20250929
+  default: claude-fable-5-2
   provider: custom
   base_url: https://api.fishxcode.com/v1
 ```
@@ -210,7 +210,7 @@ Kiểm tra theo thứ tự sau:
 
 1. Xác nhận `base_url` là `https://api.fishxcode.com/v1`
 2. Xác nhận token lấy từ [bảng điều khiển FishXCode](https://fishxcode.com/console/token)
-3. Xác nhận `model.default` là ID mô hình hợp lệ, ví dụ `gpt-5.4`
+3. Xác nhận `model.default` là ID mô hình hợp lệ, ví dụ `gpt-6.2-sol`
 4. Xác nhận ngữ cảnh của mô hình không dưới `65536`
 5. Chạy `hermes config check` và `hermes doctor` để xem lỗi cụ thể
 

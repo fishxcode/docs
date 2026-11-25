@@ -13,12 +13,12 @@ FishXCode 平臺支援來自多個供應商的 AI 模型，覆蓋不同的使用
 通過環境變數設定主模型：
 
 ```bash tab="Linux/macOS"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL = "claude-fable-5-2"
 claude
 ```
 
@@ -27,7 +27,7 @@ claude
 編輯 `~/.codex/config.toml`，修改 `model` 欄位：
 
 ```toml
-model = "gpt-5"
+model = "gpt-6.2-sol"
 ```
 
 ### RooCode / Qwen Code
@@ -37,13 +37,13 @@ model = "gpt-5"
 ## 模型推薦
 
 <Callout type="idea" title="最佳編碼能力">
-  **claude-sonnet-4-5-20250929** — 綜合編碼能力最強，適合複雜專案和架構級任務。
+  **claude-opus-5-5** — 綜合編碼能力最強，適合複雜專案和架構級任務。
 </Callout>
 
 <Callout type="idea" title="最佳響應速度">
-  **claude-3-5-haiku-20241022** — 響應速度最快，適合高頻呼叫和即時補全場景。
+  **claude-haiku-5-5** — 響應速度最快，適合高頻呼叫和即時補全場景。
 </Callout>
 
 <Callout type="idea" title="最佳價效比">
-  **claude-haiku-4-5-20251001** — 在速度和質量之間取得良好平衡，適合大多數日常開發任務。
+  **claude-fable-5-2** — 在速度和質量之間取得良好平衡，適合大多數日常開發任務。
 </Callout>

@@ -138,7 +138,7 @@ New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-opus-4-6",
+            "id": "claude-opus-5-5",
             "name": "Claude Opus 4.6",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -152,7 +152,7 @@ New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-anthropic/claude-opus-4-6"
+        "primary": "fishxcode-anthropic/claude-opus-5-5"
       }
     }
   }
@@ -179,7 +179,7 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5",
+            "id": "gpt-6.2-sol",
             "name": "GPT-5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -193,7 +193,7 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-openai/gpt-5"
+        "primary": "fishxcode-openai/gpt-6.2-sol"
       }
     }
   }
@@ -219,7 +219,7 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-opus-4-6",
+            "id": "claude-opus-5-5",
             "name": "Claude Opus 4.6",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -227,7 +227,7 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
             "reasoning": false
           },
           {
-            "id": "claude-sonnet-4-5-20250929",
+            "id": "claude-fable-5-2",
             "name": "Claude Sonnet 4.5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -242,7 +242,7 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5",
+            "id": "gpt-6.2-sol",
             "name": "GPT-5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -250,7 +250,7 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
             "reasoning": true
           },
           {
-            "id": "gpt-5-codex",
+            "id": "gpt-5.3-codex",
             "name": "GPT-5 Codex",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -264,10 +264,10 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-anthropic/claude-opus-4-6",
+        "primary": "fishxcode-anthropic/claude-opus-5-5",
         "fallbacks": [
-          "fishxcode-anthropic/claude-sonnet-4-5-20250929",
-          "fishxcode-openai/gpt-5"
+          "fishxcode-anthropic/claude-fable-5-2",
+          "fishxcode-openai/gpt-6.2-sol"
         ]
       }
     }
@@ -277,10 +277,10 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
 
 デフォルトのモデルを切り替えるときは、`model.primary` の値を変更するだけです。
 
-- `"fishxcode-anthropic/claude-opus-4-6"` → Claude Opus 4.6
-- `"fishxcode-anthropic/claude-sonnet-4-5-20250929"` → Claude Sonnet 4.5
-- `"fishxcode-openai/gpt-5"` → GPT-5
-- `"fishxcode-openai/gpt-5-codex"` → GPT-5 Codex
+- `"fishxcode-anthropic/claude-opus-5-5"` → Claude Opus 4.6
+- `"fishxcode-anthropic/claude-fable-5-2"` → Claude Sonnet 4.5
+- `"fishxcode-openai/gpt-6.2-sol"` → GPT-5
+- `"fishxcode-openai/gpt-5.3-codex"` → GPT-5 Codex
 
 ### 主なフィールドの説明
 
@@ -290,8 +290,8 @@ FishXCode 経由で OpenAI のモデルを呼び出す場合は、`api` フィ�
 | `apiKey` | ご自身の API Key | `sk-あなたのFishXCode-Token` | `sk-あなたのFishXCode-Token` |
 | `api` | API プロトコルの種類 | `anthropic-messages` | `openai-responses` |
 | `mode` | 設定のマージモード | `merge`（推奨） | `merge`（推奨） |
-| `models[].id` | モデル ID | `claude-opus-4-6` | `gpt-5` |
-| `model.primary` | デフォルトのモデル | `fishxcode-anthropic/claude-opus-4-6` | `fishxcode-openai/gpt-5` |
+| `models[].id` | モデル ID | `claude-opus-5-5` | `gpt-6.2-sol` |
+| `model.primary` | デフォルトのモデル | `fishxcode-anthropic/claude-opus-5-5` | `fishxcode-openai/gpt-6.2-sol` |
 | `reasoning` | 推論モードを有効にするか | `false`（モデルによる） | `true`（GPT-5.x が対応） |
 
 ## 設定を確認する

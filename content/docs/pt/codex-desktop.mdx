@@ -42,8 +42,8 @@ Crie `~/.codex/config.toml` com:
 
 ```toml
 model_provider = "fishxcode"
-model = "gpt-5.4"
-review_model = "gpt-5.4"
+model = "gpt-6.2-sol"
+review_model = "gpt-6.2-sol"
 model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 disable_response_storage = true
@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  Você pode trocar `model` e `review_model` por outro modelo disponível no seu plano ou grupo. Em caso de dúvida, comece com `gpt-5.4`.
+  Você pode trocar `model` e `review_model` por outro modelo disponível no seu plano ou grupo. Em caso de dúvida, comece com `gpt-6.2-sol`.
 </Callout>
 
 ### 3. Escrever `auth.json`
@@ -106,11 +106,11 @@ Na janela de importação do CC Switch, mantenha estes valores principais:
 | - | - |
 | Endpoint da API | `https://api.fishxcode.com/v1` |
 | Chave da API | Token FishXCode |
-| Modelo principal | `gpt-5.4` ou outro modelo disponível no seu plano |
+| Modelo principal | `gpt-6.2-sol` ou outro modelo disponível no seu plano |
 
-Mude o modelo principal para `gpt-5.4`, clique em **Testar** e importe somente depois de ver que o teste de conectividade do modelo foi bem-sucedido:
+Mude o modelo principal para `gpt-6.2-sol`, clique em **Testar** e importe somente depois de ver que o teste de conectividade do modelo foi bem-sucedido:
 
-![Testar gpt-5.4 na janela de importação do CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
+![Testar gpt-6.2-sol na janela de importação do CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
 
 Quando o navegador abrir o CC Switch, revise o endpoint da API, o modelo e a observação, então clique em **Importar**:
 
@@ -128,7 +128,7 @@ O Codex Desktop geralmente mostra modelo, esforço de raciocínio, modo de permi
 
 Configurações recomendadas:
 
-- Modelo: escolha um modelo FishXCode, como `gpt-5.4`
+- Modelo: escolha um modelo FishXCode, como `gpt-6.2-sol`
 - Esforço de raciocínio: use médio no dia a dia e aumente apenas em tarefas complexas
 - Permissões: use acesso total para edições frequentes; use aprovação manual ao explorar um projeto desconhecido
 - Pasta de trabalho: escolha o projeto que o Codex deve analisar ou modificar

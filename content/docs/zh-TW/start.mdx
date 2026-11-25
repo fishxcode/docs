@@ -132,19 +132,19 @@ claude
 
 | 選項 | 實際模型 | 說明 |
 | - | - | - |
-| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | 根據任務自動選擇，推薦日常使用 |
-| **Opus** | `claude-opus-4-5-20251101` | 最強推理能力，消耗較高 |
-| **Haiku** | `claude-haiku-4-5-20251001` | 輕量快速 |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | 根據任務自動選擇，推薦日常使用 |
+| **Opus** | `claude-opus-5-5` | 最強推理能力，消耗較高 |
+| **Haiku** | `claude-haiku-5-5` | 輕量快速 |
 
 也可通過環境變數固定模型：
 
 ```bash tab="macOS/Linux"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 

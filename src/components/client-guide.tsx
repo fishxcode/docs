@@ -19,7 +19,7 @@ export function ClientGuide({ name, icon, protocol, baseUrl }: ClientGuideProps)
   const lang: Locale = isLocale(locale ?? '') ? (locale as Locale) : DEFAULT_LOCALE;
   const copy = CLIENT_GUIDE_COPY[lang];
   const protocolLabel = protocol === 'openai' ? 'OpenAI' : 'Anthropic';
-  const exampleModel = protocol === 'openai' ? 'gpt-5.4' : 'claude-opus-4-7';
+  const exampleModel = protocol === 'openai' ? 'gpt-6.2-sol' : 'claude-fable-5-2';
   const note = protocol === 'anthropic' ? copy.anthropicNote : copy.openaiNote;
   const noteUrl = protocol === 'anthropic' ? HOME_ENDPOINTS.anthropic : HOME_ENDPOINTS.openai;
   const noteHint = protocol === 'anthropic' ? '/v1/messages' : '/v1';

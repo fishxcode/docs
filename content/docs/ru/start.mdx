@@ -132,19 +132,19 @@ claude
 
 | Вариант | Фактическая модель | Описание |
 | - | - | - |
-| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | Выбирается автоматически под задачу, рекомендуется для повседневной работы |
-| **Opus** | `claude-opus-4-5-20251101` | Самые сильные рассуждения, но и расход выше |
-| **Haiku** | `claude-haiku-4-5-20251001` | Лёгкая и быстрая |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Выбирается автоматически под задачу, рекомендуется для повседневной работы |
+| **Opus** | `claude-opus-5-5` | Самые сильные рассуждения, но и расход выше |
+| **Haiku** | `claude-haiku-5-5` | Лёгкая и быстрая |
 
 Модель можно также зафиксировать через переменную окружения:
 
 ```bash tab="macOS/Linux"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 

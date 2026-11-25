@@ -138,7 +138,7 @@ Ghi nội dung sau vào `openclaw.json`:
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-opus-4-6",
+            "id": "claude-opus-5-5",
             "name": "Claude Opus 4.6",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -152,7 +152,7 @@ Ghi nội dung sau vào `openclaw.json`:
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-anthropic/claude-opus-4-6"
+        "primary": "fishxcode-anthropic/claude-opus-5-5"
       }
     }
   }
@@ -179,7 +179,7 @@ Khi gọi mô hình OpenAI qua FishXCode, trường `api` phải đặt là `ope
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5",
+            "id": "gpt-6.2-sol",
             "name": "GPT-5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -193,7 +193,7 @@ Khi gọi mô hình OpenAI qua FishXCode, trường `api` phải đặt là `ope
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-openai/gpt-5"
+        "primary": "fishxcode-openai/gpt-6.2-sol"
       }
     }
   }
@@ -219,7 +219,7 @@ Thêm song song hai provider trong `models.providers` là có thể dùng mô h�
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-opus-4-6",
+            "id": "claude-opus-5-5",
             "name": "Claude Opus 4.6",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -227,7 +227,7 @@ Thêm song song hai provider trong `models.providers` là có thể dùng mô h�
             "reasoning": false
           },
           {
-            "id": "claude-sonnet-4-5-20250929",
+            "id": "claude-fable-5-2",
             "name": "Claude Sonnet 4.5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -242,7 +242,7 @@ Thêm song song hai provider trong `models.providers` là có thể dùng mô h�
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5",
+            "id": "gpt-6.2-sol",
             "name": "GPT-5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -250,7 +250,7 @@ Thêm song song hai provider trong `models.providers` là có thể dùng mô h�
             "reasoning": true
           },
           {
-            "id": "gpt-5-codex",
+            "id": "gpt-5.3-codex",
             "name": "GPT-5 Codex",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -264,10 +264,10 @@ Thêm song song hai provider trong `models.providers` là có thể dùng mô h�
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-anthropic/claude-opus-4-6",
+        "primary": "fishxcode-anthropic/claude-opus-5-5",
         "fallbacks": [
-          "fishxcode-anthropic/claude-sonnet-4-5-20250929",
-          "fishxcode-openai/gpt-5"
+          "fishxcode-anthropic/claude-fable-5-2",
+          "fishxcode-openai/gpt-6.2-sol"
         ]
       }
     }
@@ -277,10 +277,10 @@ Thêm song song hai provider trong `models.providers` là có thể dùng mô h�
 
 Khi đổi mô hình mặc định, bạn chỉ cần sửa giá trị của `model.primary`:
 
-- `"fishxcode-anthropic/claude-opus-4-6"` → Claude Opus 4.6
-- `"fishxcode-anthropic/claude-sonnet-4-5-20250929"` → Claude Sonnet 4.5
-- `"fishxcode-openai/gpt-5"` → GPT-5
-- `"fishxcode-openai/gpt-5-codex"` → GPT-5 Codex
+- `"fishxcode-anthropic/claude-opus-5-5"` → Claude Opus 4.6
+- `"fishxcode-anthropic/claude-fable-5-2"` → Claude Sonnet 4.5
+- `"fishxcode-openai/gpt-6.2-sol"` → GPT-5
+- `"fishxcode-openai/gpt-5.3-codex"` → GPT-5 Codex
 
 ### Giải thích các trường chính
 
@@ -290,8 +290,8 @@ Khi đổi mô hình mặc định, bạn chỉ cần sửa giá trị của `mo
 | `apiKey` | API Key của bạn | `sk-your-fishxcode-token` | `sk-your-fishxcode-token` |
 | `api` | Loại giao thức API | `anthropic-messages` | `openai-responses` |
 | `mode` | Chế độ gộp cấu hình | `merge` (khuyên dùng) | `merge` (khuyên dùng) |
-| `models[].id` | ID mô hình | `claude-opus-4-6` | `gpt-5` |
-| `model.primary` | Mô hình mặc định | `fishxcode-anthropic/claude-opus-4-6` | `fishxcode-openai/gpt-5` |
+| `models[].id` | ID mô hình | `claude-opus-5-5` | `gpt-6.2-sol` |
+| `model.primary` | Mô hình mặc định | `fishxcode-anthropic/claude-opus-5-5` | `fishxcode-openai/gpt-6.2-sol` |
 | `reasoning` | Có bật chế độ suy luận không | `false` (tùy mô hình) | `true` (GPT-5.x hỗ trợ) |
 
 ## Kiểm tra cấu hình

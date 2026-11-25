@@ -138,7 +138,7 @@ Adicione o seguinte conteúdo ao `openclaw.json`:
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-opus-4-6",
+            "id": "claude-opus-5-5",
             "name": "Claude Opus 4.6",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -152,7 +152,7 @@ Adicione o seguinte conteúdo ao `openclaw.json`:
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-anthropic/claude-opus-4-6"
+        "primary": "fishxcode-anthropic/claude-opus-5-5"
       }
     }
   }
@@ -179,7 +179,7 @@ Ao chamar modelos OpenAI via FishXCode, o campo `api` deve ser `openai-responses
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5",
+            "id": "gpt-6.2-sol",
             "name": "GPT-5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -193,7 +193,7 @@ Ao chamar modelos OpenAI via FishXCode, o campo `api` deve ser `openai-responses
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-openai/gpt-5"
+        "primary": "fishxcode-openai/gpt-6.2-sol"
       }
     }
   }
@@ -219,7 +219,7 @@ Adicione ambos os providers lado a lado em `models.providers` para usar modelos 
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-opus-4-6",
+            "id": "claude-opus-5-5",
             "name": "Claude Opus 4.6",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -227,7 +227,7 @@ Adicione ambos os providers lado a lado em `models.providers` para usar modelos 
             "reasoning": false
           },
           {
-            "id": "claude-sonnet-4-5-20250929",
+            "id": "claude-fable-5-2",
             "name": "Claude Sonnet 4.5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -242,7 +242,7 @@ Adicione ambos os providers lado a lado em `models.providers` para usar modelos 
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5",
+            "id": "gpt-6.2-sol",
             "name": "GPT-5",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -250,7 +250,7 @@ Adicione ambos os providers lado a lado em `models.providers` para usar modelos 
             "reasoning": true
           },
           {
-            "id": "gpt-5-codex",
+            "id": "gpt-5.3-codex",
             "name": "GPT-5 Codex",
             "input": ["text", "image"],
             "contextWindow": 200000,
@@ -264,10 +264,10 @@ Adicione ambos os providers lado a lado em `models.providers` para usar modelos 
   "agents": {
     "defaults": {
       "model": {
-        "primary": "fishxcode-anthropic/claude-opus-4-6",
+        "primary": "fishxcode-anthropic/claude-opus-5-5",
         "fallbacks": [
-          "fishxcode-anthropic/claude-sonnet-4-5-20250929",
-          "fishxcode-openai/gpt-5"
+          "fishxcode-anthropic/claude-fable-5-2",
+          "fishxcode-openai/gpt-6.2-sol"
         ]
       }
     }
@@ -283,8 +283,8 @@ Adicione ambos os providers lado a lado em `models.providers` para usar modelos 
 | `apiKey` | Sua chave API | `sk-seu-token-fishxcode` | `sk-seu-token-fishxcode` |
 | `api` | Tipo de protocolo API | `anthropic-messages` | `openai-responses` |
 | `mode` | Modo de mesclagem de config | `merge` (recomendado) | `merge` (recomendado) |
-| `models[].id` | ID do modelo | `claude-opus-4-6` | `gpt-5` |
-| `model.primary` | Modelo padrão | `fishxcode-anthropic/claude-opus-4-6` | `fishxcode-openai/gpt-5` |
+| `models[].id` | ID do modelo | `claude-opus-5-5` | `gpt-6.2-sol` |
+| `model.primary` | Modelo padrão | `fishxcode-anthropic/claude-opus-5-5` | `fishxcode-openai/gpt-6.2-sol` |
 | `reasoning` | Ativar modo raciocínio | `false` (depende do modelo) | `true` (GPT-5.x suportado) |
 
 ## Verificar a configuração

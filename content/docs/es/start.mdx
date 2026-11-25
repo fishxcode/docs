@@ -131,19 +131,19 @@ Escribe `/model` dentro de Claude Code para cambiar de modelo:
 
 | Opción | Modelo real | Notas |
 | - | - | - |
-| **Default** | `claude-sonnet-4-5-20250929` + `claude-haiku-4-5-20251001` | Selección automática según la tarea. Recomendado para uso diario. |
-| **Opus** | `claude-opus-4-5-20251101` | Razonamiento más potente, mayor costo |
-| **Haiku** | `claude-haiku-4-5-20251001` | Ligero y rápido |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Selección automática según la tarea. Recomendado para uso diario. |
+| **Opus** | `claude-opus-5-5` | Razonamiento más potente, mayor costo |
+| **Haiku** | `claude-haiku-5-5` | Ligero y rápido |
 
 También puedes fijar un modelo mediante variable de entorno:
 
 ```bash tab="macOS/Linux"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 

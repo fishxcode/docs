@@ -14,12 +14,12 @@ FishXCode prend en charge une variete de modeles d'IA de plusieurs fournisseurs,
 Definissez le modele principal via les variables d'environnement :
 
 ```bash tab="Linux/macOS"
-export ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+export ANTHROPIC_MODEL=claude-fable-5-2
 claude
 ```
 
 ```powershell tab="Windows PowerShell"
-$env:ANTHROPIC_MODEL = "claude-sonnet-4-5-20250929"
+$env:ANTHROPIC_MODEL = "claude-fable-5-2"
 claude
 ```
 
@@ -28,7 +28,7 @@ claude
 Modifiez le fichier `~/.codex/config.toml` et changez le champ `model` :
 
 ```toml
-model = "gpt-5"
+model = "gpt-6.2-sol"
 ```
 
 ### RooCode / Qwen Code
@@ -38,13 +38,13 @@ Modifiez le champ **Model** directement dans la configuration du fournisseur. To
 ## Recommandations
 
 <Callout type="idea" title="Meilleur pour le codage">
-  **claude-sonnet-4-5-20250929** — Capacite de codage globale la plus forte, ideal pour les projets complexes et les taches d'architecture.
+  **claude-opus-5-5** — Capacite de codage globale la plus forte, ideal pour les projets complexes et les taches d'architecture.
 </Callout>
 
 <Callout type="idea" title="Meilleur pour la vitesse">
-  **claude-3-5-haiku-20241022** — Temps de reponse le plus rapide, ideal pour les appels frequents et les completions en temps reel.
+  **claude-haiku-5-5** — Temps de reponse le plus rapide, ideal pour les appels frequents et les completions en temps reel.
 </Callout>
 
 <Callout type="idea" title="Meilleur equilibre">
-  **claude-haiku-4-5-20251001** — Excellent equilibre entre vitesse et qualite, adapte a la plupart des taches de developpement quotidiennes.
+  **claude-fable-5-2** — Excellent equilibre entre vitesse et qualite, adapte a la plupart des taches de developpement quotidiennes.
 </Callout>
