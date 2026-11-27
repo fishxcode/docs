@@ -1,6 +1,6 @@
 ---
 title: Billing Rules & Groups
-description: FishXCode's two billing methods, the 10 available groups and multipliers, group selection tips, and usage notes.
+description: FishXCode's two billing methods, the 13 available groups and multipliers, group selection tips, and usage notes.
 navTitle: Billing Rules & Groups
 ---
 
@@ -21,7 +21,7 @@ For monthly package pricing, quotas, and usage, see [Subscription Plans](/en/sub
 
 ## 2. Available groups
 
-A group determines which models an API Key can call, which resource pool it uses, and at what multiplier usage is billed. 10 groups are currently on sale:
+A group determines which models an API Key can call, which resource pool it uses, and at what multiplier usage is billed. 13 groups are currently on sale:
 
 ### Codex series
 
@@ -29,7 +29,8 @@ A group determines which models an API Key can call, which resource pool it uses
 | - | - | - |
 | `codex-plus` | 0.2x | Codex Plus official full-price account pool; low multiplier, stable, suited to daily calls |
 | `codex-pro` | 0.4x | Codex Pro official full-price resources; stable performance, suited to teams and enterprises |
-| `codex-team` | 0.15x | Codex Team official shared account pool; low-multiplier shared resources |
+| `codex-team` | 0.12x | Codex Team official shared account pool; low-multiplier shared resources |
+| `codex-ultrafast` | 0.4x | ultrafast mode of the codex-pro pool; unlimited, stability-first |
 | `codex-officially` | 2x | OpenAI official API Key resources; direct official connection, stable and reliable |
 
 ### Claude series
@@ -47,6 +48,8 @@ A group determines which models an API Key can call, which resource pool it uses
 | `china` | 0.8x | Collection of mainstream Chinese models, official API direct connection |
 | `grok` | 0.5x | Dedicated group for xAI Grok models; experience Grok at a low multiplier |
 | `fishxlab` | 2x | Multimodal models for audio, video, and images, covering generation and creation scenarios |
+| `gemini` | 0.8x | Full Gemini model series |
+| `tencent-china` | 0.1x | Tencent Cloud Chinese models; currently the lowest multiplier |
 
 For other models and their exact availability, check the site.
 
@@ -64,7 +67,7 @@ Actual usage ≈ model base usage × group multiplier
 
 | Model base usage | Group | Estimated deduction |
 | - | - | - |
-| 10 credits | `codex-team` (0.15x) | 1.5 credits |
+| 10 credits | `codex-team` (0.12x) | 1.2 credits |
 | 10 credits | `codex-plus` (0.2x) | 2 credits |
 | 10 credits | `claude` (1.5x) | 15 credits |
 | 10 credits | `claudemax` (2.6x) | 26 credits |
@@ -99,7 +102,7 @@ Common symptoms of picking the wrong group:
 | Use case | Recommendation | Description |
 | - | - | - |
 | Daily Codex coding | `codex-plus` (0.2x) | Suited to everyday code development |
-| Low-multiplier Codex | `codex-team` (0.15x) | For users who accept a shared resource pool |
+| Low-multiplier Codex | `codex-team` (0.12x) | For users who accept a shared resource pool |
 | High-frequency Codex / Agent development | Codex Pro account-pool monthly package | Choose the $200 or $2,000 quota monthly package based on actual usage |
 | Claude coding and long tasks | `claude` (1.5x) | For heavy use, consider `claudemax` (2.6x) |
 | Kiro | `kiro-svip` (0.2x) | Official full-price Kiro account pool |

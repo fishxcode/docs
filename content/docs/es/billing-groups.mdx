@@ -1,6 +1,6 @@
 ---
 title: Reglas de facturación y grupos
-description: Las dos formas de facturación de FishXCode, los 10 grupos a la venta con sus multiplicadores, recomendaciones para elegir grupo y notas de uso.
+description: Las dos formas de facturación de FishXCode, los 13 grupos a la venta con sus multiplicadores, recomendaciones para elegir grupo y notas de uso.
 navTitle: Reglas de facturación y grupos
 ---
 
@@ -21,7 +21,7 @@ Para el precio, la cuota y el uso del paquete mensual, ver [Planes de suscripci�
 
 ## 2. Grupos a la venta
 
-El grupo determina qué modelos puede llamar una API Key, qué pool de recursos usa y con qué multiplicador se factura. Actualmente hay 10 grupos a la venta:
+El grupo determina qué modelos puede llamar una API Key, qué pool de recursos usa y con qué multiplicador se factura. Actualmente hay 13 grupos a la venta:
 
 ### Serie Codex
 
@@ -29,7 +29,8 @@ El grupo determina qué modelos puede llamar una API Key, qué pool de recursos 
 | - | - | - |
 | `codex-plus` | 0.2x | Pool oficial de precio completo Codex Plus; multiplicador bajo, estable, ideal para llamadas diarias |
 | `codex-pro` | 0.4x | Recursos oficiales de precio completo Codex Pro; rendimiento estable, ideal para equipos y empresas |
-| `codex-team` | 0.15x | Pool compartido oficial de la serie Codex Team; recursos compartidos con multiplicador bajo |
+| `codex-team` | 0.12x | Pool compartido oficial de la serie Codex Team; recursos compartidos con multiplicador bajo |
+| `codex-ultrafast` | 0.4x | Modo ultrafast del pool codex-pro; sin límites, prioriza estabilidad |
 | `codex-officially` | 2x | Recursos de API Key oficial de OpenAI; conexión oficial directa, estable y fiable |
 
 ### Serie Claude
@@ -47,6 +48,8 @@ El grupo determina qué modelos puede llamar una API Key, qué pool de recursos 
 | `china` | 0.8x | Conjunto de modelos nacionales principales, conexión directa por API oficial |
 | `grok` | 0.5x | Grupo exclusivo de los modelos xAI Grok; prueba Grok con multiplicador bajo |
 | `fishxlab` | 2x | Modelos multimodales de audio, vídeo e imagen, para generación y creación |
+| `gemini` | 0.8x | Serie completa de modelos Gemini |
+| `tencent-china` | 0.1x | Modelos chinos de Tencent Cloud; el multiplicador más bajo actual |
 
 Para otros modelos y su disponibilidad exacta, consúltalo en el sitio.
 
@@ -64,7 +67,7 @@ Consumo real ≈ consumo base del modelo × multiplicador del grupo
 
 | Consumo base del modelo | Grupo | Descuento estimado |
 | - | - | - |
-| 10 créditos | `codex-team` (0.15x) | 1.5 créditos |
+| 10 créditos | `codex-team` (0.12x) | 1.2 créditos |
 | 10 créditos | `codex-plus` (0.2x) | 2 créditos |
 | 10 créditos | `claude` (1.5x) | 15 créditos |
 | 10 créditos | `claudemax` (2.6x) | 26 créditos |
@@ -99,7 +102,7 @@ Síntomas habituales de haber elegido mal el grupo:
 | Caso de uso | Recomendación | Descripción |
 | - | - | - |
 | Programación Codex diaria | `codex-plus` (0.2x) | Ideal para el desarrollo de código cotidiano |
-| Codex con multiplicador bajo | `codex-team` (0.15x) | Para usuarios que aceptan un pool de recursos compartido |
+| Codex con multiplicador bajo | `codex-team` (0.12x) | Para usuarios que aceptan un pool de recursos compartido |
 | Codex de alta frecuencia / desarrollo de Agentes | Paquete mensual del pool de cuentas Codex Pro | Elige el paquete mensual de $200 o $2,000 según tu uso real |
 | Programación y tareas largas con Claude | `claude` (1.5x) | Para uso intensivo, considera `claudemax` (2.6x) |
 | Kiro | `kiro-svip` (0.2x) | Pool oficial de precio completo de Kiro |

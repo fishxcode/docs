@@ -18,6 +18,7 @@ import type { HomeRedesignCopy } from '@/lib/home-redesign-copy';
 import { localePath, type Locale } from '@/lib/i18n';
 import { siteConfig } from '@/lib/site';
 import { CodeWindow, type CodeTab } from './code-window';
+import { GroupRatioList } from './group-ratio-list';
 import { HeroClientIcons, HeroFlowLines } from './hero-ambient';
 import {
   ButtonLink,
@@ -346,26 +347,14 @@ export function PricingSection({ lang, copy }: SectionProps) {
 
           <div className="lg:col-span-5">
             <h3 className="font-semibold">{pricing.groupsTitle}</h3>
-            <dl className="mt-4 border-t border-fd-foreground/80">
-              {GROUP_CATEGORIES.map((category) => (
-                <div key={category} className="grid gap-3 border-b border-fd-border py-4 sm:grid-cols-[7.5rem_1fr]">
-                  <dt className="text-sm font-semibold">{pricing.categories[category]}</dt>
-                  <dd>
-                    <ul className="flex flex-wrap gap-1.5">
-                      {HOME_GROUPS.filter((group) => group.category === category).map((group) => (
-                        <li
-                          key={group.name}
-                          className="inline-flex items-center gap-1.5 rounded-md border border-fd-border bg-paper px-2 py-0.5 font-mono text-xs"
-                        >
-                          {group.name}
-                          <span className="text-brand">{group.ratio}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {/* 运行时从 /api/pricing 拉最新倍率与分组说明，失败回退到 HOME_GROUPS 基线；见 group-ratio-list.tsx */}
+            <GroupRatioList
+              groups={HOME_GROUPS}
+              categories={GROUP_CATEGORIES}
+              categoryLabels={pricing.categories}
+              lang={lang}
+              copy={{ liveNote: pricing.groupsLiveNote }}
+            />
             <p className="mt-4 text-xs text-fd-muted-foreground">{pricing.groupsNote}</p>
             <div className="mt-6">
               <TextLink href={localePath(lang, BILLING_PATH)}>{pricing.groupsCta}</TextLink>

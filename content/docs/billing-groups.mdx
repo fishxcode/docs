@@ -1,6 +1,6 @@
 ---
 title: 计费规则与分组
-description: FishXCode 的两种计费方式、10 个在售分组与倍率、分组选择建议和使用注意事项。
+description: FishXCode 的两种计费方式、13 个在售分组与倍率、分组选择建议和使用注意事项。
 navTitle: 计费规则与分组
 ---
 
@@ -21,7 +21,7 @@ FishXCode 是一站式 AI 模型接入与账号服务平台，覆盖 Claude、Co
 
 ## 二、在售分组
 
-分组决定一个 API Key 能调用哪些模型、走哪个资源池、按什么倍率扣费。目前在售 10 个分组：
+分组决定一个 API Key 能调用哪些模型、走哪个资源池、按什么倍率扣费。目前在售 13 个分组：
 
 ### Codex 系列
 
@@ -29,7 +29,8 @@ FishXCode 是一站式 AI 模型接入与账号服务平台，覆盖 Claude、Co
 | - | - | - |
 | `codex-plus` | 0.2x | Codex Plus 官方正价系列号池，低倍率、稳定可用，适合日常调用 |
 | `codex-pro` | 0.4x | Codex Pro 官方正价系列资源，性能稳定，适合团队与企业 |
-| `codex-team` | 0.15x | Codex Team 官方系列共享号池，低倍率共享资源 |
+| `codex-team` | 0.12x | Codex Team 官方系列共享号池，低倍率共享资源 |
+| `codex-ultrafast` | 0.4x | codex-pro 号池的 ultrafast 模式，无限制，稳定性优先 |
 | `codex-officially` | 2x | OpenAI 官方 API Key 资源，官方直连，稳定可靠 |
 
 ### Claude 系列
@@ -47,6 +48,8 @@ FishXCode 是一站式 AI 模型接入与账号服务平台，覆盖 Claude、Co
 | `china` | 0.8x | 国产主流模型合集，官方 API 直连 |
 | `grok` | 0.5x | xAI Grok 模型专属分组，低倍率体验 Grok 能力 |
 | `fishxlab` | 2x | 音频、视频、图像等多模态模型，覆盖生成与创作场景 |
+| `gemini` | 0.8x | Gemini 系列全模型分组 |
+| `tencent-china` | 0.1x | 腾讯云国产模型分组，低倍率 |
 
 其他模型及具体支持情况请在站内查看。
 
@@ -64,7 +67,7 @@ FishXCode 是一站式 AI 模型接入与账号服务平台，覆盖 Claude、Co
 
 | 模型基础消耗 | 分组 | 估算扣除 |
 | - | - | - |
-| 10 额度 | `codex-team`（0.15x） | 1.5 额度 |
+| 10 额度 | `codex-team`（0.12x） | 1.2 额度 |
 | 10 额度 | `codex-plus`（0.2x） | 2 额度 |
 | 10 额度 | `claude`（1.5x） | 15 额度 |
 | 10 额度 | `claudemax`（2.6x） | 26 额度 |
@@ -99,13 +102,15 @@ FishXCode 是一站式 AI 模型接入与账号服务平台，覆盖 Claude、Co
 | 使用场景 | 推荐 | 说明 |
 | - | - | - |
 | 日常 Codex 编程 | `codex-plus`（0.2x） | 适合日常代码开发 |
-| 低倍率 Codex | `codex-team`（0.15x） | 适合接受共享资源池的用户 |
+| 低倍率 Codex | `codex-team`（0.12x） | 适合接受共享资源池的用户 |
 | 高频 Codex / Agent 开发 | Codex Pro 号池月包 | 根据实际使用量选择 200 或 2000 美元额度月包 |
 | Claude 编程与长任务 | `claude`（1.5x） | 高频使用可考虑 `claudemax`（2.6x） |
 | Kiro | `kiro-svip`（0.2x） | Kiro 官方正价号池 |
 | 国产模型 | `china`（0.8x） | 官方 API 直连 |
 | Grok 模型 | `grok`（0.5x） | xAI Grok 专属分组 |
 | 图像、视频、音频生成 | `fishxlab`（2x） | 具体模型及计费以站内为准 |
+| Gemini 模型 | `gemini`（0.8x） | Gemini 系列全模型 |
+| 腾讯云国产模型 | `tencent-china`（0.1x） | 当前倍率最低的分组 |
 | 团队或项目拆分 | 为成员或项目创建独立 API Key | 便于额度控制、成本分摊和日志排查 |
 
 ## 六、使用后核对实际消耗

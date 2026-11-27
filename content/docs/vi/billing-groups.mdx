@@ -1,6 +1,6 @@
 ---
 title: Quy tắc tính phí và nhóm
-description: Hai cách tính phí của FishXCode, 10 nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng.
+description: Hai cách tính phí của FishXCode, 13 nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng.
 navTitle: Quy tắc tính phí và nhóm
 ---
 
@@ -21,7 +21,7 @@ Giá, hạn mức và cách sử dụng gói tháng được trình bày tại [
 
 ## 2. Các nhóm đang mở bán
 
-Nhóm quyết định một API Key có thể gọi những mô hình nào, đi qua pool tài nguyên nào và bị trừ phí theo hệ số nào. Hiện có 10 nhóm đang mở bán:
+Nhóm quyết định một API Key có thể gọi những mô hình nào, đi qua pool tài nguyên nào và bị trừ phí theo hệ số nào. Hiện có 13 nhóm đang mở bán:
 
 ### Dòng Codex
 
@@ -29,7 +29,8 @@ Nhóm quyết định một API Key có thể gọi những mô hình nào, đi 
 | - | - | - |
 | `codex-plus` | 0.2x | Pool tài khoản chính thức dòng Codex Plus mua theo giá gốc; hệ số thấp, ổn định, phù hợp để gọi hằng ngày |
 | `codex-pro` | 0.4x | Tài nguyên chính thức dòng Codex Pro mua theo giá gốc; hiệu năng ổn định, phù hợp với đội nhóm và doanh nghiệp |
-| `codex-team` | 0.15x | Pool tài khoản dùng chung chính thức dòng Codex Team; tài nguyên dùng chung với hệ số thấp |
+| `codex-team` | 0.12x | Pool tài khoản dùng chung chính thức dòng Codex Team; tài nguyên dùng chung với hệ số thấp |
+| `codex-ultrafast` | 0.4x | Chế độ ultrafast của pool codex-pro; không giới hạn, ưu tiên ổn định |
 | `codex-officially` | 2x | Tài nguyên API Key chính thức của OpenAI; kết nối trực tiếp chính thức, ổn định và đáng tin cậy |
 
 ### Dòng Claude
@@ -47,6 +48,8 @@ Nhóm quyết định một API Key có thể gọi những mô hình nào, đi 
 | `china` | 0.8x | Tổng hợp các mô hình phổ biến của Trung Quốc, kết nối trực tiếp API chính thức |
 | `grok` | 0.5x | Nhóm dành riêng cho mô hình xAI Grok, trải nghiệm khả năng của Grok với hệ số thấp |
 | `fishxlab` | 2x | Các mô hình đa phương thức như âm thanh, video, hình ảnh, bao quát các tình huống tạo nội dung và sáng tạo |
+| `gemini` | 0.8x | Nhóm toàn bộ mô hình dòng Gemini |
+| `tencent-china` | 0.1x | Mô hình Trung Quốc của Tencent Cloud; hệ số thấp nhất hiện tại |
 
 Bạn có thể xem các mô hình khác và mức độ hỗ trợ cụ thể trên trang.
 
@@ -64,7 +67,7 @@ Tiêu hao thực tế ≈ Tiêu hao cơ bản của mô hình × Hệ số nhóm
 
 | Tiêu hao cơ bản của mô hình | Nhóm | ước tính bị trừ |
 | - | - | - |
-| 10 hạn mức | `codex-team` (0.15x) | 1,5 hạn mức |
+| 10 hạn mức | `codex-team` (0.12x) | 1,2 hạn mức |
 | 10 hạn mức | `codex-plus` (0.2x) | 2 hạn mức |
 | 10 hạn mức | `claude` (1.5x) | 15 hạn mức |
 | 10 hạn mức | `claudemax` (2.6x) | 26 hạn mức |
@@ -99,7 +102,7 @@ Các biểu hiện phổ biến khi chọn sai nhóm:
 | Tình huống sử dụng | Khuyến nghị | Mô tả |
 | - | - | - |
 | Lập trình Codex hằng ngày | `codex-plus` (0.2x) | Phù hợp phát triển mã hằng ngày |
-| Codex hệ số thấp | `codex-team` (0.15x) | Phù hợp người dùng chấp nhận pool tài nguyên dùng chung |
+| Codex hệ số thấp | `codex-team` (0.12x) | Phù hợp người dùng chấp nhận pool tài nguyên dùng chung |
 | Codex tần suất cao / phát triển Agent | Gói tháng pool tài khoản Codex Pro | Chọn gói tháng hạn mức $200 hoặc $2,000 theo mức dùng thực tế |
 | Lập trình Claude và tác vụ dài | `claude` (1.5x) | Dùng tần suất cao có thể cân nhắc `claudemax` (2.6x) |
 | Kiro | `kiro-svip` (0.2x) | Pool tài khoản chính thức Kiro mua theo giá gốc |

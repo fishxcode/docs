@@ -39,19 +39,29 @@ export const HOME_LOWEST_PLAN_RATIO = multiplier(Math.min(...PLANS.map((plan) =>
 
 export type GroupCategory = 'codex' | 'claude' | 'other';
 
-/** 在售分组与倍率。与 content/docs/billing-groups.mdx 一致，调整时两处同步 */
+/**
+ * 在售分组与倍率的内置基线（2026-11-27 与主站 /api/pricing 对齐）。
+ *
+ * 首页「在售分组与倍率」区块会运行时从 /api/pricing 拉最新倍率（见 GroupRatioList），
+ * 拉取失败时回退到这里；llms 的首页 Markdown 副本（discovery.ts，构建期静态生成）
+ * 也用这份基线。接口不可达时展示的数值，以及文档页 billing-groups.mdx 的静态正文，
+ * 都以本清单为准，调整时与 content/docs/billing-groups.mdx 两处同步。
+ */
 export const HOME_GROUPS: ReadonlyArray<{ name: string; ratio: string; category: GroupCategory }> = (
   [
     ['codex-plus', 0.2, 'codex'],
     ['codex-pro', 0.4, 'codex'],
-    ['codex-team', 0.15, 'codex'],
+    ['codex-team', 0.12, 'codex'],
+    ['codex-ultrafast', 0.4, 'codex'],
     ['codex-officially', 2, 'codex'],
     ['claude', 1.5, 'claude'],
     ['claudemax', 2.6, 'claude'],
     ['kiro-svip', 0.2, 'other'],
     ['china', 0.8, 'other'],
+    ['gemini', 0.8, 'other'],
     ['grok', 0.5, 'other'],
     ['fishxlab', 2, 'other'],
+    ['tencent-china', 0.1, 'other'],
   ] as const
 ).map(([name, ratio, category]) => ({ name, ratio: multiplier(ratio), category }));
 
@@ -433,6 +443,8 @@ export type HomePageCopy = {
     categories: Record<GroupCategory, string>;
     groupsNote: string;
     groupsCta: string;
+    /** 实时倍率加载完成后的读屏播报（视觉隐藏），如「已更新为实时倍率」 */
+    groupsLiveNote: string;
   };
   clients: { title: string; description: string };
   steps: { title: string; description: string; items: readonly [StepCopy, StepCopy, StepCopy]; cta: string };
@@ -485,6 +497,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       },
       groupsNote: '倍率越低，同一请求扣得越少；以站内实时信息为准。',
       groupsCta: '计费规则与分组',
+      groupsLiveNote: '分组倍率已更新为官网实时数据',
     },
     clients: {
       title: '接入你正在用的工具',
@@ -559,6 +572,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       },
       groupsNote: 'A lower multiplier deducts less for the same request. Live values on the platform prevail.',
       groupsCta: 'Billing rules and groups',
+      groupsLiveNote: 'Group ratios updated with live data from the platform',
     },
     clients: {
       title: 'Connect the tools you already use',
@@ -641,6 +655,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       groupsNote:
         'Plus le multiplicateur est bas, moins la même requête coûte cher. Les informations en temps réel du site font foi.',
       groupsCta: 'Règles de facturation et groupes',
+      groupsLiveNote: 'Multiplicateurs mis à jour avec les données en temps réel de la plateforme',
     },
     clients: {
       title: 'Connectez les outils que vous utilisez déjà',
@@ -724,6 +739,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       groupsNote:
         'A menor multiplicador, menos se descuenta por la misma solicitud. Prevalece la información en tiempo real del sitio.',
       groupsCta: 'Reglas de facturación y grupos',
+      groupsLiveNote: 'Multiplicadores actualizados con datos en tiempo real de la plataforma',
     },
     clients: {
       title: 'Conecta las herramientas que ya usas',
@@ -807,6 +823,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       groupsNote:
         'Quanto menor o multiplicador, menos é descontado pela mesma requisição. Prevalecem as informações em tempo real do site.',
       groupsCta: 'Regras de cobrança e grupos',
+      groupsLiveNote: 'Multiplicadores atualizados com dados em tempo real da plataforma',
     },
     clients: {
       title: 'Conecte as ferramentas que você já usa',
@@ -890,6 +907,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       groupsNote:
         'Чем ниже коэффициент, тем меньше спишется за тот же запрос. Окончательными считаются актуальные данные на сайте.',
       groupsCta: 'Правила тарификации и группы',
+      groupsLiveNote: 'Коэффициенты обновлены по актуальным данным платформы',
     },
     clients: {
       title: 'Подключите инструменты, которыми уже пользуетесь',
@@ -969,6 +987,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       groupsNote:
         '倍率が低いほど、同じリクエストでの差し引き額は少なくなります。サイト上のリアルタイム情報が優先されます。',
       groupsCta: '課金ルールとグループ',
+      groupsLiveNote: 'グループ倍率をサイトのリアルタイムデータで更新しました',
     },
     clients: {
       title: 'お使いのツールにそのまま接続',
@@ -1052,6 +1071,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       groupsNote:
         'Hệ số càng thấp thì cùng một yêu cầu bị trừ càng ít; căn cứ theo thông tin thời gian thực trên trang.',
       groupsCta: 'Quy tắc tính phí và nhóm',
+      groupsLiveNote: 'Hệ số nhóm đã được cập nhật theo dữ liệu thời gian thực trên trang',
     },
     clients: {
       title: 'Kết nối công cụ bạn đang dùng',
@@ -1127,6 +1147,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       },
       groupsNote: '倍率越低，同一請求扣得越少；以站內即時資訊為準。',
       groupsCta: '計費規則與分組',
+      groupsLiveNote: '分組倍率已更新為官網即時資料',
     },
     clients: {
       title: '接入你正在用的工具',
