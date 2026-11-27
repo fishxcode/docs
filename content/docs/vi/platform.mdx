@@ -1,72 +1,72 @@
 ---
-title: Điều hướng nền tảng và giới thiệu hệ thống
-description: Tổng quan kiến trúc nền tảng FishXCode, tính năng bảng điều khiển, đường dẫn các trang và bảng đối chiếu tài liệu.
+title: Điều hướng nền tảng và mô tả hệ thống
+description: Kiến trúc nền tảng FishXCode, chức năng bảng điều khiển, route các trang và bảng đối chiếu tài liệu.
 navTitle: Điều hướng nền tảng
 ---
 
-> Trang này giới thiệu cấu trúc tổng thể của nền tảng FishXCode, giúp bạn nhanh chóng tìm đúng tính năng cần dùng.
+> Trang này giới thiệu cấu trúc nền tảng tổng thể của FishXCode, giúp bạn nhanh chóng định vị chức năng cần dùng.
 > Cần đăng ký tài khoản? Xem [Đăng ký và quản lý tài khoản](/vi/account).
 
 ## 1. Tổng quan nền tảng
 
-FishXCode là nền tảng truy cập AI dành cho nhà phát triển và đội nhóm. Bạn có thể hiểu nó là một cổng truy cập thống nhất: phía trước là trang web chính thức, trang giá và tài liệu; phía sau là bảng điều khiển, token, nạp tiền, hóa đơn và lịch sử sử dụng.
+FishXCode là nền tảng truy cập AI dành cho lập trình viên và đội nhóm. Bạn có thể hiểu nó như một cổng vào thống nhất: phía trước là trang chủ, giá và tài liệu; phía sau là bảng điều khiển, khóa, nạp tiền, hóa đơn và bản ghi sử dụng.
 
-Nền tảng cung cấp dịch vụ trung chuyển cho các mô hình AI phổ biến; kênh và mô hình cụ thể căn cứ theo thông tin thực tế trên trang web chính thức, vui lòng xem tại [trang giá](https://fishxcode.com/pricing). Từ khi đăng ký đến tạo token, chọn gói, kết nối công cụ và xem mức tiêu hao, toàn bộ quy trình đều được thực hiện trong cùng một hệ thống.
+Nền tảng cung cấp dịch vụ trung chuyển xoay quanh các mô hình AI chủ đạo; kênh và mô hình cụ thể căn cứ theo thực tế trên trang chủ, hãy vào [trang giá](https://fishxcode.com/pricing) xem chi tiết. Người dùng từ đăng ký, tạo khóa, chọn gói, kết nối công cụ đến xem mức tiêu hao, toàn bộ quy trình đều hoàn tất trong cùng một hệ thống.
 
 ---
 
 ## 2. Tổng quan các mô-đun của trang
 
-Toàn bộ hệ thống gồm 4 mô-đun chính:
+Cả hệ thống gồm 4 mô-đun lớn:
 
-| Đường dẫn | Trang | Mô-đun | Mô tả |
+| Route | Trang | Mô-đun | Mô tả |
 | - | - | - | - |
-| `/` | Trang chủ | Trang web chính thức | Giới thiệu năng lực của nền tảng, hiển thị thông báo, hướng dẫn đăng ký hoặc xem tài liệu |
-| `/pricing` | Trang giá | Trang web chính thức | Xem giá mô hình, các gói và hệ số tiêu thụ của từng nhóm |
-| `/login` | Trang đăng nhập | Trung tâm xác thực | Đăng nhập bằng tên người dùng/email, hỗ trợ đăng nhập bên thứ ba qua GitHub, LinuxDO |
-| `/register` | Trang đăng ký | Trung tâm xác thực | Lối vào đăng ký dành cho người dùng mới |
-| `/console` | Dashboard | Bảng điều khiển | Trang tổng quan: số dư, thống kê tiêu hao, số yêu cầu và thông báo hệ thống |
-| `/console/package` | Quản lý gói | Bảng điều khiển | Xem và mua gói đăng ký, xem các mô hình được bao gồm |
-| `/console/token` | Quản lý token | Bảng điều khiển | Tạo, sao chép, xóa API Key, quản lý nhóm và thời hạn hiệu lực |
-| `/console/log` | Nhật ký sử dụng | Bảng điều khiển | Xem thời gian, mô hình, mức tiêu hao và bản ghi chi tiết của từng lần gọi |
-| `/console/topup` | Nạp tiền | Bảng điều khiển | Nạp tiền vào số dư, dùng mã đổi thưởng, xem lịch sử nạp tiền |
-| `/console/invoice` | Quản lý hóa đơn | Bảng điều khiển | Gửi yêu cầu xuất hóa đơn, theo dõi tiến độ hóa đơn |
-| `/console/invite` | Giới thiệu nhận thưởng | Bảng điều khiển | Liên kết mời, quy tắc thưởng, thu nhập và bảng xếp hạng |
-| `/console/personal` | Cài đặt cá nhân | Bảng điều khiển | Thông tin tài khoản, nhóm mặc định, phần thưởng điểm danh |
-| `/status` | Trạng thái dịch vụ | Trang công khai | Kiểm tra dịch vụ của từng nhóm có hoạt động bình thường không |
-| `/contact` | Liên hệ | Trang công khai | Kênh liên hệ chính thức và hỗ trợ hậu mãi |
-| `/docs` | Trung tâm tài liệu | Trang công khai | Hướng dẫn kết nối, hướng dẫn công cụ và FAQ |
+| `/` | Trang chủ | Gian hàng trang chủ | Giới thiệu năng lực nền tảng, hiển thị thông báo, hướng tới đăng ký hoặc xem tài liệu |
+| `/pricing` | Trang giá | Gian hàng trang chủ | Xem giá mô hình, gói và hệ số tiêu hao của các nhóm khác nhau |
+| `/sign-in` | Trang đăng nhập | Trung tâm xác thực | Đăng nhập bằng tên người dùng/email; hỗ trợ ủy quyền GitHub, LinuxDO, Google |
+| `/sign-up` | Trang đăng ký | Trung tâm xác thực | Lối vào đăng ký người dùng mới (mã xác minh email + xác minh chống máy) |
+| `/dashboard/overview` | Tổng quan | Bảng điều khiển | Trang tổng quan: số dư, thống kê tiêu hao, số yêu cầu và hướng dẫn cài đặt |
+| `/dashboard/models` | Bảng dữ liệu | Bảng điều khiển | Xem lượng gọi và tiêu hao theo mô hình |
+| `/keys` | API Keys | Bảng điều khiển | Tạo, sao chép, xóa API Key; quản lý nhóm, hạn mức và thời hạn |
+| `/usage-logs/common` | Nhật ký sử dụng | Bảng điều khiển | Xem thời gian, mô hình, tiêu hao và bản ghi chi tiết của mỗi lần gọi |
+| `/usage-logs/audit` | Nhật ký kiểm toán | Bảng điều khiển | Xem bản ghi kiểm toán |
+| `/wallet` | Ví | Bảng điều khiển | Nạp số dư, gói đăng ký, dùng mã đổi thưởng, xem lịch sử đơn hàng |
+| `/profile` | Hồ sơ cá nhân | Bảng điều khiển | Thông tin tài khoản và phần thưởng điểm danh |
+| `/security` | Bảo mật và truy cập | Bảng điều khiển | Mật khẩu, liên kết bên thứ ba, phiên đăng nhập, Passkey, xác minh hai bước |
+| `/rankings` | Bảng xếp hạng | Trang công khai | Xếp hạng sử dụng mô hình |
+| `/status` | Trạng thái dịch vụ | Trang công khai | Xem dịch vụ của từng nhóm có bình thường không |
+| `/contact` | Liên hệ với chúng tôi | Trang công khai | Kênh liên hệ chính thức và hỗ trợ sau bán |
+| `/docs` | Trung tâm tài liệu | Trang công khai | Hướng dẫn kết nối, chỉ dẫn công cụ và FAQ |
 
 ---
 
-## 3. Tra cứu nhanh tính năng bảng điều khiển
+## 3. Tra nhanh chức năng bảng điều khiển
 
-Sau khi đăng nhập, mọi thao tác đều tập trung trong bảng điều khiển; bạn có thể tìm nhanh theo tình huống sử dụng:
+Sau khi đăng nhập, mọi thao tác đều tập trung ở bảng điều khiển, định vị nhanh theo tình huống sử dụng:
 
-### Kích hoạt và bắt đầu sử dụng
+### Bật sử dụng
 
-1. Đăng ký tài khoản → Đăng nhập bảng điều khiển
-2. **Quản lý token**: Tạo API Key (chọn nhóm phù hợp)
+1. Đăng ký tài khoản → đăng nhập bảng điều khiển
+2. **API Keys**: tạo API Key (chọn nhóm phù hợp)
 3. Cấu hình Base URL và API Key vào công cụ của bạn
 
-### Mua gói và nạp tiền
+### Mua hàng và nạp tiền
 
-- **Quản lý gói**: Xem các gói hiện có, đăng ký phương án phù hợp
-- **Trang nạp tiền**: Hỗ trợ Alipay, WeChat Pay và mã đổi thưởng
-- **Xem số dư**: Hiển thị theo thời gian thực trên trang chủ Dashboard
+- **Ví → Gói đăng ký**: xem và mua gói tháng Codex và các phương án đăng ký khác
+- **Ví → Nạp số dư**: hỗ trợ Alipay, Waffo Pancake và mã đổi thưởng
+- **Xem số dư**: hiển thị thời gian thực trên trang ví và trang tổng quan
 
 ### Quản lý sử dụng
 
-- **Nhật ký sử dụng**: Xem bản ghi của từng lần gọi, gồm mô hình, mức tiêu hao, IP và các chi tiết khác
-- **Quản lý token**: Xem trạng thái token, phạm vi nhóm, xóa các token không còn sử dụng
-- **Cài đặt cá nhân**: Đổi nhóm mặc định, xem phần thưởng điểm danh và thống kê cơ bản
+- **Nhật ký sử dụng**: xem bản ghi mỗi lần gọi, gồm mô hình, tiêu hao, IP và chi tiết khác
+- **API Keys**: xem trạng thái khóa, phạm vi nhóm; xóa hoặc vô hiệu hóa khóa không còn dùng
+- **Hồ sơ cá nhân**: xem phần thưởng điểm danh và thống kê cơ bản
 
 ### Hậu mãi và hỗ trợ
 
-- **Quản lý hóa đơn**: Doanh nghiệp hoặc người dùng có nhu cầu thanh toán chi phí gửi yêu cầu xuất hóa đơn
-- **Giới thiệu nhận thưởng**: Mời người dùng mới qua liên kết mời và xem thu nhập từ phần thưởng
-- **Trạng thái dịch vụ**: Kiểm tra các nhóm có hoạt động bình thường không khi xử lý lỗi gọi API
-- **Liên hệ**: Giải quyết vấn đề khi sử dụng, trao đổi về mua hàng và hỗ trợ hậu mãi
+- **Hoa hồng mời**: xem liên kết mời của chương trình giới thiệu và phần thưởng ở dưới trang ví
+- **Trạng thái dịch vụ**: khi xử lý sự cố gọi API, xem từng nhóm có bình thường không
+- **Liên hệ với chúng tôi**: xử lý vấn đề sử dụng, trao đổi mua sắm và hỗ trợ sau bán
 
 ---
 
@@ -74,12 +74,12 @@ Sau khi đăng nhập, mọi thao tác đều tập trung trong bảng điều k
 
 `/docs` chính là trung tâm tài liệu của FishXCode, nội dung bên trong tương ứng một-một với trang tài liệu hiện tại:
 
-| Trang tài liệu | Đường dẫn | Nội dung |
+| Trang tài liệu | Route | Nội dung |
 | - | - | - |
 | Trang chủ | `/` | Trang chủ tài liệu và tổng quan sản phẩm |
 | Bắt đầu nhanh | `/start` | Hướng dẫn kết nối Claude Code |
-| Đăng ký tài khoản | `/account` | Đăng ký, đăng nhập, token, nạp tiền và quản lý tài khoản |
-| Kết nối nhanh ZCF | `/zcf` | Quy trình làm việc ZCF và cấu hình MCP |
+| Đăng ký tài khoản | `/account` | Đăng ký, đăng nhập, khóa, nạp tiền và quản lý tài khoản |
+| Kết nối nhanh qua ZCF | `/zcf` | Quy trình làm việc ZCF và cấu hình MCP |
 | OpenAI Codex | `/codex` | Hướng dẫn kết nối Codex |
 | Cursor | `/cursor` | Hướng dẫn kết nối Cursor |
 | RooCode | `/roocode` | Hướng dẫn kết nối RooCode |
@@ -91,13 +91,13 @@ Sau khi đăng nhập, mọi thao tác đều tập trung trong bảng điều k
 | CodeBuddy | `/codebuddy` | Hướng dẫn kết nối CodeBuddy |
 | QClaw | `/qclaw` | Hướng dẫn kết nối QClaw |
 | So sánh công cụ | `/compare` | So sánh nhiều công cụ |
-| Mô hình được hỗ trợ | `/models` | Danh sách mô hình và phạm vi năng lực |
-| Câu hỏi thường gặp | `/faq` | Câu hỏi thường gặp và hướng dẫn khắc phục sự cố |
-| Nhật ký cập nhật | `/changelog` | Lịch sử cập nhật phiên bản |
-| Thỏa thuận người dùng | `/terms` | Thỏa thuận của nền tảng |
-| Chính sách hoàn tiền | `/refund` | Quy định về hoàn tiền nạp và quy đổi gói |
-| Chính sách quyền riêng tư | `/privacy` | Thông tin về quyền riêng tư |
+| Các mô hình được hỗ trợ | `/models` | Danh sách mô hình và phạm vi năng lực |
+| Câu hỏi thường gặp | `/faq` | FAQ và hướng dẫn xử lý sự cố |
+| Nhật ký thay đổi | `/changelog` | Bản ghi cập nhật phiên bản |
+| Thỏa thuận người dùng | `/terms` | Điều khoản nền tảng |
+| Chính sách hoàn tiền | `/refund` | Hoàn tiền nạp và quy đổi gói |
+| Chính sách quyền riêng tư | `/privacy` | Mô tả quyền riêng tư |
 
-<Callout type="idea" title="Tóm gọn trong một câu">
-  Người dùng tìm hiểu nền tảng qua trang web chính thức, sau đó đăng ký và kích hoạt dịch vụ trong bảng điều khiển, rồi sử dụng thực tế ở các trang token, gói, nạp tiền và nhật ký; tài liệu và trang trạng thái đảm nhận việc hướng dẫn và bảo đảm dịch vụ.
+<Callout type="idea" title="Tóm lại trong một câu">
+  Người dùng trước tìm hiểu nền tảng qua trang chủ, sau đó mở dịch vụ qua đăng ký và bảng điều khiển; tiếp theo hoàn thành sử dụng thực tế ở các trang khóa, gói, nạp tiền và nhật ký; tài liệu và trang trạng thái đảm nhận vai trò giải thích và đảm bảo.
 </Callout>

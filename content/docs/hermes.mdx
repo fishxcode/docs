@@ -14,7 +14,7 @@ navTitle: Hermes
 
 ## 前提条件
 
-- 已获取 FishXCode API Key（[控制台获取](https://fishxcode.com/console/token)）
+- 已获取 FishXCode API Key（[控制台获取](https://fishxcode.com/keys)）
 - 本机可用 `git`
 - 本机可用 `python3`
 
@@ -209,7 +209,7 @@ Hermes 官方已经移除了这两个旧环境变量的读取逻辑。现在模�
 按下面顺序排查：
 
 1. 确认 `base_url` 写的是 `https://api.fishxcode.com/v1`
-2. 确认 Token 来自 [FishXCode 控制台](https://fishxcode.com/console/token)
+2. 确认 Token 来自 [FishXCode 控制台](https://fishxcode.com/keys)
 3. 确认 `model.default` 填的是有效模型 ID，例如 `gpt-6.2-sol`
 4. 确认模型上下文不低于 `65536`
 5. 运行 `hermes config check` 与 `hermes doctor` 查看具体报错

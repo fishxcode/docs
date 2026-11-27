@@ -1,161 +1,178 @@
 ---
 title: Création de compte et gestion
-description: Inscription FishXCode, obtention de clé API, recharge et sécurité du compte.
+description: Guide d'inscription FishXCode, obtention de clé API, recharge et sécurité du compte.
 navTitle: Création de compte
 ---
 
-> Vous avez déjà un compte ? Rendez-vous directement sur [Démarrage rapide](/fr/start) pour configurer vos outils.
-> Découvrir la plateforme ? Consultez le [Guide plateforme](/fr/platform).
+> Vous avez déjà un compte ? Passez directement au [Démarrage rapide](/fr/start) pour configurer vos outils.
+> Vous voulez une vue d'ensemble de la plateforme ? Consultez [Navigation plateforme](/fr/platform).
 
-## 1. Obtenir la clé API
+## 1. Inscription et connexion
 
 ### 1. Créer un compte
 
-Rendez-vous sur [fishxcode.com](https://fishxcode.com/register?aff=9CTW) et cliquez sur **S'inscrire** :
+Rendez-vous sur [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW) pour ouvrir la page d'inscription :
 
-![Page d'accueil FishXCode](/img/start/api-01-home.png)
+![Page d'inscription FishXCode](/img/start/api-v2-01-home.png)
 
-Choisissez votre méthode d'inscription (GitHub, LinuxDO ou nom d'utilisateur) :
+Remplissez le formulaire d'inscription : définissez un nom d'utilisateur et un mot de passe (8 à 128 caractères ; lettres majuscules et minuscules, chiffres et symboles recommandés), et saisissez l'adresse e-mail qui recevra le code de vérification :
 
-![Choix de la méthode d'inscription](/img/start/api-02-register.png)
+![Remplir les informations d'inscription](/img/start/api-v2-03-register-form.png)
 
-Renseignez votre nom d'utilisateur, mot de passe et confirmation du mot de passe pour finaliser l'inscription :
+<Callout type="idea" title="Domaines e-mail pris en charge">
+  L'inscription par e-mail prend actuellement en charge quatre domaines : **qq.com, 126.com, 163.com, gmail.com**. Les autres domaines risquent de ne pas recevoir le code de vérification.
+</Callout>
 
-![Formulaire d'inscription](/img/start/api-03-register-form.png)
+Cliquez sur **Envoyer le code de vérification**. Après avoir validé la vérification anti-robot Cloudflare, le code est envoyé à votre adresse e-mail. Retrouvez le code (une combinaison alphanumérique de 6 caractères) dans votre boîte de réception et saisissez-le dans le formulaire :
+
+![Saisir le code de vérification e-mail](/img/start/api-v2-02-register-verify.png)
+
+Cliquez sur **Créer un compte** pour terminer l'inscription. La page redirige vers la connexion avec le message « Compte créé ! Veuillez vous connecter ».
+
+<Callout type="warn" title="Vous ne recevez pas le code de vérification ?">
+  1. Vérifiez que le domaine de l'e-mail figure dans la liste prise en charge (qq.com / 126.com / 163.com / gmail.com)
+  2. Consultez le dossier des indésirables
+  3. Attendez 1 à 2 minutes puis réessayez ; évitez les demandes trop fréquentes
+  4. S'il n'arrive toujours pas, passez à la connexion autorisée par un tiers
+</Callout>
 
 ### 2. Se connecter
 
-Une fois inscrit, connectez-vous avec votre nom d'utilisateur et votre mot de passe :
+Après l'inscription, connectez-vous avec votre nom d'utilisateur et votre mot de passe, ou utilisez la connexion autorisée par un tiers en un clic :
 
-![Page de connexion](/img/start/api-04-login.png)
+![Page de connexion](/img/start/api-v2-04-login.png)
 
-Après connexion, vous accédez à la console :
-
-![Page d'accueil de la console](/img/start/api-05-console.png)
-
-### 3. Créer un token
-
-Allez dans **Console → Gestion des tokens → Ajouter un token** et remplissez le formulaire :
-
-![Ajouter un token](/img/start/api-06-token-create.png)
-
-- Pour le **groupe de tokens**, choisissez de préférence le **canal officiel**. Ce groupe inclut l'ensemble des modèles Claude et sélectionne automatiquement le modèle selon la complexité de la tâche. Les canaux et modèles disponibles sont susceptibles de changer — consultez la [page Tarifs](https://fishxcode.com/pricing) pour les informations à jour.
-
-Une fois créé, cliquez sur le bouton **Copier** dans la liste des tokens pour récupérer votre clé API (format : `sk-xxx`) :
-
-![Copier le token](/img/start/api-07-token-copy.png)
-
-### 4. Recharger le solde
-
-Allez dans **Console → Gestion du portefeuille** ; les paiements Alipay, WeChat et codes de recharge sont acceptés :
-
-![Page de recharge](/img/start/api-08-wallet.png)
-
-| Méthode | Chemin |
+| Méthode de connexion | Description |
 | - | - |
-| Alipay | Saisir/sélectionner le montant → Alipay |
-| WeChat | Saisir/sélectionner le montant → WeChat |
-| Code de recharge | Saisir le code dans la zone dédiée → Cliquer sur Échanger |
+| Compte créé par e-mail | Connexion avec nom d'utilisateur/e-mail + mot de passe |
+| GitHub | Connexion autorisée ; recommandée pour les développeurs |
+| LinuxDO | Connexion autorisée pour les utilisateurs de la communauté |
+| Google | Connexion autorisée avec un compte Google |
 
-<Callout type="idea" title="Multiplicateur de taux">
-  Le `0.5x` dans le nom d'un groupe indique le multiplicateur de consommation. Plus la valeur est faible, plus vous obtenez de tokens. Par exemple, `0.5x` signifie 10 millions de tokens officiels pour 1 yuan (contre 5 millions au tarif officiel).
+<Callout type="info" title="La connexion via un tiers crée le compte automatiquement">
+  À la première connexion via GitHub / LinuxDO / Google, un compte est créé automatiquement — aucune inscription distincte n'est nécessaire.
 </Callout>
+
+Après la connexion, vous arrivez sur la console (page d'aperçu) :
+
+![Aperçu de la console](/img/start/api-v2-05-console.png)
 
 ---
 
-## 2. Gestion des tokens
+## 2. Obtenir une clé API
 
-### Détails des groupes de tokens
+### 1. Créer une clé API
 
-Lors de la création d'un token, vous devez choisir un groupe qui détermine les modèles disponibles et le multiplicateur de consommation :
+Allez dans **Console → Clés API** et cliquez sur **Créer une clé API** en haut à droite :
 
-| Type de groupe | Description | Cas d'usage |
-| - | - | - |
-| **Canal officiel** | Inclut l'ensemble des modèles Claude, routage automatique | Recommandé pour la majorité des utilisateurs |
-| **Groupes faible taux** | Multiplicateur de consommation réduit, meilleur rapport qualité-prix | Appels fréquents, scénarios sensibles aux coûts |
+![Fenêtre de création de clé API](/img/start/api-v2-06-token-create.png)
 
-<Callout type="idea" title="Recommandation">
-  Si vous ne savez pas quel groupe choisir, sélectionnez simplement le **canal officiel**. Le système choisira automatiquement le modèle le plus adapté en fonction de la complexité de la tâche.
+Champs du formulaire :
+
+| Champ | Description |
+| - | - |
+| Nom | Nom personnalisé de la clé pour identifier son usage |
+| Groupe | Détermine les modèles disponibles et le multiplicateur de facturation ; voir ci-dessous |
+| Expiration | Jamais / 1 mois / 1 jour / 1 heure |
+| Quantité | Créez plusieurs clés d'un coup (un suffixe aléatoire est ajouté à chaque nom) |
+| Quota illimité | Activé par défaut ; désactivez-le pour plafonner la consommation maximale de cette clé |
+| Paramètres avancés | Liste blanche d'IP (CIDR pris en charge), autoriser la consultation du quota utilisateur |
+
+- Pour le **groupe**, nous recommandons **claude** (1.5x) : il s'agit du pool de comptes officiel au prix plein Claude Max 20, avec des performances complètes. Pour utiliser un forfait mensuel Codex, sélectionnez obligatoirement `codex-sub-june`. Tous les groupes et multiplicateurs sont détaillés dans [Règles de facturation et groupes](/fr/billing-groups).
+- La **liste blanche d'IP** convient aux serveurs avec IP de sortie fixe ; méfiez-vous en développement local, car un changement d'IP bloquera vos appels.
+
+Cliquez sur **Enregistrer les modifications** pour terminer. Dans la liste des clés, cliquez sur **Copier** pour récupérer la clé API (format `sk-xxx`) :
+
+![Copier la clé API](/img/start/api-v2-07-token-copy.png)
+
+<Callout type="idea" title="Adresse API">
+  Cliquez sur **Adresse API** en haut à droite de la page pour voir les adresses d'accès. La console affiche `https://fishxcode.com` par défaut ; `https://api.fishxcode.com` fonctionne également. Les deux se comportent à l'identique — choisissez l'une ou l'autre.
 </Callout>
 
-### Recommandations de sécurité des tokens
+### 2. Recharger
 
-- **Rotation régulière** : renouvelez vos tokens tous les 30 à 90 jours afin de réduire les risques de fuite
-- **Pas de stockage en clair** : évitez d'inscrire votre clé API directement dans le code source ou de la committer dans un dépôt Git ; privilégiez les variables d'environnement
-- **Un token par projet** : créez un token indépendant pour chaque projet afin de faciliter la gestion et le suivi
-- **En cas de fuite** : si vous suspectez qu'un token a été compromis, supprimez-le immédiatement depuis la console et créez-en un nouveau
+Allez dans **Console → Portefeuille**. La page comporte deux onglets : **Recharge de solde** et **Forfaits d'abonnement** :
 
-### Modifier et supprimer des tokens
+![Recharge de solde du portefeuille](/img/start/api-v2-08-wallet.png)
 
-Depuis la page **Console → Gestion des tokens** :
+**Recharge de solde** : choisissez un montant prédéfini ($1 / $5 / $10 / $100 / $500 / $1,000 ; les gros montants bénéficient de 1 % à 3 % de remise) ou saisissez un montant personnalisé, puis choisissez un moyen de paiement :
 
-- **Consulter les détails** : cliquez sur le nom du token pour afficher le groupe, la portée des modèles et la date de création
-- **Copier le token** : cliquez sur le bouton de copie dans la liste
-- **Supprimer un token** : cliquez sur le bouton de suppression ; le token sera immédiatement invalidé et les outils qui l'utilisent ne pourront plus effectuer d'appels
+![Moyens de paiement et codes d'échange](/img/start/api-09-payment.png)
 
-<Callout type="warn" title="Attention">
-  La suppression est irréversible. Assurez-vous de ne plus utiliser le token avant de le supprimer.
+| Moyen | Description |
+| - | - |
+| Alipay | Moyen de recharge courant, sans minimum |
+| Waffo Pancake | Recharge minimale de $100 |
+| Code d'échange | Saisissez-le dans la zone « Vous avez un code d'échange ? » puis cliquez sur **Échanger contre du crédit** |
+
+**Forfaits d'abonnement** : achetez un forfait mensuel du pool de comptes Codex ($20 / $200 / $2,000 en trois paliers), puis créez vos clés avec le groupe `codex-sub-june` pour l'utiliser. Détails dans [Forfaits d'abonnement](/fr/subscription-plans) :
+
+![Onglet des forfaits d'abonnement](/img/start/api-10-subscription.png)
+
+<Callout type="idea" title="Avantage nouveaux utilisateurs">
+  Les comptes nouvellement inscrits reçoivent automatiquement un solde d'essai de **$0.2**, utilisable directement pour tester les appels API.
+</Callout>
+
+<Callout type="idea" title="Comprendre les multiplicateurs">
+  Le multiplicateur figurant dans le nom du groupe est le facteur de facturation : plus la valeur est petite, moins la même requête coûte. Par exemple, consommer 1 unité sur un groupe `0.5x` correspond au volume de tokens qui coûterait 2 unités au prix officiel. Détails dans [Règles de facturation et groupes](/fr/billing-groups).
 </Callout>
 
 ---
 
 ## 3. Sécurité du compte
 
-### Mot de passe et sécurité de connexion
+Allez dans **Console → Sécurité et accès** pour gérer les paramètres de sécurité de votre compte :
 
-- Utilisez un **mot de passe fort** (au moins 8 caractères, incluant majuscules, minuscules et chiffres)
-- N'utilisez pas le même mot de passe sur plusieurs plateformes
-- En cas d'oubli, utilisez la procédure de réinitialisation disponible sur la page de connexion
+![Page Sécurité et accès](/img/start/api-12-security.png)
 
-### Connexion tierce
-
-FishXCode prend en charge les méthodes de connexion tierces suivantes :
-
-| Méthode | Description |
+| Fonctionnalité | Description |
 | - | - |
-| **GitHub** | Recommandé pour les développeurs, connexion en un clic |
-| **LinuxDO** | Connexion directe pour les membres de la communauté |
+| Changer le mot de passe | Renouvelez-le régulièrement : 8 caractères minimum, avec majuscules, minuscules et chiffres |
+| Liaison de comptes | Après liaison de GitHub / LinuxDO / Google, connectez-vous en un clic via autorisation |
+| Sessions de connexion | Consultez les appareils connectés et déconnectez à distance les autres sessions |
+| Clé d'accès | Utilisée pour appeler l'API du tableau de bord ; créez-la en cochant les permissions voulues |
+| Connexion Passkey | Connexion sans mot de passe grâce à une clé d'accès |
+| Validation en deux étapes | Ajoute une couche de sécurité supplémentaire à votre compte |
 
-Après avoir lié un compte tiers, vous pouvez vous connecter directement via la plateforme correspondante, sans saisir de mot de passe.
+### Conseils de sécurité pour les clés
 
-### Détection d'anomalies et résolution
+- **Renouvelez régulièrement** : remplacez les clés tous les 30 à 90 jours pour réduire le risque de fuite
+- **Ne stockez jamais les clés en clair** : évitez d'écrire la clé API directement dans le code ou de la pousser dans Git ; utilisez des variables d'environnement
+- **Principe de moindre privilège** : créez des clés distinctes par projet pour faciliter la gestion et le suivi
+- **En cas de fuite** : si vous suspectez une fuite, supprimez immédiatement la clé sur la page **Clés API** et créez-en une nouvelle
 
-Si vous constatez l'une des situations suivantes, nous vous recommandons d'agir immédiatement :
-
-1. **Consommation anormalement élevée** → Vérifiez si un token a été compromis ; si nécessaire, supprimez tous les tokens et recréez-en de nouveaux
-2. **Impossibilité de se connecter** → Essayez la réinitialisation du mot de passe ; si le problème persiste, contactez le support
-3. **Déduction de solde anormale** → Consultez le journal d'utilisation pour vérifier les appels enregistrés et confirmer s'il s'agit d'une consommation normale
-
-<Callout type="idea" title="Contacter le support">
-  En cas d'anomalie sur votre compte, rendez-vous sur la page [Nous contacter](https://fishxcode.com/contact) pour obtenir de l'aide.
+<Callout type="warn" title="Attention">
+  La suppression d'une clé est irréversible. Une fois supprimée, la clé cesse de fonctionner immédiatement et les outils qui l'utilisent ne peuvent plus appeler.
 </Callout>
 
 ---
 
 ## 4. Questions fréquentes
 
-### Code de vérification non reçu ?
+### Vous ne recevez pas le code de vérification à l'inscription ?
 
-1. Vérifiez que l'adresse e-mail est correcte (orthographe et nom de domaine)
-2. Consultez votre dossier de courrier indésirable (spam)
-3. Patientez 1 à 2 minutes avant de réessayer ; évitez les demandes répétées
-4. Si le problème persiste, essayez une autre adresse e-mail ou utilisez la connexion tierce
+1. Vérifiez que le domaine de l'e-mail figure dans la liste prise en charge (qq.com / 126.com / 163.com / gmail.com)
+2. Consultez le dossier des indésirables / spams
+3. Attendez 1 à 2 minutes puis réessayez ; évitez les demandes trop fréquentes
+4. S'il n'arrive toujours pas, utilisez la connexion autorisée par GitHub / LinuxDO / Google
 
-### Où retrouver les tokens créés ?
+### Où retrouver ma clé API après sa création ?
 
-Rendez-vous dans **Console → Gestion des tokens**. Les tokens déjà créés apparaissent dans la liste. Cliquez sur le bouton de copie pour obtenir la clé API au format `sk-xxx`.
+Allez dans **Console → Clés API** ; les clés créées apparaissent dans la liste. Cliquez sur le bouton de copie pour récupérer la clé API au format `sk-xxx`.
 
-### Recharge non créditée ?
+### Que faire si la recharge n'arrive pas ?
 
-1. Vérifiez que le paiement a bien été effectué (consultez l'historique des transactions Alipay/WeChat)
-2. Patientez 1 à 5 minutes ; un léger délai est possible
-3. Actualisez la page du portefeuille dans la console
-4. Si le solde n'apparaît toujours pas après 10 minutes, contactez le support en fournissant une capture d'écran du paiement
+1. Vérifiez que le paiement a abouti (consultez l'historique des transactions d'Alipay ou de votre canal de paiement)
+2. Attendez 1 à 5 minutes ; le système peut avoir un léger délai
+3. Actualisez la page Portefeuille de la console
+4. Si rien n'est arrivé après 10 minutes, contactez-nous via [Contact](https://fishxcode.com/contact) en fournissant le justificatif de paiement
 
-### Comment consulter le détail des consommations ?
+### Comment consulter le détail de la consommation ?
 
-Rendez-vous dans **Console → Journal d'utilisation** pour consulter, pour chaque appel API :
+Allez dans **Console → Journaux d'utilisation** et retrouvez, pour chaque appel API :
 
-- La date/heure et le nom du modèle
-- La quantité de tokens consommés et le coût
-- L'adresse IP de la requête et les détails associés
+- L'heure de l'appel et le nom du modèle
+- La consommation de tokens et le coût
+- L'IP de la requête et les enregistrements détaillés
+
+D'autres types de journaux (audit, tâches) sont accessibles via la barre latérale.

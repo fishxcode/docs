@@ -14,7 +14,7 @@ navTitle: OpenClaw
 ## Предварительные условия
 
 - Установлен OpenClaw (см. раздел об установке ниже)
-- Получен API Key FishXCode ([получить в консоли](https://fishxcode.com/console/token))
+- Получен API Key FishXCode ([получить в консоли](https://fishxcode.com/keys))
 
 ## Основные возможности
 
@@ -160,7 +160,7 @@ New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
 ```
 
 <Callout type="warn" title="Важно">
-  - Замените `sk-your-fishxcode-token` на реальный токен, полученный в [консоли FishXCode](https://fishxcode.com/console/token)
+  - Замените `sk-your-fishxcode-token` на реальный токен, полученный в [консоли FishXCode](https://fishxcode.com/keys)
   - **Для протокола Anthropic не добавляйте `/v1` в `baseUrl`** — SDK сам допишет путь
 </Callout>
 

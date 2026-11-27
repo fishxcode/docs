@@ -1,145 +1,145 @@
 ---
-title: Billing Rules and Groups
-description: FishXCode's two billing methods, the 10 available groups and their multipliers, tips for choosing a group, and usage notes.
-navTitle: Billing Rules and Groups
+title: Billing Rules & Groups
+description: FishXCode's two billing methods, the 10 available groups and multipliers, group selection tips, and usage notes.
+navTitle: Billing Rules & Groups
 ---
 
-FishXCode is a one-stop platform for AI model access and account services, covering Claude, Codex, Kiro, Grok, Chinese models, and multimodal models. This page explains how billing works, which groups are available, how to choose one, and how to check your usage afterward.
+FishXCode is a one-stop platform for AI model access and account services, covering Claude, Codex, Kiro, Grok, Chinese models, and multimodal models. This page explains how billing works, which groups exist, how to choose one, and how to verify usage afterwards.
 
-<Callout type="idea" title="Live site information takes precedence">
-  Group multipliers, model availability, and resource status change as upstream resources are adjusted. The live information on the [pricing page](https://fishxcode.com/pricing) and in the console is final.
+<Callout type="idea" title="The site's real-time information prevails">
+  Group multipliers, model availability, and resource conditions change with upstream resources. The real-time information on the [pricing page](https://fishxcode.com/pricing) and in the console always prevails.
 </Callout>
 
-## 1. Two Billing Methods
+## 1. Two billing methods
 
-| Method | How you are charged | Best for |
+| Method | How it bills | Best for |
 | - | - | - |
-| Pay-as-you-go balance | The model price multiplied by the multiplier of the token's group, deducted from your account balance | Everyday calls, mixing models, quick tests |
-| Codex Pro Pool Monthly Pack | Calls use a token created in the `codex-sub-june` group, and actual token usage is deducted from the pack's credit | High-frequency Codex coding and agent development |
+| Pay-as-you-go balance | Model price × the multiplier of the key's group, deducted from your account balance | Daily calls, mixing models, quick tests |
+| Codex Pro account-pool monthly package | Call with a key created in the `codex-sub-june` group; actual token consumption is deducted from the package quota | High-frequency Codex coding and Agent development |
 
-For the monthly pack's prices, credit, and usage, see [Subscription Plans](/en/subscription-plans).
+For monthly package pricing, quotas, and usage, see [Subscription Plans](/en/subscription-plans).
 
-## 2. Available Groups
+## 2. Available groups
 
-A group determines which models an API key can call, which resource pool it uses, and the multiplier it is billed at. There are currently 10 groups available:
+A group determines which models an API Key can call, which resource pool it uses, and at what multiplier usage is billed. 10 groups are currently on sale:
 
-### Codex Series
+### Codex series
 
 | Group | Multiplier | Description |
 | - | - | - |
-| `codex-plus` | 0.2x | Pool of official full-price Codex Plus accounts. Low multiplier, stable and reliable, good for everyday calls |
-| `codex-pro` | 0.4x | Official full-price Codex Pro resources. Stable performance, suited to teams and enterprises |
-| `codex-team` | 0.15x | Shared pool of official Codex Team accounts. Low-multiplier shared resources |
-| `codex-officially` | 2x | Official OpenAI API key resources. Direct official connection, stable and reliable |
+| `codex-plus` | 0.2x | Codex Plus official full-price account pool; low multiplier, stable, suited to daily calls |
+| `codex-pro` | 0.4x | Codex Pro official full-price resources; stable performance, suited to teams and enterprises |
+| `codex-team` | 0.15x | Codex Team official shared account pool; low-multiplier shared resources |
+| `codex-officially` | 2x | OpenAI official API Key resources; direct official connection, stable and reliable |
 
-### Claude Series
-
-| Group | Multiplier | Description |
-| - | - | - |
-| `claude` | 1.5x | Pool of official full-price Claude Max 20 accounts. Full-strength performance with a stable direct connection |
-| `claudemax` | 2.6x | Claude Max 20 pool of thousands of accounts. High-speed access, read-only management, and manual traceability |
-
-### Other Models
+### Claude series
 
 | Group | Multiplier | Description |
 | - | - | - |
-| `kiro-svip` | 0.2x | Pool of official full-price Kiro accounts. Stable access at a low multiplier |
-| `china` | 0.8x | Collection of mainstream Chinese models, connected directly through official APIs |
-| `grok` | 0.5x | Dedicated group for xAI Grok models. Try Grok's capabilities at a low multiplier |
-| `fishxlab` | 2x | Audio, video, image, and other multimodal models for generation and creative work |
+| `claude` | 1.5x | Official full-price Claude Max 20 account pool; full performance with a stable direct connection |
+| `claudemax` | 2.6x | Claude Max 20 pool of thousands of accounts; high-speed access, read-only management, manual traceability supported |
 
-Check the site for other models and their exact availability.
+### Other models
 
-<Callout type="info" title="Monthly pack group">
-  `codex-sub-june` is the dedicated group for the Codex Pro Pool Monthly Pack. Its multiplier is fixed at 1x, it deducts only monthly pack credit, and it is not one of the pay-as-you-go groups listed above.
+| Group | Multiplier | Description |
+| - | - | - |
+| `kiro-svip` | 0.2x | Official full-price Kiro account pool; stable access, low multiplier |
+| `china` | 0.8x | Collection of mainstream Chinese models, official API direct connection |
+| `grok` | 0.5x | Dedicated group for xAI Grok models; experience Grok at a low multiplier |
+| `fishxlab` | 2x | Multimodal models for audio, video, and images, covering generation and creation scenarios |
+
+For other models and their exact availability, check the site.
+
+<Callout type="info" title="Monthly-package-only group">
+  `codex-sub-june` is the dedicated group for the Codex Pro account-pool monthly package. It is fixed at a 1x multiplier, deducts only from the package quota, and is not among the pay-as-you-go groups above.
 </Callout>
 
-## 3. How Multipliers Work
+## 3. How multipliers are calculated
 
-A multiplier is a factor applied on top of the model's base price. The lower the multiplier, the less the same request to the same model costs:
+The multiplier is a factor applied on top of a model's base price. The lower the multiplier, the less the same model and the same request cost:
 
 ```text
-Actual cost ≈ base model cost × group multiplier
+Actual usage ≈ model base usage × group multiplier
 ```
 
-| Base model cost | Group | Estimated deduction |
+| Model base usage | Group | Estimated deduction |
 | - | - | - |
 | 10 credits | `codex-team` (0.15x) | 1.5 credits |
 | 10 credits | `codex-plus` (0.2x) | 2 credits |
 | 10 credits | `claude` (1.5x) | 15 credits |
 | 10 credits | `claudemax` (2.6x) | 26 credits |
 
-The base model cost here is not a fixed value. It varies with input length, output length, cache hits, and the model's own price. Cached portions are usually cheaper.
+The model base usage here is not a fixed value: it varies with input length, output length, cache hits, and the model's own price. Cached portions are usually cheaper.
 
 <Callout type="warn" title="Don't judge by the multiplier alone">
-  The multiplier is not the whole price. Base prices, output multipliers, and cache multipliers vary widely between models, and image and video models may have fixed prices. When estimating costs, rely on the current prices on the pricing page or in the console's model list.
+  The multiplier is not the whole price. Base prices, output multipliers, and cache multipliers differ greatly between models; image and video models may even use flat pricing. When estimating costs, rely on the current prices on the pricing page or in the console's model list.
 </Callout>
 
-## 4. Choose the Right Group When Creating a Token
+## 4. Pick the right group when creating an API Key
 
-When you create a token in **Console -> Token Management**, the token group defines the key's available models, billing multiplier, and upstream resource pool, so make sure you choose the right one.
+When you create an API Key under **Console → API Keys**, the key's group defines the models it can call, the billing multiplier, and the upstream resource pool — make sure to choose it correctly.
 
-![Choosing a group when creating a token](/img/start/api-06-token-create.png)
+![Choosing a group when creating an API Key](/img/start/api-v2-06-token-create.png)
 
-Pay attention to these fields when creating a token:
+When creating an API Key, pay attention to:
 
-- **Token Group**: Determines which models this key can call and the multiplier it is billed at. For the Codex monthly pack, you must choose `codex-sub-june`.
-- **Quota**: Caps how much credit this key can consume. An unlimited quota does not mean free usage; the key is still limited by your account balance or monthly pack credit.
-- **Model Restriction List**: Restricting models is not recommended unless you explicitly want to allow only a few of them.
-- **IP Allowlist**: Suited to servers with a fixed egress IP. Use it with caution for personal local development, so calls don't fail after your IP changes.
+- **Group**: determines which models this key can call and at what multiplier usage is billed. When using a Codex monthly package you must select `codex-sub-june`.
+- **Quota settings**: cap how much this key may consume. Unlimited quota does not mean free — usage is still limited by your account balance or monthly package quota.
+- **Model restriction list**: avoid restricting unless you clearly want to allow only a few models.
+- **IP allowlist**: suits servers with a fixed outbound IP; use cautiously for personal local development to avoid broken calls after an IP change.
 
-Common symptoms of choosing the wrong group:
+Common symptoms of picking the wrong group:
 
-- The model appears in the model list, but calls with the current key return `model not found`, `model not available`, or a permission error.
-- The model can be called, but the billing multiplier or stability is not the tier you expected.
-- Monthly pack tokens and regular tokens get mixed up, so credit is charged to the wrong account or usage statistics become unclear.
+- The model shows up in the model list, but calls with the current key fail with `model not found`, `model not available`, or a permission error.
+- The model works, but the billed multiplier or the stability is not the tier you expected.
+- A monthly-package key and a regular key are mixed, sending quota to the wrong account or muddling the usage statistics.
 
-## 5. Group Recommendations
+## 5. Group selection tips
 
-| Scenario | Recommended | Notes |
+| Use case | Recommendation | Description |
 | - | - | - |
-| Everyday Codex coding | `codex-plus` (0.2x) | Suited to everyday development |
-| Low-multiplier Codex | `codex-team` (0.15x) | For users who are fine with a shared resource pool |
-| High-frequency Codex / agent development | Codex Pro Pool Monthly Pack | Choose the $200 or $2,000 credit pack based on your actual usage |
+| Daily Codex coding | `codex-plus` (0.2x) | Suited to everyday code development |
+| Low-multiplier Codex | `codex-team` (0.15x) | For users who accept a shared resource pool |
+| High-frequency Codex / Agent development | Codex Pro account-pool monthly package | Choose the $200 or $2,000 quota monthly package based on actual usage |
 | Claude coding and long tasks | `claude` (1.5x) | For heavy use, consider `claudemax` (2.6x) |
-| Kiro | `kiro-svip` (0.2x) | Pool of official full-price Kiro accounts |
-| Chinese models | `china` (0.8x) | Direct connection through official APIs |
-| Grok models | `grok` (0.5x) | Dedicated xAI Grok group |
-| Image, video, and audio generation | `fishxlab` (2x) | Check the site for exact models and pricing |
-| Splitting by team member or project | Create a separate token for each member or project | Easier quota control, cost allocation, and log troubleshooting |
+| Kiro | `kiro-svip` (0.2x) | Official full-price Kiro account pool |
+| Chinese models | `china` (0.8x) | Official API direct connection |
+| Grok models | `grok` (0.5x) | Dedicated group for xAI Grok |
+| Image, video, and audio generation | `fishxlab` (2x) | Exact models and billing per the site |
+| Team or project separation | Create separate API Keys per member or project | Easier quota control, cost allocation, and log troubleshooting |
 
-## 6. Check Actual Usage After Calls
+## 6. Verify actual usage afterwards
 
-After making calls, check your actual usage against the records in **Console -> Usage Logs**. For teams, also use [Group Health Status](/en/group-health) to tell whether an issue lies with a single key, a single member, or an entire group.
+After making calls, verify actual consumption against the records in **Console → Usage Logs**. In team scenarios, combine [Group Health Status](/en/group-health) to tell whether the issue is one key, one member, or the whole group.
 
 ![Group health status example](/img/plans/statistics.png)
 
-| Question | Fields to check |
+| Question | Which fields to look at |
 | - | - |
-| Which group costs the most | Group, Cost, Requests |
-| Whether only one member is affected | User / token detail rows |
-| Whether caching is working | Cache Hit Rate, Cache Tokens, Cache Request Share |
-| Whether the resource pool is the problem | Group success rate, Errors, Failure Reason |
-| Whether long context or large output is driving up costs | Cost per successful request, Avg Latency, Cache Tokens |
+| Which group consumed the most | Group, consumption, request count |
+| Is only one member abnormal | User / key detail rows |
+| Did the cache take effect | Cache hit rate, cached tokens, share of cached requests |
+| Is it a resource-pool issue | Group success rate, error count, failure reasons |
+| Is the high cost due to long context or large outputs | Per-success consumption, average duration, cached tokens |
 
-## 7. Usage Notes
+## 7. Usage notes
 
-1. Different groups map to different resource pools, so choose based on your use case.
-2. For the Codex monthly pack, you must create tokens in the `codex-sub-june` group. Other groups cannot use the pack's credit.
-3. The monthly pack is not unlimited. Once the credit runs out or the plan expires, you can no longer use it.
-4. For long Claude conversations, make good use of context caching. Actual cache hits depend on your client configuration, the model, and the interval between requests.
-5. Group multipliers, model availability, and resource status are subject to the live information on the site.
+1. Different groups map to different resource pools — choose by use case.
+2. The Codex monthly package requires an API Key created with the `codex-sub-june` group; no other group can use that plan's quota.
+3. The monthly package is not unlimited. Once the quota is exhausted or the plan expires, it can no longer be used.
+4. For long Claude conversations, make good use of context caching. Actual cache hits depend on client configuration, the model, and request intervals.
+5. Group multipliers, model availability, and resource conditions are subject to the site's real-time information.
 
-## 8. Troubleshooting Billing or Permission Issues
+## 8. Troubleshooting usage or permission issues
 
-If you notice unexpected charges or a model is unavailable, troubleshoot in this order:
+When consumption looks wrong or a model is unavailable, troubleshoot in this order:
 
-1. Confirm that the group bound to the current key includes the target model.
-2. Check your account balance, or confirm that the monthly pack is still valid and has enough credit left.
-3. Open **Console -> Usage Logs** and filter by time, model, token, group, and request ID.
-4. Compare with [Group Health Status](/en/group-health) to tell whether the issue is with a single token or with the group's resource pool.
-5. If you still can't tell, contact support with the order number, token name, group, model name, request time, and request ID.
+1. Confirm the group bound to the current key includes the target model.
+2. Confirm your account balance, or that the monthly package is still valid with quota remaining.
+3. Check **Console → Usage Logs**, filtering by time, model, key, group, or request ID.
+4. Compare [Group Health Status](/en/group-health) to tell whether it is a single-key issue or a group resource-pool issue.
+5. If it is still unclear, contact support with the order number, key name, group, model name, request time, and request ID.
 
-## 9. Enterprise Purchasing and Partnerships
+## 9. Enterprise procurement and partnership
 
-For enterprise bulk usage, team onboarding, model procurement, and custom requirements, contact us through the [dedicated enterprise site](https://enterprise.fishxcode.com/).
+For enterprise bulk usage, team onboarding, model procurement, and custom requirements, inquire via the [enterprise site](https://enterprise.fishxcode.com/).

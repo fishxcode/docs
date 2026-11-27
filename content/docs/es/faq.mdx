@@ -4,164 +4,182 @@ title: Preguntas frecuentes
 
 ## General
 
-### Que es FishXCode?
+### ¿Qué es FishXCode?
 
-FishXCode es una plataforma integral de acceso a modelos de IA y gestión de cuentas: Claude, Codex, Kiro, Grok, modelos chinos y multimodales, que puedes usar en muchas herramientas y plataformas.
+FishXCode es una plataforma integral de acceso a modelos de IA y servicios de cuentas que cubre Claude, Codex, Kiro, Grok, modelos nacionales y multimodales, utilizable en multitud de herramientas y plataformas.
 
-### Que herramientas son compatibles?
+### ¿Qué herramientas admite?
 
-Herramientas disponibles actualmente:
+Actualmente se admiten estas herramientas:
 
-- **Claude Code** — CLI oficial de Anthropic
-- **OpenAI Codex** — Asistente de programacion de OpenAI
-- **RooCode** — Extension de IA para VS Code
-- **Qwen Code** — Herramienta de programacion basada en Qwen de Alibaba
-- **Droid CLI** — CLI ligero para programacion con IA
-- **OpenCode** — Herramienta terminal de codigo abierto para programacion con IA
+- **Claude Code** — la CLI oficial de Anthropic
+- **OpenAI Codex** — el asistente de programación oficial de OpenAI
+- **RooCode** — extensión de programación con IA para VS Code
+- **Qwen Code** — herramienta de programación de Alibaba Tongyi Qianwen
+- **Droid CLI** — CLI ligera de programación con IA
+- **OpenCode** — herramienta de terminal de programación con IA de código abierto
 
-### Como se protegen mis datos?
+### ¿Cómo se protege la privacidad de los datos?
 
-FishXCode funciona unicamente como un servicio de retransmision de API. Tu codigo y tus conversaciones no se almacenan en nuestros servidores. Todas las solicitudes se envian directamente a los proveedores de modelos correspondientes.
+FishXCode actúa solo como intermediario de la API y no almacena tu código ni el contenido de las conversaciones. Todas las solicitudes se reenvían directamente al proveedor del modelo correspondiente.
 
-<Callout type="idea" title="Recomendacion">
-  Para proyectos sensibles, te sugerimos revisar la politica de privacidad de cada proveedor de modelos antes de usar el servicio.
+<Callout type="idea" title="Recomendación">
+  Para proyectos sensibles, lee la política de privacidad de cada proveedor de modelos antes de usarlos.
 </Callout>
 
-## Cuenta y Token
+## Cuentas y API Keys
 
-### Como me registro?
+### ¿Cómo me registro?
 
-Visita [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW) y sigue las instrucciones para crear tu cuenta.
+Visita [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW), rellena nombre de usuario, contraseña y correo, e introduce el código de verificación enviado a tu correo para completar el registro. También puedes iniciar sesión directamente con la autorización de GitHub / LinuxDO / Google (la primera autorización crea la cuenta automáticamente).
 
-### Como obtengo un token de API?
-
-Despues de iniciar sesion, ve a la [pagina de gestion de tokens](https://fishxcode.com/console/token) en la consola para generar un nuevo token.
-
-### Cuanto dura un token?
-
-Los tokens permanecen activos hasta que los elimines o regeneres manualmente. Te recomendamos rotarlos periodicamente por seguridad.
-
-### Cuales son los limites de la cuota de uso?
-
-Cada usuario recibe una cuota de uso. La cantidad exacta se ajusta dinamicamente segun los recursos de la plataforma. Consulta tu consola para ver el consumo actual.
-
-<Callout type="warn" title="Aviso">
-  Cuando se agote tu cuota, las solicitudes seran rechazadas. Planifica tu uso de forma adecuada.
+<Callout type="idea" title="Dominios de correo admitidos">
+  El registro por correo admite actualmente cuatro dominios: **qq.com, 126.com, 163.com, gmail.com**.
 </Callout>
 
-## Configuracion de herramientas
+### ¿Cómo obtengo una API Key?
 
-### Mis variables de entorno no funcionan
+Tras registrarte, inicia sesión en la consola y ve a la [página de Claves API](https://fishxcode.com/keys) para crear una nueva API Key.
 
-Revisa estos problemas habituales:
+### ¿Qué métodos de recarga hay?
 
-1. **Terminal sin reiniciar** — Tras editar `.bashrc` / `.zshrc`, ejecuta `source ~/.bashrc` o abre una nueva terminal
-2. **Error en el nombre de la variable** — Los nombres distinguen entre mayusculas y minusculas: `ANTHROPIC_BASE_URL` no es lo mismo que `Anthropic_Base_Url`
-3. **Espacios o comillas de mas** — Asegurate de no incluir espacios extra en `export KEY="value"`
+Ve a **Consola → Monedero** para recargar. Se admiten:
+
+- **Alipay**: el método habitual, sin importe mínimo
+- **Waffo Pancake**: recarga mínima de $100
+- **Código de canje**: introdúcelo en la zona de canje de la página del monedero
+
+Los usuarios intensivos de Codex también pueden comprar directamente un paquete mensual del pool de cuentas (pestaña Planes de suscripción); ver [Planes de suscripción](/es/subscription-plans).
+
+### ¿Cuánto dura una API Key?
+
+Una API Key sigue siendo válida hasta que la elimines o la regeneres. Rótala periódicamente por seguridad.
+
+### ¿Cuál es mi cuota de uso?
+
+FishXCode otorga a cada usuario una cuota de uso, ajustada dinámicamente según los recursos de la plataforma. Presta atención a la información de uso en la consola.
+
+<Callout type="warn" title="Atención">
+  Las solicitudes se rechazan una vez agotada la cuota; planifica tu uso en consecuencia.
+</Callout>
+
+## Configuración de herramientas
+
+### Las variables de entorno no surten efecto
+
+Comprueba estas causas habituales:
+
+1. **Terminal no reiniciada** — tras editar `.bashrc` / `.zshrc`, ejecuta `source ~/.bashrc` o abre una terminal nueva
+2. **Nombre de variable mal escrito** — se distinguen mayúsculas y minúsculas; `ANTHROPIC_BASE_URL` no puede escribirse como `Anthropic_Base_Url`
+3. **Comillas o espacios de más** — en `export KEY="value"` no dejes espacios sobrantes alrededor del valor
 
 <Accordions type="single">
-  <Accordion title="Comandos de diagnostico rapido">
+  <Accordion title="Comandos de comprobación rápida">
     ```bash
-    # Verificar que las variables estan definidas
+    # Comprobar si las variables están establecidas
     echo $ANTHROPIC_BASE_URL
     echo $ANTHROPIC_AUTH_TOKEN
 
-    # Si la salida esta vacia, la variable no esta configurada
+    # Si la salida está vacía, las variables no están en vigor
     ```
   </Accordion>
 </Accordions>
 
-### Donde estan los archivos de configuracion?
+### ¿Dónde están los archivos de configuración?
 
-| Herramienta | Ubicacion |
+| Herramienta | Ruta del archivo de configuración |
 | - | - |
-| Claude Code | Variables de entorno |
+| Claude Code | Configuración por variables de entorno |
 | Codex | `~/.codex/config.toml` y `~/.codex/auth.json` |
-| RooCode | Configuracion JSON de VS Code |
-| Qwen Code | Variables de entorno |
+| RooCode | JSON de ajustes de VS Code |
+| Qwen Code | Configuración por variables de entorno |
 
-### No puedo conectarme a FishXCode
+### ¿No puedo conectar con FishXCode?
 
-1. Confirma que `BASE_URL` este configurado como `https://api.fishxcode.com/` (ojo con la `/` al final)
-2. Verifica que `fishxcode.com` sea accesible desde tu red
-3. Si estas detras de un proxy corporativo, revisa la configuracion del proxy
+1. Confirma que `BASE_URL` es `https://api.fishxcode.com/` o `https://fishxcode.com/` (ambas valen y se comportan igual)
+2. Comprueba que tu red alcanza `fishxcode.com`
+3. En una red corporativa, revisa que la configuración del proxy es correcta
 
-## Seleccion de modelo
+## Selección de modelos
 
-### Como elijo el modelo adecuado?
+### ¿Cómo elegir el modelo adecuado?
 
-Elige segun tu caso de uso:
+Elige según el caso de uso:
 
-| Caso de uso | Modelo recomendado | Motivo |
+| Caso de uso | Modelo recomendado | Por qué |
 | - | - | - |
-| Programacion diaria | `claude-fable-5-2` | Buen equilibrio entre capacidad y velocidad |
-| Completados rapidos | `claude-haiku-5-5` | Tiempos de respuesta cortos |
-| Arquitectura compleja | `claude-fable-5-2` | Gran capacidad de razonamiento |
+| Programación diaria | `claude-fable-5-2` | Equilibrio entre capacidad y velocidad |
+| Autocompletado rápido | `claude-haiku-5-5` | Respuesta rápida |
+| Arquitectura compleja | `claude-fable-5-2` | Mayor capacidad de razonamiento |
 
-### Cuales son las diferencias entre los modelos?
+### ¿Qué diferencias hay entre los modelos?
 
-- **Serie Sonnet** — Versatil, ideal para la mayoria de tareas de programacion
-- **Serie Haiku** — Ligera y rapida, pensada para completados simples y formateo
-- Para comparaciones detalladas, consulta la documentacion oficial de cada proveedor
+- **Serie Sonnet**: capacidades completas, adecuada para la mayoría de tareas de programación
+- **Serie Haiku**: ligera y rápida, adecuada para autocompletados simples y formateo
+- Para las diferencias detalladas de cada modelo, consulta la documentación oficial de cada proveedor
 
-### Como cambio de modelo?
+### ¿Cómo cambio de modelo?
 
-Configura la variable de entorno `ANTHROPIC_MODEL`:
+Especifícalo con la variable de entorno `ANTHROPIC_MODEL`:
 
 ```bash
 export ANTHROPIC_MODEL=claude-fable-5-2
 ```
 
-## Solucion de problemas
+## Resolución de problemas
 
-### Error de autenticacion (Auth Error)
+### Error de autenticación (Auth Error)
 
-<Callout type="warn" title="Causas comunes">
-  - El token contiene espacios extra o esta incompleto
-  - El token fue eliminado o regenerado
-  - `API_KEY` y `AUTH_TOKEN` deben estar configurados a la vez
+<Callout type="warn" title="Causas habituales">
+  - La clave se introdujo mal (espacios de más o incompleta)
+  - La clave fue eliminada o regenerada
+  - `API_KEY` y `AUTH_TOKEN` no están establecidas a la vez
 </Callout>
 
-Solucion: Ve a la [consola](https://fishxcode.com/console/token), verifica el estado de tu token y copialo de nuevo.
+Solución: ve a la [página de Claves API](https://fishxcode.com/keys), comprueba el estado de la clave y cópiala y pégala de nuevo.
 
-### Como leer los registros de error?
+### ¿Cómo ver y entender los registros de errores?
 
-Ve a [Consola -> Registros de uso](https://fishxcode.com/console/log), cambia el tipo a **Registros de error** y filtra por periodo, modelo, token, grupo, request ID, mensaje de error o codigo de estado.
+Ve a [Consola → Registros de uso](https://fishxcode.com/usage-logs/common) y cambia el tipo de registro a **Registros de errores**. Puedes filtrar por hora, modelo, clave, grupo, ID de solicitud, mensaje de error y código de estado.
 
-<Callout type="idea" title="Consejos de diagnostico">
-  - Copia primero el `request_id` desde la respuesta API o el registro y busca exactamente esa solicitud
-  - Usa el filtro de mensaje de error para buscar palabras clave en `content`, como `Invalid token` o `Upstream request failed`
-  - Usa el codigo de estado para agrupar problemas rapidamente, como `401`, `429`, `502`, `503` o `524`
+<Callout type="idea" title="Consejos de diagnóstico">
+  - Copia primero el `request_id` de la respuesta de la API o del registro y búscalo con precisión en Registros de uso para encontrar la misma solicitud
+  - Busca palabras clave de `content` con «Mensaje de error», por ejemplo `Invalid token`, `Upstream request failed`
+  - Agrega rápidamente los tipos de problema por «Código de estado», por ejemplo `400`, `401`, `403`, `413`, `429`, `500`, `502`, `503`, `504`
+  - Si el mismo error se concentra en un grupo, valora primero por el grupo si se trata de un problema de configuración, de uso o de disponibilidad del upstream
 </Callout>
 
-Para ver campos completos, codigos de estado y mensajes frecuentes, consulta la [guia de registros de error](/es/error-logs).
+Para la descripción completa de campos, la clasificación de códigos de estado y la tabla de errores habituales, consulta [Guía de registros de errores](/es/error-logs).
 
-### Como leer el estado de salud de los grupos?
+### ¿Cómo interpretar el estado de salud de los grupos?
 
-El estado de salud de los grupos ayuda a saber si el problema es una solicitud aislada o si se concentra en un paquete, modelo o grupo upstream. Revisa primero `success_rate`, `error_count` y `error_reasons`; despues usa el `request_id` del registro individual para cerrar el diagnostico.
+El estado de salud de los grupos sirve para saber si un problema es una anomalía puntual de alguna solicitud o un fallo concentrado de un plan, modelo o grupo del upstream. Mira primero `success_rate`, `error_count` y `error_reasons`, y usa después el `request_id` de los registros individuales para localizar solicitudes concretas.
 
-La pagina completa, los campos y el flujo de diagnostico estan en [Estado de salud de los grupos](/es/group-health).
+Para la página completa de estados, la descripción de campos y el flujo de diagnóstico, consulta [Estado de salud de los grupos](/es/group-health).
 
 ### Tiempo de espera agotado (Timeout)
 
-Posibles causas:
+Causas posibles:
 
-1. Alta latencia de red
-2. Contexto de entrada muy grande que requiere mayor tiempo de procesamiento
-3. El servicio esta bajo carga elevada
+1. Latencia de red elevada
+2. Contexto de la solicitud muy largo, y el modelo tarda más en procesarlo
+3. Carga del servicio elevada en este momento
 
-Intenta reducir el contexto de entrada o vuelve a intentarlo en unos minutos.
+Sugerencias: reduce el contexto de entrada o reintenta más tarde.
 
-### Limite de frecuencia alcanzado (429)
+### Límite de frecuencia o de cuota alcanzado (Rate Limit)
 
-Un codigo `429` indica que estas enviando solicitudes con demasiada frecuencia.
+Un código de estado `429` suele indicar solicitudes demasiado frecuentes. También puede indicar que la cuota diaria de una cuenta del upstream se agotó, o que la credencial del modelo actual está enfriándose.
 
-<Callout type="idea" title="Como solucionarlo">
-  - Reduce la frecuencia y espera unos segundos entre solicitudes
-  - Evita llamar a la API en bucles sin pausas
-  - Asegurate de que ningun otro proceso este usando el mismo token al mismo tiempo
+<Callout type="idea" title="Cómo actuar">
+  - Reduce la frecuencia de solicitudes y reintenta tras unos segundos
+  - Evita llamar a la API en bucles sin pausas dentro de scripts
+  - Comprueba si otro proceso está usando la misma clave al mismo tiempo
+  - Si el registro contiene `Max 10/min` o `Max 5/min`, reduce la concurrencia y las solicitudes por minuto por debajo del umbral indicado
+  - Si el registro contiene `daily limit exceeded`, espera a que la cuota diaria se restablezca o cambia a otro modelo/grupo disponible
+  - Si el registro contiene `cooling down`, no reintentes de inmediato en cadena; espera a que termine el enfriamiento o cambia de modelo temporalmente
 </Callout>
 
-### Modelo no disponible
+### Modelo no disponible (Model Not Available)
 
-Verifica que el nombre del modelo sea correcto. Consulta la lista de modelos recomendados en [Comenzar](/es/start). Algunos modelos pueden no estar disponibles aun en FishXCode.
+Comprueba que el nombre del modelo es correcto; consulta la lista de modelos recomendados en [Inicio rápido](/es/start). Algunos modelos pueden no estar disponibles aún en FishXCode.

@@ -14,7 +14,7 @@ navTitle: OpenClaw
 ## 前提条件
 
 - 已安装 OpenClaw（参考下方安装章节）
-- 已获取 FishXCode API Key（[控制台获取](https://fishxcode.com/console/token)）
+- 已获取 FishXCode API Key（[控制台获取](https://fishxcode.com/keys)）
 
 ## 核心特性
 
@@ -160,7 +160,7 @@ New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
 ```
 
 <Callout type="warn" title="重要">
-  - 请将 `sk-你的FishXCode-Token` 替换为你在 [FishXCode 控制台](https://fishxcode.com/console/token) 获取的实际 Token
+  - 请将 `sk-你的FishXCode-Token` 替换为你在 [FishXCode 控制台](https://fishxcode.com/keys) 获取的实际 Token
   - **Anthropic 协议的 `baseUrl` 不要带 `/v1`**，SDK 会自动拼接路径
 </Callout>
 

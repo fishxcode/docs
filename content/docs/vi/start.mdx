@@ -1,39 +1,39 @@
 ---
-title: Dùng FishXCode trong Claude Code
-description: Quy trình bắt đầu đầy đủ và các bước cấu hình chính để kết nối Claude Code với FishXCode.
+title: Sử dụng FishXCode với Claude Code
+description: Quy trình làm quen đầy đủ khi kết nối FishXCode bằng Claude Code và các bước cấu hình quan trọng.
 navTitle: Claude Code
 ---
 
-> Lần đầu sử dụng? Hãy hoàn tất [đăng ký tài khoản và nạp tiền](/vi/account) trước.
+> Lần đầu sử dụng? Hãy hoàn tất [Đăng ký tài khoản và nạp tiền](/vi/account) trước.
 
 ## 1. Chuẩn bị môi trường
 
 ### Cài đặt Node.js
 
-Claude  Code được cài qua npm, nên trước tiên hãy đảm bảo Node.js đã sẵn sàng.
+Claude  Code được cài qua npm, nên trước tiên hãy xác nhận Node.js đã sẵn sàng.
 
-```bash tab="macOS - Kiểm tra"
+```bash tab="macOS — kiểm tra"
 node -v
 npm -v
 ```
 
-```bash tab="macOS - Cài bằng Homebrew"
+```bash tab="macOS — cài bằng Homebrew"
 brew install node
 ```
 
-```bash tab="Windows - Kiểm tra (CMD/PowerShell)"
+```bash tab="Windows — kiểm tra (CMD/PowerShell)"
 node -v
 npm -v
 ```
 
-Nếu chưa cài, hãy truy cập [nodejs.org/en/download](https://nodejs.org/en/download/current/) để tải gói cài đặt cho nền tảng của bạn. Sau khi cài xong, **Windows cần khởi động lại máy**.
+Nếu chưa cài, hãy tải gói cài cho nền tảng của bạn tại [nodejs.org/zh-cn/download](https://nodejs.cn/download/current/); sau khi cài xong **Windows cần khởi động lại**.
 
 ### Riêng Windows: cài Git Bash
 
-Claude  Code cần môi trường bash để chạy, người dùng Windows phải cài Git Bash:
+Claude  Code phụ thuộc môi trường chạy bash, nên người dùng Windows cần cài Git Bash:
 
-1. Địa chỉ tải: [git-scm.com/install/windows](https://git-scm.com/install), chọn phiên bản phù hợp để cài.
-2. Kiểm tra: nhấp chuột phải trên màn hình desktop, nếu thấy tùy chọn **Open Git Bash here** là đã cài thành công.
+1. Tải tại: [git-scm.com/install/windows](https://git-scm.com/install), chọn phiên bản phù hợp để cài.
+2. Kiểm tra: nhấp chuột phải trên desktop, nếu xuất hiện tùy chọn **Open Git Bash here** là cài thành công.
 
 ---
 
@@ -47,77 +47,80 @@ npx zcf
 
 ## 3. Cấu hình FishXCode
 
-1. Trong terminal, nhập `npx zcf` rồi nhấn Enter.
-   Khi xuất hiện `Ok to proceed? (y)`, nhập `y` rồi nhấn Enter.
+1. Nhập `npx zcf` trong terminal rồi nhấn Enter để chạy.
+   Khi hiện `Ok to proceed? (y)`, nhập `y` và nhấn Enter.
 
 2. Chọn ngôn ngữ hiển thị của ZCF:
-   Chọn **English**.
+   chọn **简体中文**.
 
 3. Sau khi cài xong, chọn:
-   `1. Full Init - Install Claude Code + Import Workflows + Configure API or CCR Proxy + Configure MCP Services`
+   `1. 完整初始化 - 安装 Claude Code + 导入工作流 + 配置 API 或 CCR 代理 + 配置 MCP 服务`
 
-4. Có sửa cấu hình ngôn ngữ của mẫu không:
-   Chọn `No`
+4. Có sửa cấu hình ngôn ngữ mẫu không:
+   chọn `No`
 
-5. Ngôn ngữ đầu ra của AI:
-   Chọn `English`
+5. Ngôn ngữ xuất của AI:
+   chọn `简体中文`
 
 6. Có cài Claude không:
-   Chọn `Yes`
+   chọn `Yes`
 
 7. Chế độ cấu hình API:
-   Chọn `Custom API Configuration`
+   chọn `自定义 API 配置`
 
 8. Nhà cung cấp API:
-   Chọn `Custom Configuration`
+   chọn `自定义配置`
 
 9. Tên cấu hình:
-   Tự đặt một tên bằng tiếng Anh
+   đặt tên tiếng Anh tùy ý
 
-10. Kiểu xác thực:
-    Chọn `API Key`
+10. Loại xác thực:
+    chọn `API Key`
 
-11. URL gốc của API:
+11. URL cơ sở của API:
     ```
     https://api.fishxcode.com
     ```
+    <Callout type="idea" title="Địa chỉ kết nối">
+      Cả `https://api.fishxcode.com` và `https://fishxcode.com` đều dùng làm địa chỉ kết nối được, hai địa chỉ hoạt động như nhau, chọn địa chỉ nào cũng được.
+    </Callout>
 
 12. API Key:
-    Điền token được tạo trong bảng điều khiển FishXCode
+    điền API Key đã tạo trong bảng điều khiển FishXCode (Bảng điều khiển → API Keys / API 密钥)
 
 13. Cấu hình liên quan đến mô hình:
-    Nhấn Enter để bỏ qua với giá trị mặc định
+    chỉ cần nhấn Enter để bỏ qua với mặc định
 
 14. Loại quy trình làm việc:
-    Chọn `General Tools`
+    chọn `通用工具`
 
-15. Phong cách đầu ra:
-    Chọn theo sở thích cá nhân
+15. Phong cách xuất nội dung:
+    chọn theo sở thích cá nhân
 
 16. Có cấu hình MCP không:
-    Chọn `Yes`
+    chọn `Yes`
 
 17. Dịch vụ MCP:
-    Dùng phím Space để chọn các dịch vụ cần thiết, rồi nhấn Enter để chạy
+    dùng phím cách để chọn dịch vụ cần dùng, nhấn Enter để chạy
 
 18. Cấu hình CCometixLine:
-    Nhấn Enter luôn
+    nhấn Enter luôn
 
-19. Khi quay về menu chính, nhập:
+19. Quay lại menu chính, nhập:
     ```
     q
     ```
 
-20. Trong terminal, nhập:
+20. Nhập trong terminal:
     ```
     claude
     ```
-    - Chọn `Yes, I trust this folder`
-    - Ở bước chọn API, nhất định phải chọn **YES (tùy chọn đầu tiên)**
+    - chọn `Yes, I trust this folder`
+    - ở bước chọn API, bắt buộc chọn **YES (tùy chọn đầu tiên)**
 
 ---
 
-## 4. Khởi động và sử dụng
+## 4. Khởi động sử dụng
 
 ```bash
 cd my-project
@@ -128,15 +131,15 @@ claude
 
 ## 5. Chuyển đổi mô hình
 
-Trong giao diện hội thoại của Claude  Code, nhập `/model` để chuyển mô hình:
+Nhập `/model` trong giao diện hội thoại của Claude  Code là có thể chuyển mô hình:
 
 | Tùy chọn | Mô hình thực tế | Mô tả |
 | - | - | - |
-| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Tự động chọn theo tác vụ, khuyên dùng hằng ngày |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Tự chọn theo tác vụ, khuyến nghị dùng hằng ngày |
 | **Opus** | `claude-opus-5-5` | Khả năng suy luận mạnh nhất, tiêu hao cao hơn |
 | **Haiku** | `claude-haiku-5-5` | Nhẹ và nhanh |
 
-Bạn cũng có thể cố định mô hình qua biến môi trường:
+Cũng có thể cố định mô hình bằng biến môi trường:
 
 ```bash tab="macOS/Linux"
 export ANTHROPIC_MODEL=claude-fable-5-2
@@ -162,47 +165,51 @@ claude
 
 ### IntelliJ IDEA
 
-Đường dẫn thao tác: File → Settings → Plugins → Marketplace → tìm `claude code`, chọn **Claude  Code Terminal** và cài đặt:
+Đường dẫn thao tác: File → Settings → Plugins → Marketplace → tìm `claude code`, tìm thấy **Claude  Code Terminal** rồi cài:
 
-![Cài đặt Claude  Code Terminal](/img/start/idea-01-install.png)
+![Cài Claude  Code Terminal](/img/start/idea-01-install.png)
 
-Sau khi cài xong, khởi động lại IDEA và kiểm tra plugin đã được tải:
+Sau khi cài xong, khởi động lại IDEA và xác nhận plugin đã được nạp:
 
-![Kiểm tra plugin đã được tải](/img/start/idea-02-verify.png)
+![Xác nhận plugin đã nạp](/img/start/idea-02-verify.png)
 
 <Callout type="info">
-  Nếu không tìm thấy plugin trong Marketplace, nghĩa là phiên bản IDEA hiện tại quá cũ, bạn cần nâng cấp lên phiên bản mới nhất.
+  Nếu không tìm thấy trong chợ plugin, nghĩa là phiên bản IDEA hiện tại đã quá cũ, cần nâng cấp lên phiên bản mới nhất.
 </Callout>
 
 ### VSCode
 
-Nhấn `Ctrl + Shift + X` để mở bảng Extensions, tìm `claude code`, chọn **Claude  Code for VSCode** để cài đặt.
+Nhấn `Ctrl + Shift + X` để mở bảng tiện ích mở rộng, tìm `claude code`, tìm thấy **Claude  Code for VSCode** rồi cài.
 
-![Tìm và cài plugin Claude  Code](/img/start/vscode-01-install.png)
+![Tìm và cài tiện ích Claude  Code](/img/start/vscode-01-install.png)
 
-Sau khi cài xong, plugin cung cấp ba cách kết nối:
+Sau khi cài xong, tiện ích cung cấp ba cách kết nối:
 
-![Các cách kết nối của plugin Claude  Code](/img/start/vscode-02-login.png)
+![Ba cách kết nối của tiện ích Claude  Code](/img/start/vscode-02-login.png)
 
-Nên kết nối FishXCode qua cấu hình `settings.json`. Nhấn **biểu tượng bánh răng** ở góc dưới bên phải của plugin → **Edit in settings.json**:
+Khuyến nghị cấu hình kết nối FishXCode qua `settings.json`. Nhấn **biểu tượng bánh răng** ở góc dưới bên phải tiện ích → **Edit in settings.json** (在 settings.json 中编辑):
 
 ![Mở settings.json để chỉnh sửa](/img/start/vscode-03-settings.png)
 
-Thêm đoạn sau vào `settings.json` của VSCode:
+Thêm vào `settings.json` của VSCode:
 
 ```json
 {
   "claudeCode.preferredLocation": "panel",
   "claudeCode.environmentVariables": [
-    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "thay bằng API Key của bạn" },
+    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "替换为您的 API Key" },
     { "name": "ANTHROPIC_BASE_URL", "value": "https://api.fishxcode.com/" }
   ]
 }
 ```
 
+<Callout type="idea" title="Địa chỉ kết nối">
+  Trong `ANTHROPIC_BASE_URL` cũng có thể điền `https://fishxcode.com/`, hai địa chỉ hoạt động như nhau, chọn địa chỉ nào cũng được.
+</Callout>
+
 ![Ví dụ cấu hình settings.json](/img/start/vscode-04-config.png)
 
-Sau khi lưu, hãy **thoát rồi mở lại VSCode**, plugin sẽ kết nối FishXCode bình thường.
+Sau khi lưu, **thoát và mở lại VSCode**, tiện ích sẽ kết nối FishXCode bình thường.
 
 ![Dùng Claude  Code trong VSCode](/img/start/vscode-05-demo.gif)
 
@@ -210,22 +217,22 @@ Sau khi lưu, hãy **thoát rồi mở lại VSCode**, plugin sẽ kết nối F
 
 ## 7. Câu hỏi thường gặp
 
-### Gặp lỗi 403
+### Xuất hiện lỗi 403
 
-Số dư token không đủ, hãy vào bảng điều khiển nạp tiền rồi thử lại.
+Số dư token không đủ; hãy nạp tiền trong bảng điều khiển rồi thử lại.
 
-### Windows gặp lỗi kết nối hoặc lỗi 400/401
+### Windows xuất hiện lỗi kết nối bất thường hoặc 400/401
 
-Chạy lại lệnh `setx` trong PowerShell để ghi biến hệ thống, sau đó mở lại terminal:
+Chạy lại lệnh `setx` trong PowerShell để ghi biến hệ thống, rồi mở lại terminal:
 
 ```powershell
 setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
 setx ANTHROPIC_BASE_URL "https://api.fishxcode.com/"
 ```
 
-### Báo lỗi "Unable to connect to Anthropic services"
+### Hiện thông báo "Unable to connect to Anthropic services"
 
-Thông báo lỗi đầy đủ như sau:
+Nội dung lỗi đầy đủ như sau:
 
 ```
 Unable to connect to Anthropic services
@@ -233,7 +240,7 @@ Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
 Please check your internet connection and network settings.
 ```
 
-Nguyên nhân là Claude  Code chưa hoàn tất onboarding nên vẫn cố kết nối tới `api.anthropic.com` chính thức. **Không cần dùng VPN**, chỉ cần thêm `"hasCompletedOnboarding": true` vào cuối tệp `~/.claude.json` (lưu ý là tệp `.claude.json` trong thư mục home, không phải `.claude/settings.json`) để bỏ qua bước này:
+Lý do là Claude  Code chưa hoàn tất onboarding nên vẫn đang cố kết nối tới `api.anthropic.com` chính thức. **Không cần VPN**: thêm `"hasCompletedOnboarding": true` vào cuối tệp `~/.claude.json` (chú ý là `.claude.json` trong thư mục home, không phải `.claude/settings.json`) là có thể bỏ qua bước này:
 
 ```json
 {
@@ -245,5 +252,5 @@ Nguyên nhân là Claude  Code chưa hoàn tất onboarding nên vẫn cố kế
 ```
 
 <Callout type="idea">
-  Trước khi thêm, nhớ bổ sung dấu phẩy vào cuối trường phía trước (theo yêu cầu cú pháp JSON). Sau khi sửa, chạy lại `claude` là kết nối bình thường.
+  Trước khi thêm, nhớ bổ sung dấu phẩy ở cuối trường đứng trước (yêu cầu của cú pháp JSON). Sau khi sửa, chạy lại `claude` là kết nối được bình thường.
 </Callout>

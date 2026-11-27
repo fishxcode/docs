@@ -6,7 +6,7 @@ navTitle: Journaux d'erreur
 
 Les journaux d'erreur servent a identifier la cause precise d'un echec de requete. Pour depanner, consultez d'abord [l'etat de sante des groupes](/fr/group-health) afin d'evaluer l'impact, puis utilisez le `request_id` dans les journaux d'erreur pour retrouver la requete exacte.
 
-Entree : [Console -> Journaux d'utilisation](https://fishxcode.com/console/log). Passez le type de journal sur **Journaux d'erreur**, puis filtrez par periode, modele, token, groupe, ID de requete, message d'erreur ou code de statut.
+Entree : [Console -> Journaux d'utilisation](https://fishxcode.com/usage-logs/common). Passez le type de journal sur **Journaux d'erreur**, puis filtrez par periode, modele, token, groupe, ID de requete, message d'erreur ou code de statut.
 
 <Callout type="idea" title="Lecture rapide">
   - `request_id` sert a retrouver une requete unique
@@ -116,7 +116,7 @@ Surveillez `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable
 
 ## Informations utiles au support
 
-Pour les problemes simples, consultez d'abord le [guide des journaux d'erreur](/fr/error-logs) et [l'etat de sante des groupes](/fr/group-health). Si le probleme persiste, ouvrez les details du journal d'erreur dans `console/log` et cliquez sur l'icone de copie pour copier les details de diagnostic en un clic. Quand vous contactez le support, fournissez ces informations en une fois a l'equipe technique pour limiter les allers-retours :
+Pour les problemes simples, consultez d'abord le [guide des journaux d'erreur](/fr/error-logs) et [l'etat de sante des groupes](/fr/group-health). Si le probleme persiste, ouvrez les details du journal d'erreur dans `usage-logs/common` et cliquez sur l'icone de copie pour copier les details de diagnostic en un clic. Quand vous contactez le support, fournissez ces informations en une fois a l'equipe technique pour limiter les allers-retours :
 
 - ID utilisateur
 - Periode : debut du probleme et derniere occurrence

@@ -14,8 +14,8 @@ FishXCode là nền tảng một cửa cung cấp dịch vụ kết nối mô h�
 
 | Cách tính phí | Cách trừ phí | Phù hợp với |
 | - | - | - |
-| Trả theo mức dùng từ số dư | Lấy giá mô hình nhân với hệ số của nhóm chứa token, rồi trừ vào số dư tài khoản | Gọi hằng ngày, dùng kết hợp nhiều mô hình, thử nghiệm tạm thời |
-| Gói tháng pool tài khoản Codex Pro | Gọi bằng token được tạo với nhóm `codex-sub-june`, hạn mức gói tháng được trừ theo lượng token tiêu hao thực tế | Lập trình Codex và phát triển Agent tần suất cao |
+| Trả theo mức dùng từ số dư | Lấy giá mô hình nhân với hệ số của nhóm chứa API Key, rồi trừ vào số dư tài khoản | Gọi hằng ngày, dùng kết hợp nhiều mô hình, thử nghiệm tạm thời |
+| Gói tháng pool tài khoản Codex Pro | Gọi bằng API Key được tạo với nhóm `codex-sub-june`, hạn mức gói tháng được trừ theo lượng token tiêu hao thực tế | Lập trình Codex và phát triển Agent tần suất cao |
 
 Giá, hạn mức và cách sử dụng gói tháng được trình bày tại [Gói đăng ký](/vi/subscription-plans).
 
@@ -59,87 +59,87 @@ Bạn có thể xem các mô hình khác và mức độ hỗ trợ cụ thể t
 Hệ số là số nhân được áp lên giá cơ bản của mô hình. Hệ số càng thấp thì cùng một yêu cầu với cùng một mô hình sẽ bị trừ càng ít:
 
 ```text
-Mức tiêu hao thực tế ≈ Mức tiêu hao cơ bản của mô hình × Hệ số nhóm
+Tiêu hao thực tế ≈ Tiêu hao cơ bản của mô hình × Hệ số nhóm
 ```
 
-| Mức tiêu hao cơ bản của mô hình | Nhóm | Mức trừ ước tính |
+| Tiêu hao cơ bản của mô hình | Nhóm | ước tính bị trừ |
 | - | - | - |
-| 10 đơn vị hạn mức | `codex-team` (0.15x) | 1.5 đơn vị hạn mức |
-| 10 đơn vị hạn mức | `codex-plus` (0.2x) | 2 đơn vị hạn mức |
-| 10 đơn vị hạn mức | `claude` (1.5x) | 15 đơn vị hạn mức |
-| 10 đơn vị hạn mức | `claudemax` (2.6x) | 26 đơn vị hạn mức |
+| 10 hạn mức | `codex-team` (0.15x) | 1,5 hạn mức |
+| 10 hạn mức | `codex-plus` (0.2x) | 2 hạn mức |
+| 10 hạn mức | `claude` (1.5x) | 15 hạn mức |
+| 10 hạn mức | `claudemax` (2.6x) | 26 hạn mức |
 
-Mức tiêu hao cơ bản của mô hình ở đây không cố định, mà thay đổi theo độ dài đầu vào, độ dài đầu ra, lượng trúng bộ nhớ đệm và giá của chính mô hình. Phần trúng bộ nhớ đệm thường rẻ hơn.
+Tiêu hao cơ bản của mô hình ở đây không phải giá trị cố định, mà thay đổi theo độ dài đầu vào, độ dài đầu ra, tỷ lệ trúng cache và giá của chính mô hình đó. Phần trúng cache thường rẻ hơn.
 
-<Callout type="warn" title="Đừng chỉ nhìn vào hệ số">
-  Hệ số không phải là yếu tố duy nhất quyết định giá. Giá cơ bản, hệ số đầu ra và hệ số bộ nhớ đệm của các mô hình chênh lệch rất lớn; mô hình hình ảnh và video còn có thể tính theo giá cố định. Khi ước tính chi phí, hãy căn cứ theo giá hiện tại trên trang giá hoặc trong danh sách mô hình của bảng điều khiển.
+<Callout type="warn" title="Đừng chỉ nhìn hệ số">
+  Hệ số không phải yếu tố giá duy nhất. Giá cơ bản, hệ số đầu ra và hệ số cache khác nhau rất nhiều giữa các mô hình; mô hình hình ảnh, video còn có thể tính giá cố định. Khi ước tính chi phí, hãy căn cứ theo giá hiện tại trên trang giá hoặc trong danh sách mô hình của bảng điều khiển.
 </Callout>
 
-## 4. Chọn đúng nhóm khi tạo token
+## 4. Chọn đúng nhóm khi tạo API Key
 
-Khi tạo token tại **Bảng điều khiển → Quản lý token**, nhóm của token chính là phạm vi mô hình khả dụng, hệ số trừ phí và pool tài nguyên upstream của Key đó, vì vậy nhất định phải chọn đúng.
+Khi tạo API Key trong **Bảng điều khiển → API Keys** (API 密钥), nhóm của chính khóa này chính là phạm vi mô hình khả dụng, hệ số trừ phí và pool tài nguyên upstream của nó, nhất định phải chọn đúng.
 
-![Chọn nhóm khi tạo token](/img/start/api-06-token-create.png)
+![Chọn nhóm khi tạo API Key](/img/start/api-v2-06-token-create.png)
 
-Khi tạo token, hãy chú ý các mục sau:
+Khi tạo API Key cần chú ý:
 
-- **Nhóm token**: Quyết định Key này có thể gọi những mô hình nào và bị trừ phí theo hệ số nào. Khi dùng gói tháng Codex, bắt buộc phải chọn `codex-sub-june`.
-- **Thiết lập hạn mức**: Giới hạn mức tiêu hao tối đa của Key này; hạn mức không giới hạn không có nghĩa là không bị trừ phí, Key vẫn bị giới hạn bởi số dư tài khoản hoặc hạn mức gói tháng.
-- **Danh sách giới hạn mô hình**: Không nên giới hạn nếu không cần thiết, trừ khi bạn chắc chắn chỉ muốn cho phép một vài mô hình.
-- **Danh sách trắng IP**: Phù hợp với máy chủ có IP đầu ra cố định; khi phát triển cục bộ cho cá nhân nên cân nhắc kỹ, tránh trường hợp không gọi được khi IP thay đổi.
+- **Nhóm**: quyết định khóa này có thể gọi những mô hình nào và bị trừ phí theo hệ số nào. Dùng gói tháng Codex thì bắt buộc chọn `codex-sub-june`.
+- **Cài đặt hạn mức**: giới hạn khóa này tối đa được tiêu hao bao nhiêu hạn mức; hạn mức vô hạn không có nghĩa là không bị trừ phí, vẫn bị giới hạn bởi số dư tài khoản hoặc hạn mức gói tháng.
+- **Danh sách giới hạn mô hình**: không cần thiết thì không nên giới hạn, trừ khi bạn xác định chỉ cho phép một vài mô hình cụ thể.
+- **Danh sách trắng IP**: phù hợp với máy chủ có IP đầu ra cố định; phát triển cục bộ cá nhân nên dùng thận trọng, tránh sau khi IP thay đổi thì không gọi được.
 
-Khi chọn sai nhóm, các biểu hiện thường gặp gồm:
+Các biểu hiện phổ biến khi chọn sai nhóm:
 
-- Thấy mô hình trong danh sách mô hình nhưng khi gọi bằng Key hiện tại lại báo `model not found`, `model not available` hoặc lỗi quyền truy cập.
-- Gọi được mô hình nhưng hệ số trừ phí hoặc độ ổn định không đúng mức mong đợi.
-- Dùng lẫn token gói tháng với token thông thường, khiến hạn mức bị trừ nhầm nguồn hoặc số liệu thống kê không rõ ràng.
+- Xem thấy mô hình trong danh sách mô hình, nhưng gọi bằng khóa hiện tại lại báo `model not found`, `model not available` hoặc lỗi quyền.
+- Gọi được mô hình, nhưng hệ số trừ phí hoặc độ ổn định không đúng bậc như kỳ vọng.
+- Khóa gói tháng và khóa thường trộn lẫn nhau, khiến hạn mức trừ nhầm tài khoản hoặc thống kê không rõ ràng.
 
 ## 5. Gợi ý chọn nhóm
 
-| Tình huống sử dụng | Đề xuất | Mô tả |
+| Tình huống sử dụng | Khuyến nghị | Mô tả |
 | - | - | - |
-| Lập trình Codex hằng ngày | `codex-plus` (0.2x) | Phù hợp cho phát triển mã hằng ngày |
-| Codex hệ số thấp | `codex-team` (0.15x) | Phù hợp với người dùng chấp nhận pool tài nguyên dùng chung |
-| Codex / phát triển Agent tần suất cao | Gói tháng pool tài khoản Codex Pro | Chọn gói tháng hạn mức 200 hoặc 2000 USD tùy theo mức sử dụng thực tế |
-| Lập trình và tác vụ dài với Claude | `claude` (1.5x) | Nếu dùng tần suất cao, có thể cân nhắc `claudemax` (2.6x) |
+| Lập trình Codex hằng ngày | `codex-plus` (0.2x) | Phù hợp phát triển mã hằng ngày |
+| Codex hệ số thấp | `codex-team` (0.15x) | Phù hợp người dùng chấp nhận pool tài nguyên dùng chung |
+| Codex tần suất cao / phát triển Agent | Gói tháng pool tài khoản Codex Pro | Chọn gói tháng hạn mức $200 hoặc $2,000 theo mức dùng thực tế |
+| Lập trình Claude và tác vụ dài | `claude` (1.5x) | Dùng tần suất cao có thể cân nhắc `claudemax` (2.6x) |
 | Kiro | `kiro-svip` (0.2x) | Pool tài khoản chính thức Kiro mua theo giá gốc |
 | Mô hình Trung Quốc | `china` (0.8x) | Kết nối trực tiếp API chính thức |
 | Mô hình Grok | `grok` (0.5x) | Nhóm dành riêng cho xAI Grok |
-| Tạo hình ảnh, video, âm thanh | `fishxlab` (2x) | Mô hình cụ thể và cách tính phí căn cứ theo thông tin trên trang |
-| Phân tách theo đội nhóm hoặc dự án | Tạo token riêng cho từng thành viên hoặc dự án | Tiện kiểm soát hạn mức, phân bổ chi phí và tra soát nhật ký |
+| Tạo hình ảnh, video, âm thanh | `fishxlab` (2x) | Mô hình cụ thể và cách tính phí căn cứ theo trang |
+| Tách theo đội nhóm hoặc dự án | Tạo API Key riêng cho từng thành viên hoặc dự án | Dễ kiểm soát hạn mức, phân bổ chi phí và tra nhật ký |
 
-## 6. Đối chiếu mức tiêu hao thực tế sau khi sử dụng
+## 6. Sau khi sử dụng, đối chiếu mức tiêu hao thực tế
 
-Sau khi gọi, hãy đối chiếu mức tiêu hao thực tế theo bản ghi trong **Bảng điều khiển → Nhật ký sử dụng**. Với đội nhóm, hãy kết hợp thêm [Trạng thái sức khỏe nhóm](/vi/group-health) để xác định vấn đề nằm ở một Key, một thành viên hay toàn bộ nhóm.
+Sau khi gọi, hãy căn cứ bản ghi trong **Bảng điều khiển → Nhật ký sử dụng** để đối chiếu tiêu hao thực tế. Trong kịch bản đội nhóm, kết hợp thêm [Tình trạng sức khỏe nhóm](/vi/group-health) để phán đoán vấn đề thuộc về một khóa, một thành viên hay cả nhóm.
 
-![Ví dụ trạng thái sức khỏe nhóm](/img/plans/statistics.png)
+![Ví dụ tình trạng sức khỏe nhóm](/img/plans/statistics.png)
 
-| Câu hỏi | Xem trường nào |
+| Vấn đề | Xem trường nào |
 | - | - |
-| Nhóm nào tiêu hao nhiều nhất | Nhóm, tiêu hao, số yêu cầu |
-| Có phải chỉ một thành viên bất thường không | Dòng chi tiết người dùng / token |
-| Bộ nhớ đệm có phát huy tác dụng không | Tỷ lệ trúng bộ nhớ đệm, token bộ nhớ đệm, tỷ lệ yêu cầu dùng bộ nhớ đệm |
-| Có phải vấn đề của pool tài nguyên không | Tỷ lệ thành công của nhóm, số lỗi, nguyên nhân thất bại |
-| Chi phí cao có phải do ngữ cảnh dài hoặc đầu ra lớn không | Mức tiêu hao mỗi lần thành công, thời gian xử lý trung bình, token bộ nhớ đệm |
+| Nhóm nào tiêu hao cao nhất | Nhóm, tiêu hao, số yêu cầu |
+| Chỉ một thành viên có bất thường | Dòng chi tiết Người dùng / API Key |
+| Cache có phát huy tác dụng không | Tỷ lệ trúng cache, token cache, tỷ lệ yêu cầu trúng cache |
+| Có phải vấn đề pool tài nguyên | Tỷ lệ thành công của nhóm, số lỗi, nguyên nhân thất bại |
+| Chi phí cao có do ngữ cảnh dài hoặc đầu ra lớn | Tiêu hao mỗi lần thành công, thời gian trung bình, token cache |
 
-## 7. Lưu ý khi sử dụng
+## 7. Các lưu ý khi sử dụng
 
-1. Các nhóm khác nhau tương ứng với các pool tài nguyên khác nhau, hãy chọn theo tình huống sử dụng.
-2. Gói tháng Codex bắt buộc phải tạo token bằng nhóm `codex-sub-june`; các nhóm khác không dùng được hạn mức của gói này.
-3. Gói tháng không phải hạn mức không giới hạn; khi hết hạn mức hoặc gói hết hạn, bạn sẽ không thể tiếp tục sử dụng.
-4. Với hội thoại dài trên Claude, nên tận dụng hợp lý bộ nhớ đệm ngữ cảnh; lượng trúng bộ nhớ đệm thực tế phụ thuộc vào cấu hình client, mô hình và khoảng cách giữa các yêu cầu.
+1. Mỗi nhóm tương ứng một pool tài nguyên khác nhau, hãy chọn theo tình huống sử dụng.
+2. Gói tháng Codex bắt buộc dùng nhóm `codex-sub-june` để tạo API Key; các nhóm khác không dùng được hạn mức của gói này.
+3. Gói tháng không phải hạn mức vô hạn; khi hạn mức cạn hoặc gói hết hạn sẽ không thể tiếp tục sử dụng.
+4. Với hội thoại dài trên Claude, nên tận dụng hợp lý cache ngữ cảnh; việc trúng cache thực tế liên quan đến cấu hình client, mô hình và khoảng cách giữa các yêu cầu.
 5. Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên căn cứ theo thông tin thời gian thực trên trang.
 
-## 8. Khắc phục bất thường về tiêu hao hoặc quyền
+## 8. Xử lý bất thường về tiêu hao hoặc quyền
 
-Khi gặp tiêu hao bất thường hoặc mô hình không khả dụng, bạn nên kiểm tra theo thứ tự sau:
+Khi gặp bất thường tiêu hao hoặc mô hình không khả dụng, khuyến nghị xử lý theo trình tự sau:
 
-1. Xác nhận nhóm mà Key hiện tại được gắn có bao gồm mô hình cần dùng hay không.
-2. Xác nhận số dư tài khoản, hoặc thời hạn hiệu lực và hạn mức còn lại của gói tháng có đủ hay không.
-3. Xem **Bảng điều khiển → Nhật ký sử dụng**, lọc theo thời gian, mô hình, token, nhóm và ID yêu cầu.
-4. Đối chiếu với [Trạng thái sức khỏe nhóm](/vi/group-health) để xác định vấn đề nằm ở một token hay ở pool tài nguyên của nhóm.
-5. Nếu vẫn chưa xác định được, hãy liên hệ bộ phận hỗ trợ và cung cấp mã đơn hàng, tên token, nhóm, tên mô hình, thời gian yêu cầu và ID yêu cầu.
+1. Xác nhận nhóm mà khóa hiện tại gắn với có chứa mô hình mục tiêu không.
+2. Xác nhận số dư tài khoản, hoặc thời hạn hiệu lực và hạn mức còn lại của gói tháng có đủ không.
+3. Xem **Bảng điều khiển → Nhật ký sử dụng**, lọc theo thời gian, mô hình, khóa, nhóm, ID yêu cầu.
+4. Đối chiếu [Tình trạng sức khỏe nhóm](/vi/group-health) để phán đoán là vấn đề của một khóa đơn lẻ hay của pool tài nguyên nhóm.
+5. Nếu vẫn không xác định được, hãy liên hệ hỗ trợ và cung cấp số đơn hàng, tên khóa, nhóm, tên mô hình, thời điểm yêu cầu và ID yêu cầu.
 
-## 9. Mua sắm và hợp tác doanh nghiệp
+## 9. Mua sắm doanh nghiệp và hợp tác
 
-Với nhu cầu gọi số lượng lớn cho doanh nghiệp, kết nối đội nhóm, mua mô hình và tùy chỉnh, bạn có thể liên hệ tư vấn qua [trang dành riêng cho doanh nghiệp](https://enterprise.fishxcode.com/).
+Gọi API số lượng lớn, triển khai cho đội nhóm, mua sắm mô hình và nhu cầu tùy biến, có thể tư vấn qua [trang web dành riêng cho doanh nghiệp](https://enterprise.fishxcode.com/).

@@ -4,142 +4,142 @@ description: Las dos formas de facturación de FishXCode, los 10 grupos a la ven
 navTitle: Reglas de facturación y grupos
 ---
 
-FishXCode es una plataforma todo en uno de acceso a modelos de IA y servicios de cuentas que cubre Claude, Codex, Kiro, Grok, modelos chinos y modelos multimodales. Esta página explica cómo se factura, qué grupos hay, cómo elegir grupo y cómo verificar el consumo después de usarlo.
+FishXCode es una plataforma integral de acceso a modelos de IA y servicios de cuentas que cubre Claude, Codex, Kiro, Grok, modelos nacionales y multimodales. Esta página explica cómo se factura, qué grupos hay, cómo elegir uno y cómo verificar el consumo después de usarlo.
 
-<Callout type="idea" title="Prevalece la información en tiempo real">
-  Los multiplicadores de los grupos, la disponibilidad de los modelos y el estado de los recursos cambian según los ajustes de los recursos upstream. La referencia final es la información en tiempo real de la [página de precios](https://fishxcode.com/pricing) y de la consola.
+<Callout type="idea" title="La información en tiempo real del sitio prevalece">
+  Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos cambian según los recursos del upstream. La información en tiempo real de la [página de precios](https://fishxcode.com/pricing) y de la consola prevalece siempre.
 </Callout>
 
 ## 1. Dos formas de facturación
 
-| Forma | Cómo se cobra | Ideal para |
+| Método | Cómo se cobra | Ideal para |
 | - | - | - |
-| Pago por uso con saldo | Precio del modelo por el multiplicador del grupo del token, descontado del saldo de la cuenta | Llamadas diarias, uso combinado de varios modelos y pruebas puntuales |
-| Paquete mensual del pool Codex Pro | Se llama con un token creado en el grupo `codex-sub-june` y el consumo real de tokens se descuenta del crédito del paquete mensual | Programación intensiva con Codex y desarrollo de agentes |
+| Saldo de pago por uso | Precio del modelo × multiplicador del grupo de la clave, descontado del saldo de la cuenta | Llamadas diarias, mezcla de modelos, pruebas puntuales |
+| Paquete mensual del pool de cuentas Codex Pro | Se llama con una clave creada en el grupo `codex-sub-june`; el consumo real de tokens se descuenta de la cuota del paquete | Programación Codex de alta frecuencia y desarrollo de Agentes |
 
-Consulta el precio, el crédito y el uso del paquete mensual en [Planes de suscripción](/es/subscription-plans).
+Para el precio, la cuota y el uso del paquete mensual, ver [Planes de suscripción](/es/subscription-plans).
 
 ## 2. Grupos a la venta
 
-El grupo determina qué modelos puede llamar una API Key, qué pool de recursos usa y con qué multiplicador se cobra. Actualmente hay 10 grupos a la venta:
+El grupo determina qué modelos puede llamar una API Key, qué pool de recursos usa y con qué multiplicador se factura. Actualmente hay 10 grupos a la venta:
 
 ### Serie Codex
 
 | Grupo | Multiplicador | Descripción |
 | - | - | - |
-| `codex-plus` | 0.2x | Pool de cuentas oficiales Codex Plus de precio completo; multiplicador bajo y servicio estable, ideal para las llamadas del día a día |
-| `codex-pro` | 0.4x | Recursos oficiales Codex Pro de precio completo; rendimiento estable, ideal para equipos y empresas |
-| `codex-team` | 0.15x | Pool compartido de cuentas oficiales Codex Team; recursos compartidos con multiplicador bajo |
-| `codex-officially` | 2x | Recursos con API Key oficial de OpenAI; conexión directa oficial, estable y fiable |
+| `codex-plus` | 0.2x | Pool oficial de precio completo Codex Plus; multiplicador bajo, estable, ideal para llamadas diarias |
+| `codex-pro` | 0.4x | Recursos oficiales de precio completo Codex Pro; rendimiento estable, ideal para equipos y empresas |
+| `codex-team` | 0.15x | Pool compartido oficial de la serie Codex Team; recursos compartidos con multiplicador bajo |
+| `codex-officially` | 2x | Recursos de API Key oficial de OpenAI; conexión oficial directa, estable y fiable |
 
 ### Serie Claude
 
 | Grupo | Multiplicador | Descripción |
 | - | - | - |
-| `claude` | 1.5x | Pool de cuentas oficiales Claude Max 20 de precio completo; rendimiento completo y conexión directa estable |
+| `claude` | 1.5x | Pool oficial de precio completo Claude Max 20; pleno rendimiento y conexión directa estable |
 | `claudemax` | 2.6x | Pool de miles de cuentas Claude Max 20; acceso de alta velocidad, gestión de solo lectura y trazabilidad manual |
 
 ### Otros modelos
 
 | Grupo | Multiplicador | Descripción |
 | - | - | - |
-| `kiro-svip` | 0.2x | Pool de cuentas oficiales Kiro de precio completo; acceso estable y multiplicador bajo |
-| `china` | 0.8x | Colección de los principales modelos chinos; conexión directa a las API oficiales |
-| `grok` | 0.5x | Grupo exclusivo de los modelos xAI Grok; prueba las capacidades de Grok con un multiplicador bajo |
-| `fishxlab` | 2x | Modelos multimodales de audio, vídeo, imagen y más, para generación y creación de contenido |
+| `kiro-svip` | 0.2x | Pool oficial de precio completo de Kiro; acceso estable, multiplicador bajo |
+| `china` | 0.8x | Conjunto de modelos nacionales principales, conexión directa por API oficial |
+| `grok` | 0.5x | Grupo exclusivo de los modelos xAI Grok; prueba Grok con multiplicador bajo |
+| `fishxlab` | 2x | Modelos multimodales de audio, vídeo e imagen, para generación y creación |
 
-Consulta en el sitio los demás modelos y su compatibilidad concreta.
+Para otros modelos y su disponibilidad exacta, consúltalo en el sitio.
 
 <Callout type="info" title="Grupo exclusivo del paquete mensual">
-  `codex-sub-june` es el grupo exclusivo del paquete mensual del pool Codex Pro. Tiene un multiplicador fijo de 1x, solo descuenta del crédito del paquete mensual y no forma parte de los grupos de pago por uso anteriores.
+  `codex-sub-june` es el grupo exclusivo del paquete mensual del pool de cuentas Codex Pro. Fijado a multiplicador 1x, solo descuenta de la cuota del paquete y no está entre los grupos de pago por uso de arriba.
 </Callout>
 
 ## 3. Cómo se calcula el multiplicador
 
-El multiplicador es el coeficiente que se aplica sobre el precio base del modelo. Cuanto más bajo es, menos se descuenta por la misma solicitud al mismo modelo:
+El multiplicador es un factor que se aplica sobre el precio base del modelo. Cuanto menor es, menos se descuenta para el mismo modelo y la misma solicitud:
 
 ```text
 Consumo real ≈ consumo base del modelo × multiplicador del grupo
 ```
 
-| Consumo base del modelo | Grupo | Deducción estimada |
+| Consumo base del modelo | Grupo | Descuento estimado |
 | - | - | - |
 | 10 créditos | `codex-team` (0.15x) | 1.5 créditos |
 | 10 créditos | `codex-plus` (0.2x) | 2 créditos |
 | 10 créditos | `claude` (1.5x) | 15 créditos |
 | 10 créditos | `claudemax` (2.6x) | 26 créditos |
 
-El consumo base del modelo no es un valor fijo: varía con la longitud de la entrada y de la salida, los aciertos de caché y el precio del propio modelo. La parte que se sirve desde la caché suele ser más barata.
+El consumo base del modelo no es un valor fijo: varía según la longitud de la entrada, la de la salida, los aciertos de caché y el propio precio del modelo. Las partes servidas desde la caché suelen ser más baratas.
 
-<Callout type="warn" title="No te fijes solo en el multiplicador">
-  El multiplicador no es el único factor del precio. El precio base, el multiplicador de salida y el multiplicador de caché varían mucho entre modelos, y los modelos de imagen y vídeo pueden tener un precio fijo. Para estimar costes, toma como referencia el precio actual de la página de precios o de la lista de modelos de la consola.
+<Callout type="warn" title="No te guíes solo por el multiplicador">
+  El multiplicador no es el precio único. Los precios base, los multiplicadores de salida y de caché varían mucho entre modelos; los modelos de imagen y vídeo pueden incluso tener precio fijo. Para estimar costes, guíate por los precios actuales de la página de precios o de la lista de modelos de la consola.
 </Callout>
 
-## 4. Elige el grupo correcto al crear el token
+## 4. Elige bien el grupo al crear una API Key
 
-Al crear un token en **Consola → Gestión de tokens**, el grupo del token fija los modelos disponibles de esa Key, su multiplicador de cobro y el pool de recursos upstream, así que elígelo con cuidado.
+Al crear una API Key en **Consola → Claves API**, el grupo de la clave define los modelos que puede llamar, el multiplicador de facturación y el pool de recursos del upstream: elígelo bien.
 
-![Selección del grupo al crear un token](/img/start/api-06-token-create.png)
+![Elegir grupo al crear la API Key](/img/start/api-v2-06-token-create.png)
 
-Al crear el token, revisa sobre todo:
+Al crear una API Key, fíjate sobre todo en:
 
-- **Grupo de tokens**: determina qué modelos puede llamar esta Key y con qué multiplicador se cobra. Para usar el paquete mensual de Codex debes elegir `codex-sub-june`.
-- **Límite de crédito**: limita el crédito máximo que puede consumir esta Key. Un crédito ilimitado no significa que no se cobre: el uso sigue limitado por el saldo de la cuenta o por el crédito del paquete mensual.
-- **Lista de restricción de modelos**: no conviene restringir si no es necesario, salvo que quieras permitir solo determinados modelos.
-- **Lista de IP permitidas**: útil para servidores con IP de salida fija. Úsala con cuidado en el desarrollo local, porque si tu IP cambia dejarás de poder hacer llamadas.
+- **Grupo**: determina qué modelos puede llamar esta clave y con qué multiplicador se factura. Para usar un paquete mensual de Codex debes seleccionar `codex-sub-june`.
+- **Cuota**: limita cuánto puede consumir esta clave como máximo; cuota ilimitada no significa gratis, sigue limitada por el saldo de la cuenta o la cuota del paquete mensual.
+- **Lista de restricción de modelos**: no la restrinjas salvo necesidad, salvo que permitas claramente solo unos pocos modelos.
+- **Lista blanca de IP**: para servidores con IP de salida fija; úsala con cautela en desarrollo local para evitar llamadas rotas tras un cambio de IP.
 
-Síntomas habituales de un grupo mal elegido:
+Síntomas habituales de haber elegido mal el grupo:
 
-- El modelo aparece en la lista de modelos, pero al llamarlo con la Key actual se obtiene `model not found`, `model not available` o un error de permisos.
-- Puedes llamar al modelo, pero el multiplicador de cobro o la estabilidad no son los que esperabas.
-- Se mezclan tokens del paquete mensual con tokens normales, de modo que el crédito se descuenta de la cuenta equivocada o las estadísticas dejan de ser claras.
+- El modelo aparece en la lista de modelos, pero al llamarlo con la clave actual falla con `model not found`, `model not available` o un error de permisos.
+- El modelo funciona, pero el multiplicador de facturación o la estabilidad no son el nivel esperado.
+- Se mezclan claves del paquete mensual y claves normales, enviando la cuota a la cuenta equivocada o difuminando las estadísticas de uso.
 
 ## 5. Recomendaciones para elegir grupo
 
-| Escenario de uso | Recomendado | Descripción |
+| Caso de uso | Recomendación | Descripción |
 | - | - | - |
-| Programación diaria con Codex | `codex-plus` (0.2x) | Ideal para el desarrollo de código del día a día |
+| Programación Codex diaria | `codex-plus` (0.2x) | Ideal para el desarrollo de código cotidiano |
 | Codex con multiplicador bajo | `codex-team` (0.15x) | Para usuarios que aceptan un pool de recursos compartido |
-| Uso intensivo de Codex / desarrollo de agentes | Paquete mensual del pool Codex Pro | Elige el paquete mensual de 200 o 2000 USD de crédito según tu uso real |
-| Programación con Claude y tareas largas | `claude` (1.5x) | Para uso intensivo, considera `claudemax` (2.6x) |
-| Kiro | `kiro-svip` (0.2x) | Pool de cuentas oficiales Kiro de precio completo |
-| Modelos chinos | `china` (0.8x) | Conexión directa a las API oficiales |
+| Codex de alta frecuencia / desarrollo de Agentes | Paquete mensual del pool de cuentas Codex Pro | Elige el paquete mensual de $200 o $2,000 según tu uso real |
+| Programación y tareas largas con Claude | `claude` (1.5x) | Para uso intensivo, considera `claudemax` (2.6x) |
+| Kiro | `kiro-svip` (0.2x) | Pool oficial de precio completo de Kiro |
+| Modelos nacionales | `china` (0.8x) | Conexión directa por API oficial |
 | Modelos Grok | `grok` (0.5x) | Grupo exclusivo de xAI Grok |
-| Generación de imagen, vídeo y audio | `fishxlab` (2x) | Consulta en el sitio los modelos y la facturación concretos |
-| Separar por equipo o proyecto | Crea un token independiente para cada miembro o proyecto | Facilita el control del crédito, el reparto de costes y el diagnóstico con los registros |
+| Generación de imagen, vídeo y audio | `fishxlab` (2x) | Modelos y facturación exactos según el sitio |
+| Separación por equipo o proyecto | Crea API Keys separadas por miembro o proyecto | Facilita el control de cuota, la repartición de costes y el diagnóstico por registros |
 
-## 6. Verifica el consumo real tras el uso
+## 6. Verificar el consumo real tras el uso
 
-Después de las llamadas, verifica el consumo real con los registros de **Consola → Registros de uso**, que son la referencia. En equipos, combínalos con el [Estado de salud de grupos](/es/group-health) para saber si el problema está en una sola Key, en un solo miembro o en todo el grupo.
+Tras llamar, verifica el consumo real con los registros de **Consola → Registros de uso**. En equipos, combina además [Estado de salud de los grupos](/es/group-health) para saber si el problema es de una clave, de un miembro o de todo el grupo.
 
-![Ejemplo del estado de salud de grupos](/img/plans/statistics.png)
+![Ejemplo de estado de salud de los grupos](/img/plans/statistics.png)
 
 | Pregunta | Qué campos mirar |
 | - | - |
-| Qué grupo consume más | Grupo, Consumo, Solicitudes |
-| Si la anomalía afecta solo a un miembro | Filas de detalle de usuario / token |
-| Si la caché funciona | Tasa de caché, Tokens en caché, Proporción de solicitudes en caché |
-| Si es un problema del pool de recursos | Tasa de éxito del grupo, Errores, Causa de fallo |
-| Si el coste alto se debe a un contexto largo o a salidas grandes | Consumo por solicitud exitosa, Tiempo medio, Tokens en caché |
+| Qué grupo consumió más | Grupo, consumo, número de solicitudes |
+| ¿Es anormal solo un miembro? | Filas de detalle por usuario / clave |
+| ¿La caché funcionó? | Tasa de aciertos de caché, tokens en caché, proporción de solicitudes cacheadas |
+| ¿Es un problema del pool de recursos? | Tasa de éxito del grupo, número de errores, motivos de fallo |
+| ¿El coste alto se debe a contexto largo o salidas grandes? | Consumo por llamada exitosa, duración media, tokens en caché |
 
 ## 7. Notas de uso
 
-1. Cada grupo corresponde a un pool de recursos distinto; elige según tu escenario de uso.
-2. Para el paquete mensual de Codex, el token debe crearse en el grupo `codex-sub-june`; los demás grupos no pueden usar el crédito de este paquete.
-3. El paquete mensual no tiene crédito ilimitado: cuando se agota el crédito o vence el paquete, ya no podrás seguir usándolo.
-4. En conversaciones largas con Claude, aprovecha la caché de contexto. Los aciertos de caché reales dependen de la configuración del cliente, del modelo y del intervalo entre solicitudes.
-5. Los multiplicadores de los grupos, la disponibilidad de los modelos y el estado de los recursos se rigen por la información en tiempo real del sitio.
+1. Los grupos corresponden a pools de recursos distintos: elige según el caso de uso.
+2. El paquete mensual de Codex exige crear la API Key con el grupo `codex-sub-june`; ningún otro grupo puede usar la cuota de ese plan.
+3. El paquete mensual no es una cuota ilimitada: agotada la cuota o vencido el plan, deja de poder usarse.
+4. En conversaciones largas con Claude, aprovecha bien la caché de contexto; los aciertos reales dependen de la configuración del cliente, del modelo y del intervalo entre solicitudes.
+5. Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos están sujetos a la información en tiempo real del sitio.
 
-## 8. Diagnosticar consumo anómalo o problemas de permisos
+## 8. Diagnosticar problemas de consumo o permisos
 
-Si ves un consumo anómalo o un modelo no disponible, revisa en este orden:
+Ante un consumo anómalo o un modelo no disponible, diagnostica en este orden:
 
-1. Confirma que el grupo vinculado a la Key actual incluye el modelo que quieres usar.
-2. Confirma que el saldo de la cuenta, o la validez y el crédito restante del paquete mensual, son suficientes.
-3. Revisa **Consola → Registros de uso** y filtra por periodo, modelo, Token, grupo y request ID.
-4. Compara con el [Estado de salud de grupos](/es/group-health) para saber si el problema es de un solo token o del pool de recursos del grupo.
-5. Si aún no lo tienes claro, contacta con soporte e indica el número de pedido, el nombre del token, el grupo, el nombre del modelo, la hora de la solicitud y el request ID.
+1. Confirma que el grupo vinculado a la clave actual incluye el modelo objetivo.
+2. Confirma el saldo de la cuenta, o que el paquete mensual sigue vigente y con cuota suficiente.
+3. Revisa **Consola → Registros de uso**, filtrando por hora, modelo, clave, grupo o ID de solicitud.
+4. Compara con [Estado de salud de los grupos](/es/group-health) para saber si es un problema de una sola clave o del pool de recursos del grupo.
+5. Si sigue sin poder determinarse, contacta con soporte aportando el número de pedido, el nombre de la clave, el grupo, el modelo, la hora de la solicitud y el ID de solicitud.
 
 ## 9. Compras empresariales y colaboración
 
-Para llamadas a gran escala de empresas, integración de equipos, compra de modelos o necesidades a medida, haz tu consulta en el [sitio exclusivo para empresas](https://enterprise.fishxcode.com/).
+Para uso empresarial por volumen, incorporación de equipos, compra de modelos y necesidades personalizadas, consulta en el [sitio para empresas](https://enterprise.fishxcode.com/).

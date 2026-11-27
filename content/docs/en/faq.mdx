@@ -6,107 +6,121 @@ title: FAQ
 
 ### What is FishXCode?
 
-FishXCode is a one-stop platform for AI model access and accounts, covering Claude, Codex, Kiro, Grok, Chinese and multimodal models, usable across many tools and platforms.
+FishXCode is a one-stop platform for AI model access and account services, covering Claude, Codex, Kiro, Grok, Chinese models, and multimodal models, usable across many tools and platforms.
 
 ### Which tools are supported?
 
-Currently supported tools:
+The following tools are currently supported:
 
 - **Claude Code** — Anthropic's official CLI
-- **OpenAI Codex** — OpenAI's coding assistant
+- **OpenAI Codex** — OpenAI's official coding assistant
 - **RooCode** — AI coding extension for VS Code
-- **Qwen Code** — Alibaba's Qwen-based coding tool
-- **Droid CLI** — Lightweight AI coding CLI
-- **OpenCode** — Open-source AI coding terminal tool
+- **Qwen Code** — Alibaba Tongyi Qianwen coding tool
+- **Droid CLI** — lightweight AI coding CLI
+- **OpenCode** — open-source AI coding terminal tool
 
-### How is my data handled?
+### How is data privacy protected?
 
-FishXCode acts solely as an API relay service. Your code and conversations are not stored on our servers. All requests are forwarded directly to the respective model providers.
+FishXCode acts only as an API relay and does not store your code or conversation content. All requests are forwarded directly to the corresponding model provider.
 
-<Callout type="idea">
-  For sensitive projects, we recommend reviewing each model provider's privacy policy before use.
+<Callout type="idea" title="Recommendation">
+  For sensitive projects, read each model provider's privacy policy before use.
 </Callout>
 
-## Account & Token
+## Accounts and API Keys
 
-### How do I sign up?
+### How do I register?
 
-Visit [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW) and follow the prompts to create an account.
+Visit [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW), fill in a username, password, and email, then enter the verification code sent to your email to finish registration. You can also log in directly with GitHub / LinuxDO / Google third-party authorization (the first authorization creates the account automatically).
 
-### How do I get an API token?
-
-After signing in, go to the [Token Management page](https://fishxcode.com/console/token) in the console to generate a new token.
-
-### How long does a token last?
-
-Tokens remain valid until you manually delete or regenerate them. We recommend rotating tokens periodically for security.
-
-### What are the usage quota limits?
-
-Every user receives a usage quota. The exact amount adjusts dynamically based on platform resources. Check the console for your current usage.
-
-<Callout type="warn">
-  Once your quota is exhausted, requests will be rejected. Plan your usage accordingly.
+<Callout type="idea" title="Supported email domains">
+  Email registration currently supports four domains: **qq.com, 126.com, 163.com, gmail.com**.
 </Callout>
 
-## Tool Configuration
+### How do I get an API Key?
 
-### My environment variables don't seem to work
+After registering, log in to the console and go to the [API Keys page](https://fishxcode.com/keys) to create a new API Key.
 
-Check these common issues:
+### Which top-up methods are supported?
 
-1. **Terminal not restarted** — After editing `.bashrc` / `.zshrc`, run `source ~/.bashrc` or open a new terminal
-2. **Typos in variable names** — Names are case-sensitive; `ANTHROPIC_BASE_URL` is not the same as `Anthropic_Base_Url`
-3. **Extra quotes or spaces** — Make sure there are no stray spaces around the value in `export KEY="value"`
+Go to **Console → Wallet** to top up. Supported:
+
+- **Alipay**: the mainstream method, no minimum
+- **Waffo Pancake**: minimum top-up $100
+- **Redeem code**: enter it in the redeem area on the Wallet page
+
+Heavy Codex users can also buy an account-pool monthly package directly (Subscription plans tab) — see [Subscription Plans](/en/subscription-plans).
+
+### How long is an API Key valid?
+
+An API Key stays valid until you delete or regenerate it. Rotate keys regularly for security.
+
+### What is my usage quota?
+
+FishXCode provides each user a usage quota, adjusted dynamically based on platform resources. Keep an eye on the usage information in the console.
+
+<Callout type="warn" title="Note">
+  Requests are rejected once the quota is used up — plan your usage accordingly.
+</Callout>
+
+## Tool configuration
+
+### Environment variables are set but have no effect
+
+Check these common causes:
+
+1. **Terminal not restarted** — after editing `.bashrc` / `.zshrc`, run `source ~/.bashrc` or open a new terminal
+2. **Variable name misspelled** — names are case-sensitive; `ANTHROPIC_BASE_URL` cannot be written as `Anthropic_Base_Url`
+3. **Extra quotes or spaces** — in `export KEY="value"`, do not leave extra spaces around value
 
 <Accordions type="single">
-  <Accordion title="Quick diagnostic commands">
+  <Accordion title="Quick check commands">
     ```bash
-    # Verify that variables are set
+    # Check whether the variables are set
     echo $ANTHROPIC_BASE_URL
     echo $ANTHROPIC_AUTH_TOKEN
 
-    # Empty output means the variable is not set
+    # Empty output means the variables are not in effect
     ```
   </Accordion>
 </Accordions>
 
-### Where are configuration files located?
+### Where are the configuration files?
 
-| Tool | Config Location |
+| Tool | Configuration file path |
 | - | - |
-| Claude Code | Environment variables |
+| Claude Code | Configured via environment variables |
 | Codex | `~/.codex/config.toml` and `~/.codex/auth.json` |
-| RooCode | VS Code Settings JSON |
-| Qwen Code | Environment variables |
+| RooCode | VS Code settings JSON |
+| Qwen Code | Configured via environment variables |
 
-### I can't connect to FishXCode
+### What if I cannot connect to FishXCode?
 
-1. Confirm the `BASE_URL` is set to `https://api.fishxcode.com/` (note the trailing `/`)
-2. Verify that `fishxcode.com` is reachable from your network
-3. If you're behind a corporate proxy, ensure your proxy settings are configured correctly
+1. Confirm `BASE_URL` is set to `https://api.fishxcode.com/` or `https://fishxcode.com/` (both work and behave identically)
+2. Check that `fishxcode.com` is reachable from your network
+3. On a corporate network, confirm your proxy settings are correct
 
-## Model Selection
+## Model selection
 
 ### How do I choose the right model?
 
-Pick based on your use case:
+Choose by use case:
 
-| Use Case | Recommended Model | Why |
+| Use case | Recommended model | Why |
 | - | - | - |
-| Everyday coding | `claude-fable-5-2` | Good balance of capability and speed |
-| Quick completions | `claude-haiku-5-5` | Fast response times |
-| Complex architecture | `claude-fable-5-2` | Strong reasoning ability |
+| Daily coding | `claude-fable-5-2` | Balanced capability and speed |
+| Fast completions | `claude-haiku-5-5` | Fast response |
+| Complex architecture | `claude-fable-5-2` | Strong reasoning |
 
 ### What are the differences between models?
 
-- **Sonnet series** — Well-rounded, suitable for most coding tasks
-- **Haiku series** — Lightweight and fast, ideal for simple completions and formatting
-- For detailed capability comparisons, refer to each provider's official documentation
+- **Sonnet series**: well-rounded, suits most coding tasks
+- **Haiku series**: lightweight and fast, suits simple completions and formatting tasks
+- For detailed capability differences, refer to each provider's official documentation
 
 ### How do I switch models?
 
-Set the `ANTHROPIC_MODEL` environment variable:
+Specify it with the `ANTHROPIC_MODEL` environment variable:
 
 ```bash
 export ANTHROPIC_MODEL=claude-fable-5-2
@@ -114,54 +128,58 @@ export ANTHROPIC_MODEL=claude-fable-5-2
 
 ## Troubleshooting
 
-### Authentication failure (Auth Error)
+### Authentication error (Auth Error)
 
 <Callout type="warn" title="Common causes">
-  - Token contains extra spaces or is incomplete
-  - Token has been deleted or regenerated
-  - Both `API_KEY` and `AUTH_TOKEN` must be set
+  - The key was entered incorrectly (extra spaces or incomplete)
+  - The key was deleted or regenerated
+  - `API_KEY` and `AUTH_TOKEN` are not both set
 </Callout>
 
-Fix: Go to the [console](https://fishxcode.com/console/token), verify your token status, and copy-paste it again.
+Fix: go to the [API Keys page](https://fishxcode.com/keys) to check the key's status, then copy and paste it again.
 
-### How do I read error logs?
+### How do I view and understand error logs?
 
-Go to [Console -> Usage Logs](https://fishxcode.com/console/log), switch the log type to **Error logs**, and filter by time range, model, token, group, request ID, error message, or status code.
+Go to [Console → Usage Logs](https://fishxcode.com/usage-logs/common) and switch the log type to **Error Logs**. You can filter by time, model, key, group, request ID, error message, and status code.
 
 <Callout type="idea" title="Troubleshooting tips">
-  - Copy the `request_id` from the API response or log entry first, then search for that exact request
-  - Use the error message filter for keywords in `content`, such as `Invalid token` or `Upstream request failed`
-  - Use the status code filter to group issues quickly, such as `401`, `429`, `502`, `503`, or `524`
+  - Copy the `request_id` from the API response or the log first and search it precisely in Usage Logs to find the same request
+  - Search keywords in `content` via “Error message”, e.g. `Invalid token`, `Upstream request failed`
+  - Aggregate issue types quickly by “Status code”, e.g. `400`, `401`, `403`, `413`, `429`, `500`, `502`, `503`, `504`
+  - If the same error clusters in one group, judge from the group first whether it is a configuration, usage, or upstream availability problem
 </Callout>
 
-For field descriptions, status code categories, and the full common error table, see [Error Logs](/en/error-logs).
+For full field descriptions, status code categories, and the common error table, see [Error Log Guide](/en/error-logs).
 
 ### How do I read group health status?
 
-Group health helps determine whether an issue is an isolated request failure or a concentrated issue in a plan, model, or upstream group. Check `success_rate`, `error_count`, and `error_reasons` first, then use the `request_id` from a single log entry to locate the exact request.
+Group health status tells you whether an issue is an isolated request anomaly or a concentrated failure of a plan, model, or upstream group. Look at `success_rate`, `error_count`, and `error_reasons` first, then use the `request_id` in individual logs to locate specific requests.
 
-For the full status page, field descriptions, and troubleshooting flow, see [Group Health](/en/group-health).
+For the full status page, field descriptions, and the troubleshooting workflow, see [Group Health Status](/en/group-health).
 
-### Request timeout
+### Request timeout (Timeout)
 
 Possible causes:
 
 1. High network latency
-2. Very large input context requiring longer processing
-3. Service under heavy load
+2. Very long request context, so the model takes longer to process
+3. High current service load
 
-Try reducing the input context or retry after a short wait.
+Suggestions: reduce the input context, or retry later.
 
-### Rate limit hit (429)
+### Rate limit or quota limit triggered (Rate Limit)
 
-A `429` status code means you're sending requests too frequently.
+A `429` status code usually means requests are too frequent. It can also mean an upstream account's daily quota is exhausted, or the current model credential is cooling down.
 
-<Callout type="idea" title="How to handle it">
-  - Slow down and wait a few seconds between requests
-  - Avoid calling the API in tight loops without delays
-  - Make sure no other process is using the same token simultaneously
+<Callout type="idea" title="What to do">
+  - Lower the request frequency and retry after a few seconds
+  - Avoid calling the API in tight loops without intervals in scripts
+  - Check whether another process is using the same key at the same time
+  - If the log contains `Max 10/min` or `Max 5/min`, reduce concurrency and requests per minute below the threshold as prompted
+  - If the log contains `daily limit exceeded`, wait for the daily quota to reset, or switch to another available model/group
+  - If the log contains `cooling down`, do not retry immediately in a row; wait for the cooldown to end or switch models temporarily
 </Callout>
 
-### Model not available
+### Model Not Available
 
-Double-check the model name you specified. Refer to the recommended model list in [Get Started](/en/start). Some models may not yet be available on FishXCode.
+Check that the model name is correct — see the recommended model list in [Quick Start](/en/start). Some models may not be available on FishXCode yet.

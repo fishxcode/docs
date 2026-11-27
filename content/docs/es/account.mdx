@@ -1,161 +1,178 @@
 ---
 title: Registro de cuenta y gestión
-description: Registro en FishXCode, obtención de API Key, recarga y seguridad de cuenta.
+description: Guía de registro en FishXCode, obtención de API Key, recarga y seguridad de la cuenta.
 navTitle: Registro de cuenta
 ---
 
-> ¿Ya tienes cuenta? Ve directamente a [Comenzar](/es/start) para configurar tus herramientas.
-> ¿Explorar toda la plataforma? Consulta la [Guía de plataforma](/es/platform).
+> ¿Ya tienes cuenta? Ve directamente a [Inicio rápido](/es/start) para configurar tus herramientas.
+> ¿Quieres ver el panorama completo de la plataforma? Consulta [Navegación de plataforma](/es/platform).
 
-## 1. Obtener una API Key
+## 1. Registro e inicio de sesión
 
-### 1. Registrarse
+### 1. Crear una cuenta
 
-Visita [fishxcode.com](https://fishxcode.com/register?aff=9CTW) y haz clic en **Registrarse**:
+Visita [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW) para abrir la página de registro:
 
-![Página de inicio de FishXCode](/img/start/api-01-home.png)
+![Página de registro de FishXCode](/img/start/api-v2-01-home.png)
 
-Elige el método de registro (GitHub, LinuxDO o nombre de usuario):
+Rellena el formulario de registro: establece un nombre de usuario y una contraseña (8–128 caracteres; se recomienda incluir mayúsculas, minúsculas, números y símbolos), e indica el correo electrónico que recibirá el código de verificación:
 
-![Selección del método de registro](/img/start/api-02-register.png)
+![Rellenar los datos de registro](/img/start/api-v2-03-register-form.png)
 
-Completa el formulario con nombre de usuario, contraseña y confirmación de contraseña:
+<Callout type="idea" title="Dominios de correo admitidos">
+  El registro por correo admite actualmente cuatro dominios: **qq.com, 126.com, 163.com, gmail.com**. Otros dominios podrían no recibir el código de verificación.
+</Callout>
 
-![Formulario de registro](/img/start/api-03-register-form.png)
+Haz clic en **Enviar código de verificación**. Tras completar la verificación humana de Cloudflare, el código se envía a tu correo. Busca el código (una combinación alfanumérica de 6 caracteres) en tu bandeja de entrada e introdúcelo en el formulario:
+
+![Introducir el código de verificación del correo](/img/start/api-v2-02-register-verify.png)
+
+Haz clic en **Crear cuenta** para completar el registro. La página te lleva al inicio de sesión con el mensaje «Cuenta creada. Inicia sesión, por favor».
+
+<Callout type="warn" title="¿No recibes el código de verificación?">
+  1. Comprueba que el dominio del correo está en la lista admitida (qq.com / 126.com / 163.com / gmail.com)
+  2. Revisa la carpeta de correo no deseado
+  3. Espera 1–2 minutos y reintenta; evita solicitudes frecuentes
+  4. Si sigue sin llegar, cambia al inicio de sesión autorizado de terceros
+</Callout>
 
 ### 2. Iniciar sesión
 
-Una vez registrado, inicia sesión con tu nombre de usuario y contraseña:
+Tras registrarte, inicia sesión con tu nombre de usuario y contraseña, o usa el inicio de sesión autorizado de terceros con un clic:
 
-![Página de inicio de sesión](/img/start/api-04-login.png)
+![Página de inicio de sesión](/img/start/api-v2-04-login.png)
 
-Tras iniciar sesión, accederás a la consola:
-
-![Página principal de la consola](/img/start/api-05-console.png)
-
-### 3. Crear un token
-
-Ve a **Consola → Gestión de tokens → Agregar token** y rellena el formulario:
-
-![Agregar token](/img/start/api-06-token-create.png)
-
-- En **Grupo de tokens**, se recomienda seleccionar el **canal oficial**. Este grupo incluye toda la gama de modelos Claude y selecciona automáticamente el modelo según la complejidad de la tarea. Los canales y modelos disponibles están sujetos a cambios — consulta la [página de Precios](https://fishxcode.com/pricing) para información actualizada.
-
-Una vez creado, haz clic en el botón **Copiar** en la lista de tokens para obtener tu API Key (formato: `sk-xxx`):
-
-![Copiar token](/img/start/api-07-token-copy.png)
-
-### 4. Recargar saldo
-
-Ve a **Consola → Gestión de billetera**. Se admite Alipay, WeChat o código de canje:
-
-![Página de recarga](/img/start/api-08-wallet.png)
-
-| Método | Ruta |
+| Método de inicio de sesión | Descripción |
 | - | - |
-| Alipay | Ingresar/seleccionar monto → Alipay |
-| WeChat Pay | Ingresar/seleccionar monto → WeChat |
-| Código de canje | Ingresar código en el área de canje → Clic en Canjear saldo |
+| Cuenta registrada por correo | Inicio de sesión con nombre de usuario/correo + contraseña |
+| GitHub | Inicio de sesión autorizado; recomendado para desarrolladores |
+| LinuxDO | Inicio de sesión autorizado para usuarios de la comunidad |
+| Google | Inicio de sesión autorizado con cuenta de Google |
 
-<Callout type="idea" title="Explicación del multiplicador">
-  El `0.5x multiplicador` en el nombre del grupo indica la tasa de consumo. Cuanto menor sea el valor, más tokens obtienes. Por ejemplo, `0.5x` significa que por ¥1 puedes usar 10 millones de tokens oficiales (frente a los 5 millones al precio oficial).
+<Callout type="info" title="El inicio de sesión de terceros crea la cuenta automáticamente">
+  La primera vez que inicies sesión con GitHub / LinuxDO / Google se crea una cuenta automáticamente; no necesitas registrarte aparte.
 </Callout>
+
+Tras iniciar sesión entras en la consola (página de resumen):
+
+![Resumen de la consola](/img/start/api-v2-05-console.png)
 
 ---
 
-## 2. Gestión de tokens
+## 2. Obtener una API Key
 
-### Detalles de grupos de tokens
+### 1. Crear una API Key
 
-Al crear un token es necesario seleccionar un grupo, que determina el rango de modelos disponibles y la tasa de consumo:
+Ve a **Consola → Claves API** y haz clic en **Crear API Key** en la esquina superior derecha:
 
-| Tipo de grupo | Descripción | Escenario recomendado |
-| - | - | - |
-| **Canal oficial** | Incluye toda la gama de modelos Claude con enrutamiento automático | Recomendado para la mayoría de usuarios |
-| **Grupos de tarifa baja** | Tasa de consumo inferior, mayor relación calidad-precio | Llamadas frecuentes o escenarios sensibles al coste |
+![Diálogo de creación de API Key](/img/start/api-v2-06-token-create.png)
 
-<Callout type="idea" title="Recomendación">
-  Si no estás seguro de qué grupo elegir, selecciona directamente el **canal oficial**. El sistema seleccionará automáticamente el modelo más adecuado según la complejidad de la tarea.
+Campos del formulario:
+
+| Campo | Descripción |
+| - | - |
+| Nombre | Nombre personalizado de la clave para reconocer su propósito |
+| Grupo | Determina los modelos disponibles y el multiplicador de facturación; ver abajo |
+| Caducidad | Nunca / 1 mes / 1 día / 1 hora |
+| Cantidad | Puedes crear varias claves de una vez (se añade un sufijo aleatorio a cada nombre) |
+| Cuota ilimitada | Activada por defecto; desactívala para limitar el consumo máximo de esta clave |
+| Ajustes avanzados | Lista blanca de IP (admite CIDR), permitir consultar la cuota del usuario |
+
+- Para el **grupo**, recomendamos **claude** (1.5x): es el grupo oficial de precio completo del pool de cuentas Claude Max 20, con pleno rendimiento. Para usar un paquete mensual de Codex debes seleccionar `codex-sub-june`. Consulta todos los grupos y multiplicadores en [Reglas de facturación y grupos](/es/billing-groups).
+- La **lista blanca de IP** conviene a servidores con IP de salida fija; úsala con cautela en desarrollo local, porque un cambio de IP impedirá las llamadas.
+
+Haz clic en **Guardar cambios** para terminar. En la lista de claves, pulsa el botón **Copiar** para obtener la API Key (formato `sk-xxx`):
+
+![Copiar la API Key](/img/start/api-v2-07-token-copy.png)
+
+<Callout type="idea" title="Dirección de la API">
+  Haz clic en **Dirección de la API** en la esquina superior derecha de la página para ver las direcciones de acceso. La consola muestra `https://fishxcode.com` por defecto; `https://api.fishxcode.com` también funciona. Ambas se comportan igual: elige la que prefieras.
 </Callout>
 
-### Recomendaciones de seguridad para tokens
+### 2. Recargar
 
-- **Rotación periódica**: se recomienda renovar los tokens cada 30-90 días para reducir el riesgo de filtración
-- **No almacenar en texto plano**: evita escribir la API Key directamente en el código o subirla a un repositorio Git; utiliza variables de entorno
-- **Un token por proyecto**: crea tokens independientes para cada proyecto, lo que facilita la gestión y el seguimiento
-- **Eliminación ante fuga**: si sospechas que un token se ha filtrado, elimínalo de inmediato en la consola y crea uno nuevo
+Ve a **Consola → Monedero**. La página tiene dos pestañas: **Recarga de saldo** y **Planes de suscripción**:
 
-### Modificar y eliminar tokens
+![Recarga de saldo del monedero](/img/start/api-v2-08-wallet.png)
 
-En la página **Consola → Gestión de tokens**:
+**Recarga de saldo**: elige un importe predefinido ($1 / $5 / $10 / $100 / $500 / $1,000; los importes grandes tienen un 1%–3% de descuento) o introduce un importe personalizado, y elige el método de pago:
 
-- **Ver detalles**: haz clic en el nombre del token para consultar el grupo, el rango de modelos y la fecha de creación
-- **Copiar token**: haz clic en el botón de copiar en la lista
-- **Eliminar token**: haz clic en el botón de eliminar; una vez eliminado, el token dejará de funcionar de inmediato y las herramientas que lo utilicen no podrán realizar más llamadas
+![Métodos de pago y códigos de canje](/img/start/api-09-payment.png)
 
-<Callout type="warn" title="Atención">
-  La eliminación no se puede deshacer. Asegúrate de que ya no necesitas el token antes de eliminarlo.
+| Método | Descripción |
+| - | - |
+| Alipay | El método de recarga habitual, sin mínimo |
+| Waffo Pancake | Recarga mínima de $100 |
+| Código de canje | Introdúcelo en la zona «¿Tienes un código de canje?» y haz clic en **Canjear saldo** |
+
+**Planes de suscripción**: compra un paquete mensual del pool de cuentas Codex ($20 / $200 / $2,000 en tres tramos) y, tras la compra, crea claves con el grupo `codex-sub-june` para usarlo. Más detalles en [Planes de suscripción](/es/subscription-plans):
+
+![Pestaña de planes de suscripción](/img/start/api-10-subscription.png)
+
+<Callout type="idea" title="Ventaja para nuevos usuarios">
+  Las cuentas recién registradas reciben automáticamente un saldo de prueba de **$0.2**, utilizable para probar llamadas a la API.
+</Callout>
+
+<Callout type="idea" title="Cómo funcionan los multiplicadores">
+  El multiplicador del nombre del grupo es el factor de facturación: cuanto menor es el valor, menos cuesta la misma solicitud. Por ejemplo, consumir 1 unidad en un grupo `0.5x` equivale al volumen de tokens que costaría 2 unidades al precio oficial. Más detalles en [Reglas de facturación y grupos](/es/billing-groups).
 </Callout>
 
 ---
 
 ## 3. Seguridad de la cuenta
 
-### Contraseña y seguridad de inicio de sesión
+Ve a **Consola → Seguridad y acceso** para gestionar la seguridad de tu cuenta:
 
-- Utiliza una **contraseña segura** (mínimo 8 caracteres, con mayúsculas, minúsculas y números)
-- No reutilices la misma contraseña en varias plataformas
-- Si olvidaste tu contraseña, puedes restablecerla desde la página de inicio de sesión mediante el flujo de recuperación
+![Página de seguridad y acceso](/img/start/api-12-security.png)
 
-### Inicio de sesión con terceros
-
-FishXCode admite los siguientes métodos de inicio de sesión con terceros:
-
-| Método | Descripción |
+| Función | Descripción |
 | - | - |
-| **GitHub** | Recomendado para desarrolladores, inicio de sesión con un clic |
-| **LinuxDO** | Usuarios de la comunidad pueden iniciar sesión directamente |
+| Cambiar contraseña | Rótala periódicamente: 8 caracteres o más, con mayúsculas, minúsculas y números |
+| Vinculación de cuentas | Tras vincular GitHub / LinuxDO / Google puedes iniciar sesión con autorización de un clic |
+| Sesiones de inicio | Consulta los dispositivos conectados y cierra otras sesiones a distancia |
+| Clave de acceso | Para llamar a la API del panel; créala marcando los permisos que necesites |
+| Inicio con Passkey | Inicio de sesión sin contraseña mediante llave de acceso |
+| Verificación en dos pasos | Añade una capa extra de seguridad a tu cuenta |
 
-Una vez vinculada una cuenta de terceros, podrás iniciar sesión mediante la autorización de la plataforma correspondiente, sin necesidad de introducir contraseña.
+### Consejos de seguridad para las claves
 
-### Detección de anomalías y resolución
+- **Rota periódicamente**: cambia las claves cada 30–90 días para reducir el riesgo de fuga
+- **No las guardes en texto plano**: evita escribir la API Key directamente en el código o subirla a Git; usa variables de entorno
+- **Mínimo privilegio**: crea claves separadas por proyecto para facilitar la gestión y el seguimiento
+- **Si una clave se filtra**: si sospechas una fuga, elimina la clave de inmediato en la página **Claves API** y crea una nueva
 
-Si detectas alguna de las siguientes situaciones anómalas, te recomendamos actuar de inmediato:
-
-1. **Aumento inusual del consumo** → Comprueba si algún token se ha filtrado; si es necesario, elimina todos los tokens y créalos de nuevo
-2. **No puedes iniciar sesión** → Intenta recuperar la contraseña; si el problema persiste, contacta con el soporte oficial
-3. **Descuento anómalo del saldo** → Revisa los registros de uso para identificar las llamadas concretas y confirmar si se trata de un consumo normal
-
-<Callout type="idea" title="Contactar con soporte">
-  Si tienes problemas con tu cuenta, accede a la página [Contacto](https://fishxcode.com/contact) para obtener ayuda.
+<Callout type="warn" title="Atención">
+  Eliminar una clave es irreversible. Al eliminarla deja de funcionar de inmediato y las herramientas que la usaban no podrán seguir llamando.
 </Callout>
 
 ---
 
 ## 4. Preguntas frecuentes
 
-### ¿No recibes el código de verificación?
+### ¿No recibes el código de verificación al registrarte?
 
-1. Comprueba que el correo electrónico esté escrito correctamente (presta atención a la ortografía y al dominio)
-2. Revisa la carpeta de correo no deseado / spam
-3. Espera 1-2 minutos y vuelve a intentarlo; evita solicitudes frecuentes
-4. Si sigues sin recibirlo, prueba con otro correo electrónico o utiliza el inicio de sesión con terceros
+1. Comprueba que el dominio del correo está en la lista admitida (qq.com / 126.com / 163.com / gmail.com)
+2. Revisa la carpeta de correo no deseado
+3. Espera 1–2 minutos y reintenta; evita solicitudes frecuentes
+4. Si sigue sin llegar, usa el inicio de sesión autorizado de terceros con GitHub / LinuxDO / Google
 
-### ¿Dónde encontrar los tokens creados?
+### ¿Dónde veo mi API Key después de crearla?
 
-Ve a **Consola → Gestión de tokens**; los tokens creados aparecerán en la lista. Haz clic en el botón de copiar para obtener la API Key en formato `sk-xxx`.
+Ve a **Consola → Claves API**; las claves creadas aparecen en la lista. Pulsa el botón de copiar para obtener la API Key en formato `sk-xxx`.
 
-### ¿Recarga no reflejada?
+### ¿Y si la recarga no llega?
 
-1. Confirma que el pago se haya completado (consulta el historial de transacciones en Alipay/WeChat)
-2. Espera entre 1 y 5 minutos, ya que puede haber un breve retraso en el sistema
-3. Actualiza la página de billetera en la consola
-4. Si transcurridos más de 10 minutos el saldo no aparece, contacta con el servicio de atención al cliente y proporciona una captura de pantalla del pago
+1. Comprueba que el pago se realizó con éxito (revisa el registro de transacciones de Alipay o de tu canal de pago)
+2. Espera 1–5 minutos; puede haber un pequeño retraso del sistema
+3. Actualiza la página del monedero en la consola
+4. Si tras 10 minutos sigue sin llegar, contacta por [Contacto](https://fishxcode.com/contact) aportando el registro del pago
 
-### ¿Cómo consultar el detalle de consumo?
+### ¿Cómo consulto el detalle del consumo?
 
-Ve a **Consola → Registro de uso**, donde podrás ver de cada llamada a la API:
+Ve a **Consola → Registros de uso** y verás, para cada llamada a la API:
 
-- Fecha y hora, y nombre del modelo
+- Hora de la llamada y nombre del modelo
 - Consumo de tokens y coste
-- IP de la solicitud y registro detallado
+- IP de la solicitud y registros detallados
+
+Más tipos de registros (auditoría, tareas) se pueden cambiar en la barra lateral.

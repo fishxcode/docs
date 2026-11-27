@@ -1,16 +1,16 @@
 ---
 title: 在 Claude Code 中使用 FishXCode
-description: 用 Claude Code 接入 FishXCode 的完整上手流程和關鍵配置步驟。
+description: 用 Claude Code 接入 FishXCode 的完整上手流程和關鍵設定步驟。
 navTitle: Claude Code
 ---
 
-> 首次使用？請先完成 [帳戶註冊與充值](/zh-TW/account)。
+> 首次使用？請先完成 [帳戶註冊與儲值](/zh-TW/account)。
 
 ## 一、環境準備
 
 ### 安裝 Node.js
 
-Claude  Code 通過 npm 安裝，需先確認 Node.js 已就緒。
+Claude  Code 透過 npm 安裝，需先確認 Node.js 已就緒。
 
 ```bash tab="macOS - 驗證"
 node -v
@@ -26,18 +26,18 @@ node -v
 npm -v
 ```
 
-若未安裝，前往 [nodejs.org/zh-cn/download](https://nodejs.cn/download/current/) 下載對應平臺安裝包，安裝完成後 **Windows 需重啟**。
+若未安裝，前往 [nodejs.org/zh-cn/download](https://nodejs.cn/download/current/) 下載對應平台安裝包，安裝完成後 **Windows 需重新啟動**。
 
-### Windows 額外：安裝 Git Bash
+### Windows 另需：安裝 Git Bash
 
 Claude  Code 依賴 bash 執行環境，Windows 使用者需安裝 Git Bash：
 
-1. 下載地址：[git-scm.com/install/windows](https://git-scm.com/install)，選擇對應版本安裝。
-2. 驗證：右鍵桌面，出現 **Open Git Bash here** 選項即安裝成功。
+1. 下載網址：[git-scm.com/install/windows](https://git-scm.com/install)，選擇對應版本安裝。
+2. 驗證：在桌面按滑鼠右鍵，出現 **Open Git Bash here** 選項即安裝成功。
 
 ---
 
-## 二、通過ZCF安裝 Claude  Code
+## 二、透過 ZCF 安裝 Claude  Code
 
 ```bash tab="npm"
 npx zcf
@@ -45,75 +45,78 @@ npx zcf
 
 ---
 
-## 三、配置 FishXCode
+## 三、設定 FishXCode
 
-1. 終端輸入 `npx zcf`，回車執行。
-   出現 `Ok to proceed? (y)` 時輸入 `y` 回車。
+1. 終端機輸入 `npx zcf`，按 Enter 執行。
+   出現 `Ok to proceed? (y)` 時輸入 `y` 按 Enter。
 
 2. 選擇 ZCF 顯示語言：
-   選擇 **簡體中文**。
+   選擇 **简体中文**。
 
 3. 安裝完成後，選擇：
-   `1. 完整初始化 - 安裝 Claude Code + 匯入工作流 + 配置 API 或 CCR 代理 + 配置 MCP 服務`
+   `1. 完整初始化 - 安装 Claude Code + 导入工作流 + 配置 API 或 CCR 代理 + 配置 MCP 服务`
 
-4. 是否修改模板語言配置：
+4. 是否修改範本語言設定：
    選擇 `No`
 
 5. AI 輸出語言：
-   選擇 `簡體中文`
+   選擇 `简体中文`
 
 6. 是否安裝 Claude：
    選擇 `Yes`
 
-7. API 配置模式：
-   選擇 `自定義 API 配置`
+7. API 設定模式：
+   選擇 `自定义 API 配置`
 
 8. API 供應商：
-   選擇 `自定義配置`
+   選擇 `自定义配置`
 
-9. 配置名稱：
-   自定義英文名稱
+9. 設定名稱：
+   自訂英文名稱
 
-10. 認證型別：
+10. 驗證類型：
     選擇 `API Key`
 
 11. API 基礎 URL：
     ```
     https://api.fishxcode.com
     ```
+    <Callout type="idea" title="接入位址">
+      `https://api.fishxcode.com` 與 `https://fishxcode.com` 均可作為接入位址，兩者行為一致，任選其一。
+    </Callout>
 
 12. API 金鑰：
-    填寫 FishXCode 控制台生成的令牌
+    填寫 FishXCode 控制台建立的 API Key（控制台 → API 金鑰）
 
-13. 模型相關配置：
-    預設回車跳過即可
+13. 模型相關設定：
+    預設按 Enter 跳過即可
 
-14. 工作流型別：
+14. 工作流程類型：
     選擇 `通用工具`
 
 15. 輸出風格：
-    根據個人喜好選擇
+    依個人喜好選擇
 
-16. 是否配置 MCP：
+16. 是否設定 MCP：
     選擇 `Yes`
 
 17. MCP 服務：
-    使用空格選擇需要的服務，回車執行
+    使用空白鍵選取需要的服務，按 Enter 執行
 
-18. 配置 CCometixLine：
-    直接回車
+18. 設定 CCometixLine：
+    直接按 Enter
 
 19. 返回主選單後輸入：
     ```
     q
     ```
 
-20. 終端輸入：
+20. 終端機輸入：
     ```
     claude
     ```
     - 選擇 `Yes, I trust this folder`
-    - API 選擇，一定要選擇 **YES（第一個）**
+    - API 選擇，一定要選 **YES（第一個）**
 
 ---
 
@@ -132,11 +135,11 @@ claude
 
 | 選項 | 實際模型 | 說明 |
 | - | - | - |
-| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | 根據任務自動選擇，推薦日常使用 |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | 依任務自動選擇，推薦日常使用 |
 | **Opus** | `claude-opus-5-5` | 最強推理能力，消耗較高 |
 | **Haiku** | `claude-haiku-5-5` | 輕量快速 |
 
-也可通過環境變數固定模型：
+也可透過環境變數固定模型：
 
 ```bash tab="macOS/Linux"
 export ANTHROPIC_MODEL=claude-fable-5-2
@@ -149,7 +152,7 @@ claude
 ```
 
 <Callout type="idea" title="升級 Claude Code">
-  如發現模型版本不是最新，執行升級命令後重啟相關工具：
+  如發現模型版本不是最新，執行升級指令後重新啟動相關工具：
 
   ```bash
   npm install -g @anthropic-ai/claude-code
@@ -166,17 +169,17 @@ claude
 
 ![安裝 Claude  Code Terminal](/img/start/idea-01-install.png)
 
-安裝完成後重啟 IDEA，驗證外掛已載入：
+安裝完成後重新啟動 IDEA，驗證外掛已載入：
 
 ![驗證外掛已載入](/img/start/idea-02-verify.png)
 
 <Callout type="info">
-  若在外掛市場搜尋不到，說明當前 IDEA 版本過低，需升級至最新版本。
+  若在外掛市場搜尋不到，表示目前 IDEA 版本過低，需升級至最新版本。
 </Callout>
 
 ### VSCode
 
-按 `Ctrl + Shift + X` 開啟擴充套件面板，搜尋 `claude code`，找到 **Claude  Code for VSCode** 安裝。
+按 `Ctrl + Shift + X` 開啟擴充功能面板，搜尋 `claude code`，找到 **Claude  Code for VSCode** 安裝。
 
 ![搜尋並安裝 Claude  Code 外掛](/img/start/vscode-01-install.png)
 
@@ -184,25 +187,29 @@ claude
 
 ![Claude  Code 外掛接入方式](/img/start/vscode-02-login.png)
 
-推薦通過 `settings.json` 配置接入 FishXCode。點選外掛右下角**齒輪圖示** → **在 settings.json 中編輯**：
+建議透過 `settings.json` 設定接入 FishXCode。點選外掛右下角**齒輪圖示** → **在 settings.json 中編輯**：
 
 ![開啟 settings.json 編輯](/img/start/vscode-03-settings.png)
 
-在 VSCode 的 `settings.json` 中新增：
+在 VSCode 的 `settings.json` 中加入：
 
 ```json
 {
   "claudeCode.preferredLocation": "panel",
   "claudeCode.environmentVariables": [
-    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "替換為您的 API Key" },
+    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "替换为您的 API Key" },
     { "name": "ANTHROPIC_BASE_URL", "value": "https://api.fishxcode.com/" }
   ]
 }
 ```
 
-![settings.json 配置示例](/img/start/vscode-04-config.png)
+<Callout type="idea" title="接入位址">
+  `ANTHROPIC_BASE_URL` 也可以填 `https://fishxcode.com/`，兩個位址行為一致，任選其一。
+</Callout>
 
-儲存後**退出並重新開啟 VSCode**，外掛即可正常連線 FishXCode。
+![settings.json 設定範例](/img/start/vscode-04-config.png)
+
+儲存後**結束並重新開啟 VSCode**，外掛即可正常連線 FishXCode。
 
 ![在 VSCode 中使用 Claude  Code](/img/start/vscode-05-demo.gif)
 
@@ -212,11 +219,11 @@ claude
 
 ### 出現 403 錯誤
 
-Token 餘額不足，前往控制台充值後重試。
+Token 餘額不足，前往控制台儲值後重試。
 
 ### Windows 出現連線異常或 400/401 錯誤
 
-在 PowerShell 中重新執行 `setx` 命令寫入系統變數，然後重新開啟終端：
+在 PowerShell 中重新執行 `setx` 指令寫入系統變數，然後重新開啟終端機：
 
 ```powershell
 setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
@@ -233,7 +240,7 @@ Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
 Please check your internet connection and network settings.
 ```
 
-這是因為 Claude  Code 尚未完成 onboarding，仍嘗試連線官方 `api.anthropic.com`。**無需科學上網**，在 `~/.claude.json`（注意是 home 目錄下的 `.claude.json`，不是 `.claude/settings.json`）末尾新增 `"hasCompletedOnboarding": true` 即可跳過：
+這是因為 Claude  Code 尚未完成 onboarding，仍嘗試連線官方 `api.anthropic.com`。**無需翻牆**，在 `~/.claude.json`（注意是 home 目錄下的 `.claude.json`，不是 `.claude/settings.json`）結尾加入 `"hasCompletedOnboarding": true` 即可跳過：
 
 ```json
 {
@@ -245,5 +252,5 @@ Please check your internet connection and network settings.
 ```
 
 <Callout type="idea">
-  新增前注意在上一個欄位末尾補逗號（JSON 語法要求）。修改後重新執行 `claude` 即可正常連線。
+  加入前注意在上一個欄位結尾補逗號（JSON 語法要求）。修改後重新執行 `claude` 即可正常連線。
 </Callout>

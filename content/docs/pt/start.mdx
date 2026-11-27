@@ -1,15 +1,16 @@
 ---
 title: Usando FishXCode com Claude Code
+description: Fluxo completo de primeiros passos para conectar o Claude Code ao FishXCode e etapas essenciais de configuração.
 navTitle: Claude Code
 ---
 
-> Primeira vez? Primeiro complete a [Configuração de conta](/pt/account).
+> Primeira vez aqui? Conclua primeiro o [Registro da conta e recarga](/pt/account).
 
 ## 1. Preparação do ambiente
 
-### Instalar Node.js
+### Instalar o Node.js
 
-Claude Code é instalado via npm. Verifique primeiro se o Node.js está disponível.
+O Claude Code é instalado via npm; primeiro confirme que o Node.js está pronto.
 
 ```bash tab="macOS - Verificar"
 node -v
@@ -25,18 +26,18 @@ node -v
 npm -v
 ```
 
-Se não estiver instalado, acesse [nodejs.org/pt-br/download](https://nodejs.cn/download/current/) para baixar o instalador correspondente à sua plataforma. **Windows requer reinicialização** após a instalação.
+Se não estiver instalado, baixe o instalador da sua plataforma em [nodejs.org/zh-cn/download](https://nodejs.cn/download/current/). Após instalar, **o Windows precisa ser reiniciado**.
 
-### Somente Windows: instalar Git Bash
+### Passo extra no Windows: instalar o Git Bash
 
-Claude Code requer um ambiente bash. Usuários Windows devem instalar o Git Bash:
+O Claude Code depende de um ambiente bash; usuários Windows precisam instalar o Git Bash:
 
-1. Baixe em [git-scm.com/install/windows](https://git-scm.com/install) e instale a versão correspondente.
-2. Verificação: clique com o botão direito na área de trabalho — se aparecer **Open Git Bash here**, a instalação foi bem-sucedida.
+1. Download: [git-scm.com/install/windows](https://git-scm.com/install); escolha a versão correspondente e instale.
+2. Verificação: clique com o botão direito na área de trabalho; se aparecer a opção **Open Git Bash here**, a instalação foi bem-sucedida.
 
 ---
 
-## 2. Instalar Claude Code via ZCF
+## 2. Instalar o Claude Code via ZCF
 
 ```bash tab="npm"
 npx zcf
@@ -44,79 +45,82 @@ npx zcf
 
 ---
 
-## 3. Configurar FishXCode
+## 3. Configurar o FishXCode
 
-1. Digite `npx zcf` no terminal e pressione Enter.
+1. Digite `npx zcf` no terminal e pressione Enter para executar.
    Quando aparecer `Ok to proceed? (y)`, digite `y` e pressione Enter.
 
-2. Selecione o idioma de exibição do ZCF:
-   Escolha **English**.
+2. Escolha o idioma de exibição do ZCF:
+   selecione **简体中文**.
 
-3. Após a instalação, selecione:
-   `1. Full Initialization - Install Claude Code + Import Workflows + Configure API or CCR Proxy + Configure MCP Services`
+3. Após a instalação, escolha:
+   `1. Inicialização completa - Instalar Claude Code + importar workflows + configurar API ou proxy CCR + configurar serviços MCP`
 
-4. Modificar configuração de idioma do template:
-   Selecione `No`
+4. Deseja alterar a configuração de idioma dos templates:
+   escolha `No`
 
 5. Idioma de saída da IA:
-   Selecione `English`
+   escolha `简体中文`
 
-6. Instalar Claude:
-   Selecione `Yes`
+6. Deseja instalar o Claude:
+   escolha `Yes`
 
 7. Modo de configuração da API:
-   Selecione `Custom API Configuration`
+   escolha `Configuração de API personalizada`
 
-8. Provedor de API:
-   Selecione `Custom Configuration`
+8. Provedor da API:
+   escolha `Configuração personalizada`
 
 9. Nome da configuração:
-   Defina um nome em inglês de sua preferência
+   um nome personalizado em inglês
 
 10. Tipo de autenticação:
-    Selecione `API Key`
+    escolha `API Key`
 
 11. URL base da API:
     ```
     https://api.fishxcode.com
     ```
+    <Callout type="idea" title="Endereço de acesso">
+      `https://api.fishxcode.com` e `https://fishxcode.com` podem ser usados como endereço de acesso; ambos se comportam da mesma forma — escolha qualquer um.
+    </Callout>
 
-12. Chave de API:
-    Insira o token gerado no console do FishXCode
+12. Chave da API:
+    informe a API Key criada no console do FishXCode (Console → Chaves API)
 
 13. Configurações relacionadas ao modelo:
-    Pressione Enter para pular com os valores padrão
+    basta pressionar Enter para pular (padrão)
 
 14. Tipo de workflow:
-    Selecione `General Tools`
+    escolha `Ferramentas gerais`
 
 15. Estilo de saída:
-    Escolha conforme sua preferência pessoal
+    escolha conforme sua preferência
 
-16. Configurar MCP:
-    Selecione `Yes`
+16. Deseja configurar MCP:
+    escolha `Yes`
 
 17. Serviços MCP:
-    Use a barra de espaço para selecionar os serviços desejados e pressione Enter para continuar
+    selecione os serviços desejados com a barra de espaço e pressione Enter para executar
 
 18. Configurar CCometixLine:
-    Pressione Enter diretamente
+    apenas pressione Enter
 
-19. Após retornar ao menu principal, digite:
+19. De volta ao menu principal, digite:
     ```
     q
     ```
 
-20. No terminal, digite:
+20. Digite no terminal:
     ```
     claude
     ```
-    - Selecione `Yes, I trust this folder`
-    - Na seleção de API, certifique-se de escolher **YES (a primeira opção)**
+    - escolha `Yes, I trust this folder`
+- na escolha da API, selecione obrigatoriamente **YES (a primeira)**
 
 ---
 
-## 4. Iniciar
+## 4. Iniciar e usar
 
 ```bash
 cd my-project
@@ -125,17 +129,17 @@ claude
 
 ---
 
-## 5. Seleção de modelo
+## 5. Troca de modelos
 
-Digite `/model` dentro do Claude Code para trocar de modelo:
+Na interface de conversa do Claude Code, digite `/model` para trocar de modelo:
 
-| Opção | Modelo real | Notas |
+| Opção | Modelo real | Descrição |
 | - | - | - |
-| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Seleção automática por complexidade da tarefa. Recomendado para uso diário. |
-| **Opus** | `claude-opus-5-5` | Raciocínio mais poderoso, custo mais alto |
+| **Default** | `claude-fable-5-2` + `claude-haiku-5-5` | Escolha automática conforme a tarefa; recomendado para uso diário |
+| **Opus** | `claude-opus-5-5` | Raciocínio mais poderoso; consumo mais alto |
 | **Haiku** | `claude-haiku-5-5` | Leve e rápido |
 
-Você também pode fixar um modelo via variável de ambiente:
+Também é possível fixar o modelo por variável de ambiente:
 
 ```bash tab="macOS/Linux"
 export ANTHROPIC_MODEL=claude-fable-5-2
@@ -147,8 +151,8 @@ $env:ANTHROPIC_MODEL="claude-fable-5-2"
 claude
 ```
 
-<Callout type="idea" title="Atualizar Claude Code">
-  Se a versão do modelo parecer desatualizada, execute o comando de atualização e reinicie as ferramentas relacionadas:
+<Callout type="idea" title="Atualizar o Claude Code">
+  Se a versão do modelo não estiver atualizada, execute o comando de atualização e reinicie as ferramentas relacionadas:
 
   ```bash
   npm install -g @anthropic-ai/claude-code
@@ -157,35 +161,35 @@ claude
 
 ---
 
-## 6. Integração com IDE
+## 6. Integração com IDEs
 
 ### IntelliJ IDEA
 
-Caminho: Arquivo → Configurações → Plugins → Marketplace → buscar `claude code`, encontrar **Claude Code Terminal** e instalar:
+Caminho: Arquivo → Configurações → Plugins → Marketplace → pesquise `claude code`, localize o **Claude Code Terminal** e instale:
 
 ![Instalar Claude Code Terminal](/img/start/idea-01-install.png)
 
-Após a instalação, reinicie o IDEA e verifique se o plugin foi carregado:
+Após instalar, reinicie o IDEA e verifique se o plugin foi carregado:
 
-![Verificar plugin carregado](/img/start/idea-02-verify.png)
+![Verificar carregamento do plugin](/img/start/idea-02-verify.png)
 
 <Callout type="info">
-  Se o plugin não aparecer no Marketplace, sua versão do IDEA é muito antiga — atualize para a versão mais recente.
+  Se o plugin não aparecer no marketplace, a versão atual do IDEA está muito antiga e precisa ser atualizada para a mais recente.
 </Callout>
 
 ### VSCode
 
-Pressione `Ctrl + Shift + X` para abrir o painel de extensões, busque `claude code` e instale o **Claude Code for VSCode**.
+Pressione `Ctrl + Shift + X` para abrir o painel de extensões, pesquise `claude code` e instale o **Claude Code for VSCode**.
 
-![Buscar e instalar o plugin Claude Code](/img/start/vscode-01-install.png)
+![Pesquisar e instalar o plugin Claude Code](/img/start/vscode-01-install.png)
 
-Após a instalação, o plugin oferece três métodos de conexão:
+Após a instalação, o plugin oferece três formas de conexão:
 
-![Métodos de conexão do plugin Claude Code](/img/start/vscode-02-login.png)
+![Formas de conexão do plugin Claude Code](/img/start/vscode-02-login.png)
 
-Recomenda-se configurar via `settings.json`. Clique no **ícone de engrenagem** no canto inferior direito do plugin → **Editar em settings.json**:
+Recomendamos conectar ao FishXCode via `settings.json`. Clique no **ícone de engrenagem** no canto inferior direito do plugin → **Editar em settings.json**:
 
-![Abrir edição do settings.json](/img/start/vscode-03-settings.png)
+![Abrir settings.json para editar](/img/start/vscode-03-settings.png)
 
 Adicione ao `settings.json` do VSCode:
 
@@ -199,32 +203,36 @@ Adicione ao `settings.json` do VSCode:
 }
 ```
 
+<Callout type="idea" title="Endereço de acesso">
+  No `ANTHROPIC_BASE_URL` também é possível usar `https://fishxcode.com/`; os dois endereços se comportam da mesma forma — escolha qualquer um.
+</Callout>
+
 ![Exemplo de configuração no settings.json](/img/start/vscode-04-config.png)
 
-Após salvar, **feche e reabra o VSCode** — o plugin estará conectado ao FishXCode normalmente.
+Depois de salvar, **feche e reabra o VSCode**; o plugin passará a se conectar normalmente ao FishXCode.
 
 ![Usando Claude Code no VSCode](/img/start/vscode-05-demo.gif)
 
 ---
 
-## 7. Solução de problemas
+## 7. Perguntas frequentes
 
 ### Erro 403
 
-Saldo do token insuficiente. Recarregue no console e tente novamente.
+Saldo insuficiente; recarregue no console e tente novamente.
 
-### Windows: erro de conexão ou 400/401
+### Erro de conexão anormal ou 400/401 no Windows
 
-Execute estes comandos no PowerShell para gravar as variáveis permanentes do sistema e reabra o terminal:
+Execute novamente o comando `setx` no PowerShell para gravar as variáveis de sistema e reabra o terminal:
 
 ```powershell
 setx ANTHROPIC_AUTH_TOKEN "sk-xxx"
 setx ANTHROPIC_BASE_URL "https://api.fishxcode.com/"
 ```
 
-### "Unable to connect to Anthropic services"
+### Mensagem "Unable to connect to Anthropic services"
 
-Erro completo:
+O erro completo é:
 
 ```
 Unable to connect to Anthropic services
@@ -232,7 +240,7 @@ Failed to connect to api.anthropic.com: ERR_BAD_REQUEST
 Please check your internet connection and network settings.
 ```
 
-Isso acontece porque o Claude Code não concluiu o onboarding e ainda tenta se conectar a `api.anthropic.com`. **Nenhuma VPN é necessária.** Abra `~/.claude.json` (o arquivo `.claude.json` no seu diretório home — não `.claude/settings.json`) e adicione `"hasCompletedOnboarding": true` ao final:
+Isso acontece porque o Claude Code ainda não concluiu o onboarding e continua tentando conectar ao `api.anthropic.com` oficial. **Não é necessário VPN**. Basta adicionar `"hasCompletedOnboarding": true` ao final do arquivo `~/.claude.json` (atenção: é o `.claude.json` no diretório home, não o `.claude/settings.json`):
 
 ```json
 {
@@ -244,5 +252,5 @@ Isso acontece porque o Claude Code não concluiu o onboarding e ainda tenta se c
 ```
 
 <Callout type="idea">
-  Adicione uma vírgula após o campo anterior antes de inserir a nova entrada (requisito de sintaxe JSON). Reinicie o `claude` após salvar para que a conexão funcione normalmente.
+  Ao adicionar, atenção à vírgula no final do campo anterior (exigência da sintaxe JSON). Após a alteração, execute `claude` novamente e a conexão funcionará normalmente.
 </Callout>

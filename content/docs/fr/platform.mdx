@@ -1,103 +1,103 @@
 ---
 title: Navigation plateforme et guide système
-description: Architecture FishXCode, fonctionnalités console, routes et référence documentaire.
-navTitle: Guide plateforme
+description: Architecture FishXCode, fonctionnalités de la console, routes des pages et référence documentaire.
+navTitle: Navigation plateforme
 ---
 
-> Cette page présente la structure globale de la plateforme FishXCode et vous aide à localiser rapidement les fonctionnalités dont vous avez besoin.
-> Besoin de créer un compte ? Consultez [Création de compte et gestion](/fr/account).
+> Cette page présente la structure globale de la plateforme FishXCode pour que vous localisiez rapidement la fonctionnalité recherchée.
+> Besoin d'un compte ? Consultez [Création de compte et gestion](/fr/account).
 
-## 1. Vue d'ensemble
+## 1. Aperçu de la plateforme
 
-FishXCode est une plateforme d'accès IA destinée aux développeurs et aux équipes. Considérez-la comme un point d'entrée unifié : en façade, le site vitrine, les tarifs et la documentation ; en arrière-plan, la console, les tokens, la recharge, la facturation et l'historique d'utilisation.
+FishXCode est une plateforme d'accès à l'IA destinée aux développeurs et aux équipes. Considérez-la comme un point d'entrée unique : devant se trouvent le site principal, les tarifs et la documentation ; derrière, la console, les clés API, les recharges, les factures et les journaux d'utilisation.
 
-La plateforme fournit un service de relais autour des principaux modèles IA. Les canaux et modèles disponibles sont susceptibles de changer — consultez la [page Tarifs](https://fishxcode.com/pricing) pour les informations à jour. De l'inscription à la création de tokens, en passant par le choix d'un forfait, la connexion des outils et le suivi de la consommation, l'ensemble du parcours s'effectue au sein du même système.
+La plateforme fournit des services de relais autour des modèles d'IA majeurs ; les canaux et modèles exacts sont soumis au site principal — consultez la [page des tarifs](https://fishxcode.com/pricing). De l'inscription à la création de clés, au choix des forfaits, à la connexion des outils et à la consultation de la consommation, tout le parcours se déroule dans un même système.
 
 ---
 
-## 2. Modules du site
+## 2. Modules du site en un coup d'œil
 
-Le système se compose de 4 modules principaux :
+Le système se compose de 4 grands modules :
 
 | Route | Page | Module | Description |
 | - | - | - | - |
-| `/` | Page d'accueil | Site vitrine | Présentation des capacités de la plateforme, affichage des annonces, orientation vers l'inscription ou la documentation |
-| `/pricing` | Tarifs | Site vitrine | Consultation des prix des modèles, des forfaits et des multiplicateurs de consommation par groupe |
-| `/login` | Connexion | Centre d'authentification | Connexion par nom d'utilisateur / e-mail, prise en charge de GitHub et LinuxDO |
-| `/register` | Inscription | Centre d'authentification | Point d'entrée pour les nouveaux utilisateurs |
-| `/console` | Dashboard | Console | Page de synthèse : solde, statistiques de consommation, nombre de requêtes et notifications système |
-| `/console/package` | Gestion des forfaits | Console | Consultation et souscription de forfaits, affichage des modèles couverts |
-| `/console/token` | Gestion des tokens | Console | Création, copie et suppression de clés API, gestion des groupes et des dates d'expiration |
-| `/console/log` | Journal d'utilisation | Console | Consultation de chaque appel : horodatage, modèle, consommation et détails |
-| `/console/topup` | Recharge | Console | Rechargement du solde, utilisation de codes de recharge, historique des rechargements |
-| `/console/invoice` | Gestion des factures | Console | Soumission de demandes de facturation, suivi de l'avancement |
-| `/console/invite` | Parrainage | Console | Lien d'invitation, règles de récompense, gains et classement |
-| `/console/personal` | Paramètres personnels | Console | Informations du compte, groupe par défaut, récompenses de connexion quotidienne |
-| `/status` | État du service | Page publique | Vérification du fonctionnement de chaque groupe de service |
-| `/contact` | Nous contacter | Page publique | Canaux de contact officiels et support après-vente |
-| `/docs` | Centre de documentation | Page publique | Tutoriels d'intégration, guides d'outils et FAQ |
+| `/` | Accueil du site | Site principal | Présente la plateforme, affiche les annonces, guide vers l'inscription ou la documentation |
+| `/pricing` | Page des tarifs | Site principal | Prix des modèles, forfaits et multiplicateurs de consommation par groupe |
+| `/sign-in` | Connexion | Centre d'authentification | Connexion utilisateur/e-mail avec autorisation GitHub, LinuxDO et Google |
+| `/sign-up` | Inscription | Centre d'authentification | Enregistrement des nouveaux utilisateurs (code de vérification e-mail + vérification anti-robot) |
+| `/dashboard/overview` | Aperçu | Console | Vue d'ensemble : solde, statistiques de consommation, requêtes et guide de configuration |
+| `/dashboard/models` | Tableau de données | Console | Appels et consommation par modèle |
+| `/keys` | Clés API | Console | Créer, copier, supprimer des clés API ; gérer groupes, quotas et expiration |
+| `/usage-logs/common` | Journaux d'utilisation | Console | Heure, modèle, consommation et détails de chaque appel |
+| `/usage-logs/audit` | Journaux d'audit | Console | Enregistrements d'audit |
+| `/wallet` | Portefeuille | Console | Recharge de solde, forfaits d'abonnement, codes d'échange, historique des commandes |
+| `/profile` | Profil | Console | Informations du compte et récompenses de check-in |
+| `/security` | Sécurité et accès | Console | Mot de passe, liaisons tierces, sessions de connexion, Passkey, validation en deux étapes |
+| `/rankings` | Classements | Pages publiques | Classement d'utilisation des modèles |
+| `/status` | État du service | Pages publiques | Si le service de chaque groupe fonctionne normalement |
+| `/contact` | Contact | Pages publiques | Canaux de contact officiels et support après-vente |
+| `/docs` | Centre de documentation | Pages publiques | Tutoriels d'intégration, guides d'outils et FAQ |
 
 ---
 
-## 3. Référence rapide console
+## 3. Référence rapide de la console
 
-Après connexion, toutes les opérations sont centralisées dans la console. Retrouvez rapidement ce dont vous avez besoin par cas d'usage :
+Après connexion, tout se concentre dans la console. Repérez les fonctionnalités par scénario :
 
 ### Mise en service
 
-1. Créer un compte → Se connecter à la console
-2. **Gestion des tokens** : créer une clé API (choisir le groupe approprié)
-3. Configurer le Base URL et la clé API dans votre outil
+1. Inscrivez un compte → connectez-vous à la console
+2. **Clés API** : créez une clé API (choisissez un groupe adapté)
+3. Configurez l'URL de base et la clé API dans votre outil
 
-### Achats et recharge
+### Achat et recharge
 
-- **Gestion des forfaits** : consulter les forfaits disponibles, souscrire le plan adapté
-- **Page de recharge** : paiement par Alipay, WeChat ou code de recharge
-- **Consultation du solde** : affiché en temps réel sur la page d'accueil du Dashboard
+- **Portefeuille → Forfaits d'abonnement** : consultez et achetez les forfaits mensuels Codex et autres abonnements
+- **Portefeuille → Recharge de solde** : Alipay, Waffo Pancake et codes d'échange pris en charge
+- **Consultation du solde** : affiché en temps réel sur le Portefeuille et l'Aperçu
 
-### Gestion de l'utilisation
+### Gestion de l'usage
 
-- **Journal d'utilisation** : historique de chaque appel, incluant le modèle, la consommation, l'IP et les détails
-- **Gestion des tokens** : état des tokens, portée des groupes, suppression des tokens obsolètes
-- **Paramètres personnels** : modification du groupe par défaut, récompenses de connexion quotidienne et statistiques de base
+- **Journaux d'utilisation** : chaque appel avec modèle, consommation, IP et plus de détails
+- **Clés API** : consultez l'état et la portée de groupe de chaque clé ; supprimez ou désactivez celles inutilisées
+- **Profil** : récompenses de check-in et statistiques de base
 
-### Support et assistance
+### Après-vente et support
 
-- **Gestion des factures** : soumission de demandes de facturation pour les entreprises ou les besoins de remboursement
-- **Parrainage** : invitation de nouveaux utilisateurs via un lien de parrainage et suivi des gains
-- **État du service** : vérification du fonctionnement des groupes en cas d'anomalie lors des appels
-- **Nous contacter** : assistance pour les problèmes d'utilisation, les questions commerciales et le support après-vente
+- **Récompenses de parrainage** : le lien d'invitation du programme de parrainage et les gains, en bas de la page Portefeuille
+- **État du service** : vérifiez la santé de chaque groupe en cas d'anomalie d'appel
+- **Contact** : problèmes d'usage, échanges d'achat et support après-vente
 
 ---
 
-## 4. Référence documentaire
+## 4. Correspondance du centre de documentation
 
-`/docs` correspond au centre de documentation FishXCode. Son contenu est en correspondance directe avec le site de documentation actuel :
+`/docs` est le centre de documentation de FishXCode ; son contenu correspond un à un à ce site de documentation :
 
 | Page de documentation | Route | Contenu |
 | - | - | - |
-| Accueil | `/` | Page d'accueil de la documentation et vue d'ensemble du produit |
+| Accueil | `/` | Accueil de la documentation et aperçu du produit |
 | Démarrage rapide | `/start` | Tutoriel d'intégration de Claude Code |
-| Création de compte | `/account` | Inscription, connexion, tokens, recharge et gestion du compte |
-| Intégration ZCF | `/zcf` | Workflow ZCF et configuration MCP |
-| OpenAI Codex | `/codex` | Guide d'intégration Codex |
-| Cursor | `/cursor` | Guide d'intégration Cursor |
-| RooCode | `/roocode` | Guide d'intégration RooCode |
-| Qwen Code | `/qwencode` | Guide d'intégration Qwen Code |
-| Droid CLI | `/droid` | Guide d'intégration Droid CLI |
-| OpenCode | `/opencode` | Guide d'intégration OpenCode |
-| OpenClaw | `/openclaw` | Guide d'intégration OpenClaw |
-| WorkBuddy | `/workbuddy` | Guide d'intégration WorkBuddy |
-| CodeBuddy | `/codebuddy` | Guide d'intégration CodeBuddy |
-| QClaw | `/qclaw` | Guide d'intégration QClaw |
-| Comparaison d'outils | `/compare` | Comparaison entre les différents outils |
-| Modèles supportés | `/models` | Liste des modèles et périmètre de fonctionnalités |
-| FAQ | `/faq` | Questions fréquentes et dépannage |
-| Journal des modifications | `/changelog` | Historique des mises à jour |
-| Conditions d'utilisation | `/terms` | Conditions de la plateforme |
-| Politique de remboursement | `/refund` | Remboursement du solde et remboursement/conversion des forfaits |
-| Politique de confidentialité | `/privacy` | Informations relatives à la confidentialité |
+| Création de compte | `/account` | Inscription, connexion, clés, recharge et gestion du compte |
+| ZCF : intégration rapide | `/zcf` | Workflow ZCF et configuration MCP |
+| OpenAI Codex | `/codex` | Guide d'intégration de Codex |
+| Cursor | `/cursor` | Guide d'intégration de Cursor |
+| RooCode | `/roocode` | Guide d'intégration de RooCode |
+| Qwen Code | `/qwencode` | Guide d'intégration de Qwen Code |
+| Droid CLI | `/droid` | Guide d'intégration de Droid CLI |
+| OpenCode | `/opencode` | Guide d'intégration de OpenCode |
+| OpenClaw | `/openclaw` | Guide d'intégration de OpenClaw |
+| WorkBuddy | `/workbuddy` | Guide d'intégration de WorkBuddy |
+| CodeBuddy | `/codebuddy` | Guide d'intégration de CodeBuddy |
+| QClaw | `/qclaw` | Guide d'intégration de QClaw |
+| Comparaison d'outils | `/compare` | Comparatif de plusieurs outils |
+| Modèles pris en charge | `/models` | Liste des modèles et périmètre de capacités |
+| Foire aux questions | `/faq` | FAQ et dépannage |
+| Journal des versions | `/changelog` | Historique des versions |
+| Conditions d'utilisation | `/terms` | Contrat de la plateforme |
+| Politique de remboursement | `/refund` | Remboursements de recharge et proratisation des forfaits |
+| Politique de confidentialité | `/privacy` | Déclaration de confidentialité |
 
-<Callout type="idea" title="En résumé">
-  L'utilisateur commence par découvrir la plateforme via le site vitrine, puis crée un compte et active le service via la console. Les pages tokens, forfaits, recharge et journal d'utilisation couvrent l'ensemble du cycle d'utilisation, tandis que la documentation et la page d'état assurent l'information et le support.
+<Callout type="idea" title="En une phrase">
+  L'utilisateur découvre d'abord la plateforme sur le site principal, s'inscrit et se configure dans la console, puis travaille sur les pages de clés, forfaits, recharges et journaux — la documentation et les pages d'état expliquent et garantissent le tout.
 </Callout>

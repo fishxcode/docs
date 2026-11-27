@@ -1,85 +1,85 @@
 ---
 title: Navegación de plataforma y guía del sistema
-description: Arquitectura FishXCode, funciones de consola, rutas y referencia documental.
-navTitle: Guía de plataforma
+description: Arquitectura FishXCode, funciones de la consola, rutas de las páginas y referencia documental.
+navTitle: Navegación de plataforma
 ---
 
-> Esta página presenta la estructura general de la plataforma FishXCode para ayudarte a localizar rápidamente la función que necesitas.
-> ¿Necesitas registrar una cuenta? Consulta [Registro de cuenta y gestión](/es/account).
+> Esta página presenta la estructura general de la plataforma FishXCode para que localices rápido la función que necesitas.
+> ¿Necesitas una cuenta? Consulta [Registro de cuenta y gestión](/es/account).
 
-## 1. Descripción general
+## 1. Resumen de la plataforma
 
-FishXCode es una plataforma de acceso a IA orientada a desarrolladores y equipos. Puedes entenderla como un punto de entrada unificado: en la parte pública están el sitio web, los precios y la documentación; en la parte privada, la consola, los tokens, las recargas, las facturas y los registros de uso.
+FishXCode es una plataforma de acceso a IA para desarrolladores y equipos. Entiéndela como un punto de entrada único: delante están la web principal, los precios y la documentación; detrás, la consola, las claves API, las recargas, las facturas y los registros de uso.
 
-La plataforma proporciona servicios de reenvío para los principales modelos de IA. Los canales y modelos disponibles están sujetos a cambios — consulta la [página de Precios](https://fishxcode.com/pricing) para información actualizada. Desde el registro hasta la creación de tokens, la selección de planes, la integración con herramientas y la consulta de consumo, todo el proceso se realiza dentro del mismo sistema.
+La plataforma ofrece servicios de intermediación en torno a los modelos de IA principales; los canales y modelos exactos están sujetos a la web principal, consúltalos en la [página de precios](https://fishxcode.com/pricing). Desde el registro hasta crear claves, elegir planes, conectar herramientas y consultar el consumo, todo el flujo se completa en un mismo sistema.
 
 ---
 
-## 2. Módulos del sitio
+## 2. Módulos del sitio de un vistazo
 
 El sistema se compone de 4 módulos principales:
 
 | Ruta | Página | Módulo | Descripción |
 | - | - | - | - |
-| `/` | Página principal | Sitio público | Presenta las capacidades de la plataforma, muestra anuncios e invita a registrarse o consultar la documentación |
-| `/pricing` | Precios | Sitio público | Consulta precios de modelos, planes y tasas de consumo por grupo |
-| `/login` | Inicio de sesión | Autenticación | Inicio de sesión con nombre de usuario/correo; admite GitHub y LinuxDO |
-| `/register` | Registro | Autenticación | Punto de entrada para nuevos usuarios |
-| `/console` | Dashboard | Consola | Vista general: saldo, estadísticas de consumo, solicitudes y notificaciones del sistema |
-| `/console/package` | Gestión de planes | Consola | Ver y adquirir planes de suscripción, consultar modelos incluidos |
-| `/console/token` | Gestión de tokens | Consola | Crear, copiar y eliminar API Keys; gestionar grupos y validez |
-| `/console/log` | Registro de uso | Consola | Consultar cada llamada: fecha, modelo, consumo y detalles |
-| `/console/topup` | Recarga | Consola | Recarga de saldo, códigos de canje y historial de recargas |
-| `/console/invoice` | Gestión de facturas | Consola | Solicitar facturación y consultar el estado de las facturas |
-| `/console/invite` | Programa de referidos | Consola | Enlace de invitación, reglas de recompensa, ganancias y clasificación |
-| `/console/personal` | Configuración personal | Consola | Información de la cuenta, grupo predeterminado y recompensas diarias |
-| `/status` | Estado del servicio | Página pública | Verificar si los servicios de cada grupo funcionan correctamente |
-| `/contact` | Contacto | Página pública | Canales oficiales de contacto y soporte posventa |
-| `/docs` | Centro de documentación | Página pública | Tutoriales de integración, guías de herramientas y FAQ |
+| `/` | Portada del sitio | Web principal | Presenta la plataforma, muestra anuncios y guía al registro o la documentación |
+| `/pricing` | Página de precios | Web principal | Precios de modelos, planes y multiplicadores de consumo por grupo |
+| `/sign-in` | Inicio de sesión | Centro de autenticación | Acceso con usuario/correo y autorización de GitHub, LinuxDO y Google |
+| `/sign-up` | Registro | Centro de autenticación | Alta de nuevos usuarios (código de verificación por correo + verificación humana) |
+| `/dashboard/overview` | Resumen | Consola | Vista general: saldo, estadísticas de consumo, solicitudes y guía de configuración |
+| `/dashboard/models` | Panel de datos | Consola | Llamadas y consumo por modelo |
+| `/keys` | Claves API | Consola | Crear, copiar y eliminar API Keys; gestionar grupos, cuotas y caducidad |
+| `/usage-logs/common` | Registros de uso | Consola | Hora, modelo, consumo y detalles de cada llamada |
+| `/usage-logs/audit` | Registros de auditoría | Consola | Registros de auditoría |
+| `/wallet` | Monedero | Consola | Recarga de saldo, planes de suscripción, códigos de canje e historial de pedidos |
+| `/profile` | Perfil | Consola | Información de la cuenta y recompensas de check-in |
+| `/security` | Seguridad y acceso | Consola | Contraseña, vinculaciones de terceros, sesiones, Passkey y verificación en dos pasos |
+| `/rankings` | Clasificaciones | Páginas públicas | Ranking de uso de modelos |
+| `/status` | Estado del servicio | Páginas públicas | Si el servicio de cada grupo funciona con normalidad |
+| `/contact` | Contacto | Páginas públicas | Canales oficiales de contacto y soporte posventa |
+| `/docs` | Centro de documentación | Páginas públicas | Tutoriales de integración, guías de herramientas y FAQ |
 
 ---
 
-## 3. Referencia rápida de consola
+## 3. Referencia rápida de la consola
 
-Una vez que has iniciado sesión, todas las operaciones se centralizan en la consola. Puedes localizarlas rápidamente según el escenario de uso:
+Tras iniciar sesión, todo se concentra en la consola. Localiza las funciones por escenario:
 
-### Poner en marcha
+### Puesta en marcha
 
-1. Registra una cuenta → Inicia sesión en la consola
-2. **Gestión de tokens**: crea una API Key (selecciona el grupo adecuado)
-3. Configura la Base URL y la API Key en tu herramienta
+1. Registra una cuenta → inicia sesión en la consola
+2. **Claves API**: crea una API Key (elige un grupo adecuado)
+3. Configura la URL base y la API Key en tu herramienta
 
 ### Compra y recarga
 
-- **Gestión de planes**: consulta los planes disponibles y suscríbete al que mejor se adapte
-- **Página de recarga**: admite Alipay, WeChat y códigos de canje
-- **Consulta de saldo**: se muestra en tiempo real en el Dashboard
+- **Monedero → Planes de suscripción**: consulta y compra paquetes mensuales de Codex y otros planes
+- **Monedero → Recarga de saldo**: admite Alipay, Waffo Pancake y códigos de canje
+- **Consulta del saldo**: visible en tiempo real en el monedero y en el resumen
 
 ### Gestión del uso
 
-- **Registro de uso**: consulta cada llamada, incluyendo modelo, consumo, IP y más detalles
-- **Gestión de tokens**: revisa el estado de los tokens, el rango del grupo y elimina los que ya no necesites
-- **Configuración personal**: modifica el grupo predeterminado, consulta recompensas diarias y estadísticas básicas
+- **Registros de uso**: cada llamada con modelo, consumo, IP y más detalles
+- **Claves API**: consulta el estado y el alcance de grupo de cada clave; elimina o desactiva las que ya no uses
+- **Perfil**: recompensas de check-in y estadísticas básicas
 
-### Soporte y posventa
+### Posventa y soporte
 
-- **Gestión de facturas**: los usuarios con necesidades de facturación pueden solicitarla aquí
-- **Programa de referidos**: invita a nuevos usuarios mediante tu enlace y consulta tus recompensas
-- **Estado del servicio**: verifica si los grupos funcionan correctamente al diagnosticar problemas de llamadas
-- **Contacto**: para problemas de uso, consultas comerciales y soporte posventa
+- **Recompensas por invitación**: el enlace de invitación del programa de referidos y las ganancias, al pie de la página del monedero
+- **Estado del servicio**: consulta la salud de cada grupo cuando las llamadas fallen
+- **Contacto**: problemas de uso, negociaciones de compra y soporte posventa
 
 ---
 
-## 4. Referencia documental
+## 4. Referencia del centro de documentación
 
-`/docs` es el centro de documentación de FishXCode. Su contenido se corresponde directamente con este sitio de documentación:
+`/docs` es el centro de documentación de FishXCode; su contenido se corresponde uno a uno con este sitio de documentación:
 
-| Página | Ruta | Contenido |
+| Página de documentación | Ruta | Contenido |
 | - | - | - |
-| Inicio | `/` | Página principal del sitio y vista general del producto |
-| Guía rápida | `/start` | Tutorial de integración de Claude Code |
-| Registro de cuenta | `/account` | Registro, inicio de sesión, tokens, recarga y gestión de cuenta |
-| Acceso rápido ZCF | `/zcf` | Flujo de trabajo ZCF y configuración MCP |
+| Portada | `/` | Portada de la documentación y resumen del producto |
+| Inicio rápido | `/start` | Tutorial de integración de Claude Code |
+| Registro de cuenta | `/account` | Registro, inicio de sesión, claves, recarga y gestión de cuenta |
+| ZCF: integración rápida | `/zcf` | Flujo de trabajo ZCF y configuración de MCP |
 | OpenAI Codex | `/codex` | Guía de integración de Codex |
 | Cursor | `/cursor` | Guía de integración de Cursor |
 | RooCode | `/roocode` | Guía de integración de RooCode |
@@ -90,14 +90,14 @@ Una vez que has iniciado sesión, todas las operaciones se centralizan en la con
 | WorkBuddy | `/workbuddy` | Guía de integración de WorkBuddy |
 | CodeBuddy | `/codebuddy` | Guía de integración de CodeBuddy |
 | QClaw | `/qclaw` | Guía de integración de QClaw |
-| Comparación de herramientas | `/compare` | Comparativa entre herramientas |
-| Modelos compatibles | `/models` | Listado de modelos y sus capacidades |
-| Preguntas frecuentes | `/faq` | Preguntas frecuentes y resolución de problemas |
-| Registro de cambios | `/changelog` | Historial de actualizaciones |
-| Términos de uso | `/terms` | Acuerdo de la plataforma |
-| Política de reembolso | `/refund` | Reembolso de recargas y reembolso/conversión de paquetes |
+| Comparación de herramientas | `/compare` | Comparativa de varias herramientas |
+| Modelos admitidos | `/models` | Lista de modelos y alcance de capacidades |
+| Preguntas frecuentes | `/faq` | FAQ y resolución de problemas |
+| Registro de cambios | `/changelog` | Historial de versiones |
+| Términos del servicio | `/terms` | Acuerdo de la plataforma |
+| Política de reembolso | `/refund` | Reembolsos de recargas y proporcionalidad de planes |
 | Política de privacidad | `/privacy` | Declaración de privacidad |
 
-<Callout type="idea" title="Resumen en una frase">
-  El usuario conoce la plataforma a través del sitio web, luego activa el servicio mediante el registro y la consola, y finalmente gestiona tokens, planes, recargas y registros para el uso diario. La documentación y la página de estado ofrecen información de apoyo y garantía.
+<Callout type="idea" title="En una frase">
+  El usuario descubre primero la plataforma en la web principal, se da de alta y se configura en la consola, y luego trabaja en las páginas de claves, planes, recargas y registros; la documentación y las páginas de estado explican y respaldan todo.
 </Callout>

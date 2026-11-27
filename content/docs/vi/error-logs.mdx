@@ -5,7 +5,7 @@ description: Các trường nhật ký lỗi trong bảng điều khiển FishXC
 
 Nhật ký lỗi dùng để xác định nguyên nhân cụ thể khiến một yêu cầu thất bại. Khi khắc phục sự cố, nên xem [trạng thái sức khỏe nhóm](/vi/group-health) trước để đánh giá phạm vi ảnh hưởng, sau đó dùng `request_id` trong nhật ký lỗi để xác định từng yêu cầu.
 
-Lối vào: [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/console/log). Sau khi chuyển loại nhật ký sang **Nhật ký lỗi**, bạn có thể lọc theo thời gian, mô hình, token, nhóm, ID yêu cầu, thông báo lỗi và mã trạng thái.
+Lối vào: [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/usage-logs/common). Sau khi chuyển loại nhật ký sang **Nhật ký lỗi**, bạn có thể lọc theo thời gian, mô hình, token, nhóm, ID yêu cầu, thông báo lỗi và mã trạng thái.
 
 <Callout type="idea" title="Đánh giá nhanh">
   - `request_id` dùng để xác định một yêu cầu cụ thể
@@ -115,7 +115,7 @@ Tập trung vào `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unava
 
 ## Thông tin cần cung cấp khi liên hệ hỗ trợ
 
-Với các vấn đề đơn giản, bạn nên tự kiểm tra trước bằng [Giải thích nhật ký lỗi](/vi/error-logs) và [Giải thích trạng thái sức khỏe nhóm](/vi/group-health). Nếu vẫn chưa giải quyết được, bạn có thể nhấn biểu tượng sao chép trong chi tiết nhật ký lỗi tại `console/log` để sao chép toàn bộ nội dung cần kiểm tra chỉ với một lần nhấn. Khi liên hệ hỗ trợ, nên cung cấp đầy đủ các thông tin sau trong một lần cho bộ phận kỹ thuật, giúp giảm việc xác nhận qua lại:
+Với các vấn đề đơn giản, bạn nên tự kiểm tra trước bằng [Giải thích nhật ký lỗi](/vi/error-logs) và [Giải thích trạng thái sức khỏe nhóm](/vi/group-health). Nếu vẫn chưa giải quyết được, bạn có thể nhấn biểu tượng sao chép trong chi tiết nhật ký lỗi tại `usage-logs/common` để sao chép toàn bộ nội dung cần kiểm tra chỉ với một lần nhấn. Khi liên hệ hỗ trợ, nên cung cấp đầy đủ các thông tin sau trong một lần cho bộ phận kỹ thuật, giúp giảm việc xác nhận qua lại:
 
 - ID người dùng
 - Khoảng thời gian: thời điểm vấn đề bắt đầu và lần xuất hiện gần nhất

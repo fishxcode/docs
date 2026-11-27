@@ -14,7 +14,7 @@ navTitle: OpenClaw
 ## 前提条件
 
 - OpenClaw をインストール済みであること（下記のインストールの章を参照）
-- FishXCode の API Key を取得済みであること（[コンソールで取得](https://fishxcode.com/console/token)）
+- FishXCode の API Key を取得済みであること（[コンソールで取得](https://fishxcode.com/keys)）
 
 ## 主な特長
 
@@ -160,7 +160,7 @@ New-Item -ItemType File -Force -Path "$env:USERPROFILE\.openclaw\openclaw.json"
 ```
 
 <Callout type="warn" title="重要">
-  - `sk-あなたのFishXCode-Token` は、[FishXCode コンソール](https://fishxcode.com/console/token) で取得した実際のトークンに置き換えてください
+  - `sk-あなたのFishXCode-Token` は、[FishXCode コンソール](https://fishxcode.com/keys) で取得した実際のトークンに置き換えてください
   - **Anthropic プロトコルの `baseUrl` には `/v1` を付けないでください**。SDK がパスを自動で付加します
 </Callout>
 

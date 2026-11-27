@@ -6,7 +6,7 @@ title: 常見問題
 
 ### FishXCode 是什麼？
 
-FishXCode 是一站式 AI 模型接入與帳號服務平臺，覆蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型，可在多種工具與平臺中使用。
+FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型，可在多種工具與平台中使用。
 
 ### 支援哪些工具？
 
@@ -27,75 +27,89 @@ FishXCode 僅作為 API 中轉服務，不儲存你的程式碼和對話內容�
   敏感專案建議在使用前閱讀各模型提供商的隱私政策。
 </Callout>
 
-## 帳戶與 Token
+## 帳戶與 API Key
 
 ### 如何註冊？
 
-訪問 [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW)，按提示完成註冊即可。
+造訪 [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW)，填寫使用者名稱、密碼和電子郵件，輸入收到的電子郵件驗證碼完成註冊。也可以直接使用 GitHub / LinuxDO / Google 第三方授權登入（首次授權自動建立帳號）。
 
-### 如何獲取 API Token？
+<Callout type="idea" title="支援的電子郵件網域">
+  電子郵件註冊目前支援 **qq.com、126.com、163.com、gmail.com** 四個網域。
+</Callout>
 
-註冊後登入控制台，前往 [Token 管理頁](https://fishxcode.com/console/token) 建立新的 Token。
+### 如何取得 API Key？
 
-### Token 有效期多長？
+註冊後登入控制台，前往 [API 金鑰頁](https://fishxcode.com/keys) 建立新的 API Key。
 
-Token 在手動刪除或重新生成前持續有效。建議定期輪換以確保安全。
+### 支援哪些儲值方式？
+
+進入 **控制台 → 錢包** 儲值，支援：
+
+- **支付寶（alipay）**：主流方式，無最低限額
+- **Waffo Pancake**：最低儲值 $100
+- **兌換碼**：在錢包頁兌換額度區域輸入兌換
+
+Codex 高頻使用者也可以直接購買號池月包（訂閱方案分頁），見 [訂閱方案](/zh-TW/subscription-plans)。
+
+### API Key 有效期多長？
+
+金鑰在手動刪除或重新產生前持續有效。建議定期輪替以確保安全。
 
 ### 用量額度是多少？
 
-FishXCode 為每個使用者提供用量額度，具體數量根據平臺資源動態調整。請關注控制台中的用量資訊。
+FishXCode 為每位使用者提供用量額度，具體數量依平台資源動態調整。請留意控制台中的用量資訊。
 
 <Callout type="warn" title="注意">
   額度用盡後請求會被拒絕，請合理規劃用量。
 </Callout>
 
-## 工具配置
+## 工具設定
 
 ### 環境變數設定後不生效怎麼辦？
 
 檢查以下常見原因：
 
-1. **未重啟終端** — 修改 `.bashrc` / `.zshrc` 後需要執行 `source ~/.bashrc` 或新開終端
-2. **變數名拼寫錯誤** — 注意區分大小寫，如 `ANTHROPIC_BASE_URL` 不能寫成 `Anthropic_Base_Url`
+1. **未重新啟動終端機** — 修改 `.bashrc` / `.zshrc` 後需要執行 `source ~/.bashrc` 或新開終端機
+2. **變數名稱拼寫錯誤** — 注意區分大小寫，如 `ANTHROPIC_BASE_URL` 不能寫成 `Anthropic_Base_Url`
 3. **多餘的引號或空格** — `export KEY="value"` 中 value 前後不要有多餘空格
 
 <Accordions type="single">
-  <Accordion title="快速排查命令">
+  <Accordion title="快速排查指令">
     ```bash
     # 檢查變數是否已設定
     echo $ANTHROPIC_BASE_URL
     echo $ANTHROPIC_AUTH_TOKEN
 
-    # 如果為空，說明變數未生效
+    # 如果為空，表示變數未生效
     ```
   </Accordion>
 </Accordions>
 
-### 配置檔案路徑在哪裡？
+### 設定檔路徑在哪裡？
 
-| 工具 | 配置檔案路徑 |
+| 工具 | 設定檔路徑 |
 | - | - |
-| Claude Code | 環境變數方式配置 |
+| Claude Code | 環境變數方式設定 |
 | Codex | `~/.codex/config.toml` 和 `~/.codex/auth.json` |
 | RooCode | VS Code 設定 JSON |
-| Qwen Code | 環境變數方式配置 |
+| Qwen Code | 環境變數方式設定 |
 
-### 連線不上 FishXCode 服務怎麼辦？
+### 連不上 FishXCode 服務怎麼辦？
 
-1. 確認 `BASE_URL` 設定為 `https://api.fishxcode.com/`（注意末尾的 `/`）
-2. 檢查網路是否能訪問 `fishxcode.com`
-3. 如果在公司網路中，確認代理設定是否正確
+1. 確認 `BASE_URL` 設定為 `https://api.fishxcode.com/` 或 `https://fishxcode.com/`（兩者均可用，行為一致）
+2. 檢查網路是否能存取 `fishxcode.com`
+3. 如果在公司網路中，確認代理伺服器設定是否正確
 
 ## 模型選擇
 
 ### 如何選擇合適的模型？
 
-根據使用場景選擇：
+依使用情境選擇：
 
-| 場景 | 推薦模型 | 理由 |
+| 情境 | 推薦模型 | 理由 |
 | - | - | - |
 | 日常程式設計 | `claude-fable-5-2` | 能力與速度均衡 |
-| 快速補全 | `claude-haiku-5-5` | 響應速度快 |
+| 快速補全 | `claude-haiku-5-5` | 回應速度快 |
 | 複雜架構 | `claude-fable-5-2` | 推理能力強 |
 
 ### 不同模型之間有什麼差異？
@@ -106,66 +120,66 @@ FishXCode 為每個使用者提供用量額度，具體數量根據平臺資源�
 
 ### 如何切換模型？
 
-通過環境變數 `ANTHROPIC_MODEL` 指定：
+透過環境變數 `ANTHROPIC_MODEL` 指定：
 
 ```bash
 export ANTHROPIC_MODEL=claude-fable-5-2
 ```
 
-## 故障排除
+## 疑難排解
 
-### 提示認證失敗（Auth Error）
+### 提示驗證失敗（Auth Error）
 
 <Callout type="warn" title="常見原因">
-  - Token 輸入有誤（多餘空格或不完整）
-  - Token 已被刪除或重新生成
+  - 金鑰輸入有誤（多餘空格或不完整）
+  - 金鑰已被刪除或重新產生
   - `API_KEY` 和 `AUTH_TOKEN` 未同時設定
 </Callout>
 
-解決方法：前往 [控制台](https://fishxcode.com/console/token) 確認 Token 狀態，重新複製貼上。
+解決方法：前往 [API 金鑰頁](https://fishxcode.com/keys) 確認金鑰狀態，重新複製貼上。
 
-### 如何檢視和理解錯誤日誌？
+### 如何查看和理解錯誤日誌？
 
-進入 [控制台 → 使用日誌](https://fishxcode.com/console/log)，將日誌型別切換為 **錯誤日誌**，可按時間、模型、Token、分組、請求 ID、錯誤訊息和狀態碼篩選。
+進入 [控制台 → 使用日誌](https://fishxcode.com/usage-logs/common)，將日誌類型切換為 **錯誤日誌**，可按時間、模型、金鑰、分組、請求 ID、錯誤訊息和狀態碼篩選。
 
 <Callout type="idea" title="排查建議">
-  - 優先複製介面響應或日誌中的 `request_id`，在使用日誌中精確搜尋同一次請求
-  - 用“錯誤訊息”搜尋 `content` 中的關鍵詞，例如 `Invalid token`、`Upstream request failed`
-  - 用“狀態碼”快速聚合問題型別，例如 `400`、`401`、`403`、`413`、`429`、`500`、`502`、`503`、`504`
-  - 如果同一分組集中出現相同錯誤，優先按分組判斷是配置問題、用量問題還是上游可用性問題
+  - 優先複製介面回應或日誌中的 `request_id`，在使用日誌中精確搜尋同一次請求
+  - 用「錯誤訊息」搜尋 `content` 中的關鍵字，例如 `Invalid token`、`Upstream request failed`
+  - 用「狀態碼」快速彙整問題類型，例如 `400`、`401`、`403`、`413`、`429`、`500`、`502`、`503`、`504`
+  - 如果同一分組集中出現相同錯誤，優先按分組判斷是設定問題、用量問題還是上游可用性問題
 </Callout>
 
-完整欄位說明、狀態碼分類和常見錯誤表請檢視 [錯誤日誌說明](/zh-TW/error-logs)。
+完整欄位說明、狀態碼分類和常見錯誤表請查看 [錯誤日誌說明](/zh-TW/error-logs)。
 
 ### 分組健康狀態怎麼看？
 
-分組健康狀態用於判斷問題是個別請求異常，還是某個套餐、模型或上游分組集中異常。優先看 `success_rate`、`error_count` 和 `error_reasons`，再結合單條日誌中的 `request_id` 定位具體請求。
+分組健康狀態用於判斷問題是個別請求異常，還是某個方案、模型或上游分組集中異常。優先看 `success_rate`、`error_count` 和 `error_reasons`，再結合單筆日誌中的 `request_id` 定位具體請求。
 
-完整狀態頁、欄位說明和排查流程請檢視 [分組健康狀態](/zh-TW/group-health)。
+完整狀態頁、欄位說明和排查流程請查看 [分組健康狀態](/zh-TW/group-health)。
 
-### 請求超時（Timeout）
+### 請求逾時（Timeout）
 
 可能原因：
 
 1. 網路延遲過高
 2. 請求的上下文過長，模型處理時間較久
-3. 當前服務負載較高
+3. 目前服務負載較高
 
-建議：減小輸入上下文，或稍後重試。
+建議：縮小輸入上下文，或稍後重試。
 
 ### 觸發頻率或額度限制（Rate Limit）
 
-收到 `429` 狀態碼通常表示請求過於頻繁，也可能表示上游帳號日額度已用盡，或當前模型憑證正在冷卻。
+收到 `429` 狀態碼通常表示請求過於頻繁，也可能表示上游帳號日額度已用盡，或目前模型憑證正在冷卻。
 
 <Callout type="idea" title="應對方法">
   - 降低請求頻率，間隔幾秒後重試
-  - 避免在指令碼中無間隔迴圈呼叫 API
-  - 檢查是否有其他程序在同時使用同一 Token
-  - 如果日誌包含 `Max 10/min` 或 `Max 5/min`，按提示把併發和每分鐘請求數降到閾值以下
+  - 避免在腳本中無間隔循環呼叫 API
+  - 檢查是否有其他程序正在同時使用同一把金鑰
+  - 如果日誌包含 `Max 10/min` 或 `Max 5/min`，依提示把並行數和每分鐘請求數降到門檻以下
   - 如果日誌包含 `daily limit exceeded`，等待每日額度重置，或切換其他可用模型/分組
-  - 如果日誌包含 `cooling down`，不要立即連續重試，等待冷卻結束或臨時切換模型
+  - 如果日誌包含 `cooling down`，不要立即連續重試，等待冷卻結束或暫時切換模型
 </Callout>
 
-### 返回模型不可用（Model Not Available）
+### 回傳模型不可用（Model Not Available）
 
-檢查指定的模型名稱是否正確，參考 [快速開始](/zh-TW/start) 中的推薦模型列表。部分模型可能尚未在 FishXCode 上線。
+檢查指定的模型名稱是否正確，參考 [快速開始](/zh-TW/start) 中的推薦模型清單。部分模型可能尚未在 FishXCode 上線。

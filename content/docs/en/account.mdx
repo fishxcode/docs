@@ -1,161 +1,178 @@
 ---
-title: Account Setup & Management
-description: FishXCode account registration, API Key setup, top-up, and account security guide.
-navTitle: Account Setup
+title: Account Registration & Management
+description: FishXCode account registration, API Key creation, top-up, and account security guide.
+navTitle: Account Registration
 ---
 
-> Already have an account? Jump to [Quick Start](/en/start) to configure your tools.
-> Want to explore the full platform? See [Platform Guide](/en/platform).
+> Already have an account? Go straight to [Quick Start](/en/start) to configure your tools.
+> Want the full platform picture? See [Platform Navigation](/en/platform).
 
-## 1. Get Your API Key
+## 1. Registration and Login
 
-### 1. Register
+### 1. Create an account
 
-Visit [fishxcode.com](https://fishxcode.com/register?aff=9CTW) and click **Register**:
+Visit [fishxcode.com/register](https://fishxcode.com/register?aff=9CTW) to open the registration page:
 
-![FishXCode Home](/img/start/api-01-home.png)
+![FishXCode registration page](/img/start/api-v2-01-home.png)
 
-Choose a registration method (GitHub, LinuxDO, or username):
+Fill in the registration form: set a username and a password (8–128 characters; we recommend uppercase and lowercase letters, digits, and symbols), and enter the email address that will receive the verification code:
 
-![Registration Method Selection](/img/start/api-02-register.png)
+![Fill in registration details](/img/start/api-v2-03-register-form.png)
 
-Fill in your username, password, and confirm password to complete registration:
+<Callout type="idea" title="Supported email domains">
+  Email registration currently supports four domains: **qq.com, 126.com, 163.com, gmail.com**. Other domains may not receive the verification code.
+</Callout>
 
-![Registration Form](/img/start/api-03-register-form.png)
+Click **Send verification code**. After completing the Cloudflare human verification, the code is sent to your inbox. Find the code (a 6-character alphanumeric combination) in your inbox and enter it in the form:
 
-### 2. Log In
+![Enter the email verification code](/img/start/api-v2-02-register-verify.png)
 
-After registering, log in with your username and password:
+Click **Create account** to finish registration. The page redirects to the login page with the message “Account created! Please log in”.
 
-![Login Page](/img/start/api-04-login.png)
+<Callout type="warn" title="Not receiving the verification code?">
+  1. Make sure the email domain is on the supported list (qq.com / 126.com / 163.com / gmail.com)
+  2. Check your spam folder
+  3. Wait 1–2 minutes and retry; avoid frequent requests
+  4. If it still does not arrive, switch to third-party authorized login
+</Callout>
 
-After logging in, you will be taken to the console:
+### 2. Log in
 
-![Console Home](/img/start/api-05-console.png)
+After registering, log in with your username and password, or use one-click third-party authorized login:
 
-### 3. Create a Token
+![Login page](/img/start/api-v2-04-login.png)
 
-Go to **Console -> Token Management -> Add Token** and fill in the form:
-
-![Add Token](/img/start/api-06-token-create.png)
-
-- For **Token Group**, select **Official Channel**. This group includes the full Claude model lineup and automatically selects the best model based on task complexity. Specific channels and models are subject to change -- check the [Pricing page](https://fishxcode.com/pricing) for the latest information.
-
-After creation, click the **Copy** button in the token list to get your API Key (format: `sk-xxx`):
-
-![Copy Token](/img/start/api-07-token-copy.png)
-
-### 4. Top Up
-
-Go to **Console -> Wallet Management**. Alipay, WeChat Pay, and redeem codes are supported:
-
-![Top-Up Page](/img/start/api-08-wallet.png)
-
-| Method | Steps |
+| Login method | Description |
 | - | - |
-| Alipay | Enter/select amount -> Alipay |
-| WeChat Pay | Enter/select amount -> WeChat |
-| Redeem Code | Enter code in the redeem section -> Click Redeem |
+| Email-registered account | Log in with username/email + password |
+| GitHub | Authorized login; recommended for developers |
+| LinuxDO | Authorized login for community users |
+| Google | Authorized login with a Google account |
 
-<Callout type="idea" title="Rate Multiplier">
-  A group labeled `0.5x` in the group name means a 0.5x consumption multiplier -- the lower the value, the more tokens you get. For example, `0.5x` means 1 CNY gives you 10M official tokens (vs. 5M at the official price).
+<Callout type="info" title="Third-party login creates the account automatically">
+  The first time you log in with GitHub / LinuxDO / Google, an account is created automatically — no separate registration needed.
 </Callout>
+
+After logging in you land on the console (Overview page):
+
+![Console overview](/img/start/api-v2-05-console.png)
 
 ---
 
-## 2. Token Management
+## 2. Get an API Key
 
-### Token Group Details
+### 1. Create an API Key
 
-When creating a token, you need to select a group. Different groups determine the available model range and consumption rate:
+Go to **Console → API Keys** and click **Create API Key** in the top-right corner:
 
-| Group Type | Description | Use Case |
-| - | - | - |
-| **Official Channel** | Full Claude model lineup, automatic routing | Recommended for most users |
-| **Low-rate Groups** | Lower consumption rate, higher cost-efficiency | High-frequency calls, cost-sensitive scenarios |
+![Create API Key dialog](/img/start/api-v2-06-token-create.png)
 
-<Callout type="idea" title="Recommendation">
-  If you are unsure which group to select, choose **Official Channel**. The system will automatically select the most suitable model based on task complexity.
+Form fields:
+
+| Field | Description |
+| - | - |
+| Name | A custom key name so you can recognize its purpose |
+| Group | Determines the available models and the billing multiplier; see below |
+| Expiry | Never / 1 month / 1 day / 1 hour |
+| Quantity | You can batch-create several keys at once (a random suffix is added to each name) |
+| Unlimited quota | Enabled by default; disable it to cap the maximum usage of this key |
+| Advanced settings | IP allowlist (CIDR supported), allow querying user quota |
+
+- For **Group**, we recommend **claude** (1.5x): this group is the official full-price Claude Max 20 account pool with full performance. When using a Codex monthly package you must select `codex-sub-june`. For all groups and multipliers see [Billing Rules & Groups](/en/billing-groups).
+- The **IP allowlist** suits servers with a fixed outbound IP; be careful using it for local development, since an IP change will break your calls.
+
+Click **Save changes** to finish. In the key list, click **Copy** to get the API Key (format `sk-xxx`):
+
+![Copy the API Key](/img/start/api-v2-07-token-copy.png)
+
+<Callout type="idea" title="API endpoint">
+  Click **API Endpoint** in the top-right corner of the page to see the access addresses. The console shows `https://fishxcode.com` by default; `https://api.fishxcode.com` works as well. Both behave identically — pick either one.
 </Callout>
 
-### Token Security Best Practices
+### 2. Top up
 
-- **Rotate regularly**: Replace your tokens every 30-90 days to reduce the risk of exposure
-- **Never store in plaintext**: Do not hardcode API Keys in source code or commit them to Git repositories -- use environment variables instead
-- **Separate tokens per project**: Create independent tokens for different projects for easier management and tracking
-- **Handle leaks immediately**: If you suspect a token has been leaked, delete it from the console right away and create a new one
+Go to **Console → Wallet**. The page has two tabs: **Balance top-up** and **Subscription plans**:
 
-### Modify & Delete Tokens
+![Wallet balance top-up](/img/start/api-v2-08-wallet.png)
 
-In **Console -> Token Management**:
+**Balance top-up**: choose a preset amount ($1 / $5 / $10 / $100 / $500 / $1,000; large amounts get a 1%–3% discount) or enter a custom amount, then choose a payment method:
 
-- **View details**: Click the token name to view its group, model scope, and creation time
-- **Copy token**: Click the copy button in the list
-- **Delete token**: Click the delete button. Once deleted, the token is immediately invalidated and any tools using it will no longer be able to make calls
-
-<Callout type="warn" title="Caution">
-  Deletion is irreversible. Make sure you no longer need the token before deleting it.
-</Callout>
-
----
-
-## 3. Account Security
-
-### Password & Login Security
-
-- Use a **strong password** (8+ characters, including uppercase, lowercase letters, and numbers)
-- Do not reuse passwords across multiple platforms
-- If you forget your password, use the password recovery process on the login page to reset it
-
-### Third-Party Login
-
-FishXCode supports the following third-party login methods:
+![Payment methods and redeem codes](/img/start/api-09-payment.png)
 
 | Method | Description |
 | - | - |
-| **GitHub** | Recommended for developers, one-click authorization login |
-| **LinuxDO** | Community users can log in directly |
+| Alipay | The mainstream top-up method, no minimum |
+| Waffo Pancake | Minimum top-up $100 |
+| Redeem code | Enter it in the “Got a redeem code?” area and click **Redeem credits** |
 
-After binding a third-party account, you can log in using that platform's authorization without entering a password.
+**Subscription plans**: buy a Codex account-pool monthly package ($20 / $200 / $2,000 tiers), then create keys with the `codex-sub-june` group to use it. See [Subscription Plans](/en/subscription-plans):
 
-### Anomaly Detection
+![Subscription plans tab](/img/start/api-10-subscription.png)
 
-If you notice any of the following issues, take action immediately:
+<Callout type="idea" title="New-user bonus">
+  Newly registered accounts automatically get a **$0.2** trial balance you can use to test API calls right away.
+</Callout>
 
-1. **Unusual spending increase** -> Check whether any tokens have been leaked; if necessary, delete all tokens and create new ones
-2. **Cannot log in** -> Try password recovery; if the issue persists, contact official support
-3. **Unexpected balance deductions** -> Check the usage logs for specific call records to confirm whether the consumption is legitimate
+<Callout type="idea" title="How multipliers work">
+  The multiplier in a group name is the billing factor: the smaller the value, the less the same request costs. For example, consuming 1 unit on a `0.5x` group corresponds to the token volume that would cost 2 units at the official price. See [Billing Rules & Groups](/en/billing-groups).
+</Callout>
 
-<Callout type="idea" title="Contact Support">
-  If you encounter account issues, get help through the [Contact Us](https://fishxcode.com/contact) page.
+---
+
+## 3. Account security
+
+Go to **Console → Security & Access** to manage account security settings:
+
+![Security & Access page](/img/start/api-12-security.png)
+
+| Feature | Description |
+| - | - |
+| Change password | Rotate regularly: at least 8 characters with upper- and lowercase letters and digits |
+| Account linking | After linking GitHub / LinuxDO / Google you can log in with one-click authorization |
+| Login sessions | See current logged-in devices and remotely sign out other sessions |
+| Access API Key | Used when calling the dashboard API; create it with the permissions you need |
+| Passkey login | Passwordless sign-in with a passkey |
+| Two-factor authentication | Add an extra layer of security to your account |
+
+### API Key security tips
+
+- **Rotate regularly**: replace keys every 30–90 days to reduce the risk of leaks
+- **Never store keys in plain text**: avoid hard-coding API Keys in source code or committing them to Git; use environment variables instead
+- **Least privilege**: create separate keys per project for easier management and tracking
+- **If a key leaks**: if you suspect a key has leaked, delete it immediately on the **API Keys** page and create a new one
+
+<Callout type="warn" title="Note">
+  Deleting a key is irreversible. Once deleted, the key stops working immediately and tools using it can no longer make calls.
 </Callout>
 
 ---
 
 ## 4. FAQ
 
-### Can't receive the verification code?
+### Not receiving the verification code when registering?
 
-1. Check that the email address is correct (watch for typos and domain errors)
-2. Check your spam or junk mail folder
-3. Wait 1-2 minutes and try again -- avoid sending repeated requests
-4. If you still cannot receive the code, try a different email address or use third-party login
+1. Make sure the email domain is on the supported list (qq.com / 126.com / 163.com / gmail.com)
+2. Check your spam/junk folder
+3. Wait 1–2 minutes and retry; avoid frequent requests
+4. If it still does not arrive, use third-party authorized login with GitHub / LinuxDO / Google
 
-### Where to find created tokens?
+### Where do I find my API Key after creating it?
 
-Go to **Console -> Token Management**. Your created tokens will appear in the list. Click the copy button to get the `sk-xxx` format API Key.
+Go to **Console → API Keys**; created keys appear in the list. Click the copy button to get the API Key in `sk-xxx` format.
 
-### Top-up not reflected?
+### What if my top-up has not arrived?
 
-1. Confirm that the payment was successful (check your Alipay/WeChat transaction history)
-2. Wait 1-5 minutes -- there may be a short delay
-3. Refresh the console wallet page
-4. If it has been more than 10 minutes, contact support and provide a payment screenshot
+1. Confirm the payment succeeded (check the transaction record in Alipay or your payment channel)
+2. Wait 1–5 minutes; the system may have a short delay
+3. Refresh the console Wallet page
+4. If it still has not arrived after 10 minutes, contact us via [Contact](https://fishxcode.com/contact) with your payment record
 
-### How to check spending details?
+### How do I view usage details?
 
-Go to **Console -> Usage Logs** to view details for each API call:
+Go to **Console → Usage Logs** to see, for every API call:
 
-- Call time and model name
+- Time of the call and the model name
 - Token consumption and cost
 - Request IP and detailed records
+
+More log types (audit logs, task logs) can be switched in the sidebar.
