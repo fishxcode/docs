@@ -1,13 +1,13 @@
 ---
 title: Quy tắc tính phí và nhóm
-description: Hai cách tính phí của FishXCode, 13 nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng.
+description: Hai cách tính phí của FishXCode, các nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng. Hệ số nhóm được lấy trực tiếp từ nền tảng khi trang được tải.
 navTitle: Quy tắc tính phí và nhóm
 ---
 
 FishXCode là nền tảng một cửa cung cấp dịch vụ kết nối mô hình AI và tài khoản, bao gồm Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và mô hình đa phương thức. Trang này giải thích cách tính phí, các nhóm hiện có, cách chọn nhóm và cách đối chiếu mức tiêu hao sau khi sử dụng.
 
 <Callout type="idea" title="Căn cứ theo thông tin thời gian thực trên trang">
-  Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên sẽ thay đổi theo tài nguyên của nhà cung cấp upstream; thông tin cuối cùng căn cứ theo [trang giá](https://fishxcode.com/pricing) và thông tin thời gian thực trong bảng điều khiển.
+  Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên sẽ thay đổi theo tài nguyên của nhà cung cấp upstream; thông tin cuối cùng căn cứ theo [trang giá](https://fishxcode.com/pricing) và thông tin thời gian thực trong bảng điều khiển. Hệ số nhóm trên trang được lấy trực tiếp từ API của nền tảng khi trang được tải.
 </Callout>
 
 ## 1. Hai cách tính phí
@@ -21,35 +21,13 @@ Giá, hạn mức và cách sử dụng gói tháng được trình bày tại [
 
 ## 2. Các nhóm đang mở bán
 
-Nhóm quyết định một API Key có thể gọi những mô hình nào, đi qua pool tài nguyên nào và bị trừ phí theo hệ số nào. Hiện có 13 nhóm đang mở bán:
+Nhóm quyết định một API Key có thể gọi những mô hình nào, đi qua pool tài nguyên nào và bị trừ phí theo hệ số nào. Hiện có <GroupCount /> nhóm đang mở bán:
 
-### Dòng Codex
+<GroupRatioTable category="codex" />
 
-| Nhóm | Hệ số | Mô tả |
-| - | - | - |
-| `codex-plus` | 0.2x | Pool tài khoản chính thức dòng Codex Plus mua theo giá gốc; hệ số thấp, ổn định, phù hợp để gọi hằng ngày |
-| `codex-pro` | 0.4x | Tài nguyên chính thức dòng Codex Pro mua theo giá gốc; hiệu năng ổn định, phù hợp với đội nhóm và doanh nghiệp |
-| `codex-team` | 0.12x | Pool tài khoản dùng chung chính thức dòng Codex Team; tài nguyên dùng chung với hệ số thấp |
-| `codex-ultrafast` | 0.4x | Chế độ ultrafast của pool codex-pro; không giới hạn, ưu tiên ổn định |
-| `codex-officially` | 2x | Tài nguyên API Key chính thức của OpenAI; kết nối trực tiếp chính thức, ổn định và đáng tin cậy |
+<GroupRatioTable category="claude" />
 
-### Dòng Claude
-
-| Nhóm | Hệ số | Mô tả |
-| - | - | - |
-| `claude` | 1.5x | Pool tài khoản chính thức Claude Max 20 mua theo giá gốc; hiệu năng đầy đủ, kết nối trực tiếp ổn định |
-| `claudemax` | 2.6x | Pool hàng nghìn tài khoản Claude Max 20; kết nối tốc độ cao, quản lý chỉ đọc, hỗ trợ truy vết thủ công |
-
-### Mô hình khác
-
-| Nhóm | Hệ số | Mô tả |
-| - | - | - |
-| `kiro-svip` | 0.2x | Pool tài khoản chính thức Kiro mua theo giá gốc; kết nối ổn định, hệ số thấp |
-| `china` | 0.8x | Tổng hợp các mô hình phổ biến của Trung Quốc, kết nối trực tiếp API chính thức |
-| `grok` | 0.5x | Nhóm dành riêng cho mô hình xAI Grok, trải nghiệm khả năng của Grok với hệ số thấp |
-| `fishxlab` | 2x | Các mô hình đa phương thức như âm thanh, video, hình ảnh, bao quát các tình huống tạo nội dung và sáng tạo |
-| `gemini` | 0.8x | Nhóm toàn bộ mô hình dòng Gemini |
-| `tencent-china` | 0.1x | Mô hình Trung Quốc của Tencent Cloud; hệ số thấp nhất hiện tại |
+<GroupRatioTable category="other" />
 
 Bạn có thể xem các mô hình khác và mức độ hỗ trợ cụ thể trên trang.
 
@@ -65,12 +43,7 @@ Hệ số là số nhân được áp lên giá cơ bản của mô hình. Hệ 
 Tiêu hao thực tế ≈ Tiêu hao cơ bản của mô hình × Hệ số nhóm
 ```
 
-| Tiêu hao cơ bản của mô hình | Nhóm | ước tính bị trừ |
-| - | - | - |
-| 10 hạn mức | `codex-team` (0.12x) | 1,2 hạn mức |
-| 10 hạn mức | `codex-plus` (0.2x) | 2 hạn mức |
-| 10 hạn mức | `claude` (1.5x) | 15 hạn mức |
-| 10 hạn mức | `claudemax` (2.6x) | 26 hạn mức |
+<RatioExampleTable base={10} groups={['codex-team', 'codex-plus', 'claude', 'claudemax']} />
 
 Tiêu hao cơ bản của mô hình ở đây không phải giá trị cố định, mà thay đổi theo độ dài đầu vào, độ dài đầu ra, tỷ lệ trúng cache và giá của chính mô hình đó. Phần trúng cache thường rẻ hơn.
 
@@ -101,14 +74,16 @@ Các biểu hiện phổ biến khi chọn sai nhóm:
 
 | Tình huống sử dụng | Khuyến nghị | Mô tả |
 | - | - | - |
-| Lập trình Codex hằng ngày | `codex-plus` (0.2x) | Phù hợp phát triển mã hằng ngày |
-| Codex hệ số thấp | `codex-team` (0.12x) | Phù hợp người dùng chấp nhận pool tài nguyên dùng chung |
+| Lập trình Codex hằng ngày | <LiveRatio name="codex-plus" /> | Phù hợp phát triển mã hằng ngày |
+| Codex hệ số thấp | <LiveRatio name="codex-team" /> | Phù hợp người dùng chấp nhận pool tài nguyên dùng chung |
 | Codex tần suất cao / phát triển Agent | Gói tháng pool tài khoản Codex Pro | Chọn gói tháng hạn mức $200 hoặc $2,000 theo mức dùng thực tế |
-| Lập trình Claude và tác vụ dài | `claude` (1.5x) | Dùng tần suất cao có thể cân nhắc `claudemax` (2.6x) |
-| Kiro | `kiro-svip` (0.2x) | Pool tài khoản chính thức Kiro mua theo giá gốc |
-| Mô hình Trung Quốc | `china` (0.8x) | Kết nối trực tiếp API chính thức |
-| Mô hình Grok | `grok` (0.5x) | Nhóm dành riêng cho xAI Grok |
-| Tạo hình ảnh, video, âm thanh | `fishxlab` (2x) | Mô hình cụ thể và cách tính phí căn cứ theo trang |
+| Lập trình Claude và tác vụ dài | <LiveRatio name="claude" /> | Dùng tần suất cao có thể cân nhắc <LiveRatio name="claudemax" /> |
+| Kiro | <LiveRatio name="kiro-svip" /> | Pool tài khoản chính thức Kiro mua theo giá gốc |
+| Mô hình Trung Quốc | <LiveRatio name="china" /> | Kết nối trực tiếp API chính thức |
+| Mô hình Grok | <LiveRatio name="grok" /> | Nhóm dành riêng cho xAI Grok |
+| Tạo hình ảnh, video, âm thanh | <LiveRatio name="fishxlab" /> | Mô hình cụ thể và cách tính phí căn cứ theo trang |
+| Mô hình Gemini | <LiveRatio name="gemini" /> | Nhóm toàn bộ mô hình dòng Gemini |
+| Mô hình Trung Quốc của Tencent Cloud | <LiveRatio name="tencent-china" /> | Hệ số thấp nhất hiện tại |
 | Tách theo đội nhóm hoặc dự án | Tạo API Key riêng cho từng thành viên hoặc dự án | Dễ kiểm soát hạn mức, phân bổ chi phí và tra nhật ký |
 
 ## 6. Sau khi sử dụng, đối chiếu mức tiêu hao thực tế

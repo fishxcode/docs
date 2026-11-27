@@ -5,6 +5,7 @@ import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 import type { MDXComponents } from 'mdx/types';
 import { ModelCatalog } from '@/components/model-catalog-lazy';
 import { ClientGuide } from '@/components/client-guide';
+import { GroupCount, GroupRatioTable, LiveRatio, RatioExampleTable } from '@/components/group-ratio-table';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -17,6 +18,11 @@ export function getMDXComponents(components?: MDXComponents) {
     Accordions,
     ModelCatalog,
     ClientGuide,
+    // 分组倍率表：构建时渲染基线、水合后从 /api/pricing 拉实时值（见 group-ratio-table.tsx）
+    GroupRatioTable,
+    RatioExampleTable,
+    LiveRatio,
+    GroupCount,
     ...components,
   } satisfies MDXComponents;
 }

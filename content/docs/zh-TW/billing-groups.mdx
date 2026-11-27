@@ -1,13 +1,13 @@
 ---
 title: 計費規則與分組
-description: FishXCode 的兩種計費方式、13 個在售分組與倍率、分組選擇建議和使用注意事項。
+description: FishXCode 的兩種計費方式、在售分組與倍率、分組選擇建議和使用注意事項。分組倍率由頁面即時擷取官網資料。
 navTitle: 計費規則與分組
 ---
 
 FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型。這頁說明怎麼計費、有哪些分組、怎麼選分組，以及用完後怎麼核對消耗。
 
 <Callout type="idea" title="以站內即時資訊為準">
-  分組倍率、模型可用性及資源情況會隨上游資源調整，最終以 [定價頁](https://fishxcode.com/pricing) 和控制台的即時資訊為準。
+  分組倍率、模型可用性及資源情況會隨上游資源調整，最終以 [定價頁](https://fishxcode.com/pricing) 和控制台的即時資訊為準。本頁的分組倍率會在頁面開啟時自動從官網介面擷取最新資料。
 </Callout>
 
 ## 一、兩種計費方式
@@ -21,35 +21,13 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 
 ## 二、在售分組
 
-分組決定一個 API Key 能呼叫哪些模型、走哪個資源池、按什麼倍率扣費。目前在售 13 個分組：
+分組決定一個 API Key 能呼叫哪些模型、走哪個資源池、按什麼倍率扣費。目前在售 <GroupCount /> 個分組：
 
-### Codex 系列
+<GroupRatioTable category="codex" />
 
-| 分組 | 倍率 | 說明 |
-| - | - | - |
-| `codex-plus` | 0.2x | Codex Plus 官方正價系列號池，低倍率、穩定可用，適合日常呼叫 |
-| `codex-pro` | 0.4x | Codex Pro 官方正價系列資源，效能穩定，適合團隊與企業 |
-| `codex-team` | 0.12x | Codex Team 官方系列共享號池，低倍率共享資源 |
-| `codex-ultrafast` | 0.4x | codex-pro 號池的 ultrafast 模式，無限制，穩定性優先 |
-| `codex-officially` | 2x | OpenAI 官方 API Key 資源，官方直連，穩定可靠 |
+<GroupRatioTable category="claude" />
 
-### Claude 系列
-
-| 分組 | 倍率 | 說明 |
-| - | - | - |
-| `claude` | 1.5x | Claude Max 20 官方正價號池，滿血效能，穩定直連 |
-| `claudemax` | 2.6x | Claude Max 20 千級號池，高速接入、唯讀管理，支援人工溯源 |
-
-### 其他模型
-
-| 分組 | 倍率 | 說明 |
-| - | - | - |
-| `kiro-svip` | 0.2x | Kiro 官方正價號池，穩定接入，低倍率 |
-| `china` | 0.8x | 國產主流模型合輯，官方 API 直連 |
-| `grok` | 0.5x | xAI Grok 模型專屬分組，低倍率體驗 Grok 能力 |
-| `fishxlab` | 2x | 音訊、影片、影像等多模態模型，涵蓋生成與創作情境 |
-| `gemini` | 0.8x | Gemini 系列全模型分組 |
-| `tencent-china` | 0.1x | 騰訊雲國產模型分組，低倍率 |
+<GroupRatioTable category="other" />
 
 其他模型及具體支援情況請在站內查看。
 
@@ -65,12 +43,7 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 實際消耗 ≈ 模型基礎消耗 × 分組倍率
 ```
 
-| 模型基礎消耗 | 分組 | 估算扣除 |
-| - | - | - |
-| 10 額度 | `codex-team`（0.12x） | 1.2 額度 |
-| 10 額度 | `codex-plus`（0.2x） | 2 額度 |
-| 10 額度 | `claude`（1.5x） | 15 額度 |
-| 10 額度 | `claudemax`（2.6x） | 26 額度 |
+<RatioExampleTable base={10} groups={['codex-team', 'codex-plus', 'claude', 'claudemax']} />
 
 這裡的模型基礎消耗不是固定值，會隨輸入長度、輸出長度、快取命中和模型本身的價格變化。命中快取的部分通常更便宜。
 
@@ -101,14 +74,16 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 
 | 使用情境 | 推薦 | 說明 |
 | - | - | - |
-| 日常 Codex 程式設計 | `codex-plus`（0.2x） | 適合日常程式碼開發 |
-| 低倍率 Codex | `codex-team`（0.12x） | 適合接受共享資源池的使用者 |
+| 日常 Codex 程式設計 | <LiveRatio name="codex-plus" /> | 適合日常程式碼開發 |
+| 低倍率 Codex | <LiveRatio name="codex-team" /> | 適合接受共享資源池的使用者 |
 | 高頻 Codex / Agent 開發 | Codex Pro 號池月包 | 依實際使用量選擇 200 或 2000 美元額度月包 |
-| Claude 程式設計與長任務 | `claude`（1.5x） | 高頻使用可考慮 `claudemax`（2.6x） |
-| Kiro | `kiro-svip`（0.2x） | Kiro 官方正價號池 |
-| 國產模型 | `china`（0.8x） | 官方 API 直連 |
-| Grok 模型 | `grok`（0.5x） | xAI Grok 專屬分組 |
-| 圖像、影片、音訊生成 | `fishxlab`（2x） | 具體模型及計費以站內為準 |
+| Claude 程式設計與長任務 | <LiveRatio name="claude" /> | 高頻使用可考慮 <LiveRatio name="claudemax" /> |
+| Kiro | <LiveRatio name="kiro-svip" /> | Kiro 官方正價號池 |
+| 國產模型 | <LiveRatio name="china" /> | 官方 API 直連 |
+| Grok 模型 | <LiveRatio name="grok" /> | xAI Grok 專屬分組 |
+| 圖像、影片、音訊生成 | <LiveRatio name="fishxlab" /> | 具體模型及計費以站內為準 |
+| Gemini 模型 | <LiveRatio name="gemini" /> | Gemini 系列全模型 |
+| 騰訊雲國產模型 | <LiveRatio name="tencent-china" /> | 當前倍率最低的分組 |
 | 團隊或專案拆分 | 為成員或專案建立獨立 API Key | 便於額度控制、成本分攤和日誌排查 |
 
 ## 六、使用後核對實際消耗

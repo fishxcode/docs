@@ -1,13 +1,13 @@
 ---
 title: Reglas de facturación y grupos
-description: Las dos formas de facturación de FishXCode, los 13 grupos a la venta con sus multiplicadores, recomendaciones para elegir grupo y notas de uso.
+description: Las dos formas de facturación de FishXCode, los grupos a la venta con sus multiplicadores, recomendaciones para elegir grupo y notas de uso. Los multiplicadores se obtienen en tiempo real de la plataforma al cargar la página.
 navTitle: Reglas de facturación y grupos
 ---
 
 FishXCode es una plataforma integral de acceso a modelos de IA y servicios de cuentas que cubre Claude, Codex, Kiro, Grok, modelos nacionales y multimodales. Esta página explica cómo se factura, qué grupos hay, cómo elegir uno y cómo verificar el consumo después de usarlo.
 
 <Callout type="idea" title="La información en tiempo real del sitio prevalece">
-  Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos cambian según los recursos del upstream. La información en tiempo real de la [página de precios](https://fishxcode.com/pricing) y de la consola prevalece siempre.
+  Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos cambian según los recursos del upstream. La información en tiempo real de la [página de precios](https://fishxcode.com/pricing) y de la consola prevalece siempre. Los multiplicadores de esta página se obtienen en tiempo real de la API de la plataforma al cargar la página.
 </Callout>
 
 ## 1. Dos formas de facturación
@@ -21,35 +21,13 @@ Para el precio, la cuota y el uso del paquete mensual, ver [Planes de suscripci�
 
 ## 2. Grupos a la venta
 
-El grupo determina qué modelos puede llamar una API Key, qué pool de recursos usa y con qué multiplicador se factura. Actualmente hay 13 grupos a la venta:
+El grupo determina qué modelos puede llamar una API Key, qué pool de recursos usa y con qué multiplicador se factura. Actualmente hay <GroupCount /> grupos a la venta:
 
-### Serie Codex
+<GroupRatioTable category="codex" />
 
-| Grupo | Multiplicador | Descripción |
-| - | - | - |
-| `codex-plus` | 0.2x | Pool oficial de precio completo Codex Plus; multiplicador bajo, estable, ideal para llamadas diarias |
-| `codex-pro` | 0.4x | Recursos oficiales de precio completo Codex Pro; rendimiento estable, ideal para equipos y empresas |
-| `codex-team` | 0.12x | Pool compartido oficial de la serie Codex Team; recursos compartidos con multiplicador bajo |
-| `codex-ultrafast` | 0.4x | Modo ultrafast del pool codex-pro; sin límites, prioriza estabilidad |
-| `codex-officially` | 2x | Recursos de API Key oficial de OpenAI; conexión oficial directa, estable y fiable |
+<GroupRatioTable category="claude" />
 
-### Serie Claude
-
-| Grupo | Multiplicador | Descripción |
-| - | - | - |
-| `claude` | 1.5x | Pool oficial de precio completo Claude Max 20; pleno rendimiento y conexión directa estable |
-| `claudemax` | 2.6x | Pool de miles de cuentas Claude Max 20; acceso de alta velocidad, gestión de solo lectura y trazabilidad manual |
-
-### Otros modelos
-
-| Grupo | Multiplicador | Descripción |
-| - | - | - |
-| `kiro-svip` | 0.2x | Pool oficial de precio completo de Kiro; acceso estable, multiplicador bajo |
-| `china` | 0.8x | Conjunto de modelos nacionales principales, conexión directa por API oficial |
-| `grok` | 0.5x | Grupo exclusivo de los modelos xAI Grok; prueba Grok con multiplicador bajo |
-| `fishxlab` | 2x | Modelos multimodales de audio, vídeo e imagen, para generación y creación |
-| `gemini` | 0.8x | Serie completa de modelos Gemini |
-| `tencent-china` | 0.1x | Modelos chinos de Tencent Cloud; el multiplicador más bajo actual |
+<GroupRatioTable category="other" />
 
 Para otros modelos y su disponibilidad exacta, consúltalo en el sitio.
 
@@ -65,12 +43,7 @@ El multiplicador es un factor que se aplica sobre el precio base del modelo. Cua
 Consumo real ≈ consumo base del modelo × multiplicador del grupo
 ```
 
-| Consumo base del modelo | Grupo | Descuento estimado |
-| - | - | - |
-| 10 créditos | `codex-team` (0.12x) | 1.2 créditos |
-| 10 créditos | `codex-plus` (0.2x) | 2 créditos |
-| 10 créditos | `claude` (1.5x) | 15 créditos |
-| 10 créditos | `claudemax` (2.6x) | 26 créditos |
+<RatioExampleTable base={10} groups={['codex-team', 'codex-plus', 'claude', 'claudemax']} />
 
 El consumo base del modelo no es un valor fijo: varía según la longitud de la entrada, la de la salida, los aciertos de caché y el propio precio del modelo. Las partes servidas desde la caché suelen ser más baratas.
 
@@ -101,14 +74,16 @@ Síntomas habituales de haber elegido mal el grupo:
 
 | Caso de uso | Recomendación | Descripción |
 | - | - | - |
-| Programación Codex diaria | `codex-plus` (0.2x) | Ideal para el desarrollo de código cotidiano |
-| Codex con multiplicador bajo | `codex-team` (0.12x) | Para usuarios que aceptan un pool de recursos compartido |
+| Programación Codex diaria | <LiveRatio name="codex-plus" /> | Ideal para el desarrollo de código cotidiano |
+| Codex con multiplicador bajo | <LiveRatio name="codex-team" /> | Para usuarios que aceptan un pool de recursos compartido |
 | Codex de alta frecuencia / desarrollo de Agentes | Paquete mensual del pool de cuentas Codex Pro | Elige el paquete mensual de $200 o $2,000 según tu uso real |
-| Programación y tareas largas con Claude | `claude` (1.5x) | Para uso intensivo, considera `claudemax` (2.6x) |
-| Kiro | `kiro-svip` (0.2x) | Pool oficial de precio completo de Kiro |
-| Modelos nacionales | `china` (0.8x) | Conexión directa por API oficial |
-| Modelos Grok | `grok` (0.5x) | Grupo exclusivo de xAI Grok |
-| Generación de imagen, vídeo y audio | `fishxlab` (2x) | Modelos y facturación exactos según el sitio |
+| Programación y tareas largas con Claude | <LiveRatio name="claude" /> | Para uso intensivo, considera <LiveRatio name="claudemax" /> |
+| Kiro | <LiveRatio name="kiro-svip" /> | Pool oficial de precio completo de Kiro |
+| Modelos nacionales | <LiveRatio name="china" /> | Conexión directa por API oficial |
+| Modelos Grok | <LiveRatio name="grok" /> | Grupo exclusivo de xAI Grok |
+| Generación de imagen, vídeo y audio | <LiveRatio name="fishxlab" /> | Modelos y facturación exactos según el sitio |
+| Modelos Gemini | <LiveRatio name="gemini" /> | Serie completa de modelos Gemini |
+| Modelos chinos de Tencent Cloud | <LiveRatio name="tencent-china" /> | El multiplicador más bajo actual |
 | Separación por equipo o proyecto | Crea API Keys separadas por miembro o proyecto | Facilita el control de cuota, la repartición de costes y el diagnóstico por registros |
 
 ## 6. Verificar el consumo real tras el uso

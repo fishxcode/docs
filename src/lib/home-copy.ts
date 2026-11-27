@@ -1,6 +1,7 @@
 import { siteConfig } from './site';
 import { docsImageRoute, joinRoute } from './shared';
 import { DEFAULT_LOCALE, type Locale } from './i18n';
+import { GROUP_BASELINE, baselineRatioLabel, type GroupCategory } from './group-baseline';
 
 /*
  * 首页的全部可见内容都由本文件决定（首页「最近更新」与 sitemap 的 lastmod 都取本文件的
@@ -37,33 +38,16 @@ export const HOME_PLANS = PLANS.map((plan) => ({
 /** 月包里最低的实际成本倍率（首屏徽标用） */
 export const HOME_LOWEST_PLAN_RATIO = multiplier(Math.min(...PLANS.map((plan) => plan.price / plan.quota)));
 
-export type GroupCategory = 'codex' | 'claude' | 'other';
+export type { GroupCategory };
 
 /**
- * 在售分组与倍率的内置基线（2026-11-27 与主站 /api/pricing 对齐）。
- *
- * 首页「在售分组与倍率」区块会运行时从 /api/pricing 拉最新倍率（见 GroupRatioList），
- * 拉取失败时回退到这里；llms 的首页 Markdown 副本（discovery.ts，构建期静态生成）
- * 也用这份基线。接口不可达时展示的数值，以及文档页 billing-groups.mdx 的静态正文，
- * 都以本清单为准，调整时与 content/docs/billing-groups.mdx 两处同步。
+ * 在售分组与倍率的首页基线：由 group-baseline.ts 的 GROUP_BASELINE 派生（同一
+ * 数字来源，避免两处倍率漂移）。首页「在售分组与倍率」区块会运行时从
+ * /api/pricing 拉最新倍率（见 GroupRatioList），拉取失败时回退到这里；
+ * llms 的首页 Markdown 副本（discovery.ts，构建期静态生成）也用这份派生值。
  */
-export const HOME_GROUPS: ReadonlyArray<{ name: string; ratio: string; category: GroupCategory }> = (
-  [
-    ['codex-plus', 0.2, 'codex'],
-    ['codex-pro', 0.4, 'codex'],
-    ['codex-team', 0.12, 'codex'],
-    ['codex-ultrafast', 0.4, 'codex'],
-    ['codex-officially', 2, 'codex'],
-    ['claude', 1.5, 'claude'],
-    ['claudemax', 2.6, 'claude'],
-    ['kiro-svip', 0.2, 'other'],
-    ['china', 0.8, 'other'],
-    ['gemini', 0.8, 'other'],
-    ['grok', 0.5, 'other'],
-    ['fishxlab', 2, 'other'],
-    ['tencent-china', 0.1, 'other'],
-  ] as const
-).map(([name, ratio, category]) => ({ name, ratio: multiplier(ratio), category }));
+export const HOME_GROUPS: ReadonlyArray<{ name: string; ratio: string; category: GroupCategory }> =
+  GROUP_BASELINE.map(({ name, ratio, category }) => ({ name, ratio: baselineRatioLabel(ratio), category }));
 
 /**
  * 首页展示的客户端教程，顺序同侧边栏。path 是文档页路径（渲染时加语言前缀）；

@@ -1,13 +1,13 @@
 ---
 title: 課金ルールとグループ
-description: FishXCode の 2 つの課金方式、販売中の 13 グループと倍率、グループ選びの推奨、利用上の注意事項を解説します。
+description: FishXCode の 2 つの課金方式、販売中のグループと倍率、グループ選びの推奨、利用上の注意事項を解説します。グループ倍率はページ読み込み時に公式サイトの API からリアルタイムで取得します。
 navTitle: 課金ルールとグループ
 ---
 
 FishXCode はワンストップの AI モデル接続・アカウントサービスプラットフォームで、Claude、Codex、Kiro、Grok、中国産モデル、マルチモーダルモデルをカバーしています。このページでは、課金の仕組み、利用できるグループ、グループの選び方、そして利用後に消費を確認する方法を説明します。
 
 <Callout type="idea" title="サイト内のリアルタイム情報が優先">
-  グループの倍率、モデルの利用可否、リソース状況は上流リソースの調整により変わります。最終的には [料金ページ](https://fishxcode.com/pricing) とコンソールのリアルタイム情報が優先されます。
+  グループの倍率、モデルの利用可否、リソース状況は上流リソースの調整により変わります。最終的には [料金ページ](https://fishxcode.com/pricing) とコンソールのリアルタイム情報が優先されます。このページのグループ倍率は、ページの読み込み時に公式 API から最新データを自動取得します。
 </Callout>
 
 ## 1. 2 つの課金方式
@@ -21,35 +21,13 @@ FishXCode はワンストップの AI モデル接続・アカウントサービ
 
 ## 2. 販売中のグループ
 
-グループは、1 つの API Key がどのモデルを呼び出せるか、どのリソースプールを経由するか、どの倍率で課金されるかを決めます。現在販売中のグループは 13 個です：
+グループは、1 つの API Key がどのモデルを呼び出せるか、どのリソースプールを経由するか、どの倍率で課金されるかを決めます。現在販売中のグループは <GroupCount /> 個です：
 
-### Codex シリーズ
+<GroupRatioTable category="codex" />
 
-| グループ | 倍率 | 説明 |
-| - | - | - |
-| `codex-plus` | 0.2x | Codex Plus の公式正価格シリーズのアカウントプール。低倍率で安定して利用でき、日常的な呼び出しに適しています |
-| `codex-pro` | 0.4x | Codex Pro の公式正価格シリーズのリソース。性能が安定しており、チームや企業向け |
-| `codex-team` | 0.12x | Codex Team の公式シリーズ共有アカウントプール。低倍率の共有リソース |
-| `codex-ultrafast` | 0.4x | codex-pro プールの ultrafast モード。無制限、安定性重視 |
-| `codex-officially` | 2x | OpenAI 公式 API Key のリソース。公式直接続で安定・信頼性が高い |
+<GroupRatioTable category="claude" />
 
-### Claude シリーズ
-
-| グループ | 倍率 | 説明 |
-| - | - | - |
-| `claude` | 1.5x | Claude Max 20 の公式正価格アカウントプール。フルスペックの性能で安定した直接続 |
-| `claudemax` | 2.6x | Claude Max 20 の千規模アカウントプール。高速アクセス・読み取り専用管理で、手動でのトレース対応に対応 |
-
-### その他のモデル
-
-| グループ | 倍率 | 説明 |
-| - | - | - |
-| `kiro-svip` | 0.2x | Kiro の公式正価格アカウントプール。安定した接続で低倍率 |
-| `china` | 0.8x | 中国産主要モデルのコレクション。公式 API 直接続 |
-| `grok` | 0.5x | xAI Grok モデル専用グループ。低倍率で Grok の能力を体験できます |
-| `fishxlab` | 2x | 音声、動画、画像などのマルチモーダルモデル。生成・創作シーンをカバー |
-| `gemini` | 0.8x | Gemini シリーズ全モデルのグループ |
-| `tencent-china` | 0.1x | Tencent Cloud の中国系モデルグループ。現時点で最も低い倍率 |
+<GroupRatioTable category="other" />
 
 その他のモデルと対応状況の詳細は、サイト内でご確認ください。
 
@@ -65,12 +43,7 @@ FishXCode はワンストップの AI モデル接続・アカウントサービ
 実際の消費 ≒ モデル基本消費 × グループ倍率
 ```
 
-| モデル基本消費 | グループ | 消費の見積もり |
-| - | - | - |
-| 10 クォータ | `codex-team`（0.12x） | 1.2 クォータ |
-| 10 クォータ | `codex-plus`（0.2x） | 2 クォータ |
-| 10 クォータ | `claude`（1.5x） | 15 クォータ |
-| 10 クォータ | `claudemax`（2.6x） | 26 クォータ |
+<RatioExampleTable base={10} groups={['codex-team', 'codex-plus', 'claude', 'claudemax']} />
 
 ここでのモデル基本消費は固定値ではなく、入力長・出力長・キャッシュヒット・モデル自体の価格により変動します。キャッシュヒット部分は通常より安くなります。
 
@@ -101,14 +74,16 @@ API Key 作成時に注目すべきポイント：
 
 | 利用シーン | 推奨 | 説明 |
 | - | - | - |
-| 日常の Codex コーディング | `codex-plus`（0.2x） | 日常の開発に適しています |
-| 低倍率の Codex | `codex-team`（0.12x） | 共有リソースプールを受け入れられるユーザー向け |
+| 日常の Codex コーディング | <LiveRatio name="codex-plus" /> | 日常の開発に適しています |
+| 低倍率の Codex | <LiveRatio name="codex-team" /> | 共有リソースプールを受け入れられるユーザー向け |
 | 高頻度の Codex / Agent 開発 | Codex Pro アカウントプール月額パッケージ | 実際の使用量に応じて 200 または 2,000 米ドルの月額パッケージを選択 |
-| Claude のコーディングと長時間タスク | `claude`（1.5x） | 高頻度利用の場合は `claudemax`（2.6x）も検討可 |
-| Kiro | `kiro-svip`（0.2x） | Kiro の公式正価格アカウントプール |
-| 中国産モデル | `china`（0.8x） | 公式 API 直接続 |
-| Grok モデル | `grok`（0.5x） | xAI Grok 専用グループ |
-| 画像・動画・音声の生成 | `fishxlab`（2x） | 具体的なモデルと課金はサイト内の情報が優先 |
+| Claude のコーディングと長時間タスク | <LiveRatio name="claude" /> | 高頻度利用の場合は <LiveRatio name="claudemax" /> も検討可 |
+| Kiro | <LiveRatio name="kiro-svip" /> | Kiro の公式正価格アカウントプール |
+| 中国産モデル | <LiveRatio name="china" /> | 公式 API 直接続 |
+| Grok モデル | <LiveRatio name="grok" /> | xAI Grok 専用グループ |
+| 画像・動画・音声の生成 | <LiveRatio name="fishxlab" /> | 具体的なモデルと課金はサイト内の情報が優先 |
+| Gemini モデル | <LiveRatio name="gemini" /> | Gemini シリーズ全モデル |
+| Tencent Cloud の中国系モデル | <LiveRatio name="tencent-china" /> | 現時点で最も低い倍率 |
 | チームやプロジェクトの分離 | メンバーまたはプロジェクトごとに独立した API Key を作成 | クォータ管理、コスト配分、ログ調査がしやすくなります |
 
 ## 6. 利用後の実際の消費を確認する
