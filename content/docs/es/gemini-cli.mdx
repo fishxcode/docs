@@ -10,3 +10,31 @@ description: Aprende a configurar FishXCode en Gemini CLI y a llamar a los model
 ## Notas de la plataforma
 
 Gemini CLI se conecta mediante el protocolo compatible con OpenAI. Si el cliente ofrece campos personalizados de Base URL / API Key, complétalos con los datos anteriores; si solo admite endpoints compatibles con OpenAI, comprueba que la URL incluya `/v1`.
+
+## Opcional: Importación de un clic con CC Switch
+
+Si mantienes varios canales de Gemini, puedes usar [CC Switch](https://github.com/farion1231/cc-switch) para cambiar rápidamente; si solo usas FishXCode, la configuración por variables de entorno de arriba suele ser suficiente.
+
+En la página **Claves API** de la consola de FishXCode, busca la fila de la clave objetivo y haz clic en **Abrir menú → CC Switch**:
+
+![Elegir Rellenar en CC Switch en la consola de FishXCode](/img/start/gemini-cli/cc-switch-import-channel.png)
+
+La consola muestra el formulario «Rellenar en CC Switch». Elige `Gemini` en **Aplicación**, deja **Nombre** como `FishXCode` (fácil de reconocer en la lista de canales), elige `gemini-3.6-flash` en **Modelo principal** y haz clic en **Abrir CC Switch**:
+
+| Campo | Valor recomendado de FishXCode |
+| - | - |
+| Aplicación | `Gemini` |
+| Nombre | `FishXCode` |
+| Modelo principal | `gemini-3.6-flash` |
+
+CC Switch muestra el diálogo «Confirmar importación de proveedor». Verifica que el punto de acceso API sea `https://fishxcode.com` y el modelo `gemini-3.6-flash`, luego haz clic en **Importar**:
+
+![Confirmar la importación de FishXCode en CC Switch](/img/start/gemini-cli/cc-switch-select-model.png)
+
+Tras la importación, FishXCode aparece en la lista de proveedores:
+
+![FishXCode importado y visible en la lista de proveedores](/img/start/gemini-cli/cc-switch-import-success.png)
+
+<Callout type="warn" title="Nota">
+  Cuando «Cambiar a este proveedor justo después de importar» está activado, CC Switch reescribe la configuración local de Gemini CLI (`~/.gemini/.env`). Al volver al canal oficial, vuelvelo a seleccionar en CC Switch para no enviar peticiones a una dirección inesperada.
+</Callout>

@@ -63,7 +63,7 @@ image_generation = false
 ```
 
 <Callout type="info">
-  `model` 和 `review_model` 可按你的套餐和分组改成其它可用模型。若不确定，先使用 `gpt-6.2-sol`。
+  `model` 和 `review_model` 可按你的分组改成其它可用模型。若不确定，先使用 `gpt-6.2-sol`。
 </Callout>
 
 ### 3. 写入 `auth.json`
@@ -96,27 +96,27 @@ image_generation = false
 
 如果你同时维护多个 Codex 渠道，可以使用 CC Switch 做快速切换；如果只使用 FishXCode，一个 `~/.codex/config.toml` 通常已经足够。
 
-在 FishXCode 控制台令牌页找到目标令牌后，点击 `codex-sub-june` 分组对应行的 **导入**：
+进入 FishXCode 控制台的 **API 密钥** 页，找到目标密钥所在行，点击右侧 **打开菜单 → CC Switch**：
 
-![在 FishXCode 控制台点击 Codex 分组导入](/img/start/codex-desktop/cc-switch-import-channel.png)
+![在 FishXCode 控制台选择填入 CC Switch](/img/start/codex-desktop/cc-switch-import-channel.png)
 
-CC Switch 导入弹窗中选择 `Codex` 应用后，核心字段建议保持：
+控制台会弹出「填入 CC Switch」表单，**应用**选择 `Codex`，**名称**建议填 `FishXCode`（便于在渠道列表中识别），**主模型**选择 `gpt-6.2-sol`，然后点击 **打开 CC Switch**：
 
 | 字段 | FishXCode 推荐值 |
 | - | - |
-| API 端点 | `https://api.fishxcode.com/v1` |
-| API 密钥 | FishXCode Token |
-| 主模型 | `gpt-6.2-sol` 或你的套餐可用模型 |
+| 应用 | `Codex` |
+| 名称 | `FishXCode` |
+| 主模型 | `gpt-6.2-sol` |
 
-主模型切换到 `gpt-6.2-sol` 后点击 **测试**，看到“测试通过 / 模型连通性测试成功”后再导入：
+CC Switch 会弹出「确认导入供应商配置」，核对 API 端点为 `https://fishxcode.com/v1`、模型为 `gpt-6.2-sol` 后点击 **导入**：
 
-![在 CC Switch 导入弹窗中测试 gpt-6.2-sol](/img/start/codex-desktop/cc-switch-select-model.png)
+![在 CC Switch 确认导入 FishXCode 配置](/img/start/codex-desktop/cc-switch-select-model.png)
 
-浏览器唤起 CC Switch 后，核对 API 端点、模型和备注信息，确认无误再点击 **导入**：
+导入成功后，FishXCode 会出现在 Codex 的供应商列表中并自动切换为使用中的渠道：
 
-![确认导入 FishXCode Codex 配置](/img/start/codex-desktop/cc-switch-import-success.png)
+![FishXCode 导入成功并出现在供应商列表](/img/start/codex-desktop/cc-switch-import-success.png)
 
-配置完成后，确认当前切换到 FishXCode 对应渠道，再重新打开 Codex Desktop。
+配置完成后，重新打开 Codex Desktop 即可使用 FishXCode 渠道。
 
 ## 五、常用功能
 
@@ -172,7 +172,7 @@ Codex Desktop 的输入框附近通常会显示模型、推理强度、权限模
 
 ### 报 401 或 403 怎么办？
 
-优先检查 Token 是否复制完整、是否启用、余额是否充足，以及当前模型是否在你的套餐或分组中可用。
+优先检查 Token 是否复制完整、是否启用、余额是否充足，以及当前模型是否在你的分组中可用。
 
 ### 模型显示和预期不一致？
 

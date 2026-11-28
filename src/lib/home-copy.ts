@@ -15,29 +15,6 @@ export function fmt(template: string, values: Record<string, string | number>): 
 
 // ─────────────────────────────────────────────── 语言无关的业务数据
 
-/**
- * Codex Pro 号池月包三档（美元）。实际成本倍率 = 售价 ÷ 额度，展示用的字符串由数字推导，
- * 不单独手写。与 content/docs/subscription-plans/index.mdx 一致，调价时两处同步。
- */
-const PLANS = [
-  { price: 260, quota: 2000 },
-  { price: 30, quota: 200 },
-  { price: 3.6, quota: 20 },
-] as const;
-
-const usd = (amount: number) =>
-  `$${amount.toLocaleString('en-US', { minimumFractionDigits: Number.isInteger(amount) ? 0 : 2 })}`;
-const multiplier = (ratio: number) => `${Number(ratio.toFixed(2))}x`;
-
-export const HOME_PLANS = PLANS.map((plan) => ({
-  price: usd(plan.price),
-  quota: usd(plan.quota),
-  ratio: multiplier(plan.price / plan.quota),
-}));
-
-/** 月包里最低的实际成本倍率（首屏徽标用） */
-export const HOME_LOWEST_PLAN_RATIO = multiplier(Math.min(...PLANS.map((plan) => plan.price / plan.quota)));
-
 export type { GroupCategory };
 
 /**
@@ -159,7 +136,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
       {
         title: '高性价比，按需使用',
-        details: '余额按量计费，用多少扣多少；高频 Codex 开发可选固定额度的号池月包。',
+        details: '余额按量计费，用多少扣多少，按实际用量控制成本。',
       },
       { title: '支持企业接入，批量定制', details: '团队与企业批量调用、定制化方案与专属技术支持。' },
     ],
@@ -184,7 +161,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
       {
         title: 'Cost-effective, pay as you go',
-        details: 'Pay from your balance for what you use, or pick a fixed-credit pool pack for heavy Codex work.',
+        details: 'Pay from your balance for what you use, keeping costs tied to actual usage.',
       },
       {
         title: 'Built for teams and enterprises',
@@ -213,7 +190,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Économique, à la demande',
         details:
-          'Payez à l’usage depuis votre solde, ou choisissez un forfait mensuel à crédit fixe pour un usage intensif de Codex.',
+          'Payez à l’usage depuis votre solde : les coûts suivent la consommation réelle.',
       },
       {
         title: 'Pensé pour les équipes et les entreprises',
@@ -243,7 +220,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Económico, pago por uso',
         details:
-          'Paga desde tu saldo solo por lo que usas, o elige un paquete mensual de crédito fijo para uso intensivo de Codex.',
+          'Paga desde tu saldo solo por lo que usas: el coste sigue a tu consumo real.',
       },
       {
         title: 'Para equipos y empresas',
@@ -272,7 +249,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Econômico, pague pelo uso',
         details:
-          'Pague pelo saldo apenas o que usar, ou escolha um pacote mensal de crédito fixo para uso intenso do Codex.',
+          'Pague pelo saldo apenas o que usar: o custo acompanha o consumo real.',
       },
       {
         title: 'Para equipes e empresas',
@@ -301,7 +278,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       {
         title: 'Выгодно, оплата по факту',
         details:
-          'Оплачивайте с баланса только то, что используете, или выберите месячный пакет с фиксированной квотой для активной работы с Codex.',
+          'Оплачивайте с баланса только то, что используете: затраты следуют фактическому потреблению.',
       },
       {
         title: 'Для команд и компаний',
@@ -328,7 +305,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
       {
         title: '高コスパ、使った分だけ',
-        details: '残高から使った分だけ従量課金。Codex を多用するなら固定枠の月額パックも選べます。',
+        details: '残高から使った分だけ従量課金。実際の使用量に応じてコストを管理できます。',
       },
       {
         title: '法人・チーム利用に対応',
@@ -356,7 +333,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
       {
         title: 'Tiết kiệm, dùng bao nhiêu trả bấy nhiêu',
-        details: 'Trừ số dư theo mức dùng thực tế, hoặc chọn gói tháng hạn mức cố định khi dùng Codex nhiều.',
+        details: 'Trừ số dư theo mức dùng thực tế, chi phí gắn với mức tiêu thụ thật.',
       },
       {
         title: 'Hỗ trợ đội nhóm và doanh nghiệp',
@@ -382,7 +359,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       },
       {
         title: '高性價比，按需使用',
-        details: '餘額按量計費，用多少扣多少；高頻 Codex 開發可選固定額度的號池月包。',
+        details: '餘額按量計費，用多少扣多少，按實際用量控制成本。',
       },
       { title: '支援企業接入，批量客製', details: '團隊與企業批量呼叫、客製化方案與專屬技術支援。' },
     ],
@@ -394,13 +371,11 @@ type StepCopy = { title: string; description: string };
 
 /**
  * 首页各区块的文案（只在首页与首页 Markdown 副本里用），区块顺序与 localized-home-page.tsx 一致。
- * 占位符：{ratio} 实际成本倍率，{quota} 月包额度，{count} 教程数量。
+ * 占位符：{count} 教程数量。
  * zh 为原稿；zh-TW 由 OpenCC 从 zh 转换后人工校对；其余语言为译文。
  */
 export type HomePageCopy = {
   hero: {
-    /** 首屏徽标，链接到月包页 */
-    badge: string;
     /** 两行大标题，第二行用品牌色 */
     title: readonly [string, string];
     description: string;
@@ -417,12 +392,6 @@ export type HomePageCopy = {
   pricing: {
     title: string;
     description: string;
-    plansTitle: string;
-    planQuota: string;
-    planRatio: string;
-    planTerms: string;
-    planGroup: string;
-    plansCta: string;
     groupsTitle: string;
     categories: Record<GroupCategory, string>;
     groupsNote: string;
@@ -446,7 +415,6 @@ export type HomePageCopy = {
 export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
   zh: {
     hero: {
-      badge: 'Codex Pro 号池月包 · 实际成本低至 {ratio}',
       title: ['主流 AI 模型', '一网打尽'],
       description:
         '覆盖 Claude、Codex、Kiro、Grok、国产模型与多模态模型，一个账号接入你常用的编程工具，满足开发、创作与企业级应用需求。',
@@ -462,17 +430,11 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     },
     why: {
       title: '一个账号，接入主流 AI 模型',
-      description: '官方资源直连，按场景选择分组，余额按量计费或购买月包，个人开发与团队协作都适用。',
+      description: '官方资源直连，按场景选择分组，余额按量计费，个人开发与团队协作都适用。',
     },
     pricing: {
-      title: '按量计费，或选 Codex 月包',
-      description: '余额按模型价格乘以分组倍率扣费，用多少扣多少；高频 Codex 开发可以买固定额度的号池月包。',
-      plansTitle: 'Codex Pro 号池月包',
-      planQuota: '{quota} 额度',
-      planRatio: '实际成本 {ratio}',
-      planTerms: '1 个自然月有效，额度不重置',
-      planGroup: '用 codex-sub-june 分组创建令牌，该分组固定 1x 倍率',
-      plansCta: '月包购买与使用',
+      title: '按量计费',
+      description: '余额按模型价格乘以分组倍率扣费，用多少扣多少。',
       groupsTitle: '在售分组与倍率',
       categories: {
         codex: 'Codex 系列',
@@ -494,7 +456,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       items: [
         {
           title: '注册并充值',
-          description: '创建 FishXCode 账号，按需充值余额或购买 Codex 月包。',
+          description: '创建 FishXCode 账号，按需充值余额。',
         },
         {
           title: '创建令牌，选对分组',
@@ -512,14 +474,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       description: '注册账号，创建一个令牌，让熟悉的工具连接更多模型。',
       enterprise: '企业服务',
       supportTitle: '需要帮助？',
-      supportBody: '迁移、额度、令牌、套餐或接入问题，可以通过在线客服、邮件或微信联系我们。',
+      supportBody: '迁移、额度、令牌或接入问题，可以通过在线客服、邮件或微信联系我们。',
       email: '邮箱',
       wechat: '微信',
     },
   },
   en: {
     hero: {
-      badge: 'Codex Pro pool monthly pack · effective cost from {ratio}',
       title: ['Every major AI model,', 'in one place'],
       description:
         'Claude, Codex, Kiro, Grok, Chinese and multimodal models through one account, ready for the coding tools you already use, for development, creative work and enterprise applications.',
@@ -536,18 +497,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: 'One account for mainstream AI models',
       description:
-        'Official resources, a group for every scenario, and pay-as-you-go billing or monthly packs, for individual developers and teams alike.',
+        'Official resources, a group for every scenario, and pay-as-you-go billing, for individual developers and teams alike.',
     },
     pricing: {
-      title: 'Pay as you go, or pick a Codex monthly pack',
+      title: 'Pay as you go',
       description:
-        'Your balance pays the model price times the group multiplier, only for what you use. For heavy Codex work, a fixed-credit pool pack lowers the cost.',
-      plansTitle: 'Codex Pro pool monthly pack',
-      planQuota: '{quota} credit',
-      planRatio: 'Effective cost multiplier {ratio}',
-      planTerms: 'Valid for 1 calendar month; credit does not reset',
-      planGroup: 'Create tokens in the codex-sub-june group, which has a fixed 1x multiplier',
-      plansCta: 'Buying and using the pack',
+        'Your balance pays the model price times the group multiplier, only for what you use. ',
       groupsTitle: 'Groups on sale and their multipliers',
       categories: {
         codex: 'Codex',
@@ -570,7 +525,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       items: [
         {
           title: 'Sign up and top up',
-          description: 'Create a FishXCode account, then top up your balance or buy a Codex monthly pack.',
+          description: 'Create a FishXCode account, then top up your balance.',
         },
         {
           title: 'Create a token in the right group',
@@ -590,14 +545,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: 'Enterprise',
       supportTitle: 'Need a hand?',
       supportBody:
-        'For migration, balance, token, plan or integration questions, reach us through live chat, email or WeChat.',
+        'For migration, balance, token or integration questions, reach us through live chat, email or WeChat.',
       email: 'Email',
       wechat: 'WeChat',
     },
   },
   fr: {
     hero: {
-      badge: 'Forfait mensuel du pool Codex Pro · coût réel dès {ratio}',
       title: ["Les grands modèles d'IA,", 'tous au même endroit'],
       description:
         'Claude, Codex, Kiro, Grok, modèles chinois et multimodaux, réunis sur un seul compte et accessibles depuis vos outils de programmation habituels, que ce soit pour le développement, la création ou les usages en entreprise.',
@@ -618,18 +572,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: "Un seul compte pour les grands modèles d'IA",
       description:
-        "Ressources officielles en connexion directe, un groupe pour chaque besoin, paiement à l'usage depuis votre solde ou forfait mensuel : idéal pour développer en solo comme en équipe.",
+        "Ressources officielles en connexion directe, un groupe pour chaque besoin, paiement à l'usage depuis votre solde : idéal pour développer en solo comme en équipe.",
     },
     pricing: {
-      title: "Payez à l'usage ou choisissez un forfait mensuel Codex",
+      title: "Payez à l'usage",
       description:
-        'Votre solde est débité selon votre consommation réelle : prix du modèle × multiplicateur du groupe. Pour un usage intensif de Codex, privilégiez un forfait mensuel du pool à crédit fixe.',
-      plansTitle: 'Forfait mensuel du pool Codex Pro',
-      planQuota: '{quota} de crédit',
-      planRatio: 'Multiplicateur de coût réel {ratio}',
-      planTerms: 'Valable 1 mois civil, sans réinitialisation du crédit',
-      planGroup: 'Créez vos tokens dans le groupe codex-sub-june, dont le multiplicateur est fixé à 1x',
-      plansCta: 'Acheter et utiliser le forfait',
+        'Votre solde est débité selon votre consommation réelle : prix du modèle × multiplicateur du groupe.',
       groupsTitle: 'Groupes disponibles et leurs multiplicateurs',
       categories: {
         codex: 'Série Codex',
@@ -654,7 +602,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
         {
           title: 'Inscrivez-vous et rechargez',
           description:
-            'Créez votre compte FishXCode, puis rechargez votre solde ou achetez un forfait mensuel Codex selon vos besoins.',
+            'Créez votre compte FishXCode, puis rechargez votre solde selon vos besoins.',
         },
         {
           title: 'Créez un token dans le bon groupe',
@@ -674,14 +622,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: 'Entreprises',
       supportTitle: "Besoin d'aide ?",
       supportBody:
-        'Migration, crédit, tokens, forfaits ou intégration : contactez-nous par chat en ligne, par e-mail ou sur WeChat.',
+        'Migration, crédit, tokens ou intégration : contactez-nous par chat en ligne, par e-mail ou sur WeChat.',
       email: 'E-mail',
       wechat: 'WeChat',
     },
   },
   es: {
     hero: {
-      badge: 'Paquete mensual del pool Codex Pro · coste real desde {ratio}',
       title: ['Los grandes modelos de IA,', 'todos en un solo lugar'],
       description:
         'Claude, Codex, Kiro, Grok, modelos chinos y multimodales con una sola cuenta y directamente desde tus herramientas de programación habituales, ya sea para desarrollo, creación o aplicaciones empresariales.',
@@ -702,18 +649,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: 'Una sola cuenta para los grandes modelos de IA',
       description:
-        'Conexión directa a recursos oficiales, un grupo para cada necesidad, pago por uso con saldo o paquete mensual: ideal tanto para desarrolladores individuales como para equipos.',
+        'Conexión directa a recursos oficiales, un grupo para cada necesidad, pago por uso con saldo: ideal tanto para desarrolladores individuales como para equipos.',
     },
     pricing: {
-      title: 'Paga por uso o elige un paquete mensual de Codex',
+      title: 'Paga por uso',
       description:
-        'Del saldo se descuenta el precio del modelo por el multiplicador del grupo: pagas solo lo que usas. Para un uso intensivo de Codex, opta por un paquete mensual del pool con crédito fijo.',
-      plansTitle: 'Paquete mensual del pool Codex Pro',
-      planQuota: '{quota} de crédito',
-      planRatio: 'Multiplicador de coste real {ratio}',
-      planTerms: 'Válido durante 1 mes natural; el crédito no se restablece',
-      planGroup: 'Crea los tokens en el grupo codex-sub-june, que tiene un multiplicador fijo de 1x',
-      plansCta: 'Comprar y usar el paquete',
+        'Del saldo se descuenta el precio del modelo por el multiplicador del grupo: pagas solo lo que usas.',
       groupsTitle: 'Grupos a la venta y sus multiplicadores',
       categories: {
         codex: 'Serie Codex',
@@ -738,7 +679,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
         {
           title: 'Regístrate y recarga',
           description:
-            'Crea tu cuenta en FishXCode y recarga saldo o compra un paquete mensual de Codex, según lo que necesites.',
+            'Crea tu cuenta en FishXCode y recarga saldo según lo que necesites.',
         },
         {
           title: 'Crea un token en el grupo adecuado',
@@ -758,14 +699,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: 'Empresas',
       supportTitle: '¿Necesitas ayuda?',
       supportBody:
-        'Para dudas sobre migración, crédito, tokens, planes o integración, escríbenos por el chat en línea, por correo o por WeChat.',
+        'Para dudas sobre migración, crédito, tokens o integración, escríbenos por el chat en línea, por correo o por WeChat.',
       email: 'Correo',
       wechat: 'WeChat',
     },
   },
   pt: {
     hero: {
-      badge: 'Pacote mensal do pool Codex Pro · custo real a partir de {ratio}',
       title: ['Os principais modelos de IA,', 'todos em um só lugar'],
       description:
         'Claude, Codex, Kiro, Grok, modelos chineses e multimodais em uma só conta, direto nas ferramentas de programação que você já usa, seja para desenvolvimento, criação ou aplicações empresariais.',
@@ -786,18 +726,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: 'Uma só conta para os principais modelos de IA',
       description:
-        'Conexão direta com recursos oficiais, um grupo para cada necessidade, pagamento por uso com saldo ou pacote mensal: ideal tanto para quem desenvolve sozinho quanto para equipes.',
+        'Conexão direta com recursos oficiais, um grupo para cada necessidade, pagamento por uso com saldo: ideal tanto para quem desenvolve sozinho quanto para equipes.',
     },
     pricing: {
-      title: 'Pague pelo uso ou escolha um pacote mensal Codex',
+      title: 'Pague pelo uso',
       description:
-        'Do saldo é descontado o preço do modelo vezes o multiplicador do grupo: você paga só pelo que usa. Para uso intenso do Codex, opte por um pacote mensal do pool com crédito fixo.',
-      plansTitle: 'Pacote mensal do pool Codex Pro',
-      planQuota: '{quota} de crédito',
-      planRatio: 'Multiplicador de custo real {ratio}',
-      planTerms: 'Válido por 1 mês-calendário; o crédito não é redefinido',
-      planGroup: 'Crie os tokens no grupo codex-sub-june, que tem multiplicador fixo de 1x',
-      plansCta: 'Comprar e usar o pacote',
+        'Do saldo é descontado o preço do modelo vezes o multiplicador do grupo: você paga só pelo que usa.',
       groupsTitle: 'Grupos à venda e seus multiplicadores',
       categories: {
         codex: 'Série Codex',
@@ -822,7 +756,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
         {
           title: 'Cadastre-se e recarregue',
           description:
-            'Crie sua conta no FishXCode e recarregue o saldo ou compre um pacote mensal Codex, conforme precisar.',
+            'Crie sua conta no FishXCode e recarregue o saldo conforme precisar.',
         },
         {
           title: 'Crie um token no grupo certo',
@@ -842,14 +776,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: 'Empresas',
       supportTitle: 'Precisa de ajuda?',
       supportBody:
-        'Para dúvidas sobre migração, crédito, tokens, planos ou integração, fale com a gente pelo chat de atendimento, por e-mail ou pelo WeChat.',
+        'Para dúvidas sobre migração, crédito, tokens ou integração, fale com a gente pelo chat de atendimento, por e-mail ou pelo WeChat.',
       email: 'E-mail',
       wechat: 'WeChat',
     },
   },
   ru: {
     hero: {
-      badge: 'Месячный пакет пула Codex Pro · фактическая стоимость от {ratio}',
       title: ['Все ведущие модели ИИ', 'в одном месте'],
       description:
         'Claude, Codex, Kiro, Grok, китайские и мультимодальные модели через один аккаунт — прямо в привычных инструментах для программирования. Подходит для разработки, творчества и корпоративных задач.',
@@ -870,18 +803,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: 'Один аккаунт для ведущих моделей ИИ',
       description:
-        'Прямое подключение к официальным ресурсам, группы под разные задачи, оплата по факту с баланса или месячный пакет — для индивидуальных разработчиков и команд.',
+        'Прямое подключение к официальным ресурсам, группы под разные задачи, оплата по факту с баланса — для индивидуальных разработчиков и команд.',
     },
     pricing: {
-      title: 'Оплата по факту или месячный пакет Codex',
+      title: 'Оплата по факту',
       description:
-        'Цена модели умножается на коэффициент группы и списывается с баланса — вы платите только за то, что используете. Для интенсивной разработки с Codex есть месячный пакет пула с фиксированной квотой.',
-      plansTitle: 'Месячный пакет пула Codex Pro',
-      planQuota: 'Квота {quota}',
-      planRatio: 'Фактический коэффициент стоимости {ratio}',
-      planTerms: 'Действует 1 календарный месяц, квота не сбрасывается',
-      planGroup: 'Создайте токен в группе codex-sub-june: её коэффициент фиксирован и равен 1x',
-      plansCta: 'Покупка и использование пакета',
+        'Цена модели умножается на коэффициент группы и списывается с баланса — вы платите только за то, что используете.',
       groupsTitle: 'Доступные группы и коэффициенты',
       categories: {
         codex: 'Серия Codex',
@@ -906,7 +833,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
         {
           title: 'Зарегистрируйтесь и пополните баланс',
           description:
-            'Создайте аккаунт FishXCode и, в зависимости от задач, пополните баланс или купите месячный пакет Codex.',
+            'Создайте аккаунт FishXCode и, в зависимости от задач, пополните баланс.',
         },
         {
           title: 'Создайте токен в нужной группе',
@@ -926,14 +853,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: 'Для бизнеса',
       supportTitle: 'Нужна помощь?',
       supportBody:
-        'По вопросам миграции, баланса, токенов, тарифов или подключения пишите нам в онлайн-чат, на почту или в WeChat.',
+        'По вопросам миграции, баланса, токенов или подключения пишите нам в онлайн-чат, на почту или в WeChat.',
       email: 'Эл. почта',
       wechat: 'WeChat',
     },
   },
   ja: {
     hero: {
-      badge: 'Codex Pro アカウントプール月額パック · 実質コスト {ratio} から',
       title: ['主要な AI モデルを', 'ひとつの場所で'],
       description:
         'Claude・Codex・Kiro・Grok・中国系モデル・マルチモーダルモデルに対応。ひとつのアカウントで使い慣れたコーディングツールにそのまま接続でき、開発・制作・企業利用のニーズに応えます。',
@@ -950,18 +876,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: 'ひとつのアカウントで、主要な AI モデルに接続',
       description:
-        '公式リソースに直接接続し、用途に合わせてグループを選べます。残高からの従量課金のほか月額パックも用意しており、個人開発にもチーム開発にも対応します。',
+        '公式リソースに直接接続し、用途に合わせてグループを選べます。残高からの従量課金で、個人開発にもチーム開発にも対応します。',
     },
     pricing: {
-      title: '従量課金か、Codex 月額パックか',
+      title: '従量課金',
       description:
-        '使った分だけ、モデル価格にグループ倍率を掛けた額を残高から差し引きます。Codex を高頻度で使う開発なら、利用枠が固定のアカウントプール月額パックも選べます。',
-      plansTitle: 'Codex Pro アカウントプール月額パック',
-      planQuota: '利用枠 {quota}',
-      planRatio: '実質コスト倍率 {ratio}',
-      planTerms: '有効期間は 1 暦月、利用枠はリセットされません',
-      planGroup: 'codex-sub-june グループでトークンを作成します（倍率は 1x 固定）',
-      plansCta: '月額パックの購入と使い方',
+        '使った分だけ、モデル価格にグループ倍率を掛けた額を残高から差し引きます。',
       groupsTitle: '販売中のグループと倍率',
       categories: {
         codex: 'Codex シリーズ',
@@ -986,7 +906,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
         {
           title: '登録してチャージ',
           description:
-            'FishXCode のアカウントを作成し、必要に応じて残高をチャージするか、Codex 月額パックを購入します。',
+            'FishXCode のアカウントを作成し、必要に応じて残高をチャージします。',
         },
         {
           title: '適切なグループでトークンを作成',
@@ -1006,14 +926,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: '法人向け',
       supportTitle: 'お困りですか？',
       supportBody:
-        '移行、残高、トークン、プラン、接続に関するご質問は、チャットサポート・メール・WeChat でお問い合わせください。',
+        '移行、残高、トークン、接続に関するご質問は、チャットサポート・メール・WeChat でお問い合わせください。',
       email: 'メール',
       wechat: 'WeChat',
     },
   },
   vi: {
     hero: {
-      badge: 'Gói tháng pool tài khoản Codex Pro · chi phí thực tế chỉ từ {ratio}',
       title: ['Mọi mô hình AI chủ lưu', 'ở một nơi'],
       description:
         'Claude, Codex, Kiro, Grok, các mô hình Trung Quốc và đa phương thức trong một tài khoản, kết nối ngay với công cụ lập trình bạn quen dùng, đáp ứng nhu cầu phát triển, sáng tạo và ứng dụng doanh nghiệp.',
@@ -1034,18 +953,12 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     why: {
       title: 'Một tài khoản, kết nối các mô hình AI chủ lưu',
       description:
-        'Kết nối trực tiếp tài nguyên chính thức, chọn nhóm theo tình huống sử dụng, trả theo mức dùng từ số dư hoặc mua gói tháng, phù hợp cho cả phát triển cá nhân lẫn cộng tác nhóm.',
+        'Kết nối trực tiếp tài nguyên chính thức, chọn nhóm theo tình huống sử dụng, trả theo mức dùng từ số dư, phù hợp cho cả phát triển cá nhân lẫn cộng tác nhóm.',
     },
     pricing: {
-      title: 'Trả theo mức dùng, hoặc chọn gói tháng Codex',
+      title: 'Trả theo mức dùng',
       description:
-        'Số dư được trừ theo giá mô hình nhân hệ số nhóm, dùng bao nhiêu trừ bấy nhiêu; khi phát triển với Codex tần suất cao, bạn có thể mua gói tháng pool tài khoản với hạn mức cố định.',
-      plansTitle: 'Gói tháng pool tài khoản Codex Pro',
-      planQuota: 'Hạn mức {quota}',
-      planRatio: 'Hệ số chi phí thực tế {ratio}',
-      planTerms: 'Hiệu lực 1 tháng dương lịch, hạn mức không đặt lại',
-      planGroup: 'Tạo token bằng nhóm codex-sub-june, nhóm này có hệ số cố định 1x',
-      plansCta: 'Mua và sử dụng gói tháng',
+        'Số dư được trừ theo giá mô hình nhân hệ số nhóm, dùng bao nhiêu trừ bấy nhiêu.',
       groupsTitle: 'Các nhóm đang mở bán và hệ số',
       categories: {
         codex: 'Dòng Codex',
@@ -1069,7 +982,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       items: [
         {
           title: 'Đăng ký và nạp tiền',
-          description: 'Tạo tài khoản FishXCode, nạp số dư hoặc mua gói tháng Codex tùy nhu cầu.',
+          description: 'Tạo tài khoản FishXCode, nạp số dư tùy nhu cầu.',
         },
         {
           title: 'Tạo token, chọn đúng nhóm',
@@ -1089,14 +1002,13 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       enterprise: 'Doanh nghiệp',
       supportTitle: 'Cần hỗ trợ?',
       supportBody:
-        'Nếu có thắc mắc về chuyển đổi nền tảng, số dư, token, gói dịch vụ hoặc kết nối, hãy liên hệ chúng tôi qua chat trực tuyến, email hoặc WeChat.',
+        'Nếu có thắc mắc về chuyển đổi nền tảng, số dư, token hoặc kết nối, hãy liên hệ chúng tôi qua chat trực tuyến, email hoặc WeChat.',
       email: 'Email',
       wechat: 'WeChat',
     },
   },
   'zh-TW': {
     hero: {
-      badge: 'Codex Pro 號池月包 · 實際成本低至 {ratio}',
       title: ['主流 AI 模型', '一網打盡'],
       description:
         '覆蓋 Claude、Codex、Kiro、Grok、國產模型與多模態模型，一個帳號接入你常用的程式設計工具，滿足開發、創作與企業級應用需求。',
@@ -1112,17 +1024,11 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
     },
     why: {
       title: '一個帳號，接入主流 AI 模型',
-      description: '官方資源直連，按場景選擇分組，餘額按量計費或購買月包，個人開發與團隊協作都適用。',
+      description: '官方資源直連，按場景選擇分組，餘額按量計費，個人開發與團隊協作都適用。',
     },
     pricing: {
-      title: '按量計費，或選 Codex 月包',
-      description: '餘額按模型價格乘以分組倍率扣費，用多少扣多少；高頻 Codex 開發可以買固定額度的號池月包。',
-      plansTitle: 'Codex Pro 號池月包',
-      planQuota: '{quota} 額度',
-      planRatio: '實際成本 {ratio}',
-      planTerms: '1 個自然月有效，額度不重置',
-      planGroup: '用 codex-sub-june 分組建立令牌，該分組固定 1x 倍率',
-      plansCta: '月包購買與使用',
+      title: '按量計費',
+      description: '餘額按模型價格乘以分組倍率扣費，用多少扣多少。',
       groupsTitle: '在售分組與倍率',
       categories: {
         codex: 'Codex 系列',
@@ -1144,7 +1050,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       items: [
         {
           title: '註冊並充值',
-          description: '建立 FishXCode 帳號，按需充值餘額或購買 Codex 月包。',
+          description: '建立 FishXCode 帳號，按需充值餘額。',
         },
         {
           title: '建立令牌，選對分組',
@@ -1162,7 +1068,7 @@ export const HOME_PAGE_COPY: Record<Locale, HomePageCopy> = {
       description: '註冊帳號，建立一個令牌，讓熟悉的工具連線更多模型。',
       enterprise: '企業服務',
       supportTitle: '需要幫助？',
-      supportBody: '遷移、額度、令牌、套餐或接入問題，可以透過線上客服、郵件或微信聯絡我們。',
+      supportBody: '遷移、額度、令牌或接入問題，可以透過線上客服、郵件或微信聯絡我們。',
       email: '電子郵件',
       wechat: '微信',
     },

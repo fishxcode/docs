@@ -10,3 +10,31 @@ description: Tìm hiểu cách cấu hình FishXCode trong Gemini CLI và gọi 
 ## Ghi chú về nền tảng
 
 Gemini CLI kết nối bằng giao thức tương thích OpenAI. Nếu ứng dụng có các trường Base URL / API Key tùy chỉnh, hãy điền theo thông tin ở trên; nếu ứng dụng chỉ hỗ trợ endpoint tương thích OpenAI, hãy đảm bảo URL chứa `/v1`.
+
+## Tùy chọn: Nhập một lần bằng CC Switch
+
+Nếu bạn duy trì nhiều kênh Gemini, có thể dùng [CC Switch](https://github.com/farion1231/cc-switch) để chuyển nhanh; nếu FishXCode là kênh duy nhất, cấu hình bằng biến môi trường ở trên thường là đủ.
+
+Trong trang **Khóa API** của bảng điều khiển FishXCode, tìm dòng khóa mục tiêu và nhấn **Mở menu → CC Switch**:
+
+![Chọn Điền vào CC Switch trong bảng điều khiển FishXCode](/img/start/gemini-cli/cc-switch-import-channel.png)
+
+Bảng điều khiển hiển thị biểu mẫu «Điền vào CC Switch». Chọn `Gemini` ở mục **Ứng dụng**, giữ **Tên** là `FishXCode` (dễ nhận biết trong danh sách kênh), chọn `gemini-3.6-flash` làm **Mô hình chính**, rồi nhấn **Mở CC Switch**:
+
+| Trường | Giá trị khuyên dùng của FishXCode |
+| - | - |
+| Ứng dụng | `Gemini` |
+| Tên | `FishXCode` |
+| Mô hình chính | `gemini-3.6-flash` |
+
+CC Switch hiển thị hộp thoại «Xác nhận nhập cấu hình nhà cung cấp». Kiểm tra endpoint API là `https://fishxcode.com` và mô hình là `gemini-3.6-flash`, rồi nhấn **Nhập**:
+
+![Xác nhận nhập FishXCode trong CC Switch](/img/start/gemini-cli/cc-switch-select-model.png)
+
+Sau khi nhập thành công, FishXCode sẽ xuất hiện trong danh sách nhà cung cấp:
+
+![FishXCode đã nhập và hiển thị trong danh sách nhà cung cấp](/img/start/gemini-cli/cc-switch-import-success.png)
+
+<Callout type="warn" title="Lưu ý">
+  Khi «Chuyển sang nhà cung cấp này ngay sau khi nhập» đang bật, CC Switch sẽ ghi đè cấu hình cục bộ của Gemini CLI (`~/.gemini/.env`). Khi quay lại kênh chính thức, hãy chọn lại trong CC Switch để tránh gửi yêu cầu đến địa chỉ không mong muốn.
+</Callout>

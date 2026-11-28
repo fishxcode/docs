@@ -78,7 +78,7 @@ navTitle: 帳戶註冊
 | 無限配額 | 預設開啟；關閉後可限制該金鑰的最大消耗額度 |
 | 進階設定 | IP 白名單（支援 CIDR）、允許查詢使用者額度 |
 
-- **分組**建議選擇 <LiveRatio name="claude" />，該分組為 Claude Max 20 官方正價號池、滿血效能。使用 Codex 月包時必須選 `codex-sub-june`。全部分組和倍率見 [計費規則與分組](/zh-TW/billing-groups)。
+- **分組**建議選擇 <LiveRatio name="claude" />，該分組為 Claude Max 20 官方正價號池、滿血效能。全部分組和倍率見 [計費規則與分組](/zh-TW/billing-groups)。
 - **IP 白名單**適合伺服器固定出口 IP；本機開發請謹慎使用，IP 變動後會導致無法呼叫。
 
 點選**儲存變更**完成建立。在金鑰列表點選**複製**按鈕取得 API Key（格式為 `sk-xxx`）：
@@ -91,7 +91,7 @@ navTitle: 帳戶註冊
 
 ### 2. 儲值
 
-進入**控制台 → 錢包**，頁面分**餘額儲值**和**訂閱方案**兩個分頁：
+進入**控制台 → 錢包**，在**餘額儲值**分頁儲值：
 
 ![錢包餘額儲值](/img/start/api-v2-08-wallet.png)
 
@@ -104,10 +104,6 @@ navTitle: 帳戶註冊
 | 支付寶（alipay） | 主流儲值方式，無最低限額 |
 | Waffo Pancake | 最低儲值 $100 |
 | 兌換碼 | 在「有兌換碼嗎？」區域輸入後點選**兌換額度** |
-
-**訂閱方案**：購買 Codex 號池月包（$20 / $200 / $2,000 三檔額度），購買後用 `codex-sub-june` 分組建立金鑰使用，詳見 [訂閱方案](/zh-TW/subscription-plans)：
-
-![訂閱方案分頁](/img/start/api-10-subscription.png)
 
 <Callout type="idea" title="新使用者好禮">
   新註冊帳號會自動獲得 **$0.2** 試用餘額，可直接用來測試 API 呼叫。

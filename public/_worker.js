@@ -4,8 +4,7 @@
  * 1. 定价接口转发：模型目录组件请求同源 `/api/pricing`，这里原样转发到主站同一路径
  *    （主站接口不带 CORS 头，浏览器跨域取不到）。dev 下由 src/proxy.ts 转发。
  * 2. 旧地址兼容（只在生产环境生效）：旧文档站（VitePress）的订阅地址 /feed.xml、/feed.atom
- *    永久转到 /rss.xml；已下架的套餐页（subscription-plans 下的 claude、codex、
- *    by-number-of-times）永久转到同语言的套餐总览页。
+ *    永久转到 /rss.xml；已下架的订阅套餐页（/subscription-plans 及其子页）永久转到同语言的计费规则页。
  * 3. Markdown 内容协商——页面的 HTML 与 Markdown 副本是两份独立静态文件，
  *    「同一 URL 按 Accept 返回不同表示」：
  *    - 客户端更偏好 Markdown（Accept 协商）→ 改取 `/llms.mdx/<页面路径>/content.md`
@@ -59,14 +58,14 @@ const LEGACY_REDIRECTS = new Map([
   ['/feed.xml', '/rss.xml'],
   ['/feed.atom', '/rss.xml'],
 ]);
-/** 套餐总览页（各语言同一路径，前面加语言段） */
-const PLANS_PATH = '/subscription-plans';
+/** 计费规则页（各语言同一路径，前面加语言段） */
+const BILLING_PATH = '/billing-groups';
 /**
- * 已下架的套餐页：/<语言?>/subscription-plans/<下架页>，可带 .html 后缀与结尾斜杠。
- * 只认 subscription-plans 下的子页——同名的 /codex 是 Codex CLI 教程，不能跳走。
+ * 已下架的订阅套餐页：/<语言?>/subscription-plans 及其任意子页，可带 .html 后缀与结尾斜杠。
+ * 整个目录都已下架，统一跳到计费规则页。
  */
 const RETIRED_PLAN_RE = new RegExp(
-  `^(/(?:${[...LOCALES].join('|')}))?${PLANS_PATH}/(?:claude|codex|by-number-of-times)(?:\\.html)?/*$`,
+  `^(/(?:${[...LOCALES].join('|')}))?/subscription-plans(?:/.*)?(?:\\.html)?/*$`,
 );
 /**
  * 旧地址跳转的浏览器缓存时长（秒）。不带缓存头的 301 会被浏览器无限期缓存，
@@ -350,7 +349,7 @@ function legacyTarget(pathname) {
   if (redirect) return redirect;
 
   const retiredPlan = RETIRED_PLAN_RE.exec(pathname);
-  return retiredPlan ? `${retiredPlan[1] ?? ''}${PLANS_PATH}` : null;
+  return retiredPlan ? `${retiredPlan[1] ?? ''}${BILLING_PATH}` : null;
 }
 
 /** 旧地址的永久跳转（保留查询串）；不属于旧地址时返回 null */

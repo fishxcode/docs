@@ -78,7 +78,7 @@ Vào **Bảng điều khiển → API Keys** (API 密钥), nhấn **Tạo API Ke
 | Hạn mức vô hạn | Bật mặc định; tắt đi thì có thể giới hạn mức tiêu hao tối đa của khóa này |
 | Cài đặt nâng cao | Danh sách trắng IP (hỗ trợ CIDR), cho phép tra cứu hạn mức người dùng |
 
-- Với **nhóm**, khuyến nghị chọn <LiveRatio name="claude" /> — đây là pool tài khoản chính thức Claude Max 20 mua theo giá gốc, hiệu năng đầy đủ. Khi dùng gói tháng Codex bắt buộc chọn `codex-sub-june`. Toàn bộ nhóm và hệ số xem tại [Quy tắc tính phí và nhóm](/vi/billing-groups).
+- Với **nhóm**, khuyến nghị chọn <LiveRatio name="claude" /> — đây là pool tài khoản chính thức Claude Max 20 mua theo giá gốc, hiệu năng đầy đủ. Toàn bộ nhóm và hệ số xem tại [Quy tắc tính phí và nhóm](/vi/billing-groups).
 - **Danh sách trắng IP** phù hợp với máy chủ có IP đầu ra cố định; khi phát triển cục bộ hãy dùng thận trọng, vì sau khi IP thay đổi sẽ không gọi được nữa.
 
 Nhấn **Lưu thay đổi** (保存更改) để hoàn tất việc tạo. Nhấn nút **Sao chép** (复制) trong danh sách khóa để lấy API Key (định dạng `sk-xxx`):
@@ -91,7 +91,7 @@ Nhấn **Lưu thay đổi** (保存更改) để hoàn tất việc tạo. Nhấ
 
 ### 2. Nạp tiền
 
-Vào **Bảng điều khiển → Ví** (钱包), trang có hai tab: **Nạp số dư** và **Gói đăng ký**:
+Vào **Bảng điều khiển → Ví** (钱包), nạp tiền ở tab **Nạp số dư**:
 
 ![Nạp số dư trong ví](/img/start/api-v2-08-wallet.png)
 
@@ -104,10 +104,6 @@ Vào **Bảng điều khiển → Ví** (钱包), trang có hai tab: **Nạp s�
 | Alipay | Phương thức nạp chính, không giới hạn mức tối thiểu |
 | Waffo Pancake | Nạp tối thiểu $100 |
 | Mã đổi thưởng | Nhập mã trong mục 「有兑换码吗？」 rồi nhấn **Đổi hạn mức** (兑换额度) |
-
-**Gói đăng ký**: mua gói tháng pool tài khoản Codex (ba mức hạn mức $20 / $200 / $2,000); sau khi mua, dùng nhóm `codex-sub-june` để tạo khóa sử dụng, chi tiết tại [Gói đăng ký](/vi/subscription-plans):
-
-![Tab gói đăng ký](/img/start/api-10-subscription.png)
 
 <Callout type="idea" title="Ưu đãi cho người dùng mới">
   Tài khoản mới đăng ký sẽ tự động nhận **$0.2** số dư dùng thử, dùng được ngay để thử nghiệm gọi API.

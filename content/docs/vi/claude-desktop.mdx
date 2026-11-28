@@ -101,7 +101,35 @@ Thao tác này sẽ ghi cấu hình suy luận bên thứ ba vào cấu hình Cl
 
 Sau khi cấu hình thành công, mở lại Claude Desktop, thông thường bạn sẽ thấy giao diện làm việc **Cowork / Code** khả dụng.
 
-## Cách 2: Quản lý qua tệp cấu hình cục bộ (nâng cao)
+## Cách 2: Nhập một lần bằng CC Switch (tùy chọn)
+
+Nếu bạn duy trì nhiều kênh Claude, có thể dùng [CC Switch](https://github.com/farion1231/cc-switch) để chuyển nhanh; nếu FishXCode là kênh duy nhất, Cách 1 thường là đủ.
+
+Trong trang **Khóa API** của bảng điều khiển FishXCode, tìm dòng khóa mục tiêu và nhấn **Mở menu → CC Switch**:
+
+![Chọn Điền vào CC Switch trong bảng điều khiển FishXCode](/img/start/claude-desktop/cc-switch-import-channel.png)
+
+Bảng điều khiển hiển thị biểu mẫu «Điền vào CC Switch». Chọn `Claude` ở mục **Ứng dụng**, giữ **Tên** là `FishXCode` (dễ nhận biết trong danh sách kênh), chọn `claude-fable-5-2` làm **Mô hình chính**, rồi nhấn **Mở CC Switch**:
+
+| Trường | Giá trị khuyên dùng của FishXCode |
+| - | - |
+| Ứng dụng | `Claude` |
+| Tên | `FishXCode` |
+| Mô hình chính | `claude-fable-5-2` |
+
+CC Switch hiển thị hộp thoại «Xác nhận nhập cấu hình nhà cung cấp». Kiểm tra endpoint API là `https://fishxcode.com` và mô hình là `claude-fable-5-2`, rồi nhấn **Nhập**:
+
+![Xác nhận nhập FishXCode trong CC Switch](/img/start/claude-desktop/cc-switch-select-model.png)
+
+Sau khi nhập thành công, FishXCode sẽ xuất hiện trong danh sách nhà cung cấp:
+
+![FishXCode đã nhập và hiển thị trong danh sách nhà cung cấp](/img/start/claude-desktop/cc-switch-import-success.png)
+
+<Callout type="warn" title="Lưu ý">
+  Khi «Chuyển sang nhà cung cấp này ngay sau khi nhập» đang bật, CC Switch sẽ ghi FishXCode vào cấu hình cục bộ của Claude Code (khối env trong `~/.claude/settings.json`). Khi quay lại kênh chính thức, hãy chọn lại trong CC Switch để tránh gửi yêu cầu đến địa chỉ không mong muốn.
+</Callout>
+
+## Cách 3: Quản lý qua tệp cấu hình cục bộ (nâng cao)
 
 Nếu bạn muốn sao lưu, di chuyển hoặc kiểm tra lỗi cấu hình, có thể xem vị trí mà Claude Desktop ghi cấu hình cục bộ.
 

@@ -7,7 +7,6 @@ import {
   HOME_ENDPOINTS,
   HOME_GROUPS,
   HOME_MODELS_PATH,
-  HOME_PLANS,
   HOME_PROVIDERS,
   HOME_START_PATH,
   type GroupCategory,
@@ -42,8 +41,7 @@ type SectionProps = {
 
 const focusRing = 'focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:outline-none';
 
-/** 月包页与计费页（站内路径，渲染时加语言前缀） */
-const PLANS_PATH = '/subscription-plans';
+/** 计费规则页（站内路径，渲染时加语言前缀） */
 const BILLING_PATH = '/billing-groups';
 
 /** 首屏三条要点的链接，与 copy.hero.points 按下标对应 */
@@ -76,19 +74,6 @@ const STEP_PATHS = ['/account', BILLING_PATH, HOME_START_PATH] as const;
 
 const GROUP_CATEGORIES: readonly GroupCategory[] = ['codex', 'claude', 'other'];
 
-/** 文案里的分组名（如 codex-sub-june）以行内代码显示 */
-function withInlineCode(text: string, term: string) {
-  const index = text.indexOf(term);
-  if (index === -1) return text;
-  return (
-    <>
-      {text.slice(0, index)}
-      <code className="rounded bg-fd-muted px-1 py-0.5 font-mono text-[0.85em] text-fd-foreground">{term}</code>
-      {text.slice(index + term.length)}
-    </>
-  );
-}
-
 /** 首屏：左侧主张与行动，右侧客户端图标与可切换、可复制的接入代码 */
 export function HeroSection({
   lang,
@@ -105,7 +90,7 @@ export function HeroSection({
       >
         <div className="home-enter lg:col-span-6">
           <Link
-            href={localePath(lang, PLANS_PATH)}
+            href={localePath(lang, BILLING_PATH)}
             className={`inline-flex items-center gap-2 rounded-md border border-fd-border bg-paper px-2.5 py-1 text-xs font-medium text-fd-muted-foreground transition-colors hover:border-brand/40 hover:text-brand ${focusRing}`}
           >
             <span aria-hidden="true" className="size-1.5 bg-brand" />
@@ -306,7 +291,7 @@ export function WhySection({ shared, copy }: SectionProps) {
   );
 }
 
-/** 02 套餐与分组：左侧月包三档，右侧按系列列出在售分组的倍率 */
+/** 02 计费与分组：按系列列出在售分组的倍率 */
 export function PricingSection({ lang, copy }: SectionProps) {
   const pricing = copy.pricing;
   return (
@@ -314,51 +299,19 @@ export function PricingSection({ lang, copy }: SectionProps) {
       <div className={container}>
         <SectionIntro eyebrow="02 / Pricing" title={pricing.title} description={pricing.description} />
 
-        <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <h3 className="font-semibold">{pricing.plansTitle}</h3>
-            <ol className={`${hairlineGrid} mt-4 sm:grid-cols-3`}>
-              {HOME_PLANS.map((plan) => (
-                <li key={plan.quota} className="bg-paper p-6">
-                  <p className="font-mono text-xs text-fd-muted-foreground">
-                    {fmt(pricing.planQuota, { quota: plan.quota })}
-                  </p>
-                  <p className="mt-3 text-3xl font-bold tracking-tight">{plan.price}</p>
-                  <p className="mt-4 inline-flex rounded-md bg-brand-soft px-2 py-0.5 font-mono text-xs font-medium text-brand">
-                    {fmt(pricing.planRatio, { ratio: plan.ratio })}
-                  </p>
-                </li>
-              ))}
-            </ol>
-            <ul className="mt-5 space-y-1.5 text-sm text-fd-muted-foreground">
-              <li className="flex gap-2">
-                <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand" />
-                {pricing.planTerms}
-              </li>
-              <li className="flex gap-2">
-                <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand" />
-                <span>{withInlineCode(pricing.planGroup, 'codex-sub-june')}</span>
-              </li>
-            </ul>
-            <div className="mt-6">
-              <TextLink href={localePath(lang, PLANS_PATH)}>{pricing.plansCta}</TextLink>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5">
-            <h3 className="font-semibold">{pricing.groupsTitle}</h3>
-            {/* 运行时从 /api/pricing 拉最新倍率与分组说明，失败回退到 HOME_GROUPS 基线；见 group-ratio-list.tsx */}
-            <GroupRatioList
-              groups={HOME_GROUPS}
-              categories={GROUP_CATEGORIES}
-              categoryLabels={pricing.categories}
-              lang={lang}
-              copy={{ liveNote: pricing.groupsLiveNote }}
-            />
-            <p className="mt-4 text-xs text-fd-muted-foreground">{pricing.groupsNote}</p>
-            <div className="mt-6">
-              <TextLink href={localePath(lang, BILLING_PATH)}>{pricing.groupsCta}</TextLink>
-            </div>
+        <div className="mt-12 md:mt-16">
+          <h3 className="font-semibold">{pricing.groupsTitle}</h3>
+          {/* 运行时从 /api/pricing 拉最新倍率与分组说明，失败回退到 HOME_GROUPS 基线；见 group-ratio-list.tsx */}
+          <GroupRatioList
+            groups={HOME_GROUPS}
+            categories={GROUP_CATEGORIES}
+            categoryLabels={pricing.categories}
+            lang={lang}
+            copy={{ liveNote: pricing.groupsLiveNote }}
+          />
+          <p className="mt-4 text-xs text-fd-muted-foreground">{pricing.groupsNote}</p>
+          <div className="mt-6">
+            <TextLink href={localePath(lang, BILLING_PATH)}>{pricing.groupsCta}</TextLink>
           </div>
         </div>
       </div>

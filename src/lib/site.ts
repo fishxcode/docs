@@ -49,7 +49,6 @@ export const siteConfig = {
     'Anthropic API',
     'Claude Code 接入',
     'Codex 接入',
-    'Codex 号池月包',
     'Kiro',
     'Grok',
     'Cursor 配置',

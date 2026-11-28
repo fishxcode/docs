@@ -99,7 +99,36 @@ Isso grava a configuração no arquivo local do Claude Desktop do usuário atual
 
 Depois disso, reinicie o Claude Desktop. Na maioria dos casos, você verá então o espaço de trabalho **Cowork / Code**.
 
-## Método 2: Gerenciar pelo arquivo de configuração local (Avançado)
+
+## Método 2: Importação com um clique pelo CC Switch (opcional)
+
+Se você mantém vários canais Claude, pode usar o [CC Switch](https://github.com/farion1231/cc-switch) para alternar rapidamente; se o FishXCode é seu único canal, o Método 1 geralmente basta.
+
+Na página **Chaves API** do console FishXCode, localize a linha da chave desejada e clique em **Abrir menu → CC Switch**:
+
+![Escolher Preencher no CC Switch no console FishXCode](/img/start/claude-desktop/cc-switch-import-channel.png)
+
+O console mostra o formulário «Preencher no CC Switch». Defina **Aplicativo** como `Claude`, mantenha **Nome** como `FishXCode` (fácil de reconhecer na lista de canais), defina **Modelo principal** como `claude-fable-5-2` e clique em **Abrir CC Switch**:
+
+| Campo | Valor recomendado do FishXCode |
+| - | - |
+| Aplicativo | `Claude` |
+| Nome | `FishXCode` |
+| Modelo principal | `claude-fable-5-2` |
+
+O CC Switch mostra o diálogo «Confirmar importação do provedor». Verifique se o endpoint da API é `https://fishxcode.com` e o modelo é `claude-fable-5-2`, então clique em **Importar**:
+
+![Confirmar a importação do FishXCode no CC Switch](/img/start/claude-desktop/cc-switch-select-model.png)
+
+Após a importação, o FishXCode aparece na lista de provedores:
+
+![FishXCode importado e visível na lista de provedores](/img/start/claude-desktop/cc-switch-import-success.png)
+
+<Callout type="warn" title="Atenção">
+  Quando «Alternar para este provedor logo após a importação» está ativado, o CC Switch grava o FishXCode na configuração local do Claude Code (o bloco env de `~/.claude/settings.json`). Ao voltar para o canal oficial, selecione-o novamente no CC Switch para não enviar requisições a um endereço inesperado.
+</Callout>
+
+## Método 3: Gerenciar pelo arquivo de configuração local (Avançado)
 
 Se quiser fazer backup, migrar ou depurar a configuração, você pode inspecionar o arquivo local.
 

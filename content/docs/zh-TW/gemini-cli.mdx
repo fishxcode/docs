@@ -10,3 +10,31 @@ description: 瞭解如何在 Gemini CLI 中設定 FishXCode，使用 OpenAI 相�
 ## 平台說明
 
 Gemini CLI 使用 OpenAI 相容協定接入。若該用戶端提供自訂 Base URL / API Key 欄位，請依上方資訊填寫；若僅支援 OpenAI 相容端點，請確認介面網址包含 `/v1`。
+
+## 可選：用 CC Switch 一鍵匯入
+
+如果你同時維護多個 Gemini 渠道，可以使用 [CC Switch](https://github.com/farion1231/cc-switch) 快速切換；如果只使用 FishXCode，上方的環境變數配置通常已經足夠。
+
+進入 FishXCode 控制台的 **API 金鑰** 頁，找到目標金鑰所在列，點擊右側 **開啟選單 → CC Switch**：
+
+![在 FishXCode 控制台選擇填入 CC Switch](/img/start/gemini-cli/cc-switch-import-channel.png)
+
+控制台會彈出「填入 CC Switch」表單，**應用**選擇 `Gemini`，**名稱**建議填 `FishXCode`（便於在渠道列表中識別），**主模型**選擇 `gemini-3.6-flash`，然後點擊 **開啟 CC Switch**：
+
+| 欄位 | FishXCode 建議值 |
+| - | - |
+| 應用 | `Gemini` |
+| 名稱 | `FishXCode` |
+| 主模型 | `gemini-3.6-flash` |
+
+CC Switch 會彈出「確認匯入供應商配置」，核對 API 端點為 `https://fishxcode.com`、模型為 `gemini-3.6-flash` 後點擊 **匯入**：
+
+![在 CC Switch 確認匯入 FishXCode 配置](/img/start/gemini-cli/cc-switch-select-model.png)
+
+匯入成功後，FishXCode 會出現在供應商列表中：
+
+![FishXCode 匯入成功並出現在供應商列表](/img/start/gemini-cli/cc-switch-import-success.png)
+
+<Callout type="warn" title="注意">
+  「匯入後立即切換到這個供應商」開啟時，CC Switch 會改寫 Gemini CLI 的本地配置（`~/.gemini/.env`）。切回官方渠道時記得在 CC Switch 裡重新選擇，避免請求發到非預期的位址。
+</Callout>

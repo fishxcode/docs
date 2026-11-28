@@ -11,7 +11,7 @@ navTitle: Điều hướng nền tảng
 
 FishXCode là nền tảng truy cập AI dành cho lập trình viên và đội nhóm. Bạn có thể hiểu nó như một cổng vào thống nhất: phía trước là trang chủ, giá và tài liệu; phía sau là bảng điều khiển, khóa, nạp tiền, hóa đơn và bản ghi sử dụng.
 
-Nền tảng cung cấp dịch vụ trung chuyển xoay quanh các mô hình AI chủ đạo; kênh và mô hình cụ thể căn cứ theo thực tế trên trang chủ, hãy vào [trang giá](https://fishxcode.com/pricing) xem chi tiết. Người dùng từ đăng ký, tạo khóa, chọn gói, kết nối công cụ đến xem mức tiêu hao, toàn bộ quy trình đều hoàn tất trong cùng một hệ thống.
+Nền tảng cung cấp dịch vụ trung chuyển xoay quanh các mô hình AI chủ đạo; kênh và mô hình cụ thể căn cứ theo thực tế trên trang chủ, hãy vào [trang giá](https://fishxcode.com/pricing) xem chi tiết. Người dùng từ đăng ký, tạo khóa, kết nối công cụ đến xem mức tiêu hao, toàn bộ quy trình đều hoàn tất trong cùng một hệ thống.
 
 ---
 
@@ -22,7 +22,7 @@ Cả hệ thống gồm 4 mô-đun lớn:
 | Route | Trang | Mô-đun | Mô tả |
 | - | - | - | - |
 | `/` | Trang chủ | Gian hàng trang chủ | Giới thiệu năng lực nền tảng, hiển thị thông báo, hướng tới đăng ký hoặc xem tài liệu |
-| `/pricing` | Trang giá | Gian hàng trang chủ | Xem giá mô hình, gói và hệ số tiêu hao của các nhóm khác nhau |
+| `/pricing` | Trang giá | Gian hàng trang chủ | Xem giá mô hình và hệ số tiêu hao của các nhóm khác nhau |
 | `/sign-in` | Trang đăng nhập | Trung tâm xác thực | Đăng nhập bằng tên người dùng/email; hỗ trợ ủy quyền GitHub, LinuxDO, Google |
 | `/sign-up` | Trang đăng ký | Trung tâm xác thực | Lối vào đăng ký người dùng mới (mã xác minh email + xác minh chống máy) |
 | `/dashboard/overview` | Tổng quan | Bảng điều khiển | Trang tổng quan: số dư, thống kê tiêu hao, số yêu cầu và hướng dẫn cài đặt |
@@ -30,7 +30,7 @@ Cả hệ thống gồm 4 mô-đun lớn:
 | `/keys` | API Keys | Bảng điều khiển | Tạo, sao chép, xóa API Key; quản lý nhóm, hạn mức và thời hạn |
 | `/usage-logs/common` | Nhật ký sử dụng | Bảng điều khiển | Xem thời gian, mô hình, tiêu hao và bản ghi chi tiết của mỗi lần gọi |
 | `/usage-logs/audit` | Nhật ký kiểm toán | Bảng điều khiển | Xem bản ghi kiểm toán |
-| `/wallet` | Ví | Bảng điều khiển | Nạp số dư, gói đăng ký, dùng mã đổi thưởng, xem lịch sử đơn hàng |
+| `/wallet` | Ví | Bảng điều khiển | Nạp số dư, dùng mã đổi thưởng, xem lịch sử đơn hàng |
 | `/profile` | Hồ sơ cá nhân | Bảng điều khiển | Thông tin tài khoản và phần thưởng điểm danh |
 | `/security` | Bảo mật và truy cập | Bảng điều khiển | Mật khẩu, liên kết bên thứ ba, phiên đăng nhập, Passkey, xác minh hai bước |
 | `/rankings` | Bảng xếp hạng | Trang công khai | Xếp hạng sử dụng mô hình |
@@ -52,7 +52,6 @@ Sau khi đăng nhập, mọi thao tác đều tập trung ở bảng điều khi
 
 ### Mua hàng và nạp tiền
 
-- **Ví → Gói đăng ký**: xem và mua gói tháng Codex và các phương án đăng ký khác
 - **Ví → Nạp số dư**: hỗ trợ Alipay, Waffo Pancake và mã đổi thưởng
 - **Xem số dư**: hiển thị thời gian thực trên trang ví và trang tổng quan
 
@@ -95,9 +94,9 @@ Sau khi đăng nhập, mọi thao tác đều tập trung ở bảng điều khi
 | Câu hỏi thường gặp | `/faq` | FAQ và hướng dẫn xử lý sự cố |
 | Nhật ký thay đổi | `/changelog` | Bản ghi cập nhật phiên bản |
 | Thỏa thuận người dùng | `/terms` | Điều khoản nền tảng |
-| Chính sách hoàn tiền | `/refund` | Hoàn tiền nạp và quy đổi gói |
+| Chính sách hoàn tiền | `/refund` | Hoàn tiền nạp |
 | Chính sách quyền riêng tư | `/privacy` | Mô tả quyền riêng tư |
 
 <Callout type="idea" title="Tóm lại trong một câu">
-  Người dùng trước tìm hiểu nền tảng qua trang chủ, sau đó mở dịch vụ qua đăng ký và bảng điều khiển; tiếp theo hoàn thành sử dụng thực tế ở các trang khóa, gói, nạp tiền và nhật ký; tài liệu và trang trạng thái đảm nhận vai trò giải thích và đảm bảo.
+  Người dùng trước tìm hiểu nền tảng qua trang chủ, sau đó mở dịch vụ qua đăng ký và bảng điều khiển; tiếp theo hoàn thành sử dụng thực tế ở các trang khóa, nạp tiền và nhật ký; tài liệu và trang trạng thái đảm nhận vai trò giải thích và đảm bảo.
 </Callout>

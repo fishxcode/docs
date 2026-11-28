@@ -78,7 +78,7 @@ Descrição dos campos do formulário:
 | Cota ilimitada | Ativada por padrão; ao desativar, é possível limitar o consumo máximo desta chave |
 | Configurações avançadas | Lista de permissões de IP (suporta CIDR), permitir consulta de cota do usuário |
 
-- Recomendamos escolher o grupo <LiveRatio name="claude" />: é o pool de contas oficial a preço cheio do Claude Max 20, com desempenho pleno. Ao usar o pacote mensal do Codex, é obrigatório escolher `codex-sub-june`. Todos os grupos e multiplicadores estão em [Regras de cobrança e grupos](/pt/billing-groups).
+- Recomendamos escolher o grupo <LiveRatio name="claude" />: é o pool de contas oficial a preço cheio do Claude Max 20, com desempenho pleno. Todos os grupos e multiplicadores estão em [Regras de cobrança e grupos](/pt/billing-groups).
 - A **lista de permissões de IP** é adequada para IPs de saída fixos de servidores; use com cautela em desenvolvimento local, pois mudanças de IP impedirão as chamadas.
 
 Clique em **Salvar alterações** para concluir a criação. Na lista de chaves, clique no botão **Copiar** para obter a API Key (formato `sk-xxx`):
@@ -91,7 +91,7 @@ Clique em **Salvar alterações** para concluir a criação. Na lista de chaves,
 
 ### 2.2 Recarga
 
-Acesse **Console → Carteira**. A página tem duas abas: **Recarga de saldo** e **Planos de assinatura**:
+Acesse **Console → Carteira** e use a aba **Recarga de saldo**:
 
 ![Recarga de saldo na carteira](/img/start/api-v2-08-wallet.png)
 
@@ -104,10 +104,6 @@ Acesse **Console → Carteira**. A página tem duas abas: **Recarga de saldo** e
 | Alipay | Método de recarga mais comum, sem valor mínimo |
 | Waffo Pancake | Recarga mínima de $100 |
 | Código de resgate | Insira na área "Tem um código de resgate?" e clique em **Resgatar cota** |
-
-**Planos de assinatura**: compre o pacote mensal do pool de contas Codex (três faixas de cota: $20 / $200 / $2.000). Após a compra, crie chaves com o grupo `codex-sub-june` para usar. Veja detalhes em [Planos de assinatura](/pt/subscription-plans):
-
-![Aba de planos de assinatura](/img/start/api-10-subscription.png)
 
 <Callout type="idea" title="Benefício para novos usuários">
   Contas recém-registradas recebem automaticamente um saldo de teste de **$0.2**, que pode ser usado diretamente para testar chamadas à API.

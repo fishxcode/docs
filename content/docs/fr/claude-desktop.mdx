@@ -99,7 +99,36 @@ Cela écrit la configuration dans le fichier local de Claude Desktop pour l'util
 
 Redémarrez ensuite Claude Desktop. Dans la plupart des cas, vous verrez alors l'espace de travail **Cowork / Code**.
 
-## Méthode 2 : Gérer la configuration via le fichier local (Avancé)
+
+## Méthode 2 : Importation en un clic avec CC Switch (facultatif)
+
+Si vous gérez plusieurs canaux Claude, vous pouvez utiliser [CC Switch](https://github.com/farion1231/cc-switch) pour basculer rapidement ; si FishXCode est votre seul canal, la Méthode 1 suffit généralement.
+
+Dans la page **Clés API** de la console FishXCode, trouvez la ligne de la clé visée et cliquez sur **Ouvrir le menu → CC Switch** :
+
+![Choisir Remplir dans CC Switch dans la console FishXCode](/img/start/claude-desktop/cc-switch-import-channel.png)
+
+La console affiche le formulaire « Remplir dans CC Switch ». Choisissez `Claude` pour **Application**, gardez **Nom** à `FishXCode` (facile à reconnaître dans la liste des canaux), choisissez `claude-fable-5-2` comme **Modèle principal**, puis cliquez sur **Ouvrir CC Switch** :
+
+| Champ | Valeur recommandée FishXCode |
+| - | - |
+| Application | `Claude` |
+| Nom | `FishXCode` |
+| Modèle principal | `claude-fable-5-2` |
+
+CC Switch affiche le dialogue « Confirmer l'importation du fournisseur ». Vérifiez que le point d'accès API est `https://fishxcode.com` et le modèle `claude-fable-5-2`, puis cliquez sur **Importer** :
+
+![Confirmer l'importation de FishXCode dans CC Switch](/img/start/claude-desktop/cc-switch-select-model.png)
+
+Après l'importation, FishXCode apparaît dans la liste des fournisseurs :
+
+![FishXCode importé et visible dans la liste des fournisseurs](/img/start/claude-desktop/cc-switch-import-success.png)
+
+<Callout type="warn" title="Remarque">
+  Lorsque « Basculer vers ce fournisseur juste après l'importation » est activé, CC Switch écrit FishXCode dans la configuration locale de Claude Code (le bloc env de `~/.claude/settings.json`). Pour revenir au canal officiel, resélectionnez-le dans CC Switch afin de ne pas envoyer de requêtes vers une adresse inattendue.
+</Callout>
+
+## Méthode 3 : Gérer la configuration via le fichier local (Avancé)
 
 Si vous voulez sauvegarder, migrer ou diagnostiquer la configuration, vous pouvez inspecter le fichier local.
 

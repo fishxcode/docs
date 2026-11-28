@@ -1,6 +1,6 @@
 ---
 title: Quy tắc tính phí và nhóm
-description: Hai cách tính phí của FishXCode, các nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng. Hệ số nhóm được lấy trực tiếp từ nền tảng khi trang được tải.
+description: Cách tính phí của FishXCode, các nhóm đang mở bán cùng hệ số, gợi ý chọn nhóm và các lưu ý khi sử dụng. Hệ số nhóm được lấy trực tiếp từ nền tảng khi trang được tải.
 navTitle: Quy tắc tính phí và nhóm
 ---
 
@@ -15,9 +15,6 @@ FishXCode là nền tảng một cửa cung cấp dịch vụ kết nối mô h�
 | Cách tính phí | Cách trừ phí | Phù hợp với |
 | - | - | - |
 | Trả theo mức dùng từ số dư | Lấy giá mô hình nhân với hệ số của nhóm chứa API Key, rồi trừ vào số dư tài khoản | Gọi hằng ngày, dùng kết hợp nhiều mô hình, thử nghiệm tạm thời |
-| Gói tháng pool tài khoản Codex Pro | Gọi bằng API Key được tạo với nhóm `codex-sub-june`, hạn mức gói tháng được trừ theo lượng token tiêu hao thực tế | Lập trình Codex và phát triển Agent tần suất cao |
-
-Giá, hạn mức và cách sử dụng gói tháng được trình bày tại [Gói đăng ký](/vi/subscription-plans).
 
 ## 2. Các nhóm đang mở bán
 
@@ -30,10 +27,6 @@ Nhóm quyết định một API Key có thể gọi những mô hình nào, đi 
 <GroupRatioTable category="other" />
 
 Bạn có thể xem các mô hình khác và mức độ hỗ trợ cụ thể trên trang.
-
-<Callout type="info" title="Nhóm dành riêng cho gói tháng">
-  `codex-sub-june` là nhóm dành riêng cho gói tháng pool tài khoản Codex Pro, có hệ số cố định 1x, chỉ trừ hạn mức gói tháng và không thuộc các nhóm trả theo mức dùng ở trên.
-</Callout>
 
 ## 3. Cách tính hệ số
 
@@ -59,8 +52,8 @@ Khi tạo API Key trong **Bảng điều khiển → API Keys** (API 密钥), nh
 
 Khi tạo API Key cần chú ý:
 
-- **Nhóm**: quyết định khóa này có thể gọi những mô hình nào và bị trừ phí theo hệ số nào. Dùng gói tháng Codex thì bắt buộc chọn `codex-sub-june`.
-- **Cài đặt hạn mức**: giới hạn khóa này tối đa được tiêu hao bao nhiêu hạn mức; hạn mức vô hạn không có nghĩa là không bị trừ phí, vẫn bị giới hạn bởi số dư tài khoản hoặc hạn mức gói tháng.
+- **Nhóm**: quyết định khóa này có thể gọi những mô hình nào và bị trừ phí theo hệ số nào.
+- **Cài đặt hạn mức**: giới hạn khóa này tối đa được tiêu hao bao nhiêu hạn mức; hạn mức vô hạn không có nghĩa là không bị trừ phí, vẫn bị giới hạn bởi số dư tài khoản.
 - **Danh sách giới hạn mô hình**: không cần thiết thì không nên giới hạn, trừ khi bạn xác định chỉ cho phép một vài mô hình cụ thể.
 - **Danh sách trắng IP**: phù hợp với máy chủ có IP đầu ra cố định; phát triển cục bộ cá nhân nên dùng thận trọng, tránh sau khi IP thay đổi thì không gọi được.
 
@@ -68,7 +61,6 @@ Các biểu hiện phổ biến khi chọn sai nhóm:
 
 - Xem thấy mô hình trong danh sách mô hình, nhưng gọi bằng khóa hiện tại lại báo `model not found`, `model not available` hoặc lỗi quyền.
 - Gọi được mô hình, nhưng hệ số trừ phí hoặc độ ổn định không đúng bậc như kỳ vọng.
-- Khóa gói tháng và khóa thường trộn lẫn nhau, khiến hạn mức trừ nhầm tài khoản hoặc thống kê không rõ ràng.
 
 ## 5. Gợi ý chọn nhóm
 
@@ -76,7 +68,7 @@ Các biểu hiện phổ biến khi chọn sai nhóm:
 | - | - | - |
 | Lập trình Codex hằng ngày | <LiveRatio name="codex-plus" /> | Phù hợp phát triển mã hằng ngày |
 | Codex hệ số thấp | <LiveRatio name="codex-team" /> | Phù hợp người dùng chấp nhận pool tài nguyên dùng chung |
-| Codex tần suất cao / phát triển Agent | Gói tháng pool tài khoản Codex Pro | Chọn gói tháng hạn mức $200 hoặc $2,000 theo mức dùng thực tế |
+| Codex tần suất cao / phát triển Agent | <LiveRatio name="codex-pro" /> | Ưu tiên ổn định thì xem <LiveRatio name="codex-ultrafast" /> |
 | Lập trình Claude và tác vụ dài | <LiveRatio name="claude" /> | Dùng tần suất cao có thể cân nhắc <LiveRatio name="claudemax" /> |
 | Kiro | <LiveRatio name="kiro-svip" /> | Pool tài khoản chính thức Kiro mua theo giá gốc |
 | Mô hình Trung Quốc | <LiveRatio name="china" /> | Kết nối trực tiếp API chính thức |
@@ -101,17 +93,15 @@ Sau khi gọi, hãy căn cứ bản ghi trong **Bảng điều khiển → Nhậ
 ## 7. Các lưu ý khi sử dụng
 
 1. Mỗi nhóm tương ứng một pool tài nguyên khác nhau, hãy chọn theo tình huống sử dụng.
-2. Gói tháng Codex bắt buộc dùng nhóm `codex-sub-june` để tạo API Key; các nhóm khác không dùng được hạn mức của gói này.
-3. Gói tháng không phải hạn mức vô hạn; khi hạn mức cạn hoặc gói hết hạn sẽ không thể tiếp tục sử dụng.
-4. Với hội thoại dài trên Claude, nên tận dụng hợp lý cache ngữ cảnh; việc trúng cache thực tế liên quan đến cấu hình client, mô hình và khoảng cách giữa các yêu cầu.
-5. Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên căn cứ theo thông tin thời gian thực trên trang.
+2. Với hội thoại dài trên Claude, nên tận dụng hợp lý cache ngữ cảnh; việc trúng cache thực tế liên quan đến cấu hình client, mô hình và khoảng cách giữa các yêu cầu.
+3. Hệ số nhóm, khả năng sẵn sàng của mô hình và tình trạng tài nguyên căn cứ theo thông tin thời gian thực trên trang.
 
 ## 8. Xử lý bất thường về tiêu hao hoặc quyền
 
 Khi gặp bất thường tiêu hao hoặc mô hình không khả dụng, khuyến nghị xử lý theo trình tự sau:
 
 1. Xác nhận nhóm mà khóa hiện tại gắn với có chứa mô hình mục tiêu không.
-2. Xác nhận số dư tài khoản, hoặc thời hạn hiệu lực và hạn mức còn lại của gói tháng có đủ không.
+2. Xác nhận số dư tài khoản có đủ không.
 3. Xem **Bảng điều khiển → Nhật ký sử dụng**, lọc theo thời gian, mô hình, khóa, nhóm, ID yêu cầu.
 4. Lọc theo cột nhóm trong nhật ký để phán đoán là vấn đề của một khóa đơn lẻ hay của pool tài nguyên nhóm.
 5. Nếu vẫn không xác định được, hãy liên hệ hỗ trợ và cung cấp số đơn hàng, tên khóa, nhóm, tên mô hình, thời điểm yêu cầu và ID yêu cầu.

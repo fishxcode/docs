@@ -11,7 +11,7 @@ navTitle: Platform Navigation
 
 FishXCode is an AI access platform for developers and teams. Think of it as a single entry point: in front are the main site, pricing, and documentation; behind are the console, API Keys, top-ups, invoices, and usage records.
 
-The platform provides relay services around mainstream AI models. Exact channels and models are subject to the main site — see the [pricing page](https://fishxcode.com/pricing). From signing up to creating keys, choosing plans, connecting tools, and checking consumption, the entire workflow happens in one system.
+The platform provides relay services around mainstream AI models. Exact channels and models are subject to the main site — see the [pricing page](https://fishxcode.com/pricing). From signing up to creating keys, connecting tools, and checking consumption, the entire workflow happens in one system.
 
 ---
 
@@ -22,7 +22,7 @@ The system consists of 4 major modules:
 | Route | Page | Module | Description |
 | - | - | - | - |
 | `/` | Main site home | Main site | Introduces the platform, shows announcements, guides sign-up or docs |
-| `/pricing` | Pricing page | Main site | Model prices, plans, and consumption multipliers per group |
+| `/pricing` | Pricing page | Main site | Model prices and consumption multipliers per group |
 | `/sign-in` | Login page | Auth center | Username/email login with GitHub, LinuxDO, and Google authorization |
 | `/sign-up` | Registration page | Auth center | New-user sign-up (email verification code + human verification) |
 | `/dashboard/overview` | Overview | Console | Summary: balance, usage statistics, request count, setup guide |
@@ -30,7 +30,7 @@ The system consists of 4 major modules:
 | `/keys` | API Keys | Console | Create, copy, delete API Keys; manage groups, quotas, and expiry |
 | `/usage-logs/common` | Usage Logs | Console | Time, model, consumption, and details of every call |
 | `/usage-logs/audit` | Audit Logs | Console | Audit records |
-| `/wallet` | Wallet | Console | Balance top-up, subscription plans, redeem codes, order history |
+| `/wallet` | Wallet | Console | Balance top-up, redeem codes, order history |
 | `/profile` | Profile | Console | Account information and check-in rewards |
 | `/security` | Security & Access | Console | Password, third-party linking, login sessions, Passkey, 2FA |
 | `/rankings` | Rankings | Public pages | Model usage rankings |
@@ -52,7 +52,6 @@ After logging in, everything happens in the console. Locate features by scenario
 
 ### Purchase and top-up
 
-- **Wallet → Subscription plans**: view and buy Codex monthly packages and other subscription plans
 - **Wallet → Balance top-up**: Alipay, Waffo Pancake, and redeem codes supported
 - **Balance visibility**: shown in real time on the Wallet and Overview pages
 
@@ -95,9 +94,9 @@ After logging in, everything happens in the console. Locate features by scenario
 | FAQ | `/faq` | FAQ and troubleshooting |
 | Changelog | `/changelog` | Version history |
 | Terms of Service | `/terms` | Platform agreement |
-| Refund Policy | `/refund` | Top-up refunds and plan proration |
+| Refund Policy | `/refund` | Top-up refunds |
 | Privacy Policy | `/privacy` | Privacy statement |
 
 <Callout type="idea" title="In one sentence">
-  Users first learn about the platform on the main site, sign up and get set up in the console, then do the actual work across the keys, plans, top-up, and logs pages — while the docs and status pages explain and back it all up.
+  Users first learn about the platform on the main site, sign up and get set up in the console, then do the actual work across the keys, top-up, and logs pages — while the docs and status pages explain and back it all up.
 </Callout>

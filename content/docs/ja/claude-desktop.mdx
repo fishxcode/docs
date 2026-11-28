@@ -101,7 +101,36 @@ Apply locally
 
 設定に成功したら Claude Desktop を開き直すと、通常は **Cowork / Code** の作業画面が使えるようになります。
 
-## 方法 2：ローカルの設定ファイルで管理する（上級者向け）
+
+## 方法 2：CC Switch でワンクリック取り込む（任意）
+
+複数の Claude チャンネルを切り替えて使う場合は [CC Switch](https://github.com/farion1231/cc-switch) で素早く切り替えられます。FishXCode が唯一のチャンネルなら、方法 1 だけで通常は十分です。
+
+FishXCode コンソールの **API キー** ページで対象キーの行を見つけ、右側の **メニューを開く → CC Switch** をクリックします：
+
+![FishXCode コンソールで「CC Switch に入力」を選ぶ](/img/start/claude-desktop/cc-switch-import-channel.png)
+
+コンソールに「CC Switch に入力」フォームが表示されます。**アプリ**は `Claude` を選び、**名前**は `FishXCode` のまま（チャンネル一覧で識別しやすい）、**メインモデル**は `claude-fable-5-2` を選んで **CC Switch を開く** をクリックします：
+
+| 項目 | FishXCode 推奨値 |
+| - | - |
+| アプリ | `Claude` |
+| 名前 | `FishXCode` |
+| メインモデル | `claude-fable-5-2` |
+
+CC Switch に「プロバイダー設定のインポート確認」ダイアログが表示されます。API エンドポイントが `https://fishxcode.com`、モデルが `claude-fable-5-2` であることを確認して **インポート** をクリックします：
+
+![CC Switch で FishXCode のインポートを確認](/img/start/claude-desktop/cc-switch-select-model.png)
+
+インポートが成功すると、FishXCode がプロバイダー一覧に表示されます：
+
+![FishXCode がインポートされプロバイダー一覧に表示される](/img/start/claude-desktop/cc-switch-import-success.png)
+
+<Callout type="warn" title="注意">
+  「インポート後すぐにこのプロバイダーへ切り替える」が有効な場合、CC Switch は FishXCode を Claude Code のローカル設定（`~/.claude/settings.json` の env ブロック）に書き込みます。公式チャンネルへ戻すときは、CC Switch で再度選び直して、想定外のアドレスへリクエストが送られないようにしてください。
+</Callout>
+
+## 方法 3：ローカルの設定ファイルで管理する（上級者向け）
 
 設定をバックアップ・移行したり、問題を調査したりしたい場合は、Claude Desktop がローカルに書き込んだ場所を確認できます。
 

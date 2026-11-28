@@ -11,7 +11,7 @@ navTitle: Navegación de plataforma
 
 FishXCode es una plataforma de acceso a IA para desarrolladores y equipos. Entiéndela como un punto de entrada único: delante están la web principal, los precios y la documentación; detrás, la consola, las claves API, las recargas, las facturas y los registros de uso.
 
-La plataforma ofrece servicios de intermediación en torno a los modelos de IA principales; los canales y modelos exactos están sujetos a la web principal, consúltalos en la [página de precios](https://fishxcode.com/pricing). Desde el registro hasta crear claves, elegir planes, conectar herramientas y consultar el consumo, todo el flujo se completa en un mismo sistema.
+La plataforma ofrece servicios de intermediación en torno a los modelos de IA principales; los canales y modelos exactos están sujetos a la web principal, consúltalos en la [página de precios](https://fishxcode.com/pricing). Desde el registro hasta crear claves, conectar herramientas y consultar el consumo, todo el flujo se completa en un mismo sistema.
 
 ---
 
@@ -22,7 +22,7 @@ El sistema se compone de 4 módulos principales:
 | Ruta | Página | Módulo | Descripción |
 | - | - | - | - |
 | `/` | Portada del sitio | Web principal | Presenta la plataforma, muestra anuncios y guía al registro o la documentación |
-| `/pricing` | Página de precios | Web principal | Precios de modelos, planes y multiplicadores de consumo por grupo |
+| `/pricing` | Página de precios | Web principal | Precios de modelos y multiplicadores de consumo por grupo |
 | `/sign-in` | Inicio de sesión | Centro de autenticación | Acceso con usuario/correo y autorización de GitHub, LinuxDO y Google |
 | `/sign-up` | Registro | Centro de autenticación | Alta de nuevos usuarios (código de verificación por correo + verificación humana) |
 | `/dashboard/overview` | Resumen | Consola | Vista general: saldo, estadísticas de consumo, solicitudes y guía de configuración |
@@ -30,7 +30,7 @@ El sistema se compone de 4 módulos principales:
 | `/keys` | Claves API | Consola | Crear, copiar y eliminar API Keys; gestionar grupos, cuotas y caducidad |
 | `/usage-logs/common` | Registros de uso | Consola | Hora, modelo, consumo y detalles de cada llamada |
 | `/usage-logs/audit` | Registros de auditoría | Consola | Registros de auditoría |
-| `/wallet` | Monedero | Consola | Recarga de saldo, planes de suscripción, códigos de canje e historial de pedidos |
+| `/wallet` | Monedero | Consola | Recarga de saldo, códigos de canje e historial de pedidos |
 | `/profile` | Perfil | Consola | Información de la cuenta y recompensas de check-in |
 | `/security` | Seguridad y acceso | Consola | Contraseña, vinculaciones de terceros, sesiones, Passkey y verificación en dos pasos |
 | `/rankings` | Clasificaciones | Páginas públicas | Ranking de uso de modelos |
@@ -52,7 +52,6 @@ Tras iniciar sesión, todo se concentra en la consola. Localiza las funciones po
 
 ### Compra y recarga
 
-- **Monedero → Planes de suscripción**: consulta y compra paquetes mensuales de Codex y otros planes
 - **Monedero → Recarga de saldo**: admite Alipay, Waffo Pancake y códigos de canje
 - **Consulta del saldo**: visible en tiempo real en el monedero y en el resumen
 
@@ -95,9 +94,9 @@ Tras iniciar sesión, todo se concentra en la consola. Localiza las funciones po
 | Preguntas frecuentes | `/faq` | FAQ y resolución de problemas |
 | Registro de cambios | `/changelog` | Historial de versiones |
 | Términos del servicio | `/terms` | Acuerdo de la plataforma |
-| Política de reembolso | `/refund` | Reembolsos de recargas y proporcionalidad de planes |
+| Política de reembolso | `/refund` | Reembolsos de recargas |
 | Política de privacidad | `/privacy` | Declaración de privacidad |
 
 <Callout type="idea" title="En una frase">
-  El usuario descubre primero la plataforma en la web principal, se da de alta y se configura en la consola, y luego trabaja en las páginas de claves, planes, recargas y registros; la documentación y las páginas de estado explican y respaldan todo.
+  El usuario descubre primero la plataforma en la web principal, se da de alta y se configura en la consola, y luego trabaja en las páginas de claves, recargas y registros; la documentación y las páginas de estado explican y respaldan todo.
 </Callout>

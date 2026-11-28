@@ -10,3 +10,31 @@ description: Gemini CLI で FishXCode を設定し、OpenAI 互換インター�
 ## プラットフォームの注意点
 
 Gemini CLI は OpenAI 互換プロトコルで接続します。クライアントに Base URL / API Key のカスタム項目がある場合は上記の情報で入力してください。OpenAI 互換エンドポイントのみ対応する場合は、URL に `/v1` が含まれていることを確認してください。
+
+## 任意：CC Switch でワンクリック取り込む
+
+複数の Gemini チャンネルを切り替えて使う場合は [CC Switch](https://github.com/farion1231/cc-switch) で素早く切り替えられます。FishXCode が唯一のチャンネルなら、上の環境変数による設定だけで通常は十分です。
+
+FishXCode コンソールの **API キー** ページで対象キーの行を見つけ、右側の **メニューを開く → CC Switch** をクリックします：
+
+![FishXCode コンソールで「CC Switch に入力」を選ぶ](/img/start/gemini-cli/cc-switch-import-channel.png)
+
+コンソールに「CC Switch に入力」フォームが表示されます。**アプリ**は `Gemini` を選び、**名前**は `FishXCode` のまま（チャンネル一覧で識別しやすい）、**メインモデル**は `gemini-3.6-flash` を選んで **CC Switch を開く** をクリックします：
+
+| 項目 | FishXCode 推奨値 |
+| - | - |
+| アプリ | `Gemini` |
+| 名前 | `FishXCode` |
+| メインモデル | `gemini-3.6-flash` |
+
+CC Switch に「プロバイダー設定のインポート確認」ダイアログが表示されます。API エンドポイントが `https://fishxcode.com`、モデルが `gemini-3.6-flash` であることを確認して **インポート** をクリックします：
+
+![CC Switch で FishXCode のインポートを確認](/img/start/gemini-cli/cc-switch-select-model.png)
+
+インポートが成功すると、FishXCode がプロバイダー一覧に表示されます：
+
+![FishXCode がインポートされプロバイダー一覧に表示される](/img/start/gemini-cli/cc-switch-import-success.png)
+
+<Callout type="warn" title="注意">
+  「インポート後すぐにこのプロバイダーへ切り替える」が有効な場合、CC Switch は Gemini CLI のローカル設定（`~/.gemini/.env`）を書き換えます。公式チャンネルへ戻すときは、CC Switch で再度選び直して、想定外のアドレスへリクエストが送られないようにしてください。
+</Callout>

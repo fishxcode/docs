@@ -21,7 +21,7 @@ description: FishXCode 控制台錯誤日誌欄位、狀態碼含義、常見錯
 | 時間 | 請求失敗發生的時間 | 判斷問題是否持續發生 |
 | 模型 | 請求使用的模型名 | 判斷是否隻影響某個模型 |
 | Token | 請求使用的 API Key 或 Token 名稱 | 判斷是否隻影響某個 Token |
-| 分組 | 請求所屬套餐、模型或上游資源分組 | 判斷是否是分組集中異常 |
+| 分組 | 請求所屬的模型或上游資源分組 | 判斷是否是分組集中異常 |
 | 請求 ID | 單次請求的唯一標識，通常為 `request_id` | 聯絡支援時優先提供 |
 | 錯誤訊息 | 失敗原因文本，通常包含 `content` | 用關鍵詞定位具體錯誤 |
 | 狀態碼 | HTTP 或上游狀態碼，例如 `401`、`429`、`502` | 用於快速歸類錯誤 |
@@ -55,7 +55,7 @@ description: FishXCode 控制台錯誤日誌欄位、狀態碼含義、常見錯
 | - | - | - | - |
 | `400` | 請求體格式、引數或工具訊息不符合要求 | 使用問題 | 檢查客戶端請求體、介面路徑和工具 schema |
 | `401` | Token 無效、未啟用或認證失敗 | 使用問題 | 重新複製 Token，確認 Token 狀態 |
-| `403` | 上游拒絕訪問，常見於許可權或模型訪問限制 | 使用問題或上游問題 | 檢查套餐、分組和模型許可權 |
+| `403` | 上游拒絕訪問，常見於許可權或模型訪問限制 | 使用問題或上游問題 | 檢查分組和模型許可權 |
 | `413` | 請求體過大 | 使用問題 | 縮短上下文，拆分檔案，壓縮圖片 |
 | `429` | 頻率限制、日額度限制或憑證冷卻 | 需結合分組判斷 | 降低併發，等待額度或冷卻恢復 |
 | `500` | 中轉層或上游包裝後的內部錯誤 | 需結合錯誤訊息判斷 | 結合錯誤訊息判斷真實原因 |
@@ -68,14 +68,14 @@ description: FishXCode 控制台錯誤日誌欄位、狀態碼含義、常見錯
 | 錯誤日誌內容 | 含義 | 初步歸因 | 建議處理 |
 | - | - | - | - |
 | `status_code=401, Invalid token` | Token 無效、複製錯誤或已失效 | 使用問題 | 重新複製控制台 Token，確認沒有多餘空格 |
-| `status_code=401, Invalid API key or key is pending admin approval` | API Key 無效，或新 Key 仍在等待稽核/啟用 | 使用問題或帳號狀態 | 確認使用的是控制台最新 Token；如果剛建立或更換套餐，等待生效後重試，仍失敗請聯絡支援 |
-| `status_code=403, bad response status code 403` | 上游拒絕當前請求，常見於許可權、帳號狀態或模型訪問限制 | 使用問題或上游問題 | 檢查 Token、套餐分組和模型許可權；持續出現時切換模型或聯絡支援並提供 `request_id` |
+| `status_code=401, Invalid API key or key is pending admin approval` | API Key 無效，或新 Key 仍在等待稽核/啟用 | 使用問題或帳號狀態 | 確認使用的是控制台最新 Token；如果剛建立，等待生效後重試，仍失敗請聯絡支援 |
+| `status_code=403, bad response status code 403` | 上游拒絕當前請求，常見於許可權、帳號狀態或模型訪問限制 | 使用問題或上游問題 | 檢查 Token、分組和模型許可權；持續出現時切換模型或聯絡支援並提供 `request_id` |
 | `status_code=413, openai_error` / `bad response status code 413` | 請求體過大，常見於上下文、檔案、圖片或工具結果過大 | 使用問題 | 縮短上下文，減少一次性上傳內容，拆分大檔案或壓縮圖片後重試 |
 | `status_code=429, Account RPM limit exceeded` | 上游帳號觸發每分鐘請求限制 | 使用問題或上游限制 | 降低併發和重試頻率，稍後再試 |
 | `status_code=429, Account daily limit exceeded` | 上游帳號觸發每日請求上限 | 上游限制 | 等待每日額度重置，或切換其他可用模型/分組 |
 | `status_code=429, All credentials for model ... are cooling down` | 當前模型的上游憑證都處於冷卻期 | 上游限制 | 降低重試頻率，等待冷卻結束；緊急任務可臨時切換模型 |
 | `status_code=500, 請求失敗 [429]: {"message":"Too many requests, please wait before trying again."}` | 上游以 `429` 形式返回限流，但被中轉層包裝為 `500` | 使用問題或上游限制 | 按限流處理：降低併發、延長重試間隔，避免立即連續重試 |
-| `status_code=500, auth_unavailable: no auth available` | 當前模型或分組暫時沒有可用的上游認證資源 | 平臺問題 | 稍後重試；若持續出現，切換可用模型/分組，或聯絡支援確認套餐和分組狀態 |
+| `status_code=500, auth_unavailable: no auth available` | 當前模型或分組暫時沒有可用的上游認證資源 | 平臺問題 | 稍後重試；若持續出現，切換可用模型/分組，或聯絡支援確認分組狀態 |
 | `status_code=502, Upstream request failed` / `bad response status code 502` / `all upstreams failed` | 上游服務或中間網路返回異常，或所有可用上游均請求失敗 | 上游問題 | 稍後重試；若持續出現，切換模型或聯絡支援並提供 `request_id` |
 | `status_code=502, openai_error` | OpenAI 相容上游返回異常，但中轉層未獲得更具體原因 | 上游問題 | 先按上游異常處理；若同一請求穩定復現，減少上下文並提供 `request_id` 給支援 |
 | `status_code=502, The origin web server returned an invalid or incomplete response to Cloudflare` | 上游源站經 Cloudflare 返回異常響應 | 上游問題 | 通常為臨時上游故障，稍後重試 |
@@ -85,7 +85,7 @@ description: FishXCode 控制台錯誤日誌欄位、狀態碼含義、常見錯
 | `status_code=503, Service Unavailable` | 上游服務暫不可用或當前分組無可用資源 | 需結合分組判斷 | 稍後重試；持續出現時切換模型/分組，或聯絡支援確認資源狀態 |
 | `status_code=503, system disk overloaded` | 服務節點磁碟水位過高，平臺為保護服務臨時拒絕請求 | 平臺問題 | 這是平臺側容量/節點狀態問題，稍後重試；持續出現請聯絡支援 |
 | `status_code=503, No available accounts: no available accounts` | 當前分組沒有可用上游帳號 | 平臺問題 | 切換模型/分組或稍後重試；若長時間存在，聯絡支援確認資源池 |
-| `status_code=503, No available channel for model ... under group ...` | 當前分組下沒有該模型的可用通道 | 使用問題或平臺問題 | 檢查模型名稱和套餐支援範圍，切換到該分組支援的模型 |
+| `status_code=503, No available channel for model ... under group ...` | 當前分組下沒有該模型的可用通道 | 使用問題或平臺問題 | 檢查模型名稱和分組支援範圍，切換到該分組支援的模型 |
 | `status_code=503, model gpt-image-2 is only supported on /v1/images/generations and /v1/images/edits` | 影像模型被用於錯誤介面 | 使用問題 | 將影像生成/編輯請求傳送到對應 images 介面 |
 | `status_code=500, Image source is a local path that is not readable from this server` | 請求中包含上游當前無法讀取的本地圖片路徑，可能導致終端輸入無響應 | 使用問題 | 前端專案可優先檢查 `lock` 系列依賴檔案：刪除相關鎖檔案，或移除鎖檔案中異常的 `png` 欄位後重新開啟會話；如需繼續傳圖，請改用公網 `http(s)` 圖片 URL，或傳入 `data:image/...` base64 |
 | `status_code=500, failed to parse multipart form` | 影像或檔案上傳請求體格式不符合介面要求 | 使用問題 | 檢查 `multipart/form-data` 欄位名、檔案欄位和請求頭；不要手動寫錯 boundary |

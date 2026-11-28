@@ -94,29 +94,29 @@ After signing in, choose the project folder you want Codex to work on.
 
 ## 4. Optional: Manage Channels with CC Switch
 
-Use CC Switch if you maintain multiple Codex channels. If FishXCode is your only channel, a single `~/.codex/config.toml` is usually enough.
+If you maintain multiple Codex channels, CC Switch is handy for quick switching; with FishXCode as your only channel, a single `~/.codex/config.toml` is usually enough.
 
-On the FishXCode token page, find the target token and click **Import** on the `codex-sub-june` group row:
+On the **API Keys** page of the FishXCode console, find the row of the target key and click **Open menu → CC Switch** on the right:
 
-![Import the Codex group from FishXCode](/img/start/codex-desktop/cc-switch-import-channel.png)
+![Choose Fill into CC Switch in the FishXCode console](/img/start/codex-desktop/cc-switch-import-channel.png)
 
-In the CC Switch import dialog, keep these core values:
+The console opens a "Fill into CC Switch" form. Set **App** to `Codex`, fill the **Name** with `FishXCode` (so the channel is easy to recognize), pick `gpt-6.2-sol` as the **Main model**, then click **Open CC Switch**:
 
-| Field | FishXCode value |
+| Field | FishXCode recommended value |
 | - | - |
-| API endpoint | `https://api.fishxcode.com/v1` |
-| API key | FishXCode token |
-| Main model | `gpt-6.2-sol` or another model available in your plan |
+| App | `Codex` |
+| Name | `FishXCode` |
+| Main model | `gpt-6.2-sol` |
 
-Switch the main model to `gpt-6.2-sol`, click **Test**, and import only after you see "Test passed / model connectivity test succeeded":
+CC Switch shows a "Confirm importing provider config" dialog. Check that the API endpoint is `https://fishxcode.com/v1` and the model is `gpt-6.2-sol`, then click **Import**:
 
-![Test gpt-6.2-sol in the CC Switch import dialog](/img/start/codex-desktop/cc-switch-select-model.png)
+![Confirm importing the FishXCode config in CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
 
-When the browser opens CC Switch, review the API endpoint, model, and note, then click **Import**:
+Once imported, FishXCode appears in the Codex provider list and switches to the active channel automatically:
 
-![Confirm the FishXCode Codex import](/img/start/codex-desktop/cc-switch-import-success.png)
+![FishXCode imported and shown in the provider list](/img/start/codex-desktop/cc-switch-import-success.png)
 
-After importing, make sure CC Switch is switched to the FishXCode channel, then restart Codex Desktop.
+After the setup, reopen Codex Desktop to use the FishXCode channel.
 
 ## 5. Common Controls
 

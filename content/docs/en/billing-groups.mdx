@@ -1,6 +1,6 @@
 ---
 title: Billing Rules & Groups
-description: FishXCode's two billing methods, the available groups and multipliers, group selection tips, and usage notes. Group multipliers are fetched live from the platform on page load.
+description: FishXCode's pay-as-you-go billing, the available groups and multipliers, group selection tips, and usage notes. Group multipliers are fetched live from the platform on page load.
 navTitle: Billing Rules & Groups
 ---
 
@@ -10,14 +10,11 @@ FishXCode is a one-stop platform for AI model access and account services, cover
   Group multipliers, model availability, and resource conditions change with upstream resources. The real-time information on the [pricing page](https://fishxcode.com/pricing) and in the console always prevails. The group multipliers on this page are fetched live from the platform API when the page loads.
 </Callout>
 
-## 1. Two billing methods
+## 1. Billing method
 
 | Method | How it bills | Best for |
 | - | - | - |
 | Pay-as-you-go balance | Model price × the multiplier of the key's group, deducted from your account balance | Daily calls, mixing models, quick tests |
-| Codex Pro account-pool monthly package | Call with a key created in the `codex-sub-june` group; actual token consumption is deducted from the package quota | High-frequency Codex coding and Agent development |
-
-For monthly package pricing, quotas, and usage, see [Subscription Plans](/en/subscription-plans).
 
 ## 2. Available groups
 
@@ -30,10 +27,6 @@ A group determines which models an API Key can call, which resource pool it uses
 <GroupRatioTable category="other" />
 
 For other models and their exact availability, check the site.
-
-<Callout type="info" title="Monthly-package-only group">
-  `codex-sub-june` is the dedicated group for the Codex Pro account-pool monthly package. It is fixed at a 1x multiplier, deducts only from the package quota, and is not among the pay-as-you-go groups above.
-</Callout>
 
 ## 3. How multipliers are calculated
 
@@ -59,8 +52,8 @@ When you create an API Key under **Console → API Keys**, the key's group defin
 
 When creating an API Key, pay attention to:
 
-- **Group**: determines which models this key can call and at what multiplier usage is billed. When using a Codex monthly package you must select `codex-sub-june`.
-- **Quota settings**: cap how much this key may consume. Unlimited quota does not mean free — usage is still limited by your account balance or monthly package quota.
+- **Group**: determines which models this key can call and at what multiplier usage is billed.
+- **Quota settings**: cap how much this key may consume. Unlimited quota does not mean free — usage is still limited by your account balance.
 - **Model restriction list**: avoid restricting unless you clearly want to allow only a few models.
 - **IP allowlist**: suits servers with a fixed outbound IP; use cautiously for personal local development to avoid broken calls after an IP change.
 
@@ -68,7 +61,6 @@ Common symptoms of picking the wrong group:
 
 - The model shows up in the model list, but calls with the current key fail with `model not found`, `model not available`, or a permission error.
 - The model works, but the billed multiplier or the stability is not the tier you expected.
-- A monthly-package key and a regular key are mixed, sending quota to the wrong account or muddling the usage statistics.
 
 ## 5. Group selection tips
 
@@ -76,7 +68,7 @@ Common symptoms of picking the wrong group:
 | - | - | - |
 | Daily Codex coding | <LiveRatio name="codex-plus" /> | Suited to everyday code development |
 | Low-multiplier Codex | <LiveRatio name="codex-team" /> | For users who accept a shared resource pool |
-| High-frequency Codex / Agent development | Codex Pro account-pool monthly package | Choose the $200 or $2,000 quota monthly package based on actual usage |
+| High-frequency Codex / Agent development | <LiveRatio name="codex-pro" /> | For stability-first setups, see <LiveRatio name="codex-ultrafast" /> |
 | Claude coding and long tasks | <LiveRatio name="claude" /> | For heavy use, consider <LiveRatio name="claudemax" /> |
 | Kiro | <LiveRatio name="kiro-svip" /> | Official full-price Kiro account pool |
 | Chinese models | <LiveRatio name="china" /> | Official API direct connection |
@@ -101,17 +93,15 @@ After making calls, verify actual consumption against the records in **Console �
 ## 7. Usage notes
 
 1. Different groups map to different resource pools — choose by use case.
-2. The Codex monthly package requires an API Key created with the `codex-sub-june` group; no other group can use that plan's quota.
-3. The monthly package is not unlimited. Once the quota is exhausted or the plan expires, it can no longer be used.
-4. For long Claude conversations, make good use of context caching. Actual cache hits depend on client configuration, the model, and request intervals.
-5. Group multipliers, model availability, and resource conditions are subject to the site's real-time information.
+2. For long Claude conversations, make good use of context caching. Actual cache hits depend on client configuration, the model, and request intervals.
+3. Group multipliers, model availability, and resource conditions are subject to the site's real-time information.
 
 ## 8. Troubleshooting usage or permission issues
 
 When consumption looks wrong or a model is unavailable, troubleshoot in this order:
 
 1. Confirm the group bound to the current key includes the target model.
-2. Confirm your account balance, or that the monthly package is still valid with quota remaining.
+2. Confirm that your account balance is sufficient.
 3. Check **Console → Usage Logs**, filtering by time, model, key, group, or request ID.
 4. Filter by the group column in the logs to tell whether it is a single-key issue or a group resource-pool issue.
 5. If it is still unclear, contact support with the order number, key name, group, model name, request time, and request ID.

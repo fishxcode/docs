@@ -1,6 +1,6 @@
 ---
 title: Reglas de facturación y grupos
-description: Las dos formas de facturación de FishXCode, los grupos a la venta con sus multiplicadores, recomendaciones para elegir grupo y notas de uso. Los multiplicadores se obtienen en tiempo real de la plataforma al cargar la página.
+description: El método de facturación de FishXCode, los grupos a la venta con sus multiplicadores, recomendaciones para elegir grupo y notas de uso. Los multiplicadores se obtienen en tiempo real de la plataforma al cargar la página.
 navTitle: Reglas de facturación y grupos
 ---
 
@@ -10,14 +10,11 @@ FishXCode es una plataforma integral de acceso a modelos de IA y servicios de cu
   Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos cambian según los recursos del upstream. La información en tiempo real de la [página de precios](https://fishxcode.com/pricing) y de la consola prevalece siempre. Los multiplicadores de esta página se obtienen en tiempo real de la API de la plataforma al cargar la página.
 </Callout>
 
-## 1. Dos formas de facturación
+## 1. Método de facturación
 
 | Método | Cómo se cobra | Ideal para |
 | - | - | - |
 | Saldo de pago por uso | Precio del modelo × multiplicador del grupo de la clave, descontado del saldo de la cuenta | Llamadas diarias, mezcla de modelos, pruebas puntuales |
-| Paquete mensual del pool de cuentas Codex Pro | Se llama con una clave creada en el grupo `codex-sub-june`; el consumo real de tokens se descuenta de la cuota del paquete | Programación Codex de alta frecuencia y desarrollo de Agentes |
-
-Para el precio, la cuota y el uso del paquete mensual, ver [Planes de suscripción](/es/subscription-plans).
 
 ## 2. Grupos a la venta
 
@@ -30,10 +27,6 @@ El grupo determina qué modelos puede llamar una API Key, qué pool de recursos 
 <GroupRatioTable category="other" />
 
 Para otros modelos y su disponibilidad exacta, consúltalo en el sitio.
-
-<Callout type="info" title="Grupo exclusivo del paquete mensual">
-  `codex-sub-june` es el grupo exclusivo del paquete mensual del pool de cuentas Codex Pro. Fijado a multiplicador 1x, solo descuenta de la cuota del paquete y no está entre los grupos de pago por uso de arriba.
-</Callout>
 
 ## 3. Cómo se calcula el multiplicador
 
@@ -59,8 +52,8 @@ Al crear una API Key en **Consola → Claves API**, el grupo de la clave define 
 
 Al crear una API Key, fíjate sobre todo en:
 
-- **Grupo**: determina qué modelos puede llamar esta clave y con qué multiplicador se factura. Para usar un paquete mensual de Codex debes seleccionar `codex-sub-june`.
-- **Cuota**: limita cuánto puede consumir esta clave como máximo; cuota ilimitada no significa gratis, sigue limitada por el saldo de la cuenta o la cuota del paquete mensual.
+- **Grupo**: determina qué modelos puede llamar esta clave y con qué multiplicador se factura.
+- **Cuota**: limita cuánto puede consumir esta clave como máximo; cuota ilimitada no significa gratis, sigue limitada por el saldo de la cuenta.
 - **Lista de restricción de modelos**: no la restrinjas salvo necesidad, salvo que permitas claramente solo unos pocos modelos.
 - **Lista blanca de IP**: para servidores con IP de salida fija; úsala con cautela en desarrollo local para evitar llamadas rotas tras un cambio de IP.
 
@@ -68,7 +61,6 @@ Síntomas habituales de haber elegido mal el grupo:
 
 - El modelo aparece en la lista de modelos, pero al llamarlo con la clave actual falla con `model not found`, `model not available` o un error de permisos.
 - El modelo funciona, pero el multiplicador de facturación o la estabilidad no son el nivel esperado.
-- Se mezclan claves del paquete mensual y claves normales, enviando la cuota a la cuenta equivocada o difuminando las estadísticas de uso.
 
 ## 5. Recomendaciones para elegir grupo
 
@@ -76,7 +68,7 @@ Síntomas habituales de haber elegido mal el grupo:
 | - | - | - |
 | Programación Codex diaria | <LiveRatio name="codex-plus" /> | Ideal para el desarrollo de código cotidiano |
 | Codex con multiplicador bajo | <LiveRatio name="codex-team" /> | Para usuarios que aceptan un pool de recursos compartido |
-| Codex de alta frecuencia / desarrollo de Agentes | Paquete mensual del pool de cuentas Codex Pro | Elige el paquete mensual de $200 o $2,000 según tu uso real |
+| Codex de alta frecuencia / desarrollo de Agentes | <LiveRatio name="codex-pro" /> | Si priorizas estabilidad, consulta <LiveRatio name="codex-ultrafast" /> |
 | Programación y tareas largas con Claude | <LiveRatio name="claude" /> | Para uso intensivo, considera <LiveRatio name="claudemax" /> |
 | Kiro | <LiveRatio name="kiro-svip" /> | Pool oficial de precio completo de Kiro |
 | Modelos nacionales | <LiveRatio name="china" /> | Conexión directa por API oficial |
@@ -101,17 +93,15 @@ Tras llamar, verifica el consumo real con los registros de **Consola → Registr
 ## 7. Notas de uso
 
 1. Los grupos corresponden a pools de recursos distintos: elige según el caso de uso.
-2. El paquete mensual de Codex exige crear la API Key con el grupo `codex-sub-june`; ningún otro grupo puede usar la cuota de ese plan.
-3. El paquete mensual no es una cuota ilimitada: agotada la cuota o vencido el plan, deja de poder usarse.
-4. En conversaciones largas con Claude, aprovecha bien la caché de contexto; los aciertos reales dependen de la configuración del cliente, del modelo y del intervalo entre solicitudes.
-5. Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos están sujetos a la información en tiempo real del sitio.
+2. En conversaciones largas con Claude, aprovecha bien la caché de contexto; los aciertos reales dependen de la configuración del cliente, del modelo y del intervalo entre solicitudes.
+3. Los multiplicadores de los grupos, la disponibilidad de los modelos y los recursos están sujetos a la información en tiempo real del sitio.
 
 ## 8. Diagnosticar problemas de consumo o permisos
 
 Ante un consumo anómalo o un modelo no disponible, diagnostica en este orden:
 
 1. Confirma que el grupo vinculado a la clave actual incluye el modelo objetivo.
-2. Confirma el saldo de la cuenta, o que el paquete mensual sigue vigente y con cuota suficiente.
+2. Confirma que el saldo de la cuenta es suficiente.
 3. Revisa **Consola → Registros de uso**, filtrando por hora, modelo, clave, grupo o ID de solicitud.
 4. Filtra por la columna de grupo en los registros para saber si es un problema de una sola clave o del pool de recursos del grupo.
 5. Si sigue sin poder determinarse, contacta con soporte aportando el número de pedido, el nombre de la clave, el grupo, el modelo, la hora de la solicitud y el ID de solicitud.

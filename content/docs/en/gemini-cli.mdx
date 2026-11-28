@@ -10,3 +10,31 @@ description: Learn how to configure FishXCode in Gemini CLI and call available m
 ## Platform Notes
 
 Gemini CLI connects using the OpenAI-compatible protocol. If the client provides custom Base URL / API Key fields, fill them in with the details above; if it only supports OpenAI-compatible endpoints, make sure the URL includes `/v1`.
+
+## Optional: One-Click Import with CC Switch
+
+If you maintain multiple Gemini channels, you can use [CC Switch](https://github.com/farion1231/cc-switch) to switch quickly; if FishXCode is your only channel, the environment-variable setup above is usually enough.
+
+In the FishXCode console's **API Keys** page, find the row of the target key and click **Open menu → CC Switch**:
+
+![Choose Fill into CC Switch in the FishXCode console](/img/start/gemini-cli/cc-switch-import-channel.png)
+
+The console shows the "Fill into CC Switch" form. Set **App** to `Gemini`, keep **Name** as `FishXCode` (easy to recognize in the channel list), set **Main model** to `gemini-3.6-flash`, then click **Open CC Switch**:
+
+| Field | FishXCode recommended value |
+| - | - |
+| App | `Gemini` |
+| Name | `FishXCode` |
+| Main model | `gemini-3.6-flash` |
+
+CC Switch shows a "Confirm provider import" dialog. Verify the API endpoint is `https://fishxcode.com` and the model is `gemini-3.6-flash`, then click **Import**:
+
+![Confirm the FishXCode import in CC Switch](/img/start/gemini-cli/cc-switch-select-model.png)
+
+After the import, FishXCode appears in the provider list:
+
+![FishXCode imported and shown in the provider list](/img/start/gemini-cli/cc-switch-import-success.png)
+
+<Callout type="warn" title="Note">
+  When "Switch to this provider right after import" is on, CC Switch rewrites Gemini CLI's local config (`~/.gemini/.env`). When switching back to the official channel, re-select it in CC Switch to avoid sending requests to an unexpected endpoint.
+</Callout>

@@ -9,14 +9,16 @@
     },
     { "source": "/feed.xml", "destination": "/rss.xml", "statusCode": 301 },
     { "source": "/feed.atom", "destination": "/rss.xml", "statusCode": 301 },
+    { "source": "/subscription-plans", "destination": "/billing-groups", "statusCode": 301 },
+    { "source": "/subscription-plans/:path*", "destination": "/billing-groups", "statusCode": 301 },
     {
-      "source": "/subscription-plans/:plan(claude|codex|by-number-of-times){.html}?",
-      "destination": "/subscription-plans",
+      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/subscription-plans",
+      "destination": "/:locale/billing-groups",
       "statusCode": 301
     },
     {
-      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/subscription-plans/:plan(claude|codex|by-number-of-times){.html}?",
-      "destination": "/:locale/subscription-plans",
+      "source": "/:locale(en|fr|es|pt|ru|ja|vi|zh-TW)/subscription-plans/:path*",
+      "destination": "/:locale/billing-groups",
       "statusCode": 301
     }
   ],

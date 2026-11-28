@@ -8,7 +8,6 @@ import {
   HOME_GROUPS,
   HOME_PAGE_COPY,
   HOME_MODELS_PATH,
-  HOME_PLANS,
   HOME_PROVIDERS,
   HOME_START_PATH,
   type GroupCategory,
@@ -222,7 +221,7 @@ const CODE_FENCE = '```';
  * 映射规则见 public/_worker.js 与 src/proxy.ts）。
  *
  * 首页是 React 组件而不是 .mdx 文档，进不了 docs loader，所以副本在这里按
- * 首页的可见内容逐区块拼装：定位与两个按钮、为什么选择、模型供应商、月包与分组倍率、
+ * 首页的可见内容逐区块拼装：定位与两个按钮、为什么选择、模型供应商、分组倍率、
  * 接入工具、三步上手（含接入地址与代码示例）、客服联系方式，再附该语言的文档页清单与
  * 机器可读资源。内容同源于 home-copy.ts，页面改了副本自动跟随。
  */
@@ -260,16 +259,6 @@ export function createHomeMarkdown(lang: Locale): string {
     `## ${page.pricing.title}`,
     '',
     page.pricing.description,
-    '',
-    `### ${page.pricing.plansTitle}`,
-    '',
-    ...HOME_PLANS.map(
-      (plan) =>
-        `- ${plan.price} · ${fmt(page.pricing.planQuota, { quota: plan.quota })} · ${fmt(page.pricing.planRatio, { ratio: plan.ratio })}`,
-    ),
-    `- ${page.pricing.planTerms}`,
-    `- ${page.pricing.planGroup}`,
-    link(page.pricing.plansCta, '/subscription-plans'),
     '',
     `### ${page.pricing.groupsTitle}`,
     '',

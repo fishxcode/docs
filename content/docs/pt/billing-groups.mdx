@@ -1,6 +1,6 @@
 ---
 title: Regras de cobrança e grupos
-description: As duas formas de cobrança do FishXCode, os grupos à venda e seus multiplicadores, recomendações de escolha e observações de uso. Os multiplicadores são obtidos em tempo real da plataforma ao carregar a página.
+description: O método de cobrança do FishXCode, os grupos à venda e seus multiplicadores, recomendações de escolha e observações de uso. Os multiplicadores são obtidos em tempo real da plataforma ao carregar a página.
 navTitle: Regras de cobrança e grupos
 ---
 
@@ -10,14 +10,11 @@ O FishXCode é uma plataforma de acesso a modelos de IA e serviços de contas tu
   Os multiplicadores dos grupos, a disponibilidade de modelos e a situação de recursos mudam conforme ajustes do upstream. A fonte final é a [página de preços](https://fishxcode.com/pricing) e as informações em tempo real do console. Os multiplicadores desta página são obtidos em tempo real da API da plataforma ao carregar a página.
 </Callout>
 
-## 1. Duas formas de cobrança
+## 1. Método de cobrança
 
 | Forma | Como é cobrado | Adequada para |
 | - | - | - |
 | Saldo por consumo | Cobra o preço do modelo multiplicado pelo multiplicador do grupo da chave, deduzido do saldo da conta | Chamadas diárias, uso misto de vários modelos, testes pontuais |
-| Pacote mensal do pool de contas Codex Pro | Chamadas com chaves criadas no grupo `codex-sub-june`, deduzidas da cota do pacote mensal conforme o consumo real de Tokens | Programação Codex de alta frequência e desenvolvimento de Agentes |
-
-Preços, cotas e modo de uso do pacote mensal: veja [Planos de assinatura](/pt/subscription-plans).
 
 ## 2. Grupos à venda
 
@@ -30,10 +27,6 @@ O grupo define quais modelos uma API Key pode chamar, por qual pool de recursos 
 <GroupRatioTable category="other" />
 
 Para outros modelos e detalhes de suporte, consulte no site.
-
-<Callout type="info" title="Grupo exclusivo do pacote mensal">
-  `codex-sub-june` é o grupo exclusivo do pacote mensal do pool de contas Codex Pro, com multiplicador fixo de 1x, deduzido apenas da cota do pacote mensal; não está entre os grupos por consumo listados acima.
-</Callout>
 
 ## 3. Como o multiplicador é calculado
 
@@ -59,8 +52,8 @@ Ao criar uma API Key em **Console → Chaves API**, o grupo da chave define o es
 
 Pontos de atenção ao criar a API Key:
 
-- **Grupo**: define quais modelos a chave pode chamar e com qual multiplicador é cobrada. Ao usar o pacote mensal do Codex, é obrigatório escolher `codex-sub-june`.
-- **Configuração de cota**: limita quanto esta chave pode consumir no máximo; cota ilimitada não significa isenção de cobrança — ela continua limitada pelo saldo da conta ou pela cota do pacote mensal.
+- **Grupo**: define quais modelos a chave pode chamar e com qual multiplicador é cobrada.
+- **Configuração de cota**: limita quanto esta chave pode consumir no máximo; cota ilimitada não significa isenção de cobrança — ela continua limitada pelo saldo da conta.
 - **Lista de modelos permitidos**: evite restringir sem necessidade, a menos que você realmente queira permitir apenas alguns modelos.
 - **Lista de permissões de IP**: adequada para IPs de saída fixos de servidores; use com cautela em desenvolvimento local, para não perder acesso após mudança de IP.
 
@@ -68,7 +61,6 @@ Sintomas comuns de grupo errado:
 
 - O modelo aparece na lista de modelos, mas ao chamar com a chave atual retorna `model not found`, `model not available` ou erro de permissão.
 - O modelo é chamável, mas o multiplicador cobrado ou a estabilidade não correspondem à faixa esperada.
-- Chaves do pacote mensal e chaves comuns misturadas, fazendo a cota ir para a conta errada ou deixar as estatísticas pouco claras.
 
 ## 5. Recomendações de escolha de grupo
 
@@ -76,7 +68,7 @@ Sintomas comuns de grupo errado:
 | - | - | - |
 | Programação Codex diária | <LiveRatio name="codex-plus" /> | Adequado para desenvolvimento de código cotidiano |
 | Codex com multiplicador baixo | <LiveRatio name="codex-team" /> | Para quem aceita pool de recursos compartilhado |
-| Codex de alta frequência / desenvolvimento de Agentes | Pacote mensal do pool de contas Codex Pro | Escolha o pacote mensal de 200 ou 2.000 dólares conforme o uso real |
+| Codex de alta frequência / desenvolvimento de Agentes | <LiveRatio name="codex-pro" /> | Para estabilidade, veja <LiveRatio name="codex-ultrafast" /> |
 | Programação e tarefas longas com Claude | <LiveRatio name="claude" /> | Para uso intensivo, considere <LiveRatio name="claudemax" /> |
 | Kiro | <LiveRatio name="kiro-svip" /> | Pool de contas oficial a preço cheio do Kiro |
 | Modelos chineses | <LiveRatio name="china" /> | Conexão direta via API oficial |
@@ -101,17 +93,15 @@ Após as chamadas, confira o consumo real pelos registros de **Console → Logs 
 ## 7. Observações de uso
 
 1. Cada grupo corresponde a um pool de recursos diferente; escolha conforme seu cenário de uso.
-2. O pacote mensal do Codex exige criar a API Key com o grupo `codex-sub-june`; outros grupos não utilizam a cota desse plano.
-3. O pacote mensal não é cota ilimitada; após esgotar a cota ou vencer o plano, não é possível continuar usando.
-4. Para conversas longas com Claude, aproveite bem o cache de contexto; o acerto real de cache depende da configuração do cliente, do modelo e do intervalo entre requisições.
-5. Multiplicadores de grupo, disponibilidade de modelos e situação de recursos seguem as informações em tempo real do site.
+2. Para conversas longas com Claude, aproveite bem o cache de contexto; o acerto real de cache depende da configuração do cliente, do modelo e do intervalo entre requisições.
+3. Multiplicadores de grupo, disponibilidade de modelos e situação de recursos seguem as informações em tempo real do site.
 
 ## 8. Investigar anomalias de consumo ou permissão
 
 Ao encontrar consumo anômalo ou modelo indisponível, recomenda-se investigar nesta ordem:
 
 1. Confirme se o grupo vinculado à chave atual inclui o modelo desejado.
-2. Confirme o saldo da conta, ou a validade e cota restante do pacote mensal.
+2. Confirme que o saldo da conta é suficiente.
 3. Abra **Console → Logs de uso** e filtre por hora, modelo, chave, grupo, ID de requisição etc.
 4. Filtre pela coluna de grupo nos logs para distinguir problema de uma chave individual ou do pool de recursos do grupo.
 5. Se ainda não for possível determinar, contate o suporte informando número do pedido, nome da chave, grupo, nome do modelo, horário da requisição e ID da requisição.

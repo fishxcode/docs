@@ -94,29 +94,29 @@ Sau khi đăng nhập, vào thư mục dự án và chọn thư mục bạn mu�
 
 ## 4. Tùy chọn: quản lý nhiều kênh bằng CC Switch
 
-Nếu bạn đồng thời duy trì nhiều kênh Codex, có thể dùng CC Switch để chuyển đổi nhanh; nếu chỉ dùng FishXCode, một tệp `~/.codex/config.toml` thường là đủ.
+Nếu bạn dùng nhiều kênh Codex, CC Switch giúp chuyển nhanh rất tiện; nếu FishXCode là kênh duy nhất, một `~/.codex/config.toml` thường là đủ.
 
-Trên trang token của bảng điều khiển FishXCode, tìm token cần dùng rồi nhấn **Nhập** ở hàng tương ứng với nhóm `codex-sub-june`:
+Trong trang **Khóa API** của bảng điều khiển FishXCode, tìm dòng khóa cần dùng và nhấn **Mở menu → CC Switch** bên phải:
 
-![Nhấn nhập nhóm Codex trong bảng điều khiển FishXCode](/img/start/codex-desktop/cc-switch-import-channel.png)
+![Chọn Điền vào CC Switch trong bảng điều khiển FishXCode](/img/start/codex-desktop/cc-switch-import-channel.png)
 
-Trong hộp thoại nhập của CC Switch, sau khi chọn ứng dụng `Codex`, nên giữ các trường chính như sau:
+Bảng điều khiển mở biểu mẫu «Điền vào CC Switch». Chọn `Codex` ở **Ứng dụng**, điền **Tên** là `FishXCode` (để dễ nhận diện trong danh sách kênh), chọn `gpt-6.2-sol` làm **Mô hình chính**, rồi nhấn **Mở CC Switch**:
 
-| Trường | Giá trị khuyên dùng cho FishXCode |
+| Trường | Giá trị khuyến nghị của FishXCode |
 | - | - |
-| Endpoint API | `https://api.fishxcode.com/v1` |
-| API Key | Token FishXCode |
-| Mô hình chính | `gpt-6.2-sol` hoặc mô hình khả dụng trong gói của bạn |
+| Ứng dụng | `Codex` |
+| Tên | `FishXCode` |
+| Mô hình chính | `gpt-6.2-sol` |
 
-Chuyển mô hình chính sang `gpt-6.2-sol` rồi nhấn **Kiểm tra**, khi thấy "Kiểm tra thành công / Kiểm tra kết nối mô hình thành công" thì mới nhập:
+CC Switch hiện hộp thoại «Xác nhận nhập cấu hình nhà cung cấp». Kiểm tra endpoint API là `https://fishxcode.com/v1` và mô hình là `gpt-6.2-sol`, rồi nhấn **Nhập**:
 
-![Kiểm tra gpt-6.2-sol trong hộp thoại nhập của CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
+![Xác nhận nhập cấu hình FishXCode trong CC Switch](/img/start/codex-desktop/cc-switch-select-model.png)
 
-Khi trình duyệt mở CC Switch, hãy đối chiếu endpoint API, mô hình và ghi chú, xác nhận chính xác rồi nhấn **Nhập**:
+Sau khi nhập xong, FishXCode xuất hiện trong danh sách nhà cung cấp của Codex và tự động trở thành kênh đang dùng:
 
-![Xác nhận nhập cấu hình Codex của FishXCode](/img/start/codex-desktop/cc-switch-import-success.png)
+![FishXCode đã được nhập và hiển thị trong danh sách nhà cung cấp](/img/start/codex-desktop/cc-switch-import-success.png)
 
-Sau khi cấu hình xong, hãy xác nhận CC Switch đang ở kênh tương ứng của FishXCode, rồi mở lại Codex Desktop.
+Sau khi cấu hình xong, mở lại Codex Desktop để dùng kênh FishXCode.
 
 ## 5. Tính năng thường dùng
 

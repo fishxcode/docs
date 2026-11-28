@@ -22,7 +22,7 @@ Entree : [Console -> Journaux d'utilisation](https://fishxcode.com/usage-logs/co
 | Temps | Heure a laquelle la requete a echoue | Voir si le probleme persiste |
 | Modele | Nom du modele utilise par la requete | Voir si un seul modele est touche |
 | Token | Nom de l'API Key ou du token utilise | Voir si un seul token est touche |
-| Groupe | Groupe de forfait, de modele ou de ressource amont | Voir si l'anomalie se concentre sur un groupe |
+| Groupe | Groupe de modele ou de ressource amont auquel la requete appartient | Voir si l'anomalie se concentre sur un groupe |
 | ID de requete | Identifiant unique d'une requete, souvent `request_id` | A fournir en priorite au support |
 | Message d'erreur | Texte de l'echec, souvent dans `content` | Chercher l'erreur exacte par mot-cle |
 | Code de statut | Code HTTP ou amont, par exemple `401`, `429`, `502` | Classer rapidement le type d'erreur |
@@ -56,7 +56,7 @@ Les journaux d'erreur aident a distinguer un probleme d'utilisation, un probleme
 | - | - | - | - |
 | `400` | Corps de requete, parametre ou message d'outil invalide | Probleme d'utilisation | Verifier le corps de requete, l'endpoint et le schema d'outil |
 | `401` | Token invalide, desactive ou authentification echouee | Probleme d'utilisation | Recopier le token et verifier son etat |
-| `403` | Acces refuse par l'amont, souvent lie aux droits ou au modele | Probleme d'utilisation ou amont | Verifier forfait, groupe et droits du modele |
+| `403` | Acces refuse par l'amont, souvent lie aux droits ou au modele | Probleme d'utilisation ou amont | Verifier groupe et droits du modele |
 | `413` | Corps de requete trop grand | Probleme d'utilisation | Reduire le contexte, diviser les fichiers, compresser les images |
 | `429` | Limite de frequence, limite journaliere ou credentials en refroidissement | A confirmer par groupe | Reduire la concurrence, attendre le quota ou la fin du refroidissement |
 | `500` | Erreur interne du relais ou erreur amont encapsulee | A confirmer par le message | Lire le message complet pour identifier la cause reelle |
@@ -69,8 +69,8 @@ Les journaux d'erreur aident a distinguer un probleme d'utilisation, un probleme
 | Contenu du journal | Signification | Attribution initiale | Action conseillee |
 | - | - | - | - |
 | `status_code=401, Invalid token` | Token invalide, mal copie ou expire | Probleme d'utilisation | Recopier le token depuis la console et supprimer les espaces en trop |
-| `status_code=401, Invalid API key or key is pending admin approval` | API Key invalide, ou nouvelle key en attente d'approbation/activation | Probleme d'utilisation ou etat du compte | Utiliser le dernier token de la console ; si le token vient d'etre cree ou le forfait change, attendre l'activation puis reessayer |
-| `status_code=403, bad response status code 403` | L'amont refuse la requete, souvent a cause des droits, de l'etat du compte ou de l'acces modele | Probleme d'utilisation ou amont | Verifier token, groupe de forfait et droits du modele ; si cela persiste, changer de modele ou contacter le support avec le `request_id` |
+| `status_code=401, Invalid API key or key is pending admin approval` | API Key invalide, ou nouvelle key en attente d'approbation/activation | Probleme d'utilisation ou etat du compte | Utiliser le dernier token de la console ; si le token vient d'etre cree, attendre l'activation puis reessayer |
+| `status_code=403, bad response status code 403` | L'amont refuse la requete, souvent a cause des droits, de l'etat du compte ou de l'acces modele | Probleme d'utilisation ou amont | Verifier token, groupe et droits du modele ; si cela persiste, changer de modele ou contacter le support avec le `request_id` |
 | `status_code=413, openai_error` / `bad response status code 413` | Corps de requete trop grand, souvent contexte, fichier, image ou resultat d'outil | Probleme d'utilisation | Reduire le contexte, limiter le contenu envoye, diviser les gros fichiers ou compresser les images |
 | `status_code=429, Account RPM limit exceeded` | Le compte amont a atteint sa limite de requetes par minute | Probleme d'utilisation ou limite amont | Reduire concurrence et frequence des essais, puis reessayer plus tard |
 | `status_code=429, Account daily limit exceeded` | Le compte amont a atteint sa limite journaliere | Limite amont | Attendre la remise a zero journaliere ou changer de modele/groupe disponible |
@@ -86,7 +86,7 @@ Les journaux d'erreur aident a distinguer un probleme d'utilisation, un probleme
 | `status_code=503, Service Unavailable` | Service amont indisponible ou groupe sans ressource disponible | A confirmer par groupe | Reessayer plus tard ; si cela persiste, changer de modele/groupe ou contacter le support |
 | `status_code=503, system disk overloaded` | Le disque du noeud de service est trop charge ; la plateforme refuse temporairement pour proteger le service | Probleme de plateforme | Probleme de capacite/noeud cote plateforme, reessayer plus tard ; si cela persiste, contacter le support |
 | `status_code=503, No available accounts: no available accounts` | Aucun compte amont disponible dans le groupe courant | Probleme de plateforme | Changer de modele/groupe ou reessayer plus tard ; si cela dure, contacter le support |
-| `status_code=503, No available channel for model ... under group ...` | Aucun canal disponible pour ce modele dans ce groupe | Probleme d'utilisation ou plateforme | Verifier le nom du modele et la prise en charge du forfait, puis choisir un modele supporte par ce groupe |
+| `status_code=503, No available channel for model ... under group ...` | Aucun canal disponible pour ce modele dans ce groupe | Probleme d'utilisation ou plateforme | Verifier le nom du modele et les modeles supportes par le groupe, puis choisir un modele supporte par ce groupe |
 | `status_code=503, model gpt-image-2 is only supported on /v1/images/generations and /v1/images/edits` | Le modele image est appele sur le mauvais endpoint | Probleme d'utilisation | Envoyer les requetes image vers l'endpoint images correspondant |
 | `status_code=500, Image source is a local path that is not readable from this server` | La requete contient un chemin local que l'amont ne peut pas lire, ce qui peut bloquer la saisie terminal | Probleme d'utilisation | Pour un projet frontend, verifier les fichiers `lock` : supprimer le lock concerne ou retirer les champs `png` anormaux, puis rouvrir la session ; sinon utiliser une URL `http(s)` publique ou un `data:image/...` base64 |
 | `status_code=500, failed to parse multipart form` | Le corps d'upload image/fichier n'est pas conforme | Probleme d'utilisation | Verifier les champs `multipart/form-data`, le champ fichier et les en-tetes ; ne pas ecrire un mauvais boundary a la main |

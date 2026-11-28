@@ -1,6 +1,6 @@
 ---
 title: 計費規則與分組
-description: FishXCode 的兩種計費方式、在售分組與倍率、分組選擇建議和使用注意事項。分組倍率由頁面即時擷取官網資料。
+description: FishXCode 的按量計費規則、在售分組與倍率、分組選擇建議和使用注意事項。分組倍率由頁面即時擷取官網資料。
 navTitle: 計費規則與分組
 ---
 
@@ -15,9 +15,6 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 | 方式 | 怎麼扣費 | 適合 |
 | - | - | - |
 | 餘額按量 | 按模型價格乘以 Key 所在分組的倍率，從帳戶餘額扣減 | 日常呼叫、多模型混用、臨時測試 |
-| Codex Pro 號池月包 | 用 `codex-sub-june` 分組建立的 Key 呼叫，按實際 Token 消耗扣減月包額度 | 高頻 Codex 程式設計與 Agent 開發 |
-
-月包的價格、額度和使用方法見 [訂閱方案](/zh-TW/subscription-plans)。
 
 ## 二、在售分組
 
@@ -30,10 +27,6 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 <GroupRatioTable category="other" />
 
 其他模型及具體支援情況請在站內查看。
-
-<Callout type="info" title="月包專用分組">
-  `codex-sub-june` 是 Codex Pro 號池月包的專用分組，固定為 1x 倍率，只扣月包額度，不在上面的按量分組之列。
-</Callout>
 
 ## 三、倍率怎麼算
 
@@ -59,8 +52,8 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 
 建立 API Key 時重點看：
 
-- **分組**：決定這把 Key 能呼叫哪些模型、按什麼倍率扣費。使用 Codex 月包時必須選 `codex-sub-june`。
-- **額度設定**：限制這把 Key 最多可消耗多少額度；無限額度不代表不扣費，仍受帳戶餘額或月包額度限制。
+- **分組**：決定這把 Key 能呼叫哪些模型、按什麼倍率扣費。
+- **額度設定**：限制這把 Key 最多可消耗多少額度；無限額度不代表不扣費，仍受帳戶餘額限制。
 - **模型限制清單**：非必要不建議限制，除非你明確只允許某幾個模型。
 - **IP 白名單**：適合伺服器固定出口；個人本機開發請謹慎使用，避免 IP 變動後無法呼叫。
 
@@ -68,7 +61,6 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 
 - 模型列表裡看得到模型，但目前 Key 呼叫時回報 `model not found`、`model not available` 或權限錯誤。
 - 能呼叫模型，但扣費倍率或穩定性不是預期的那一檔。
-- 月包 Key 和一般 Key 混用，導致額度走錯帳戶或統計口徑不清晰。
 
 ## 五、分組選擇建議
 
@@ -76,7 +68,7 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 | - | - | - |
 | 日常 Codex 程式設計 | <LiveRatio name="codex-plus" /> | 適合日常程式碼開發 |
 | 低倍率 Codex | <LiveRatio name="codex-team" /> | 適合接受共享資源池的使用者 |
-| 高頻 Codex / Agent 開發 | Codex Pro 號池月包 | 依實際使用量選擇 200 或 2000 美元額度月包 |
+| 高頻 Codex / Agent 開發 | <LiveRatio name="codex-pro" /> | 穩定性優先可選 <LiveRatio name="codex-ultrafast" /> |
 | Claude 程式設計與長任務 | <LiveRatio name="claude" /> | 高頻使用可考慮 <LiveRatio name="claudemax" /> |
 | Kiro | <LiveRatio name="kiro-svip" /> | Kiro 官方正價號池 |
 | 國產模型 | <LiveRatio name="china" /> | 官方 API 直連 |
@@ -101,17 +93,15 @@ FishXCode 是一站式 AI 模型接入與帳號服務平台，涵蓋 Claude、Co
 ## 七、使用注意事項
 
 1. 不同分組對應不同資源池，請依使用情境選擇。
-2. Codex 月包必須使用 `codex-sub-june` 分組建立 API Key，其他分組不適用該方案額度。
-3. 月包不是無限額度，額度耗盡或方案到期後將無法繼續使用。
-4. Claude 長對話建議合理利用上下文快取，實際快取命中與用戶端設定、模型及請求間隔有關。
-5. 分組倍率、模型可用性及資源情況以站內即時資訊為準。
+2. Claude 長對話建議合理利用上下文快取，實際快取命中與用戶端設定、模型及請求間隔有關。
+3. 分組倍率、模型可用性及資源情況以站內即時資訊為準。
 
 ## 八、排查消費或權限異常
 
 遇到消費異常或模型不可用時，建議按這個順序排查：
 
 1. 確認目前 Key 綁定的分組是否包含目標模型。
-2. 確認帳戶餘額，或月包的有效期限與剩餘額度是否充足。
+2. 確認帳戶餘額是否充足。
 3. 查看 **控制台 → 使用日誌**，按時間、模型、Key、分組、請求 ID 篩選。
 4. 按日誌裡的「分組」欄篩選，判斷是單把 Key 的問題還是分組資源池的問題。
 5. 仍無法判斷時，聯絡支援並提供訂單號、Key 名稱、分組、模型名、請求時間和請求 ID。

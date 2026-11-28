@@ -1,8 +1,0 @@
-{
-  "title": "Abonnements",
-  "icon": "CreditCard",
-  "defaultOpen": true,
-  "pages": [
-    "[PackageOpen][Forfait mensuel Codex Pro](/subscription-plans)"
-  ]
-}

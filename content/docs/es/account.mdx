@@ -78,7 +78,7 @@ Campos del formulario:
 | Cuota ilimitada | Activada por defecto; desactívala para limitar el consumo máximo de esta clave |
 | Ajustes avanzados | Lista blanca de IP (admite CIDR), permitir consultar la cuota del usuario |
 
-- Para el **grupo**, recomendamos <LiveRatio name="claude" />: es el grupo oficial de precio completo del pool de cuentas Claude Max 20, con pleno rendimiento. Para usar un paquete mensual de Codex debes seleccionar `codex-sub-june`. Consulta todos los grupos y multiplicadores en [Reglas de facturación y grupos](/es/billing-groups).
+- Para el **grupo**, recomendamos <LiveRatio name="claude" />: es el grupo oficial de precio completo del pool de cuentas Claude Max 20, con pleno rendimiento. Consulta todos los grupos y multiplicadores en [Reglas de facturación y grupos](/es/billing-groups).
 - La **lista blanca de IP** conviene a servidores con IP de salida fija; úsala con cautela en desarrollo local, porque un cambio de IP impedirá las llamadas.
 
 Haz clic en **Guardar cambios** para terminar. En la lista de claves, pulsa el botón **Copiar** para obtener la API Key (formato `sk-xxx`):
@@ -91,7 +91,7 @@ Haz clic en **Guardar cambios** para terminar. En la lista de claves, pulsa el b
 
 ### 2. Recargar
 
-Ve a **Consola → Monedero**. La página tiene dos pestañas: **Recarga de saldo** y **Planes de suscripción**:
+Ve a **Consola → Monedero** y quédate en la pestaña **Recarga de saldo**:
 
 ![Recarga de saldo del monedero](/img/start/api-v2-08-wallet.png)
 
@@ -104,10 +104,6 @@ Ve a **Consola → Monedero**. La página tiene dos pestañas: **Recarga de sald
 | Alipay | El método de recarga habitual, sin mínimo |
 | Waffo Pancake | Recarga mínima de $100 |
 | Código de canje | Introdúcelo en la zona «¿Tienes un código de canje?» y haz clic en **Canjear saldo** |
-
-**Planes de suscripción**: compra un paquete mensual del pool de cuentas Codex ($20 / $200 / $2,000 en tres tramos) y, tras la compra, crea claves con el grupo `codex-sub-june` para usarlo. Más detalles en [Planes de suscripción](/es/subscription-plans):
-
-![Pestaña de planes de suscripción](/img/start/api-10-subscription.png)
 
 <Callout type="idea" title="Ventaja para nuevos usuarios">
   Las cuentas recién registradas reciben automáticamente un saldo de prueba de **$0.2**, utilizable para probar llamadas a la API.

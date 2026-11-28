@@ -1,6 +1,6 @@
 ---
 title: Règles de facturation et groupes
-description: Les deux modes de facturation de FishXCode, les groupes disponibles et leurs multiplicateurs, des conseils pour choisir un groupe et les points d'attention. Les multiplicateurs sont récupérés en direct depuis la plateforme au chargement de la page.
+description: Le mode de facturation de FishXCode, les groupes disponibles et leurs multiplicateurs, des conseils pour choisir un groupe et les points d'attention. Les multiplicateurs sont récupérés en direct depuis la plateforme au chargement de la page.
 navTitle: Règles de facturation et groupes
 ---
 
@@ -10,14 +10,11 @@ FishXCode est une plateforme tout-en-un d'accès aux modèles d'IA et de service
   Les multiplicateurs des groupes, la disponibilité des modèles et les ressources évoluent avec les ressources d'amont. L'information en temps réel de la [page des tarifs](https://fishxcode.com/pricing) et de la console prévaut toujours. Les multiplicateurs de cette page sont récupérés en direct depuis l'API de la plateforme au chargement.
 </Callout>
 
-## 1. Deux modes de facturation
+## 1. Mode de facturation
 
 | Mode | Comment c'est débité | Adapté à |
 | - | - | - |
 | Solde à l'usage | Prix du modèle × multiplicateur du groupe de la clé, déduit du solde du compte | Appels quotidiens, mélange de modèles, tests ponctuels |
-| Forfait mensuel du pool de comptes Codex Pro | Appels avec une clé créée dans le groupe `codex-sub-june` ; la consommation réelle de tokens est déduite du quota du forfait | Programmation Codex intensive et développement d'Agents |
-
-Pour le prix, le quota et l'usage du forfait mensuel, voir [Forfaits d'abonnement](/fr/subscription-plans).
 
 ## 2. Groupes disponibles
 
@@ -30,10 +27,6 @@ Le groupe détermine quels modèles une clé API peut appeler, quel pool de ress
 <GroupRatioTable category="other" />
 
 Pour les autres modèles et leur disponibilité exacte, consultez le site.
-
-<Callout type="info" title="Groupe réservé au forfait mensuel">
-  `codex-sub-june` est le groupe dédié au forfait mensuel du pool de comptes Codex Pro. Fixé à un multiplicateur de 1x, il ne déduit que du quota du forfait et ne fait pas partie des groupes à l'usage ci-dessus.
-</Callout>
 
 ## 3. Comment se calcule le multiplicateur
 
@@ -59,8 +52,8 @@ Lorsque vous créez une clé API dans **Console → Clés API**, le groupe de la
 
 À la création d'une clé API, prêtez attention à :
 
-- **Groupe** : détermine quels modèles cette clé peut appeler et avec quel multiplicateur la consommation est facturée. Pour utiliser un forfait mensuel Codex, sélectionnez obligatoirement `codex-sub-june`.
-- **Quota** : plafonne la consommation maximale de cette clé ; quota illimité ne signifie pas gratuit, la consommation reste limitée par le solde du compte ou le quota du forfait mensuel.
+- **Groupe** : détermine quels modèles cette clé peut appeler et avec quel multiplicateur la consommation est facturée.
+- **Quota** : plafonne la consommation maximale de cette clé ; quota illimité ne signifie pas gratuit, la consommation reste limitée par le solde du compte.
 - **Liste de restriction de modèles** : évitez de restreindre sans nécessité, sauf si vous n'autorisez explicitement que quelques modèles.
 - **Liste blanche d'IP** : pour les serveurs à IP de sortie fixe ; à manier avec prudence en développement local pour éviter des appels rompus après un changement d'IP.
 
@@ -68,7 +61,6 @@ Symptômes courants d'un mauvais choix de groupe :
 
 - Le modèle apparaît dans la liste des modèles, mais les appels avec la clé actuelle échouent avec `model not found`, `model not available` ou une erreur de permissions.
 - Le modèle fonctionne, mais le multiplicateur facturé ou la stabilité ne correspondent pas au niveau attendu.
-- Des clés du forfait mensuel et des clés normales sont mélangées, envoyant le quota sur le mauvais compte ou brouillant les statistiques d'usage.
 
 ## 5. Conseils de choix de groupe
 
@@ -76,7 +68,7 @@ Symptômes courants d'un mauvais choix de groupe :
 | - | - | - |
 | Programmation Codex quotidienne | <LiveRatio name="codex-plus" /> | Adapté au développement de code au quotidien |
 | Codex à multiplicateur bas | <LiveRatio name="codex-team" /> | Pour les utilisateurs acceptant un pool de ressources partagé |
-| Codex intensif / développement d'Agents | Forfait mensuel du pool de comptes Codex Pro | Choisissez le forfait mensuel de $200 ou $2,000 selon votre usage réel |
+| Codex intensif / développement d'Agents | <LiveRatio name="codex-pro" /> | Pour la stabilité, voir <LiveRatio name="codex-ultrafast" /> |
 | Programmation et tâches longues avec Claude | <LiveRatio name="claude" /> | En cas d'usage intensif, envisagez <LiveRatio name="claudemax" /> |
 | Kiro | <LiveRatio name="kiro-svip" /> | Pool de comptes officiel au prix plein de Kiro |
 | Modèles nationaux | <LiveRatio name="china" /> | Connexion directe par API officielle |
@@ -101,17 +93,15 @@ Après vos appels, vérifiez la consommation réelle d'après les enregistrement
 ## 7. Points d'attention à l'usage
 
 1. Les groupes correspondent à des pools de ressources différents : choisissez selon le cas d'usage.
-2. Le forfait mensuel Codex exige de créer la clé API avec le groupe `codex-sub-june` ; aucun autre groupe ne peut utiliser le quota de ce forfait.
-3. Le forfait mensuel n'est pas illimité : une fois le quota épuisé ou le forfait arrivé à expiration, il ne peut plus être utilisé.
-4. Pour les longues conversations Claude, exploitez bien le cache de contexte ; les succès réels de cache dépendent de la configuration du client, du modèle et de l'intervalle entre requêtes.
-5. Les multiplicateurs des groupes, la disponibilité des modèles et les ressources sont soumis à l'information en temps réel du site.
+2. Pour les longues conversations Claude, exploitez bien le cache de contexte ; les succès réels de cache dépendent de la configuration du client, du modèle et de l'intervalle entre requêtes.
+3. Les multiplicateurs des groupes, la disponibilité des modèles et les ressources sont soumis à l'information en temps réel du site.
 
 ## 8. Diagnostiquer des anomalies de consommation ou de permissions
 
 Face à une consommation anormale ou à un modèle indisponible, diagnostiquez dans cet ordre :
 
 1. Confirmez que le groupe lié à la clé actuelle inclut le modèle visé.
-2. Confirmez le solde du compte, ou que le forfait mensuel est toujours valide avec un quota suffisant.
+2. Confirmez que le solde du compte est suffisant.
 3. Consultez **Console → Journaux d'utilisation** en filtrant par heure, modèle, clé, groupe ou ID de requête.
 4. Filtrez par la colonne groupe dans les journaux pour déterminer si le problème vient d'une seule clé ou du pool de ressources du groupe.
 5. Si cela reste indéterminé, contactez le support en fournissant le numéro de commande, le nom de la clé, le groupe, le modèle, l'heure de la requête et l'ID de requête.

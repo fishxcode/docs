@@ -94,29 +94,29 @@ Codex Desktop を開いてログイン画面が表示されたら、**別の方�
 
 ## 4. オプション：CC Switch で複数のチャネルを管理する
 
-複数の Codex チャネルを同時に運用している場合は、CC Switch ですばやく切り替えられます。FishXCode だけを使う場合は、通常 `~/.codex/config.toml` 1 つで十分です。
+複数の Codex チャネルを併用するなら CC Switch での切り替えが便利です。FishXCode だけを使うなら、`~/.codex/config.toml` が 1 つあれば十分です。
 
-FishXCode コンソールのトークンページで対象のトークンを見つけ、`codex-sub-june` グループの行にある**インポート**をクリックします。
+FishXCode コンソールの **API キー** ページで対象のキーの行を見つけ、右側の **メニューを開く → CC Switch** をクリックします：
 
-![FishXCode コンソールで Codex グループのインポートをクリック](/img/start/codex-desktop/cc-switch-import-channel.png)
+![FishXCode コンソールで CC Switch への入力を選択](/img/start/codex-desktop/cc-switch-import-channel.png)
 
-CC Switch のインポートダイアログで `Codex` アプリを選択したら、主な項目は次の値のままにしておくことをおすすめします。
+コンソールに「CC Switch に入力」フォームが表示されます。**アプリ**で `Codex` を選び、**名前**には識別しやすいよう `FishXCode` と入力し、**メインモデル**として `gpt-6.2-sol` を選択して、**CC Switch を開く**をクリックします：
 
-| 項目 | FishXCode の推奨値 |
+| 項目 | FishXCode 推奨値 |
 | - | - |
-| API エンドポイント | `https://api.fishxcode.com/v1` |
-| API Key | FishXCode のトークン |
-| メインモデル | `gpt-6.2-sol` またはご利用のプランで使えるモデル |
+| アプリ | `Codex` |
+| 名前 | `FishXCode` |
+| メインモデル | `gpt-6.2-sol` |
 
-メインモデルを `gpt-6.2-sol` に切り替えたら**テスト**をクリックし、「テスト合格 / モデルの接続テストに成功しました」と表示されてからインポートします。
+CC Switch に「プロバイダー設定のインポート確認」ダイアログが表示されます。API エンドポイントが `https://fishxcode.com/v1`、モデルが `gpt-6.2-sol` であることを確認して **インポート** をクリックします：
 
-![CC Switch のインポートダイアログで gpt-6.2-sol をテスト](/img/start/codex-desktop/cc-switch-select-model.png)
+![CC Switch で FishXCode 設定のインポートを確認](/img/start/codex-desktop/cc-switch-select-model.png)
 
-ブラウザーから CC Switch が起動したら、API エンドポイント、モデル、メモの内容を確認し、問題がなければ**インポート**をクリックします。
+インポートが完了すると、FishXCode が Codex のプロバイダー一覧に表示され、自動的に使用中のチャネルに切り替わります：
 
-![FishXCode の Codex 設定のインポートを確認](/img/start/codex-desktop/cc-switch-import-success.png)
+![FishXCode がプロバイダー一覧にインポートされた状態](/img/start/codex-desktop/cc-switch-import-success.png)
 
-設定が完了したら、FishXCode に対応するチャネルに切り替わっていることを確認してから、Codex Desktop を開き直してください。
+設定が完了したら Codex Desktop を開き直すと、FishXCode チャネルを利用できます。
 
 ## 5. よく使う機能
 

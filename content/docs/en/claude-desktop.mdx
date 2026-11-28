@@ -99,7 +99,35 @@ This writes the configuration into your local Claude Desktop user config.
 
 After that, restart Claude Desktop. In most cases you should then see the **Cowork / Code** workspace.
 
-## Method 2: Manage It via Local Config File (Advanced)
+## Method 2: One-Click Import with CC Switch (Optional)
+
+If you maintain multiple Claude channels, you can use [CC Switch](https://github.com/farion1231/cc-switch) to switch quickly; if FishXCode is your only channel, Method 1 is usually enough.
+
+In the FishXCode console's **API Keys** page, find the row of the target key and click **Open menu → CC Switch**:
+
+![Choose Fill into CC Switch in the FishXCode console](/img/start/claude-desktop/cc-switch-import-channel.png)
+
+The console shows the "Fill into CC Switch" form. Set **App** to `Claude`, keep **Name** as `FishXCode` (easy to recognize in the channel list), set **Main model** to `claude-fable-5-2`, then click **Open CC Switch**:
+
+| Field | FishXCode recommended value |
+| - | - |
+| App | `Claude` |
+| Name | `FishXCode` |
+| Main model | `claude-fable-5-2` |
+
+CC Switch shows a "Confirm provider import" dialog. Verify the API endpoint is `https://fishxcode.com` and the model is `claude-fable-5-2`, then click **Import**:
+
+![Confirm the FishXCode import in CC Switch](/img/start/claude-desktop/cc-switch-select-model.png)
+
+After the import, FishXCode appears in the provider list:
+
+![FishXCode imported and shown in the provider list](/img/start/claude-desktop/cc-switch-import-success.png)
+
+<Callout type="warn" title="Note">
+  When "Switch to this provider right after import" is on, CC Switch writes FishXCode into Claude Code's local config (the env block in `~/.claude/settings.json`). When switching back to the official channel, re-select it in CC Switch to avoid sending requests to an unexpected endpoint.
+</Callout>
+
+## Method 3: Manage It via Local Config File (Advanced)
 
 If you want to back up, migrate, or troubleshoot the setup, inspect Claude Desktop's local config file.
 

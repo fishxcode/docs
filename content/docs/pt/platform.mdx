@@ -11,7 +11,7 @@ navTitle: Guia da plataforma
 
 O FishXCode é uma plataforma de acesso a IA voltada para desenvolvedores e equipes. Considere-o uma entrada unificada: na frente estão o site oficial, os preços e a documentação; atrás estão o console, as chaves, a recarga, as faturas e os registros de uso.
 
-A plataforma oferece serviço de retransmissão em torno dos principais modelos de IA; os canais e modelos concretos seguem a oferta real do site oficial — consulte a [página de preços](https://fishxcode.com/pricing). Do registro do usuário até a criação de chaves, escolha de plano, conexão de ferramentas e conferência de consumo, todo o fluxo é concluído dentro do mesmo sistema.
+A plataforma oferece serviço de retransmissão em torno dos principais modelos de IA; os canais e modelos concretos seguem a oferta real do site oficial — consulte a [página de preços](https://fishxcode.com/pricing). Do registro do usuário até a criação de chaves, conexão de ferramentas e conferência de consumo, todo o fluxo é concluído dentro do mesmo sistema.
 
 ---
 
@@ -22,7 +22,7 @@ O sistema inteiro é composto por 4 módulos:
 | Rota | Página | Módulo | Descrição |
 | - | - | - | - |
 | `/` | Página inicial do site | Exibição oficial | Apresenta as capacidades da plataforma, exibe anúncios e direciona para registro ou documentação |
-| `/pricing` | Página de preços | Exibição oficial | Consulta preços de modelos, planos e multiplicadores de consumo por grupo |
+| `/pricing` | Página de preços | Exibição oficial | Consulta preços de modelos e multiplicadores de consumo por grupo |
 | `/sign-in` | Página de login | Centro de autenticação | Login com nome de usuário/e-mail; suporta autorização de terceiros GitHub, LinuxDO, Google |
 | `/sign-up` | Página de registro | Centro de autenticação | Entrada de registro para novos usuários (código de verificação por e-mail + verificação humana) |
 | `/dashboard/overview` | Visão geral | Console | Página de resumo: saldo, estatísticas de consumo, contagem de requisições e guia de configuração |
@@ -30,7 +30,7 @@ O sistema inteiro é composto por 4 módulos:
 | `/keys` | Chaves API | Console | Criar, copiar, excluir API Keys; gerenciar grupos, cotas e validade |
 | `/usage-logs/common` | Logs de uso | Console | Ver data/hora, modelo, consumo e detalhes de cada chamada |
 | `/usage-logs/audit` | Logs de auditoria | Console | Ver registros de auditoria |
-| `/wallet` | Carteira | Console | Recarga de saldo, planos de assinatura, uso de códigos de resgate, histórico de pedidos |
+| `/wallet` | Carteira | Console | Recarga de saldo, uso de códigos de resgate, histórico de pedidos |
 | `/profile` | Perfil | Console | Informações da conta e recompensas de check-in |
 | `/security` | Segurança e acesso | Console | Senha, vínculos de terceiros, sessões de login, Passkey, verificação em duas etapas |
 | `/rankings` | Ranking | Página pública | Ranking de uso de modelos |
@@ -52,7 +52,6 @@ Após o login, todas as operações se concentram no console, localizáveis rapi
 
 ### Compras e recarga
 
-- **Carteira → Planos de assinatura**: consultar e comprar pacotes mensais do Codex e outros planos de assinatura
 - **Carteira → Recarga de saldo**: suporta Alipay, Waffo Pancake e códigos de resgate
 - **Consulta de saldo**: exibida em tempo real na página da carteira e na visão geral
 
@@ -95,9 +94,9 @@ O `/docs` é a central de documentação do FishXCode, e seu conteúdo correspon
 | Perguntas frequentes | `/faq` | FAQ e instruções de solução de problemas |
 | Registro de alterações | `/changelog` | Histórico de atualizações de versão |
 | Termos de uso | `/terms` | Termos da plataforma |
-| Política de reembolso | `/refund` | Explicação de reembolso de recargas e rateio de planos |
+| Política de reembolso | `/refund` | Explicação de reembolso de recargas |
 | Política de privacidade | `/privacy` | Informações sobre privacidade |
 
 <Callout type="idea" title="Resumo em uma frase">
-  O usuário primeiro conhece a plataforma pelo site oficial, depois ativa o serviço pelo registro e pelo console, e em seguida conclui o uso real nas páginas de chaves, planos, recarga e logs; a documentação e as páginas de status ficam responsáveis pela explicação e pela garantia.
+  O usuário primeiro conhece a plataforma pelo site oficial, depois ativa o serviço pelo registro e pelo console, e em seguida conclui o uso real nas páginas de chaves, recarga e logs; a documentação e as páginas de status ficam responsáveis pela explicação e pela garantia.
 </Callout>

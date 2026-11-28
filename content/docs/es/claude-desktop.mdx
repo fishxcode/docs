@@ -99,7 +99,36 @@ Esto escribe la configuración en el archivo local de Claude Desktop del usuario
 
 Después reinicia Claude Desktop. En la mayoría de los casos verás entonces el espacio de trabajo **Cowork / Code**.
 
-## Método 2: Gestionarlo mediante el archivo de configuración local (Avanzado)
+
+## Método 2: Importación de un clic con CC Switch (opcional)
+
+Si mantienes varios canales de Claude, puedes usar [CC Switch](https://github.com/farion1231/cc-switch) para cambiar rápidamente; si solo usas FishXCode, el Método 1 suele ser suficiente.
+
+En la página **Claves API** de la consola de FishXCode, busca la fila de la clave objetivo y haz clic en **Abrir menú → CC Switch**:
+
+![Elegir Rellenar en CC Switch en la consola de FishXCode](/img/start/claude-desktop/cc-switch-import-channel.png)
+
+La consola muestra el formulario «Rellenar en CC Switch». Elige `Claude` en **Aplicación**, deja **Nombre** como `FishXCode` (fácil de reconocer en la lista de canales), elige `claude-fable-5-2` en **Modelo principal** y haz clic en **Abrir CC Switch**:
+
+| Campo | Valor recomendado de FishXCode |
+| - | - |
+| Aplicación | `Claude` |
+| Nombre | `FishXCode` |
+| Modelo principal | `claude-fable-5-2` |
+
+CC Switch muestra el diálogo «Confirmar importación de proveedor». Verifica que el punto de acceso API sea `https://fishxcode.com` y el modelo `claude-fable-5-2`, luego haz clic en **Importar**:
+
+![Confirmar la importación de FishXCode en CC Switch](/img/start/claude-desktop/cc-switch-select-model.png)
+
+Tras la importación, FishXCode aparece en la lista de proveedores:
+
+![FishXCode importado y visible en la lista de proveedores](/img/start/claude-desktop/cc-switch-import-success.png)
+
+<Callout type="warn" title="Nota">
+  Cuando «Cambiar a este proveedor justo después de importar» está activado, CC Switch escribe FishXCode en la configuración local de Claude Code (el bloque env de `~/.claude/settings.json`). Al volver al canal oficial, vuelvelo a seleccionar en CC Switch para no enviar peticiones a una dirección inesperada.
+</Callout>
+
+## Método 3: Gestionarlo mediante el archivo de configuración local (Avanzado)
 
 Si quieres hacer copia de seguridad, migrar o depurar la configuración, puedes revisar el archivo local.
 

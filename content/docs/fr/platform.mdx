@@ -11,7 +11,7 @@ navTitle: Navigation plateforme
 
 FishXCode est une plateforme d'accès à l'IA destinée aux développeurs et aux équipes. Considérez-la comme un point d'entrée unique : devant se trouvent le site principal, les tarifs et la documentation ; derrière, la console, les clés API, les recharges, les factures et les journaux d'utilisation.
 
-La plateforme fournit des services de relais autour des modèles d'IA majeurs ; les canaux et modèles exacts sont soumis au site principal — consultez la [page des tarifs](https://fishxcode.com/pricing). De l'inscription à la création de clés, au choix des forfaits, à la connexion des outils et à la consultation de la consommation, tout le parcours se déroule dans un même système.
+La plateforme fournit des services de relais autour des modèles d'IA majeurs ; les canaux et modèles exacts sont soumis au site principal — consultez la [page des tarifs](https://fishxcode.com/pricing). De l'inscription à la création de clés, à la connexion des outils et à la consultation de la consommation, tout le parcours se déroule dans un même système.
 
 ---
 
@@ -22,7 +22,7 @@ Le système se compose de 4 grands modules :
 | Route | Page | Module | Description |
 | - | - | - | - |
 | `/` | Accueil du site | Site principal | Présente la plateforme, affiche les annonces, guide vers l'inscription ou la documentation |
-| `/pricing` | Page des tarifs | Site principal | Prix des modèles, forfaits et multiplicateurs de consommation par groupe |
+| `/pricing` | Page des tarifs | Site principal | Prix des modèles et multiplicateurs de consommation par groupe |
 | `/sign-in` | Connexion | Centre d'authentification | Connexion utilisateur/e-mail avec autorisation GitHub, LinuxDO et Google |
 | `/sign-up` | Inscription | Centre d'authentification | Enregistrement des nouveaux utilisateurs (code de vérification e-mail + vérification anti-robot) |
 | `/dashboard/overview` | Aperçu | Console | Vue d'ensemble : solde, statistiques de consommation, requêtes et guide de configuration |
@@ -30,7 +30,7 @@ Le système se compose de 4 grands modules :
 | `/keys` | Clés API | Console | Créer, copier, supprimer des clés API ; gérer groupes, quotas et expiration |
 | `/usage-logs/common` | Journaux d'utilisation | Console | Heure, modèle, consommation et détails de chaque appel |
 | `/usage-logs/audit` | Journaux d'audit | Console | Enregistrements d'audit |
-| `/wallet` | Portefeuille | Console | Recharge de solde, forfaits d'abonnement, codes d'échange, historique des commandes |
+| `/wallet` | Portefeuille | Console | Recharge de solde, codes d'échange, historique des commandes |
 | `/profile` | Profil | Console | Informations du compte et récompenses de check-in |
 | `/security` | Sécurité et accès | Console | Mot de passe, liaisons tierces, sessions de connexion, Passkey, validation en deux étapes |
 | `/rankings` | Classements | Pages publiques | Classement d'utilisation des modèles |
@@ -52,7 +52,6 @@ Après connexion, tout se concentre dans la console. Repérez les fonctionnalit�
 
 ### Achat et recharge
 
-- **Portefeuille → Forfaits d'abonnement** : consultez et achetez les forfaits mensuels Codex et autres abonnements
 - **Portefeuille → Recharge de solde** : Alipay, Waffo Pancake et codes d'échange pris en charge
 - **Consultation du solde** : affiché en temps réel sur le Portefeuille et l'Aperçu
 
@@ -95,9 +94,9 @@ Après connexion, tout se concentre dans la console. Repérez les fonctionnalit�
 | Foire aux questions | `/faq` | FAQ et dépannage |
 | Journal des versions | `/changelog` | Historique des versions |
 | Conditions d'utilisation | `/terms` | Contrat de la plateforme |
-| Politique de remboursement | `/refund` | Remboursements de recharge et proratisation des forfaits |
+| Politique de remboursement | `/refund` | Remboursements de recharge |
 | Politique de confidentialité | `/privacy` | Déclaration de confidentialité |
 
 <Callout type="idea" title="En une phrase">
-  L'utilisateur découvre d'abord la plateforme sur le site principal, s'inscrit et se configure dans la console, puis travaille sur les pages de clés, forfaits, recharges et journaux — la documentation et les pages d'état expliquent et garantissent le tout.
+  L'utilisateur découvre d'abord la plateforme sur le site principal, s'inscrit et se configure dans la console, puis travaille sur les pages de clés, recharges et journaux — la documentation et les pages d'état expliquent et garantissent le tout.
 </Callout>

@@ -78,7 +78,7 @@ Form fields:
 | Unlimited quota | Enabled by default; disable it to cap the maximum usage of this key |
 | Advanced settings | IP allowlist (CIDR supported), allow querying user quota |
 
-- For **Group**, we recommend <LiveRatio name="claude" />: this group is the official full-price Claude Max 20 account pool with full performance. When using a Codex monthly package you must select `codex-sub-june`. For all groups and multipliers see [Billing Rules & Groups](/en/billing-groups).
+- For **Group**, we recommend <LiveRatio name="claude" />: this group is the official full-price Claude Max 20 account pool with full performance. For all groups and multipliers see [Billing Rules & Groups](/en/billing-groups).
 - The **IP allowlist** suits servers with a fixed outbound IP; be careful using it for local development, since an IP change will break your calls.
 
 Click **Save changes** to finish. In the key list, click **Copy** to get the API Key (format `sk-xxx`):
@@ -91,7 +91,7 @@ Click **Save changes** to finish. In the key list, click **Copy** to get the API
 
 ### 2. Top up
 
-Go to **Console → Wallet**. The page has two tabs: **Balance top-up** and **Subscription plans**:
+Go to **Console → Wallet** and stay on the **Balance top-up** tab:
 
 ![Wallet balance top-up](/img/start/api-v2-08-wallet.png)
 
@@ -104,10 +104,6 @@ Go to **Console → Wallet**. The page has two tabs: **Balance top-up** and **Su
 | Alipay | The mainstream top-up method, no minimum |
 | Waffo Pancake | Minimum top-up $100 |
 | Redeem code | Enter it in the “Got a redeem code?” area and click **Redeem credits** |
-
-**Subscription plans**: buy a Codex account-pool monthly package ($20 / $200 / $2,000 tiers), then create keys with the `codex-sub-june` group to use it. See [Subscription Plans](/en/subscription-plans):
-
-![Subscription plans tab](/img/start/api-10-subscription.png)
 
 <Callout type="idea" title="New-user bonus">
   Newly registered accounts automatically get a **$0.2** trial balance you can use to test API calls right away.

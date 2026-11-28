@@ -78,7 +78,7 @@ Champs du formulaire :
 | Quota illimité | Activé par défaut ; désactivez-le pour plafonner la consommation maximale de cette clé |
 | Paramètres avancés | Liste blanche d'IP (CIDR pris en charge), autoriser la consultation du quota utilisateur |
 
-- Pour le **groupe**, nous recommandons <LiveRatio name="claude" /> : il s'agit du pool de comptes officiel au prix plein Claude Max 20, avec des performances complètes. Pour utiliser un forfait mensuel Codex, sélectionnez obligatoirement `codex-sub-june`. Tous les groupes et multiplicateurs sont détaillés dans [Règles de facturation et groupes](/fr/billing-groups).
+- Pour le **groupe**, nous recommandons <LiveRatio name="claude" /> : il s'agit du pool de comptes officiel au prix plein Claude Max 20, avec des performances complètes. Tous les groupes et multiplicateurs sont détaillés dans [Règles de facturation et groupes](/fr/billing-groups).
 - La **liste blanche d'IP** convient aux serveurs avec IP de sortie fixe ; méfiez-vous en développement local, car un changement d'IP bloquera vos appels.
 
 Cliquez sur **Enregistrer les modifications** pour terminer. Dans la liste des clés, cliquez sur **Copier** pour récupérer la clé API (format `sk-xxx`) :
@@ -91,7 +91,7 @@ Cliquez sur **Enregistrer les modifications** pour terminer. Dans la liste des c
 
 ### 2. Recharger
 
-Allez dans **Console → Portefeuille**. La page comporte deux onglets : **Recharge de solde** et **Forfaits d'abonnement** :
+Allez dans **Console → Portefeuille** et restez sur l'onglet **Recharge de solde** :
 
 ![Recharge de solde du portefeuille](/img/start/api-v2-08-wallet.png)
 
@@ -104,10 +104,6 @@ Allez dans **Console → Portefeuille**. La page comporte deux onglets : **Recha
 | Alipay | Moyen de recharge courant, sans minimum |
 | Waffo Pancake | Recharge minimale de $100 |
 | Code d'échange | Saisissez-le dans la zone « Vous avez un code d'échange ? » puis cliquez sur **Échanger contre du crédit** |
-
-**Forfaits d'abonnement** : achetez un forfait mensuel du pool de comptes Codex ($20 / $200 / $2,000 en trois paliers), puis créez vos clés avec le groupe `codex-sub-june` pour l'utiliser. Détails dans [Forfaits d'abonnement](/fr/subscription-plans) :
-
-![Onglet des forfaits d'abonnement](/img/start/api-10-subscription.png)
 
 <Callout type="idea" title="Avantage nouveaux utilisateurs">
   Les comptes nouvellement inscrits reçoivent automatiquement un solde d'essai de **$0.2**, utilisable directement pour tester les appels API.
