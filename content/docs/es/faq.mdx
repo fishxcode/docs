@@ -151,11 +151,11 @@ Ve a [Consola → Registros de uso](https://fishxcode.com/usage-logs/common) y c
 
 Para la descripción completa de campos, la clasificación de códigos de estado y la tabla de errores habituales, consulta [Guía de registros de errores](/es/error-logs).
 
-### ¿Cómo interpretar el estado de salud de los grupos?
+### ¿Cómo saber si un problema de grupo afecta a muchas solicitudes?
 
-El estado de salud de los grupos sirve para saber si un problema es una anomalía puntual de alguna solicitud o un fallo concentrado de un plan, modelo o grupo del upstream. Mira primero `success_rate`, `error_count` y `error_reasons`, y usa después el `request_id` de los registros individuales para localizar solicitudes concretas.
+En los [Registros de uso](https://fishxcode.com/usage-logs/common), filtra por grupo y observa si los errores se concentran en el mismo grupo: los fallos aislados suelen ser anomalías puntuales; si el mismo error se repite concentrado en un grupo, su pool de recursos esta afectado — reintenta mas tarde o cambia de grupo, y usa el `request_id` para localizar solicitudes concretas.
 
-Para la página completa de estados, la descripción de campos y el flujo de diagnóstico, consulta [Estado de salud de los grupos](/es/group-health).
+Para la descripción de campos, las categorías de códigos de estado y la tabla de errores comunes, consulta [guia de registros de error](/es/error-logs).
 
 ### Tiempo de espera agotado (Timeout)
 

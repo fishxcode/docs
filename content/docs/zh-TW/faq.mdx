@@ -151,11 +151,11 @@ export ANTHROPIC_MODEL=claude-fable-5-2
 
 完整欄位說明、狀態碼分類和常見錯誤表請查看 [錯誤日誌說明](/zh-TW/error-logs)。
 
-### 分組健康狀態怎麼看？
+### 分組問題怎麼判斷影響範圍？
 
-分組健康狀態用於判斷問題是個別請求異常，還是某個方案、模型或上游分組集中異常。優先看 `success_rate`、`error_count` 和 `error_reasons`，再結合單筆日誌中的 `request_id` 定位具體請求。
+在 [使用日誌](https://fishxcode.com/usage-logs/common) 按「分組」篩選，觀察錯誤是否集中在同一分組：只有個別請求失敗通常是偶發問題；同一分組集中出現相同錯誤，則表示該分組資源池受影響，建議稍後重試或切換分組，並透過 `request_id` 定位具體請求。
 
-完整狀態頁、欄位說明和排查流程請查看 [分組健康狀態](/zh-TW/group-health)。
+欄位說明、狀態碼分類和常見錯誤表請查看 [錯誤日誌說明](/zh-TW/error-logs)。
 
 ### 請求逾時（Timeout）
 

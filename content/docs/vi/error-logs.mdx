@@ -3,7 +3,7 @@ title: Giải thích nhật ký lỗi
 description: Các trường nhật ký lỗi trong bảng điều khiển FishXCode, ý nghĩa mã trạng thái, lỗi thường gặp và quy trình khắc phục sự cố.
 ---
 
-Nhật ký lỗi dùng để xác định nguyên nhân cụ thể khiến một yêu cầu thất bại. Khi khắc phục sự cố, nên xem [trạng thái sức khỏe nhóm](/vi/group-health) trước để đánh giá phạm vi ảnh hưởng, sau đó dùng `request_id` trong nhật ký lỗi để xác định từng yêu cầu.
+Nhật ký lỗi dùng để xác định nguyên nhân cụ thể khiến một yêu cầu thất bại. Khi khắc phục sự cố, nên lọc nhật ký sử dụng theo nhóm trước để xem lỗi có tập trung vào cùng một nhóm không, sau đó dùng `request_id` trong nhật ký lỗi để xác định từng yêu cầu.
 
 Lối vào: [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/usage-logs/common). Sau khi chuyển loại nhật ký sang **Nhật ký lỗi**, bạn có thể lọc theo thời gian, mô hình, token, nhóm, ID yêu cầu, thông báo lỗi và mã trạng thái.
 
@@ -32,7 +32,7 @@ Lối vào: [Bảng điều khiển → Nhật ký sử dụng](https://fishxcod
 2. Nếu không có `request_id`, hãy thu hẹp phạm vi theo khoảng thời gian, mô hình và token.
 3. Dùng mã trạng thái để gom loại lỗi, ví dụ `401`, `413`, `429`, `502`, `503`.
 4. Dùng thông báo lỗi để tìm từ khóa, ví dụ `Invalid API key`, `daily limit exceeded`, `Upstream request failed`.
-5. Nếu cùng một lỗi xuất hiện tập trung trong một nhóm, hãy vào [trạng thái sức khỏe nhóm](/vi/group-health) để đánh giá phạm vi ảnh hưởng.
+5. Nếu cùng một lỗi xuất hiện tập trung trong một nhóm, pool tài nguyên nhóm đó nhiều khả năng bị ảnh hưởng; hãy thử lại sau hoặc chuyển nhóm.
 
 ## Xác định nguyên nhân
 
@@ -43,7 +43,7 @@ Nhật ký lỗi giúp đánh giá sơ bộ vấn đề thuộc “vấn đề s
 | Vấn đề sử dụng | Chỉ ảnh hưởng đến một yêu cầu, một token hoặc một cấu hình client cụ thể | Sai định dạng phần thân yêu cầu, tham số không khớp, sao chép sai token, ngữ cảnh quá lớn, sai đường dẫn API | Kiểm tra cấu hình cục bộ, phần thân yêu cầu, tên mô hình, token và phiên bản công cụ |
 | Vấn đề phía nhà cung cấp upstream | Nhiều yêu cầu cùng gặp lỗi từ nhà cung cấp upstream, hết thời gian chờ gateway hoặc vượt hạn mức của nhà cung cấp upstream | `Upstream request failed`, `all upstreams failed`, `bad response status code 502/524`, tài khoản của nhà cung cấp upstream bị giới hạn tần suất | Thử lại sau, giảm số yêu cầu đồng thời, chuyển mô hình hoặc nhóm khi cần |
 | Vấn đề nền tảng | Node, pool tài nguyên hoặc kênh của nền tảng không khả dụng | `system disk overloaded`, `No available accounts`, `No available channel`, `Service Unavailable` phía nền tảng | Thử lại sau; nếu lỗi kéo dài, hãy liên hệ hỗ trợ và cung cấp nhóm, khoảng thời gian và `request_id` |
-| Cần kết hợp với nhóm để đánh giá | Một bản ghi nhật ký không đủ để xác định chính xác bên chịu trách nhiệm | Các lỗi như `429`, `502`, `503` có thể do nhiều nguyên nhân gây ra | Xem [trạng thái sức khỏe nhóm](/vi/group-health) để xác nhận lỗi có xảy ra tập trung hay không |
+| Cần kết hợp với nhóm để đánh giá | Một bản ghi nhật ký không đủ để xác định chính xác bên chịu trách nhiệm | Các lỗi như `429`, `502`, `503` có thể do nhiều nguyên nhân gây ra | Lọc nhật ký theo nhóm để xác nhận lỗi có xảy ra tập trung hay không |
 
 <Callout type="warn" title="Lưu ý">
   Đừng chỉ dựa vào một lỗi `502` hoặc `503` để xác định bên chịu trách nhiệm. Một yêu cầu thất bại có thể chỉ là dao động ngẫu nhiên từ nhà cung cấp upstream; chỉ khi cùng một nhóm thất bại hàng loạt trong cùng khoảng thời gian thì mới nên xử lý như vấn đề tài nguyên của nhà cung cấp upstream hoặc của nền tảng.
@@ -111,11 +111,11 @@ Tập trung vào `429`, `Max 10/min`, `daily limit exceeded`, `cooling down`. Đ
 
 ### Tài nguyên của nhà cung cấp upstream và nền tảng
 
-Tập trung vào `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Trước tiên hãy thử lại sau; nếu lỗi xuất hiện tập trung trong cùng một nhóm, hãy xem [trạng thái sức khỏe nhóm](/vi/group-health).
+Tập trung vào `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Trước tiên hãy thử lại sau; nếu lỗi tập trung trong cùng một nhóm, pool tài nguyên nhóm đó bị ảnh hưởng — hãy chuyển nhóm.
 
 ## Thông tin cần cung cấp khi liên hệ hỗ trợ
 
-Với các vấn đề đơn giản, bạn nên tự kiểm tra trước bằng [Giải thích nhật ký lỗi](/vi/error-logs) và [Giải thích trạng thái sức khỏe nhóm](/vi/group-health). Nếu vẫn chưa giải quyết được, bạn có thể nhấn biểu tượng sao chép trong chi tiết nhật ký lỗi tại `usage-logs/common` để sao chép toàn bộ nội dung cần kiểm tra chỉ với một lần nhấn. Khi liên hệ hỗ trợ, nên cung cấp đầy đủ các thông tin sau trong một lần cho bộ phận kỹ thuật, giúp giảm việc xác nhận qua lại:
+Với các vấn đề đơn giản, bạn nên tự kiểm tra trước bằng [Giải thích nhật ký lỗi](/vi/error-logs). Nếu vẫn chưa giải quyết được, bạn có thể nhấn biểu tượng sao chép trong chi tiết nhật ký lỗi tại `usage-logs/common` để sao chép toàn bộ nội dung cần kiểm tra chỉ với một lần nhấn. Khi liên hệ hỗ trợ, nên cung cấp đầy đủ các thông tin sau trong một lần cho bộ phận kỹ thuật, giúp giảm việc xác nhận qua lại:
 
 - ID người dùng
 - Khoảng thời gian: thời điểm vấn đề bắt đầu và lần xuất hiện gần nhất

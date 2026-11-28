@@ -151,11 +151,11 @@ Allez sur [Console → Journaux d'utilisation](https://fishxcode.com/usage-logs/
 
 Pour la description complète des champs, la classification des codes de statut et le tableau des erreurs courantes, voir [Guide des journaux d'erreurs](/fr/error-logs).
 
-### Comment lire l'état de santé des groupes ?
+### Comment évaluer l'ampleur d'un problème de groupe ?
 
-L'état de santé des groupes sert à déterminer si un problème est une anomalie isolée de requête ou un incident concentré sur un forfait, un modèle ou un groupe d'amont. Regardez d'abord `success_rate`, `error_count` et `error_reasons`, puis utilisez le `request_id` des journaux individuels pour localiser les requêtes précises.
+Dans les [Journaux d'utilisation](https://fishxcode.com/usage-logs/common), filtrez par groupe et observez si les erreurs se concentrent sur le même groupe : les échecs isolés sont généralement ponctuels ; la même erreur qui se répète sur un même groupe signifie que son pool de ressources est affecté — réessayez plus tard ou changez de groupe, et utilisez le `request_id` pour retrouver les requêtes précises.
 
-Pour la page d'état complète, la description des champs et le processus de diagnostic, voir [État de santé des groupes](/fr/group-health).
+Pour la description des champs, les catégories de codes de statut et le tableau des erreurs courantes, voir [guide des journaux d'erreur](/fr/error-logs).
 
 ### Délai d'attente dépassé (Timeout)
 

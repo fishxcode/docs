@@ -151,11 +151,11 @@ Go to [Console → Usage Logs](https://fishxcode.com/usage-logs/common) and swit
 
 For full field descriptions, status code categories, and the common error table, see [Error Log Guide](/en/error-logs).
 
-### How do I read group health status?
+### How do I tell how widespread a group issue is?
 
-Group health status tells you whether an issue is an isolated request anomaly or a concentrated failure of a plan, model, or upstream group. Look at `success_rate`, `error_count`, and `error_reasons` first, then use the `request_id` in individual logs to locate specific requests.
+In the [Usage Logs](https://fishxcode.com/usage-logs/common), filter by group and watch whether errors concentrate in the same group: isolated failures are usually one-off anomalies; the same error recurring across one group means that group's resource pool is affected — retry later or switch groups, and use `request_id` to locate specific requests.
 
-For the full status page, field descriptions, and the troubleshooting workflow, see [Group Health Status](/en/group-health).
+For field descriptions, status code categories, and the common error table, see [Error Log Guide](/en/error-logs).
 
 ### Request timeout (Timeout)
 

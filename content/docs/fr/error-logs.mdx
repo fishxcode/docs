@@ -4,7 +4,7 @@ description: Champs des journaux d'erreur FishXCode, codes de statut, erreurs fr
 navTitle: Journaux d'erreur
 ---
 
-Les journaux d'erreur servent a identifier la cause precise d'un echec de requete. Pour depanner, consultez d'abord [l'etat de sante des groupes](/fr/group-health) afin d'evaluer l'impact, puis utilisez le `request_id` dans les journaux d'erreur pour retrouver la requete exacte.
+Les journaux d'erreur servent a identifier la cause precise d'un echec de requete. Pour depanner, filtrez d'abord les journaux d'utilisation par groupe pour voir si les erreurs se concentrent sur le même groupe, puis utilisez le `request_id` dans les journaux d'erreur pour retrouver la requete exacte.
 
 Entree : [Console -> Journaux d'utilisation](https://fishxcode.com/usage-logs/common). Passez le type de journal sur **Journaux d'erreur**, puis filtrez par periode, modele, token, groupe, ID de requete, message d'erreur ou code de statut.
 
@@ -33,7 +33,7 @@ Entree : [Console -> Journaux d'utilisation](https://fishxcode.com/usage-logs/co
 2. Sans `request_id`, reduisez le perimetre avec la periode, le modele et le token.
 3. Regroupez par code de statut, par exemple `401`, `413`, `429`, `502`, `503`.
 4. Recherchez des mots-cles dans le message d'erreur, par exemple `Invalid API key`, `daily limit exceeded`, `Upstream request failed`.
-5. Si la meme erreur se repete sur un groupe, consultez [l'etat de sante des groupes](/fr/group-health) pour confirmer l'impact.
+5. Si la meme erreur se repete sur un groupe, le pool de ressources de ce groupe est probablement affecte ; reessayez plus tard ou changez de groupe.
 
 ## Attribution du probleme
 
@@ -44,7 +44,7 @@ Les journaux d'erreur aident a distinguer un probleme d'utilisation, un probleme
 | Probleme d'utilisation | Un seul appel, un seul token ou une configuration cliente specifique | Corps de requete invalide, parametre incorrect, token mal copie, contexte trop grand, mauvais endpoint | Verifier la configuration locale, le corps de requete, le modele, le token et la version de l'outil |
 | Probleme amont | Plusieurs requetes montrent des echecs amont, des delais ou des limites amont | `Upstream request failed`, `all upstreams failed`, `bad response status code 502/524`, limitation du compte amont | Reessayer plus tard, reduire la concurrence, changer de modele ou de groupe si necessaire |
 | Probleme de plateforme | Noeud, pool de ressources ou canal indisponible cote plateforme | `system disk overloaded`, `No available accounts`, `No available channel`, `Service Unavailable` cote plateforme | Reessayer plus tard ; si cela persiste, contacter le support avec le groupe, la periode et le `request_id` |
-| A confirmer par groupe | Une seule ligne ne suffit pas pour attribuer la cause | `429`, `502`, `503`, qui peuvent avoir plusieurs causes | Consulter [l'etat de sante des groupes](/fr/group-health) pour voir si l'erreur est concentree |
+| A confirmer par groupe | Une seule ligne ne suffit pas pour attribuer la cause | `429`, `502`, `503`, qui peuvent avoir plusieurs causes | Filtrer les journaux par groupe pour voir si l'erreur est concentree |
 
 <Callout type="warn" title="Attention">
   Ne concluez pas a partir d'un seul `502` ou `503`. Une requete isolee peut echouer a cause d'une variation temporaire amont ; une forte concentration d'echecs dans le meme groupe et la meme periode indique mieux un probleme amont ou de ressources.
@@ -112,11 +112,11 @@ Surveillez `429`, `Max 10/min`, `daily limit exceeded`, `cooling down`. Ne relan
 
 ### Amont et ressources plateforme
 
-Surveillez `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Reessayez d'abord plus tard ; si cela se concentre sur le meme groupe, consultez [l'etat de sante des groupes](/fr/group-health).
+Surveillez `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Reessayez d'abord plus tard ; si cela se concentre sur le meme groupe, le pool de ressources de ce groupe est affecte — changez de groupe.
 
 ## Informations utiles au support
 
-Pour les problemes simples, consultez d'abord le [guide des journaux d'erreur](/fr/error-logs) et [l'etat de sante des groupes](/fr/group-health). Si le probleme persiste, ouvrez les details du journal d'erreur dans `usage-logs/common` et cliquez sur l'icone de copie pour copier les details de diagnostic en un clic. Quand vous contactez le support, fournissez ces informations en une fois a l'equipe technique pour limiter les allers-retours :
+Pour les problemes simples, consultez d'abord le [guide des journaux d'erreur](/fr/error-logs). Si le probleme persiste, ouvrez les details du journal d'erreur dans `usage-logs/common` et cliquez sur l'icone de copie pour copier les details de diagnostic en un clic. Quand vous contactez le support, fournissez ces informations en une fois a l'equipe technique pour limiter les allers-retours :
 
 - ID utilisateur
 - Periode : debut du probleme et derniere occurrence

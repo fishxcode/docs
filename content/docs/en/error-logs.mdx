@@ -3,7 +3,7 @@ title: Error Logs
 description: FishXCode console error log fields, status codes, common errors, and troubleshooting flow.
 ---
 
-Error logs help identify why a specific request failed. When troubleshooting, check [Group Health](/en/group-health) first to understand the impact scope, then use the `request_id` in the error log to locate the exact request.
+Error logs help identify why a specific request failed. When troubleshooting, filter the usage logs by group first to see whether errors concentrate in the same group, then use the `request_id` in the error log to locate the exact request.
 
 Entry: [Console -> Usage Logs](https://fishxcode.com/usage-logs/common). Switch the log type to **Error logs**, then filter by time range, model, token, group, request ID, error message, or status code.
 
@@ -32,7 +32,7 @@ Entry: [Console -> Usage Logs](https://fishxcode.com/usage-logs/common). Switch 
 2. If there is no `request_id`, narrow the scope by time range, model, and token.
 3. Group errors by status code, such as `401`, `413`, `429`, `502`, or `503`.
 4. Search error message keywords, such as `Invalid API key`, `daily limit exceeded`, or `Upstream request failed`.
-5. If the same error is concentrated in one group, open [Group Health](/en/group-health) to confirm the impact scope.
+5. If the same error is concentrated in one group, that group's resource pool is likely affected; retry later or switch groups.
 
 ## Attribution
 
@@ -43,7 +43,7 @@ Error logs help determine whether an issue is caused by usage, upstream services
 | Usage issue | Affects only one request, one token, or a specific client configuration | Invalid request body, parameter mismatch, copied token error, oversized context, wrong endpoint path | Check local configuration, request body, model name, token, and tool version |
 | Upstream issue | Multiple requests show upstream failures, gateway timeouts, or upstream quota limits | `Upstream request failed`, `all upstreams failed`, `bad response status code 502/524`, upstream account rate limits | Retry later, reduce concurrency, or switch model/group if needed |
 | Platform issue | Platform nodes, resource pools, or channels are unavailable | `system disk overloaded`, `No available accounts`, `No available channel`, platform-side `Service Unavailable` | Retry later; if it persists, contact support with the group, time range, and `request_id` |
-| Needs group context | One log entry is not enough to identify responsibility | Errors such as `429`, `502`, or `503` can have multiple causes | Check [Group Health](/en/group-health) to confirm whether failures are concentrated |
+| Needs group context | One log entry is not enough to identify responsibility | Errors such as `429`, `502`, or `503` can have multiple causes | Filter the logs by group to confirm whether failures are concentrated |
 
 <Callout type="warn" title="Note">
   Do not assign responsibility from a single `502` or `503`. One failed request may be a transient upstream fluctuation. A large number of failures in the same group and time window is a better signal for upstream or platform resource issues.
@@ -111,11 +111,11 @@ Focus on `429`, `Max 10/min`, `daily limit exceeded`, and `cooling down`. Do not
 
 ### Upstream and platform resources
 
-Focus on `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, and `system disk overloaded`. Retry later first; if errors are concentrated in the same group, check [Group Health](/en/group-health).
+Focus on `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, and `system disk overloaded`. Retry later first; if errors are concentrated in the same group, that group's resource pool is affected — switch groups.
 
 ## Information for Support
 
-For simple issues, check [Error Logs](/en/error-logs) and [Group Health](/en/group-health) first. If the issue remains unresolved, open the error log details in `usage-logs/common` and click the copy icon to copy the troubleshooting details in one click. When contacting support, provide the following in one message so the technical team can investigate with less back-and-forth:
+For simple issues, check [Error Logs](/en/error-logs) first. If the issue remains unresolved, open the error log details in `usage-logs/common` and click the copy icon to copy the troubleshooting details in one click. When contacting support, provide the following in one message so the technical team can investigate with less back-and-forth:
 
 - User ID
 - Time range: when the issue started and when it last appeared

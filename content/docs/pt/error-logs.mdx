@@ -4,7 +4,7 @@ description: Campos dos logs de erro no console FishXCode, significado dos codig
 navTitle: Logs de erro
 ---
 
-Os logs de erro ajudam a localizar a causa exata de uma requisicao que falhou. Ao investigar, veja primeiro o [status de saude dos grupos](/pt/group-health) para entender o alcance do problema, depois use o `request_id` no log de erro para localizar a requisicao especifica.
+Os logs de erro ajudam a localizar a causa exata de uma requisicao que falhou. Ao investigar, filtre primeiro os logs de uso por grupo para ver se os erros se concentram no mesmo grupo, depois use o `request_id` no log de erro para localizar a requisicao especifica.
 
 Entrada: [Console -> Logs de uso](https://fishxcode.com/usage-logs/common). Depois de selecionar **Logs de erro**, voce pode filtrar por periodo, modelo, Token, grupo, request ID, mensagem de erro e codigo de status.
 
@@ -33,7 +33,7 @@ Entrada: [Console -> Logs de uso](https://fishxcode.com/usage-logs/common). Depo
 2. Se nao houver `request_id`, reduza o escopo por periodo, modelo e Token.
 3. Agrupe por codigo de status, como `401`, `413`, `429`, `502`, `503`.
 4. Pesquise palavras-chave na mensagem de erro, como `Invalid API key`, `daily limit exceeded`, `Upstream request failed`.
-5. Se o mesmo erro estiver concentrado no mesmo grupo, veja o [status de saude dos grupos](/pt/group-health) para confirmar o alcance.
+5. Se o mesmo erro estiver concentrado no mesmo grupo, o pool de recursos desse grupo provavelmente esta afetado; tente mais tarde ou troque de grupo.
 
 ## Atribuicao do problema
 
@@ -44,7 +44,7 @@ Os logs de erro ajudam a separar problemas de uso, problemas upstream e problema
 | Problema de uso | Afeta apenas uma requisicao, um Token ou uma configuracao de cliente | Corpo da requisicao invalido, parametro incompativel, Token copiado errado, contexto grande demais, endpoint errado | Verificar configuracao local, corpo da requisicao, nome do modelo, Token e versao da ferramenta |
 | Problema upstream | Varias requisicoes com falha upstream, timeout de gateway ou limite upstream | `Upstream request failed`, `all upstreams failed`, `bad response status code 502/524`, limite de conta upstream | Tentar mais tarde, reduzir concorrencia e trocar modelo ou grupo se necessario |
 | Problema da plataforma | No, pool de recursos ou canal da plataforma indisponivel | `system disk overloaded`, `No available accounts`, `No available channel`, `Service Unavailable` do lado da plataforma | Tentar mais tarde; se persistir, contatar suporte com grupo, periodo e `request_id` |
-| Precisa combinar com grupo | Uma linha de log nao basta para atribuir responsabilidade | `429`, `502`, `503` podem ter varias causas | Ver o [status de saude dos grupos](/pt/group-health) e confirmar se esta concentrado |
+| Precisa combinar com grupo | Uma linha de log nao basta para atribuir responsabilidade | `429`, `502`, `503` podem ter varias causas | Filtrar os logs por grupo e confirmar se esta concentrado |
 
 <Callout type="warn" title="Atencao">
   Nao atribua responsabilidade apenas por uma ocorrencia de `502` ou `503`. Uma falha isolada pode ser oscilacao upstream; muitas falhas no mesmo grupo e periodo indicam melhor um problema upstream ou de recurso da plataforma.
@@ -112,11 +112,11 @@ Olhe principalmente `429`, `Max 10/min`, `daily limit exceeded`, `cooling down`.
 
 ### Upstream e recursos da plataforma
 
-Olhe principalmente `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Tente mais tarde; se estiver concentrado no mesmo grupo, veja o [status de saude dos grupos](/pt/group-health).
+Olhe principalmente `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable`, `system disk overloaded`. Tente mais tarde; se estiver concentrado no mesmo grupo, o pool de recursos do grupo esta afetado — troque de grupo.
 
 ## Informacoes para suporte
 
-Para problemas simples, veja primeiro [Explicacao dos logs de erro](/pt/error-logs) e [Status de saude dos grupos](/pt/group-health). Se o problema continuar, abra os detalhes do log de erro em `usage-logs/common` e clique no icone de copiar para copiar os detalhes de diagnostico em um clique. Ao contatar suporte, envie as informacoes abaixo de uma vez para a equipe tecnica investigar com menos ida e volta:
+Para problemas simples, veja primeiro [Explicacao dos logs de erro](/pt/error-logs). Se o problema continuar, abra os detalhes do log de erro em `usage-logs/common` e clique no icone de copiar para copiar os detalhes de diagnostico em um clique. Ao contatar suporte, envie as informacoes abaixo de uma vez para a equipe tecnica investigar com menos ida e volta:
 
 - ID do usuario
 - Periodo: quando o problema comecou e ultimo horario em que apareceu

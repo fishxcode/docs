@@ -4,7 +4,7 @@ description: Campos, codigos de estado, errores comunes y flujo de diagnostico d
 navTitle: Registros de error
 ---
 
-Los registros de error ayudan a encontrar la causa concreta de una solicitud fallida. Para diagnosticar un problema, revisa primero el [estado de salud de los grupos](/es/group-health) para entender el alcance y luego usa el `request_id` del registro para localizar la solicitud exacta.
+Los registros de error ayudan a encontrar la causa concreta de una solicitud fallida. Para diagnosticar un problema, filtra primero los registros de uso por grupo para ver si los errores se concentran en el mismo grupo y luego usa el `request_id` del registro para localizar la solicitud exacta.
 
 Entrada: [Consola -> Registros de uso](https://fishxcode.com/usage-logs/common). Cambia el tipo de registro a **Registros de error** y filtra por periodo, modelo, Token, grupo, request ID, mensaje de error y codigo de estado.
 
@@ -33,7 +33,7 @@ Entrada: [Consola -> Registros de uso](https://fishxcode.com/usage-logs/common).
 2. Si no tienes `request_id`, acota por periodo, modelo y Token.
 3. Agrupa por codigo de estado, por ejemplo `401`, `413`, `429`, `502`, `503`.
 4. Busca palabras clave del mensaje, como `Invalid API key`, `daily limit exceeded` o `Upstream request failed`.
-5. Si el mismo error se concentra en un grupo, revisa el [estado de salud de los grupos](/es/group-health) para confirmar el alcance.
+5. Si el mismo error se concentra en un grupo, el pool de recursos de ese grupo probablemente esta afectado; reintenta mas tarde o cambia de grupo.
 
 ## Atribucion del problema
 
@@ -44,7 +44,7 @@ Los registros de error ayudan a distinguir si el problema viene del uso, del ups
 | Uso | Afecta solo a una solicitud, un Token o una configuracion de cliente | Cuerpo de solicitud incorrecto, parametros incompatibles, Token mal copiado, contexto demasiado grande, endpoint incorrecto | Revisar configuracion local, request body, nombre de modelo, Token y version de herramienta |
 | Upstream | Varias solicitudes concentran fallos upstream, timeouts de gateway o limites upstream | `Upstream request failed`, `all upstreams failed`, `bad response status code 502/524`, limite de cuenta upstream | Reintentar mas tarde, bajar concurrencia o cambiar de modelo/grupo si es necesario |
 | Plataforma | Nodo, pool de recursos o canal de la plataforma no disponible | `system disk overloaded`, `No available accounts`, `No available channel`, `Service Unavailable` de plataforma | Reintentar mas tarde; si persiste, contactar soporte con grupo, periodo y `request_id` |
-| Requiere revisar grupo | Una sola linea no basta para atribuir responsabilidad | Errores como `429`, `502`, `503`, que pueden tener varias causas | Revisar [estado de salud de los grupos](/es/group-health) para confirmar si esta concentrado |
+| Requiere revisar grupo | Una sola linea no basta para atribuir responsabilidad | Errores como `429`, `502`, `503`, que pueden tener varias causas | Filtrar los registros por grupo para confirmar si esta concentrado |
 
 <Callout type="warn" title="Atencion">
   No atribuyas la causa solo por un `502` o `503` aislado. Una solicitud puede fallar por fluctuacion temporal del upstream; si muchas solicitudes del mismo grupo fallan en el mismo periodo, tiene mas sentido tratarlo como problema upstream o de recursos.
@@ -111,11 +111,11 @@ Revisa `429`, `Max 10/min`, `daily limit exceeded` y `cooling down`. No reintent
 
 ### Upstream y recursos de plataforma
 
-Revisa `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable` y `system disk overloaded`. Reintenta mas tarde; si se concentra en un grupo, revisa el [estado de salud de los grupos](/es/group-health).
+Revisa `502`, `503`, `504`, `520`, `521`, `522`, `524`, `Service Unavailable` y `system disk overloaded`. Reintenta mas tarde; si se concentra en un grupo, el pool de ese grupo esta afectado — cambia de grupo.
 
 ## Informacion para soporte
 
-Para problemas simples, consulta primero la [guia de registros de error](/es/error-logs) y el [estado de salud de los grupos](/es/group-health). Si el problema sigue sin resolverse, abre los detalles del registro de error en `usage-logs/common` y haz clic en el icono de copiar para copiar los detalles de diagnostico en un clic. Cuando contactes soporte, aporta estos datos de una vez para que el equipo tecnico pueda investigar con menos idas y vueltas:
+Para problemas simples, consulta primero la [guia de registros de error](/es/error-logs). Si el problema sigue sin resolverse, abre los detalles del registro de error en `usage-logs/common` y haz clic en el icono de copiar para copiar los detalles de diagnostico en un clic. Cuando contactes soporte, aporta estos datos de una vez para que el equipo tecnico pueda investigar con menos idas y vueltas:
 
 - ID de usuario
 - Periodo: inicio y ultima aparicion del problema

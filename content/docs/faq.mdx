@@ -151,11 +151,11 @@ export ANTHROPIC_MODEL=claude-fable-5-2
 
 完整字段说明、状态码分类和常见错误表请查看 [错误日志说明](/error-logs)。
 
-### 分组健康状态怎么看？
+### 分组问题怎么判断影响范围？
 
-分组健康状态用于判断问题是个别请求异常，还是某个套餐、模型或上游分组集中异常。优先看 `success_rate`、`error_count` 和 `error_reasons`，再结合单条日志中的 `request_id` 定位具体请求。
+在 [使用日志](https://fishxcode.com/usage-logs/common) 里按「分组」筛选，观察错误是否集中在同一分组：只有个别请求失败通常是偶发问题；同一分组集中出现相同错误，则说明该分组资源池受影响，建议稍后重试或切换分组，并通过 `request_id` 定位具体请求。
 
-完整状态页、字段说明和排查流程请查看 [分组健康状态](/group-health)。
+字段说明、状态码分类和常见错误表请查看 [错误日志说明](/error-logs)。
 
 ### 请求超时（Timeout）
 

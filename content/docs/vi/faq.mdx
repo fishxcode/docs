@@ -151,11 +151,11 @@ Vào [Bảng điều khiển → Nhật ký sử dụng](https://fishxcode.com/u
 
 Mô tả đầy đủ các trường, phân loại mã trạng thái và bảng lỗi phổ biến xem tại [Giải thích nhật ký lỗi](/vi/error-logs).
 
-### Xem tình trạng sức khỏe nhóm thế nào?
+### Làm sao đánh giá phạm vi ảnh hưởng của vấn đề nhóm?
 
-Tình trạng sức khỏe nhóm dùng để phán đoán vấn đề là bất thường ở yêu cầu đơn lẻ hay tập trung ở một gói, một mô hình hay một nhóm upstream. Ưu tiên xem `success_rate`, `error_count` và `error_reasons`, kết hợp `request_id` trong từng bản ghi nhật ký để định vị yêu cầu cụ thể.
+Trong [Nhật ký sử dụng](https://fishxcode.com/usage-logs/common), lọc theo nhóm và quan sát lỗi có tập trung vào cùng một nhóm hay không: lỗi đơn lẻ thường là bất thường ngẫu nhiên; cùng một lỗi lặp lại tập trung trong một nhóm cho thấy pool tài nguyên nhóm đó bị ảnh hưởng — hãy thử lại sau hoặc chuyển nhóm, và dùng `request_id` để định vị yêu cầu cụ thể.
 
-Trang trạng thái đầy đủ, mô tả trường và quy trình xử lý xem tại [Tình trạng sức khỏe nhóm](/vi/group-health).
+Mô tả trường, phân loại mã trạng thái và bảng lỗi thường gặp xem tại [Giải thích nhật ký lỗi](/vi/error-logs).
 
 ### Yêu cầu vượt thời gian (Timeout)
 

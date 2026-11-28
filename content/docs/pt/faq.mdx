@@ -151,11 +151,11 @@ Acesse [Console → Logs de uso](https://fishxcode.com/usage-logs/common), alter
 
 Para a descrição completa dos campos, classificação de códigos de status e tabela de erros comuns, veja [Explicação dos logs de erro](/pt/error-logs).
 
-### Como interpretar o estado de saúde dos grupos?
+### Como avaliar o alcance de um problema de grupo?
 
-O estado de saúde dos grupos serve para distinguir se o problema é uma anomalia isolada de requisições individuais ou uma anomalia concentrada em um plano, modelo ou grupo de upstream. Comece observando `success_rate`, `error_count` e `error_reasons`, e depois combine com o `request_id` de cada log para localizar requisições específicas.
+Nos [Logs de uso](https://fishxcode.com/usage-logs/common), filtre por grupo e observe se os erros se concentram no mesmo grupo: falhas isoladas costumam ser anomalias pontuais; o mesmo erro se repetindo em um mesmo grupo indica que o pool de recursos dele esta afetado — tente mais tarde ou troque de grupo, e use o `request_id` para localizar requisições específicas.
 
-Para a página de estado completa, descrição dos campos e fluxo de diagnóstico, veja [Estado de saúde dos grupos](/pt/group-health).
+Para a descrição dos campos, as categorias de códigos de status e a tabela de erros comuns, veja [Explicacao dos logs de erro](/pt/error-logs).
 
 ### Tempo limite da requisição (Timeout)
 
